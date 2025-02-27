@@ -10,298 +10,14 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from etc import newfig, attr
-from scipy.signal import lfilter, filtfilt
 from scipy.special import k0 as K0
-from scipy.integrate import quad, quad_vec
+import Voortoets_functionaliteit as vtf
+from importlib import reload
 
 # %%
-class Dirs:
-    """Namespace for directories in project"""
-    def __init__(self):
-        self.home = '/Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/'
-        self.data = os.path.join(self.home, 'data')
-        self.images = os.path.join(self.home, 'images')
-    
-dirs = Dirs()
+dirs = vtf.Dirs()
 os.path.isdir(dirs.data)
 os.path.isdir(dirs.images)
-
-# %% [markdown]
-# De stroming Q [m2/d] is gelijk aan
-# 
-# $$Q	=-T\frac{dh}{dx}=N(x - x_L) + Q_L$$
-# 
-# Na integratie
-# $$h(x)	= h_L + \frac{Q_{L}}{T} (x - x_L) -\frac{N}{2T}(x - x_L)^{2}$$
-# 
-# $$Q_{L}=\frac{T}{x_L - x_R} \left(h_R - h_L + \frac{N}{2 T}(x_R - x_L)^2\right)$$
-# 
-# $$Q_{L}=-\frac{T}{L} \left(h_R - h_L + \frac{N}{2 T}L^2\right)$$
-# 
-# 
-# Met deze vergelijkingen kan de stijghoogte en de stroming worden berekend. Analytische uitwerking is niet nodig.
-
-# %%
-from matplotlib.path import Path
-from matplotlib.patches import PathPatch
-
-class Mirror_ditches():
-    """Class to compute mirror ditches plus signs or mirror wells plus signs
-    
-    In case of ditches the position of the ditches are returned with their signs.
-    In case of a well, the mirror well positions are returned.
-    """
-    def __init__(self, xL, xR, xw=None, N=30, Lclosed=False, Rclosed=False):
-        """Return x-coordinate of mirror points given a strip between xL and xR, xp of point of well.
-
-        Parameters
-        ----------
-        xL, xR: floats
-            x-coordinates of left and right of strip between the two head boundaries
-        N: int
-            number of mirror wells positions
-        """
-        if xL > xR:
-            xL, xR = xR, xL
-        self.xw = xw
-        self.xL = xL
-        self.xR = xR
-        self.Lclosed = Lclosed
-        self.Rclosed = Rclosed
-        self.N = N
-        
-        # The actual well (May be None for just mirroring ditches)
-        self.xw = xw
-        self.sw = 1
-
-        # Starting values for the coordinates of the mirrors
-        # The right ditch (xR) and the left ditch (xL)
-        xRD, xLD = [xR], [xL]
-        
-        # first mirror wells signs are opposite to self.sw
-        if self.xw is not None:
-            sRD = [self.sw if Rclosed else -self.sw]
-            sLD = [self.sw if Lclosed else -self.sw] 
-        
-        # No wells, just ditches. First ditches have positive sign
-        # that may be inverted later based on Lclosed and Rclosed
-        else:
-            sRD, sLD = [1], [1]
-
-        # Get mirror ditch or well coordinates starting with
-        # either the right ditch (xRD) or with the left  ditch (xLD)
-        for i in range(1, N):
-            if i % 2 == 1:
-                xRD.append(xL - (xRD[-1] - xL))
-                xLD.append(xR - (xLD[-1] - xR))
-                sRD.append(sRD[-1] if Lclosed else -sRD[-1])
-                sLD.append(sLD[-1] if Rclosed else -sLD[-1])
-            else:
-                xRD.append(xR - (xRD[-1] - xR))
-                xLD.append(xL - (xLD[-1] - xL))
-                sRD.append(sRD[-1] if Rclosed else -sRD[-1])
-                sLD.append(sLD[-1] if Lclosed else -sLD[-1])
-                
-        self.xLD = xLD
-        self.xRD = xRD
-        self.sLD = sLD
-        self.sRD = sRD
-        
-        # If a well position was given we don't want the mirror ditches but the mirror wells:
-        if self.xw is not None:
-            xM = 0.5 * (xR + xL)
-            deltaR = xR - xw     # mirror position over right ditch
-            deltaL = xL - xw     # mirror position over left  ditch
-            for i in range(len(xRD)):
-                if self.xRD[i] > xM:
-                    self.xRD[i] += deltaR
-                else:
-                    self.xRD[i] -= deltaR
-            for i in range(len(xLD)):
-                if self.xLD[i] < xM:
-                    self.xLD[i] += deltaL
-                else:
-                    self.xLD[i] -= deltaL
-        return
-
-    def show(self, ax=None, figsize=(8, 2), fcs=('yellow', 'orange')):
-        """Return picture of the ditches and the direction of the head change.
-        
-        Parameters
-        ----------
-        ax: matplotlib.Axes.axes or None
-            axis to plot on
-        fcs: tuple  of two strings
-            colors of the mirror strips and the central strips respectively
-        """
-        L = self.xR - self.xL
-        
-        if not ax:
-            _, ax = plt.subplots(figsize=figsize)   
-
-        # Draw arrows for xLD ditches
-        for x, sgn in zip(self.xLD, self.sLD):
-            if sgn > 0:
-                y1, y2 = sgn, 0   # upward arrow
-            else:
-                y1, y2 = 0, -sgn  # downward arrow
-            ax.annotate("", xy=(x, y1), xytext=(x, y2), arrowprops=dict(arrowstyle="->", color="red"))
-            
-        # Draw arrow for xRD ditches
-        for x, sgn in zip(self.xRD, self.sRD):
-            if sgn > 0:
-                y1, y2 = sgn , 0
-            else:
-                y1, y2 = 0, -sgn
-            ax.annotate("", xy=(x, y1), xytext=(x, y2), arrowprops=dict(arrowstyle="->", color="blue")) 
-
-        # Plot the strips and accentuate the central one
-        for xl in np.sort(np.hstack((self.xL - np.arange(self.N) * L, self.xR + np.arange(self.N - 1) * L))):
-            xr = xl + L
-            fc = fcs[1] if xl < 0 and xr > 0 else fcs[0]        
-            p = Path(np.array([[xl, xr, xr, xl, xl], [0, 0, -1, -1, 0]]).T, closed=True)
-            ax.add_patch(PathPatch(p, fc=fc, ec='black'))
-
-        ax.plot(0.5 * (self.xL + self.xR), 0, 'ro')
-        
-        if self.xw is not None:
-            ax.annotate("", xy=(self.xw, self.sw), xytext=(self.xw, 0), arrowprops=dict(arrowstyle="->", color="green")) 
-        
-        ax.set_title(f"Mirror ditches with     Left: {"closed" if self.Lclosed else "open"}, Right: {"closed" if self.Rclosed else "open"}")
-        ax.set_ylim(-1, 1.1)
-        
-        # Don't want no yticks and no ticklabels
-        ax.set_yticks([])
-        return ax
-
-# Example, immediately shows all possibilities
-kD, S, c= 600, 0.001, 200
-lambda_ = np.sqrt(kD * c)
-
-xL, xR, xw, N= -200, 200, 0, 30
-
-_, ax = plt.subplots()
-md = Mirror_ditches(xL, xR, xw=xw, N=N, Lclosed=False, Rclosed=False)
-_ = md.show(ax=ax, figsize=(8, 2), fcs=('yellow', 'orange'))
-
-Q = -1200.
-n = 0
-L = xR - xL
-x = np.linspace(xL - n * L, xR + n * L, 1201)
-s = np.zeros_like(x)
-r = np.sqrt((md.xw - x) ** 2)
-s = md.sw * Q / (2 * np.pi * kD) * K0( r / lambda_)
-for xw, sgn in zip(md.xLD, md.sLD):
-    r = np.sqrt((xw - x) ** 2)
-    s += sgn * Q / (2 * np.pi * kD) * K0(r / lambda_)
-for xw, sgn in zip(md.xRD, md.sRD):
-    r = np.sqrt((xw - x) ** 2)
-    s += sgn * Q / (2 * np.pi * kD) * K0(r / lambda_)
-    
-_, ax = plt.subplots()
-ax.set_title("Result of flow caused by a well between fixed boundaries")
-ax.set(xlabel="x [m]", ylabel='head [m]')
-ax.plot(x, s)
-ax.grid()
-plt.show()
-
-# %%
-from scipy.special import erfc
-
-kD, S = 600., 0.2
-xL, xR, AL, AR = -100., 100., 1.0, 1.0
-b = (xR - xL) / 2
-T50 = 0.28 * b ** 2 * S / kD
-
-ts = np.arange(7) * T50
-ts[0] = 0.01 * T50
-x = np.linspace(xL, xR, 201)
-
-md = Mirror_ditches(xL, xR, N=30, Lclosed=False, Rclosed=False)
-_, ax = plt.subplots(figsize=(8, 6))
-ax.set_title(f"Basin kD={kD} m2/d, S={S}, T50={T50:.4g} d")
-ax.set(xlabel="x [m]", ylabel="head [m]")
-for t in ts:
-    s = np.zeros_like(x)
-    xM = 0.5 * (xL + xR)
-    for xD, sgn in zip(md.xLD, md.sLD):
-        x_ = xD - x if xD >= xM else x - xD
-        u = x_ * np.sqrt(S / (4 *  kD * t))
-        s += sgn * AL * erfc(u)
-    for xD, sgn in zip(md.xRD, md.sRD):
-        x_ = xD - x if xD >= xM else x - xD
-        u = x_ * np.sqrt(S / (4 *  kD * t))
-        s += sgn * AR * erfc(u)
-    ax.plot(x, s, label=f"t = {t:.3f} = {t/T50:.4g} T50d")
-ax.grid()
-ax.legend(loc="lower right")
-plt.show()
-
-    
-
-# %%
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.signal import filtfilt
-
-def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
-    """Return a smooth ground surface elevation for visualization purposes.
-    
-    The elevation will be 0 at xL and xR and approach yM in the middle.
-
-    Parameters
-    ----------
-    x : ndarray
-        Coordinates.
-    xL, xR : floats, optional
-        Left and right coordinate bounds for the surface. Defaults to first and last x values.
-    yM : float, optional
-        Approximate maximum height of the surface before smoothing. Default is 1.
-    Lfilt : int, optional
-        Length of the smoothing filter applied with scipy.signal.filtfilt. Default is 20.
-    seed : int, optional
-        Random seed for reproducibility.
-
-    Returns
-    -------
-    ndarray
-        Smooth ground surface elevation.
-    
-    @TO 2025-02-10
-    """
-    if xL is None:
-        xL = x[0]
-    if xR is None:
-        xR = x[-1]
-        
-    L, xM = xR - xL, 0.5 * (xL + xR)
-    y = yM * np.sqrt(np.abs(np.cos(np.pi * (x - xM) / L)))
-
-    # Ensure Lfilt is at least 2 to avoid issues with filtfilt
-    Lfilt = max(Lfilt, 2)
-
-    # Random noise generation with optional seed
-    rng = np.random.default_rng(seed)
-    z = rng.random(len(x))
-
-    # Apply smoothing and return elevation
-    filtered = y * filtfilt(np.ones(Lfilt) / Lfilt, 1, z, method='gust')
-    return filtered
-
-# Test de functie
-xL, xR, yM, Lfilt = -2500., 2500., 2., 20
-x = np.linspace(-4000., 4000., 801)
-
-plt.title(f"Generated ground surface for xL={xL}, xR={xR}, yM={yM}, Lfilt={Lfilt}")
-plt.xlabel("x [m]")
-plt.ylabel("Elevation [m]")
-seed = 1
-plt.plot(x, ground_surface(x, xL=xL, xR=xR, yM=yM, Lfilt=Lfilt, seed=1), label=f"seed={seed}")
-plt.legend()
-plt.grid()
-plt.show()
-
 
 # %%
 N, kD = 0.001, 20 * 50
@@ -315,24 +31,17 @@ y = np.zeros_like(x)
 xM = 0.5 * (xL + xR)
 xW, yW = xM - 1000., 0.
 
-L = xR - xL
-def h_1d(x, N=None, kD=None, xL=None, xR=None, hL=None, hR=None):
-    """Return head for 1D flow between xL and xR for given hL and hR and N"""
-    QL = -kD / (xR - xL) * (hR - hL + N / (2 * kD) * (xR - xL) ** 2)
-    h = hL - QL / kD * (x - xL) - N / (2 * kD) * (x - xL) ** 2
-    return h
+h = vtf.hs_1d(x, N=N, kD=kD, xL=xL, xR=xR, hL=hL, hR=hR)
 
-h = h_1d(x, N=N, kD=kD, xL=xL, xR=xR, hL=hL, hR=hR)
-
-_, ax = plt.subplots()
+fig, ax = plt.subplots()
 ax.set(title="Gebied tussen twee rechte randen met gefixeerde stijghoogte en onttrekking", xlabel="x [m]", ylabel="TAW [m]")
 ax.grid(True)
 
 ax.plot(x, h, label="zonder put, alleen N")
-ax.plot(x[::10], ground_surface(x[::10], xL=xL, xR=xR, yM=1, Lfilt=8) + h[::10], label='maaiveld')
+ax.plot(x[::10], vtf.ground_surface(x[::10], xL=xL, xR=xR, yM=1, Lfilt=8) + h[::10], label='maaiveld')
 
 # Get the well positions
-md = Mirror_ditches(xL=xL, xR=xR, xw=xW, N=30)
+md = vtf.Mirrors(xL=xL, xR=xR, xw=xW, N=30)
 # md.show()
 
 yld = yrd = 0.
@@ -372,7 +81,7 @@ X, Y = np.meshgrid(x, y)
 
 kD, S, xL, xR, xw, yw = 600., 0.2, -2500, 2500., -1500., 0.
 
-md = Mirror_ditches(xL=xL, xR=xR, xw=xw, N=100)
+md = vtf.Mirrors(xL=xL, xR=xR, xw=xw, N=100)
 
 lamb = 6000. # Fixtieve zeer hoge spreidingslengte
 r = np.sqrt((X - md.xw) ** 2 + (Y - yw) ** 2)
@@ -392,7 +101,10 @@ for xl, sl, xr, sr in zip(md.xLD, md.sLD, md.xRD, md.sLD):
 # Set levels to contour
 levels = hL + np.arange(0, 6., 0.2)
 
-ax = newfig("Contourlijnen van de grwst. verlaging", "x [m]", "y [m]")
+fig, ax = plt.subplots()
+ax.set_title("Contourlijnen van de grwst. verlaging")
+ax.set(xlabel="x [m]", ylabel="y [m]")
+
 ax.plot(X[Y[:, 0]==0][0], s[Y[:,0]==0][0]) # Well
 
 ax.annotate('Left ditch', [xL, -1], xytext=[xL, 1],
@@ -409,7 +121,9 @@ ax.annotate('Mirror well R1', xy=(md.xRD[0], 1.0), xytext=(md.xRD[0], 1.5),
 ax.set_ylim(-2, 2) # Ensure arrows are completely visible.
 plt.show()
 
-ax = newfig("Contourlijnen van de grwst. verlaging", "x [m]", "y [m]")
+fig, ax = plt.subplots()
+ax.set_title("Contourlijnen van de grwst. verlaging")
+ax.set(xlabel="x [m]", ylabel="y [m]")
 ax.plot(md.xw, yw, 'ro') # Well
 ax.vlines([xL, xR], y[0], y[-1], color='b', lw=1) # The canals
 
@@ -426,7 +140,7 @@ ax.clabel(CS, CS.levels, fmt=fmt, fontsize=10)
 ax.plot(md.xw, yw, 'ro') # Well
 ax.vlines([xL, xR], y[0], y[-1], color='b', lw=1) # The canals
 
-plt.gcf().savefig(os.path.join(dirs.images, "puntbron_dupuit_strip_C.png"), transparent=True)
+fig.savefig(os.path.join(dirs.images, "puntbron_dupuit_strip_C.png"), transparent=True)
 plt.show()
 
 
@@ -468,139 +182,6 @@ plt.show()
 # 
 # De integralen zijn probleemloos numeriek te integreren, waarmee de functie gemakkelijk te berekenen is. Deze berekening wordt hieronder geïmplementeerd. Waarbij ook de situatie wordt meegenomen waarin de put links van $x = 0$ staat, m.a.w. wanneer $a <0$. Dit omkeren wordt geïmplenteerd door de coordinaten om te draaien.
 
-# %%
-import numpy as np
-from scipy.integrate import quad    # numerieke integratie
-from scipy.special import k0 as K0  # Modified Bessel function of the second kind
-
-def A(alpha, a, kD1, kD2, L1, L2):
-    """Return function A(alpha) in Bruggeman 370_07.
-    Parameters
-    ----------
-    alpha: integration parameter
-    a: float a >= 0
-        location of the well
-    kD1, kD2 floats
-        transmissivities for x < 0 and for x > 0
-    L1, L2: floats
-        L1 = np.sqrt(kD1 c1)
-        L2 = np.sqrt(kD2 c2)
-    """
-    return np.exp(-a * np.sqrt(alpha ** 2 + 1 / L2 ** 2)) / (
-        kD1 * np.sqrt(alpha ** 2 + 1 / L1 ** 2) + kD2 * np.sqrt(alpha ** 2 + 1 / L2 ** 2)
-    )
-
-def arg1(alpha, a, x, y, kD1, kD2, L1, L2):
-    """Return integrand in formula for Phi1(x, y)"""
-    return A(alpha, a, kD1, kD2, L1, L2) * np.exp(x * np.sqrt(alpha ** 2 + 1 / L1 ** 2)) * np.cos(y * alpha)
-
-def arg2(alpha, a, x, y, kD1, kD2, L1, L2):
-    """Return integrand for formula for Phi2(x, y)"""
-    return A(alpha, a, kD1, kD2, L1, L2) * np.exp(-x * np.sqrt(alpha ** 2 + 1 / L2 ** 2)) * np.cos(y * alpha)
-
-def brug370_01(X=None, Y=None, xw=None, Q=None, kD1=None, kD2=None, c1=None, c2=None):
-    """Return drawdown problem 370_01 from Bruggeman(1999).
-    
-    Parameters
-    ----------
-    X, Y: floats or arrays
-        x, y coordinates
-    xw: float
-        Well x-coordinate (y = 0)
-    kD1, kD2, c1, c2: floats
-        Aquifer transmissivities and aquitard resistances for x < 0 and for x > 0
-    """
-    # Convert scalars to arrays for vectorized computation
-    X = np.atleast_1d(X)
-    if np.isscalar(Y):
-        Y = Y * np.ones_like(X)
-    assert np.all(X.shape == Y.shape), f"X.shape {X.shape} != Y.shape {Y.shape}"
-
-    # If xw < 0, transform the problem and reuse function
-    if xw < 0:
-        X, Y, Phi = brug370_01(-X, Y, xw=-xw, Q=Q, kD1=kD2, kD2=kD1, c1=c2, c2=c1)
-        return -X, Y, Phi
-
-    # Compute length scales
-    L1, L2 = np.sqrt(kD1 * c1), np.sqrt(kD2 * c2)
-    a = xw  # Well x-coordinate
-    
-    # Create output array for Phi
-    Phi = np.full_like(X, np.nan, dtype=np.float64)
-
-    # Mask for points where x != a
-    mask_x_a = X != a
-    mask_x_neg = X < 0
-    mask_x_pos = ~mask_x_neg
-    
-    # Evaluate `phi` for x < 0
-    if np.any(mask_x_neg):
-        valid = mask_x_a & mask_x_neg
-        Phi[valid] = np.vectorize(
-            lambda x, y: Q / np.pi * quad(arg1, 0, np.inf, args=(a, x, y, kD1, kD2, L1, L2))[0]
-        )(X[valid], Y[valid])
-
-    # Evaluate `phi` for x > 0    
-    if np.any(mask_x_pos):
-        valid = mask_x_a & mask_x_pos
-        Phi[valid] = np.vectorize(
-            lambda x, y: (
-                Q / (2 * np.pi * kD2) * (K0(np.sqrt((x - a) ** 2 + y ** 2) / L2) -
-                K0(np.sqrt((x + a) ** 2 + y ** 2) / L2))
-                + Q / np.pi * quad(arg2, 0, np.inf, args=(a, x, y, kD1, kD2, L1, L2))[0]
-            )
-        )(X[valid], Y[valid])
-
-    return X, Y, Phi
-
-# Test examples
-kD1, kD2, c1, c2 = 250., 1000., 250, 1000.
-L1, L2 = np.sqrt(kD1 * c1), np.sqrt(kD2 * c2)
-a = 200.
-
-try:
-    ax = newfig(f"Bruggeman 370_01, verification, xw={xw:.4g} m, Qw={Q:.4g} m3/d\nkD1={kD1:.4g} m2/d, kD2={kD2:.4g} m2/d, c1={c1:.4g} d, c2={c2:.4g} d",
-            "x", "phi")
-except Exception as e:
-    print(f"Error: {e}")
-    breakpoint()
-    
-x = np.linspace(-2000, 2000, 401)
-y = 0
-xw = 200.
-
-# symmetrie for xw > 0 and xw < 0
-X, Y, Phi1 = brug370_01(x, y, xw=xw, Q=Q, kD1=kD1, kD2=kD2, c1=c1, c2=c2)
-try :
-    X, Y, Phi2 = brug370_01(x, y, xw=-xw, Q=Q, kD1=kD2, kD2=kD1, c1=c2, c2=c1)
-except Exception as e:
-    print(f"Error {e}")
-    breakpoint()
-
-# Using same kD and c gives just De Glee
-X, Y, Phi3 = brug370_01(x, y, xw=xw, Q=Q, kD1=kD2, kD2=kD2, c1=c2, c2=c2)
-
-# Compare with De Glee
-Phi4 = Q / (2 * np.pi * kD2) * K0(np.abs(x - xw)   / np.sqrt(kD2 * c2))
-
-# Using same kD and c gives just De Glee
-X, Y, Phi5 = brug370_01(x, y, xw=xw, Q=Q, kD1=kD1, kD2=kD1, c1=c1, c2=c1)
-Phi6 = Q / (2 * np.pi * kD1) * K0(np.abs(x - xw)   / np.sqrt(kD1 * c1))
-
-if X.ndim == 1:
-    ax.plot(X, Phi1, label="Phi1")
-    ax.plot(X, Phi2, label="Phi2")
-    ax.plot(X, Phi3, label="Phi3, same properties (2) right")
-    ax.plot(X, Phi4, '.', label=f"Phi4, K0, kD2={kD2}, c2={c2}")
-    ax.plot(X, Phi6, label="Phi3, same properties (1) left")
-    ax.plot(X, Phi6, '.', label=f"Phi4, K0, kD1={kD1}, c1={c1}")
-else:
-    CS = ax.contour(X, Y, Phi1, levels=levels)
-    ax.clabel(CS, levels=CS.levels, fmt="{:.2f}")
-    
-ax.legend()
-
-
 # %% [markdown]
 # # Example Bruggeman 370_01
 # 
@@ -627,6 +208,22 @@ ax.legend()
 # 
 # Hieronder volgt een voorbeeld. Het is een doorsende tussen $x_L$ en $x_R$ waarbij $h_L$ en $h_R$ gegeven zijn met uniforme neerslag dat op $x_L% en $x_R$ aansluit op een gebied met een drainageweerstand.
 
+
+# %% [markdown]
+# De stroming Q [m2/d] is gelijk aan
+# 
+# $$Q	=-T\frac{dh}{dx}=N(x - x_L) + Q_L$$
+# 
+# Na integratie
+# $$h(x)	= h_L + \frac{Q_{L}}{T} (x - x_L) -\frac{N}{2T}(x - x_L)^{2}$$
+# 
+# $$Q_{L}=\frac{T}{x_L - x_R} \left(h_R - h_L + \frac{N}{2 T}(x_R - x_L)^2\right)$$
+# 
+# $$Q_{L}=-\frac{T}{L} \left(h_R - h_L + \frac{N}{2 T}L^2\right)$$
+# 
+# 
+# Met deze vergelijkingen kan de stijghoogte en de stroming worden berekend. Analytische uitwerking is niet nodig.
+
 # %%
 N, kD = 0.001, 20 * 50.
 Q = -3600 # m3/d
@@ -639,38 +236,8 @@ y = np.zeros_like(x)
 xM = 0.5 * (xL + xR)
 xW, yW = xM - 1000., 0.
 
-X = np.arange(xL, xR + 1001, 10)
+X = np.arange(xL, xR + 1001, 10, dtype=float)
 h = np.zeros_like(X)
-
-def Q_hs_1d(x, N=None, kD=None, xL=None, xR=None, hL=None, hR=None, lamb_L=0., lamb_R=0., eps=1e-6):
-    L = xR - xL
-    QL = -kD / (L + lamb_L + lamb_R)  * (hR - hL + N / (2 * kD) * L ** 2 + N / kD * L * lamb_R)
-    
-    x = np.atleast_1d(x)
-    Q = np.zeros_like(x)
-    Q[x < xR] = QL + N * (x[x < xR] - xL)
-    Q[x >= xR] = (QL + N *(xR - xL)) * np.exp(-(x[x >=xR] - xR) / (lamb + eps))
-    if len(Q) == 1:
-        Q = Q[0]
-    return Q
-
-def hs_1d(x, N=None, kD=None, xL=None, xR=None, hL=None, hR=None, lamb_L=0., lamb_R=0., eps=1e-6):
-    L = xR - xL
-    QL = Q_hs_1d(xL, N=N, kD=kD, xL=xL, xR=xR, hL=hL, hR=hR, lamb_L=lamb_L, lamb_R=lamb_R)
-    QR = QL + N * L
-    dhR = +QR  * lamb_R / kD
-    dhL = -QL  * lamb_L / kD
-    x = np.atleast_1d(x)
-    h = np.zeros_like(x)
-    mask_L = x <= xL
-    mask_R = x >= xR
-    mask_C = ~(mask_L | mask_R)
-    h[mask_C] = hL - QL * lamb_L / kD - QL / kD * (x[mask_C] - xL)  - N / (2 * kD) * (x[mask_C] - xL) ** 2
-    h[mask_L] = hL + dhL * np.exp(+(x[mask_L] - xL) / (lamb_L + eps))
-    h[mask_R] = hR + dhR * np.exp(-(x[mask_R] - xR) / (lamb_R + eps))
-    if len(x) == 1:
-        h=h[0]
-    return h
 
 kwargs = {'N': N, 'kD': kD, 'xL': xL, 'xR': xR, 'hL': hL, 'hR': hR}
 
@@ -680,16 +247,16 @@ ax.set_title("Stijghoogte in hoog gebied grenzend aan laag met drainage\n" +
 ax.set(xlabel="x [m]", ylabel="TAW [m]")
 ax.grid()
 
-ax.plot(x, ground_surface(x, xL=xL, xR=xR, yM=1, Lfilt=8) + hs_1d(x, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs), label='maaiveld')
+ax.plot(x, vtf.ground_surface(x, xL=xL, xR=xR, yM=1, Lfilt=8) + hs_1d(x, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs), label='maaiveld')
 
-ax.plot(x, hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs),
+ax.plot(x, vtf.hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs),
         label=fr'h met zachte gebiedsrand. N={kwargs['N']} m/d, kD={kwargs['kD']} m2/d $\lambda_L$={lamb_L} m, $\lambda_R$={lamb_R} m')
-ax.plot(x, hs_1d(x,  lamb_L=0.,     lamb_R=0.,     **kwargs), 
+ax.plot(x, vtf.hs_1d(x,  lamb_L=0.,     lamb_R=0.,     **kwargs), 
         label=f'h met harde gebiedsrand. N={kwargs['N']} m/d, kD={kwargs['kD']} m2/d, op xL={xL} m en xR={xR} m')
 
 # Plot the boundary locations
-hxL = hs_1d(xL, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
-hxR = hs_1d(xR, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
+hxL = vtf.hs_1d(xL, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
+hxR = vtf.hs_1d(xR, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
 ax.plot([xL, xR], [hxL, hxR], 'go',
         label=fr"overgang hoog gebied naar laag kwelgebied met $\lambda_L$={lamb_L} en $\lambda_R$={lamb_R} m")
 ax.annotate("gebiedsrand", xy=(xL, 20.), xytext=(xL, 24.5), ha='center',
@@ -698,19 +265,19 @@ ax.annotate("gebiedsrand", xy=(xR, 20), xytext=(xR, 24.5), ha='center',
             arrowprops={'arrowstyle': '-'})
 
 # plot for both lamb_L = 0. and lamb_R = 0.
-hxL = hs_1d(xL, lamb_L=0., lamb_R=0., **kwargs)
-hxR = hs_1d(xR, lamb_L=0., lamb_R=0., **kwargs)
+hxL = vtf.hs_1d(xL, lamb_L=0., lamb_R=0., **kwargs)
+hxR = vtf.hs_1d(xR, lamb_L=0., lamb_R=0., **kwargs)
 ax.plot([xL, xR], [hxL, hxR], 'ro', label=f"harde grens hL={hL}, hR={hR} m op  resp x={xL} en x={xR}  m")
 
 lambda_ = 3000
-s = brug370_01(x - xR, y, xw=xw - xR, Q=Q,
+s = vtf.brug370_01(x - xR, y, xw=xw - xR, Q=Q,
                kD1=kD, kD2=kD, c1=lambda_ ** 2 / kD, c2=lamb_R ** 2 / kD)
-ax.plot(x, s[-1] + hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs), '-',
+ax.plot(x, s[-1] + vtf.hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs), '-',
         label=f'h + put acc. Bruggeman, Q={Q} m3/d, ' +
         fr"kD={kD} m2/d, $\lambda_L$={lamb_L}, $\lambda_R$={lamb_R}")
 
 # Check with drawdown according to De Glee
-h = hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
+h = vtf.hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
 
 r = np.sqrt((x - xw) ** 2)
 ax.plot(x, h + Q / (2 * np.pi * kD) * K0(r / lambda_), 'black', lw=1,
@@ -727,10 +294,10 @@ x = np.linspace(xL -1000., xR + 1000., 6001)
 lamb_L, lamb_R = 3000, 300
 kwargs.update(hL=0., hR=0.)
 
-_, ax = plt.subplots()
+fig, ax = plt.subplots()
 ax.grid()
 ax.set_title("Checking Brug370_01\n" + fr"Q={Q} m3/d kD={kD} m2/d, $\lambda_L$={lamb_L} , $\lambda_R$={lamb_R} ")
-ax.set_ylabel("head [m]")
+ax.set(xlabel="x [m]", ylabel="head [m]")
 
 # Drawdown acc. to De Glee
 r = np.sqrt((x - xw) ** 2)
@@ -738,12 +305,12 @@ ax.plot(x, Q / (2 * np.pi * kD) * K0(r / lambda_), 'black', lw=1,
         label=fr"De Glee Q={Q} m3/d, kD={kD} m2/d, $\lambda$={lamb_L} m")
 
 # Drawdown acc. to Bruggeman solution 370_01
-s = brug370_01(x - xR, y, xw=xw - xR, Q=Q, kD1=kD, kD2=kD,
+s = vtf.brug370_01(x - xR, y, xw=xw - xR, Q=Q, kD1=kD, kD2=kD,
                c1=lamb_L ** 2 / kD, c2=lamb_R ** 2 / kD)
 ax.plot(x, s[-1], '-', color='red', label=fr"Brug, kD={kD} m2/d $\lambda_L$={lamb_L} m, $\lambda_R$={lamb_R} m")
 
 # Head change due to recharge
-h = hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
+h = vtf.hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs)
 ax.plot(x, h, label=fr"h, N={N} m/d, $\lambda_L$={lamb_L} m, $\lambda_R$={lamb_R} m")
 ax.vlines([xL, xR], -2, 6, color='black')
 
