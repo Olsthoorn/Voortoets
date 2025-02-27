@@ -1,0 +1,14 @@
+# pyprogject.toml for Ruff as language server as suggested by ChatGPT
+
+[tool.ruff]
+line-length = 88  # Customize line length (default is 88)
+target-version = "py312"  # Set your Python version (e.g., 3.12)
+select = ["E", "F", "I"]  # Enable specific rule categories (E: style, F: errors, I: imports)
+ignore = ["E501"]  # Ignore specific rules (E501: line too long)
+
+[tool.ruff.format]
+quote-style = "double"  # Use double quotes for strings
+indent-style = "space"  # Force spaces instead of tabs
+
+[tool.ruff.isort]
+known-first-party = ["my_project"]  # Sort imports intelligently

@@ -8,11 +8,13 @@
 
 # %%
 import os
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.special import k0 as K0
-import Voortoets_functionaliteit as vtf
 from importlib import reload
+
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.special import k0 as K0
+
+import Voortoets_functionaliteit as vtf
 
 # %%
 dirs = vtf.Dirs()
@@ -33,7 +35,7 @@ xW, yW = xM - 1000., 0.
 
 h = vtf.hs_1d(x, N=N, kD=kD, xL=xL, xR=xR, hL=hL, hR=hR)
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(10, 6))
 ax.set(title="Gebied tussen twee rechte randen met gefixeerde stijghoogte en onttrekking", xlabel="x [m]", ylabel="TAW [m]")
 ax.grid(True)
 
@@ -101,9 +103,10 @@ for xl, sl, xr, sr in zip(md.xLD, md.sLD, md.xRD, md.sLD):
 # Set levels to contour
 levels = hL + np.arange(0, 6., 0.2)
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Contourlijnen van de grwst. verlaging")
 ax.set(xlabel="x [m]", ylabel="y [m]")
+ax.grid(True)
 
 ax.plot(X[Y[:, 0]==0][0], s[Y[:,0]==0][0]) # Well
 
@@ -119,11 +122,12 @@ ax.annotate('Mirror well R1', xy=(md.xRD[0], 1.0), xytext=(md.xRD[0], 1.5),
             ha='center', arrowprops={'arrowstyle': '->', 'lw': 3, 'color': 'green'})
 
 ax.set_ylim(-2, 2) # Ensure arrows are completely visible.
-plt.show()
 
-fig, ax = plt.subplots()
+
+fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Contourlijnen van de grwst. verlaging")
 ax.set(xlabel="x [m]", ylabel="y [m]")
+ax.grid(True)
 ax.plot(md.xw, yw, 'ro') # Well
 ax.vlines([xL, xR], y[0], y[-1], color='b', lw=1) # The canals
 
@@ -141,7 +145,6 @@ ax.plot(md.xw, yw, 'ro') # Well
 ax.vlines([xL, xR], y[0], y[-1], color='b', lw=1) # The canals
 
 fig.savefig(os.path.join(dirs.images, "puntbron_dupuit_strip_C.png"), transparent=True)
-plt.show()
 
 
 # %% [markdown]
@@ -187,42 +190,9 @@ plt.show()
 # 
 # Beschouw een hoger gebied dat grenst aan een lager gebied waarin de afvoer wordt gekarakteriseerd door zijn drainageweerstaand.
 # 
-# 
-# $$ h = h_L - \frac N {2 kD} (x - x_L)^2 - \frac{Q_L}{kD}(x - x_L) $$
-# 
-# Op overgang naar het gebied met drainageweerstand rechts van $x_R$ moet $Q_R$ continu zijn
-# $$ Q_L + N L = h_R \frac kD \lambda$$
-# Zodat
-# $$h(x_R) = h_R + (Q_L + N L) \frac \lambda kD$$
-# 
-# Ingevuld levert dit $Q_L$ op
-# 
-# $$Q_L = \frac{ -kD \left( h_R - h_L + \frac{N}{2 kD} (x_R - x_L)^2 +\frac{N}{kD} \lambda (x_R-x_L) \right)}
-# {\lambda + x_R - x_L}$$
-# 
-# $$Q_L = \frac{ -kD \left( h_R - h_L + \frac{N}{2 kD}L^2 +\frac{N}{kD} \lambda L \right)}
-# {\lambda + L}$$
-# 
-# $$Q_L = \frac{ -\frac{kD}{L} \left( h_R - h_L + \frac{N}{2 kD}L^2 +\frac{N}{kD} \lambda L \right)}
-# {1 + \frac{\lambda}{L}}$$
+# zie functie vtf.hs_1d(...)
 # 
 # Hieronder volgt een voorbeeld. Het is een doorsende tussen $x_L$ en $x_R$ waarbij $h_L$ en $h_R$ gegeven zijn met uniforme neerslag dat op $x_L% en $x_R$ aansluit op een gebied met een drainageweerstand.
-
-
-# %% [markdown]
-# De stroming Q [m2/d] is gelijk aan
-# 
-# $$Q	=-T\frac{dh}{dx}=N(x - x_L) + Q_L$$
-# 
-# Na integratie
-# $$h(x)	= h_L + \frac{Q_{L}}{T} (x - x_L) -\frac{N}{2T}(x - x_L)^{2}$$
-# 
-# $$Q_{L}=\frac{T}{x_L - x_R} \left(h_R - h_L + \frac{N}{2 T}(x_R - x_L)^2\right)$$
-# 
-# $$Q_{L}=-\frac{T}{L} \left(h_R - h_L + \frac{N}{2 T}L^2\right)$$
-# 
-# 
-# Met deze vergelijkingen kan de stijghoogte en de stroming worden berekend. Analytische uitwerking is niet nodig.
 
 # %%
 N, kD = 0.001, 20 * 50.
@@ -236,22 +206,23 @@ y = np.zeros_like(x)
 xM = 0.5 * (xL + xR)
 xW, yW = xM - 1000., 0.
 
-X = np.arange(xL, xR + 1001, 10, dtype=float)
-h = np.zeros_like(X)
-
 kwargs = {'N': N, 'kD': kD, 'xL': xL, 'xR': xR, 'hL': hL, 'hR': hR}
 
-_, ax = plt.subplots(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Stijghoogte in hoog gebied grenzend aan laag met drainage\n" +
             fr"kD={kwargs['kD']:.4g} m2/d, N={kwargs['N']:.4g} m/d, $\lambda_L$={lamb_L:.4g} m, $\lambda_R$={lamb_R:.4g} m")
 ax.set(xlabel="x [m]", ylabel="TAW [m]")
-ax.grid()
+ax.grid(True)
 
-ax.plot(x, vtf.ground_surface(x, xL=xL, xR=xR, yM=1, Lfilt=8) + hs_1d(x, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs), label='maaiveld')
+# Ground surface
+ax.plot(x, vtf.ground_surface(x, xL=xL, xR=xR, yM=1, Lfilt=8) + vtf.hs_1d(x, lamb_L=lamb_L, lamb_R=lamb_R, **kwargs), label='maaiveld')
 
+# Head for strip with adjacent semi-confined aquifer
 ax.plot(x, vtf.hs_1d(x,  lamb_L=lamb_L, lamb_R=lamb_R, **kwargs),
         label=fr'h met zachte gebiedsrand. N={kwargs['N']} m/d, kD={kwargs['kD']} m2/d $\lambda_L$={lamb_L} m, $\lambda_R$={lamb_R} m')
-ax.plot(x, vtf.hs_1d(x,  lamb_L=0.,     lamb_R=0.,     **kwargs), 
+
+# Head for strip with hard fixed heads at strip boundaries
+ax.plot(x, vtf.hs_1d(x,  **kwargs), 
         label=f'h met harde gebiedsrand. N={kwargs['N']} m/d, kD={kwargs['kD']} m2/d, op xL={xL} m en xR={xR} m')
 
 # Plot the boundary locations
@@ -264,11 +235,12 @@ ax.annotate("gebiedsrand", xy=(xL, 20.), xytext=(xL, 24.5), ha='center',
 ax.annotate("gebiedsrand", xy=(xR, 20), xytext=(xR, 24.5), ha='center',
             arrowprops={'arrowstyle': '-'})
 
-# plot for both lamb_L = 0. and lamb_R = 0.
+# Plot boundary locations for both lamb_L = 0. and lamb_R = 0.
 hxL = vtf.hs_1d(xL, lamb_L=0., lamb_R=0., **kwargs)
 hxR = vtf.hs_1d(xR, lamb_L=0., lamb_R=0., **kwargs)
 ax.plot([xL, xR], [hxL, hxR], 'ro', label=f"harde grens hL={hL}, hR={hR} m op  resp x={xL} en x={xR}  m")
 
+# Plot bruggeman with large lambda left and small lambda right of xR
 lambda_ = 3000
 s = vtf.brug370_01(x - xR, y, xw=xw - xR, Q=Q,
                kD1=kD, kD2=kD, c1=lambda_ ** 2 / kD, c2=lamb_R ** 2 / kD)
@@ -285,19 +257,21 @@ ax.plot(x, h + Q / (2 * np.pi * kD) * K0(r / lambda_), 'black', lw=1,
 
 ax.legend(loc="lower center", fontsize='x-small')
 
+
 # %% Checking Bruggeman with 1D
 # Check with drawdown according to De Glee
 
 Q = -3600.
 xw = 2000.
 x = np.linspace(xL -1000., xR + 1000., 6001)
+y = np.zeros_like(x)
 lamb_L, lamb_R = 3000, 300
-kwargs.update(hL=0., hR=0.)
+kwargs.update(hR=0., hL=0.)
 
-fig, ax = plt.subplots()
-ax.grid()
+fig, ax = plt.subplots(figsize=(10, 6))
 ax.set_title("Checking Brug370_01\n" + fr"Q={Q} m3/d kD={kD} m2/d, $\lambda_L$={lamb_L} , $\lambda_R$={lamb_R} ")
 ax.set(xlabel="x [m]", ylabel="head [m]")
+ax.grid(True)
 
 # Drawdown acc. to De Glee
 r = np.sqrt((x - xw) ** 2)
