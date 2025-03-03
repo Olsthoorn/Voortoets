@@ -36,6 +36,7 @@ from scipy.integrate import quad
 import pandas as pd
 from itertools import cycle
 from importlib import reload
+from inspect import signature
 
 # %% [markdown]
 # # Basisfuncties die verderop worden gebruikt:
@@ -69,7 +70,11 @@ def Wh(u, rho=0):
     rho = r / lambda,    lambda = sqrt(kD c)
     
     >>>Wh(0.004, 0.03)
-    4.894104204671381    
+    array(4.8941042)
+    
+    >>>Wh(0.05625, 0.03)
+    array(2.35295487)
+
     """
     def integrant(y, rho):
         """Return the function to be integrated."""
@@ -82,7 +87,6 @@ def Wh(u, rho=0):
     
     return np.asarray(wh(u, rho), dtype=float)
 
-Wh(0.004, 0.03)
 
 
 def Wb(tau, rho=0):
@@ -98,8 +102,10 @@ def Wb(tau, rho=0):
     tau = t/ (cS)
     rho = r / lambda, lambda= sqrt(kD c)
     
-    >>>Wb(0.05625, 0.03)
-    4.894104204671381    
+    >>>u, rho = 0.004, 0.03
+    >>>tau = rho ** 2 /(4 * u)
+    >>>Wb(tau, rho)
+    array(4.8941042)  
     """
     def integrant(x, rho):
         """Return the function to be integrated."""
@@ -126,8 +132,13 @@ def Wb1(tau, rho=0):
     tau = t/ (cS)
     rho = r / lambda, lambda= sqrt(kD c)
     
-    >>>Wb(0.05625, 0.03)
-    4.894104204671381    
+    >>>u, rho = 0.004, 0.03
+    >>>tau = rho ** 2 /(4 * u)
+    >>>Wb1(tau, rho)
+    array(4.8941042)  
+
+    >>>Wb1(0.05625, 0.03)
+    array(4.8941042)  
     """
     u = rho ** 2  / (4 * tau)
     return Wh(u, rho)
@@ -304,8 +315,6 @@ class WellBase(ABC):
             except Exception as e:
                 print(e)
                 raise
-        
-        r = WellBase.itimize(r)
         return r
     
     
@@ -322,7 +331,7 @@ class wTheis(WellBase):
         raise NotImplementedError("h not implemented for Theis well type.")
 
 
-    def dd(self, Q=None, x=None, y=None, t=None):
+    def dd(self, x=None, y=None, t=None, Q=None):
         """Return well's drawdown according to Theis.
         
         Note, if t is an array, x (and y of not None) must be scalars.
@@ -399,7 +408,7 @@ class wHantush(WellBase):
         raise NotImplementedError("h not implemented for Hantush well type.")
 
     
-    def dd(self, Q=None, x=None, y=None, t=None):
+    def dd(self, x=None, y=None, t=None, Q=None):
         """Return well's drawdown according to Theis.
         
         Note, if t is an array, x (and y of not None) must be scalars.
@@ -507,7 +516,7 @@ class wDupuit(WellBase):
             h = h.ravel()[0]
         return h
 
-    def dd(self, Q=None, x=None, y=None, R=None, N=None):
+    def dd(self, x=None, y=None, Q=None, R=None, N=None):
         """Return drawdown according to Dupuit.
         
         This is the same as Verrijt for N=0.        
@@ -550,7 +559,7 @@ class wDupuit(WellBase):
         qy = WellBase.itimize(qy)
         return (qx, qy)
         
-    def divide(self, Q=None, N=None):
+    def rdiv(self, *args, **kwargs):
         """Return radius of water divide."""
         return np.NaN     
 
@@ -570,13 +579,12 @@ class wDeGlee(WellBase):
         raise NotImplementedError("h not implemented for De Glee well type.")
 
 
-    def dd(self, Q=None, x=None, y=None):
-        """Return drawdown using uniform kD."""
-        WellBase.check_keys({'kD', 'lambda'}, self.aq)
-        x, y = WellBase.check_xyt(x, y)
+    def dd(self, x=None, y=None, Q=None):
+        """Return drawdown using uniform kD."""        
+        x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         FQ = Q / (2 * np.pi * self.aq['kD'])
-        s =   FQ * K0(r[r >= R] / self.aq['lambda'])
+        s =   FQ * K0(r / self.aq['lambda'])
         s = WellBase.itimize(s)
         return s
         
@@ -608,7 +616,7 @@ class Brug370_1(WellBase):
 
     def __init__(self, xw=None, yw=None,  rw=None, z1=None, z2=None, aqprops={}):
         super().__init__(xw=xw, yw=yw, rw=rw, z1=z1, z2=z2, aqprops=aqprops)
-        if not {'kD1', 'kD2' 'c1', 'c2'}.issubset(self.aq.keys()):
+        if not {'kD1', 'kD2', 'c1', 'c2'}.issubset(self.aq.keys()):
             raise ValueError("Missing one or more of kD1, kD2, c1, k2")
 
     @classmethod
@@ -639,21 +647,19 @@ class Brug370_1(WellBase):
         """Return integrand for formula for Phi2(x, y)"""
         return cls.A(alpha, a, kD1, kD2, L1, L2) * np.exp(-x * np.sqrt(alpha ** 2 + 1 / L2 ** 2)) * np.cos(y * alpha)
 
-    def dd(self, Q=None, x=None, y=None, xw=None):
-        """Return drawdown problem 370_01 from Bruggeman(1999).
+    def dd(self, x=None, y=None, Q=None):
+        r"""Return drawdown problem 370_01 from Bruggeman(1999).
         
         The problem computes the steady drawdown in a well with extraction $Q$ at $xw=a, yw=0$
         in a leaky aquifer in which the properties $kD$ and $c$ jump at $x=0$ with
-        $kD_1$ and $c_1$ for $x <= 0$ and $kD_2$ and $c_2$ for $x <= 0$.
+        $kD_1$ and $c_1$ for $x \le 0$ and $kD_2$ and $c_2$ for $x \ge 0$.
         
         Parameters
         ----------
-        X, Y: floats or arrays
+        x, y: floats or arrays
             x, y coordinates
-        xw: float
-            Well x-coordinate (yw = 0)
-        kD1, kD2, c1, c2: floats
-            Aquifer transmissivities and aquitard resistances for $x \e 0$ and for $x \ge 0$ respectively.
+        Q: float
+            extraction
         """
         # Convert scalars to arrays for vectorized computation
         
@@ -662,7 +668,7 @@ class Brug370_1(WellBase):
             Y = np.zeros_like(X)
         
         # If xw < 0, transform the problem and reuse function
-        if xw < 0:
+        if self.xw < 0:
             aqprops = {}
             for p1, p2 in zip(['kD1', 'kD2', 'c', 'c2'], ['kD2', 'kD1', 'c2', 'c1']):
                 aqprops[p1] = self.aq[p2]
@@ -688,7 +694,7 @@ class Brug370_1(WellBase):
         if np.any(mask_x_neg):
             valid = mask_x_a & mask_x_neg
             Phi[valid] = np.vectorize(
-                lambda x, y: Q / np.pi * quad(self.__class_.arg1, 0, np.inf,
+                lambda x, y: Q / np.pi * quad(self.__class__.arg1, 0, np.inf,
                     args=(self.xw, x, y, self.aq['kD1'], self.aq['kD2'], L1, L2))[0]
             )(X[valid], Y[valid])
 
@@ -715,7 +721,7 @@ class Brug370_1(WellBase):
     def qxqy(self, Q=None, X=None, Y=None, xw=None):
         raise NotImplementedError("qxqy is not implemented for Brug370_1")
 
-
+# %% Verruijt (WellBase)
 class wVerruijt(WellBase):
     """Axial symmetric flow according to Verruijt and Blom.
     
@@ -739,8 +745,8 @@ class wVerruijt(WellBase):
         FQ = Q / (np.pi * self.aq['k'])
         
         h2 = H ** 2 * np.ones_like(r)        
-        h2[r >= R] = H ** 2  - FQ * np.log(R / r[r >= R]) +\
-            N / (2 * self.aq['k']) * (R ** 2 - r[r >= R] ** 2)
+        h2[r < R] = H ** 2  - FQ * np.log(R / r[r < R]) +\
+            N / (2 * self.aq['k']) * (R ** 2 - r[r < R] ** 2)
 
         h = np.sqrt(h2)
         h = WellBase.itimize(h)
@@ -748,11 +754,11 @@ class wVerruijt(WellBase):
 
     def dd(self, Q=None, x=None, y=None, R=None, N=None):
         """Return drawdown according to Verrijt."""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         FQ = Q / (2 * np.pi * self.aq['kD'])
         s = np.zeros_like(r)
-        s = FQ * np.log(R / r[r <= R]) - N / (4 * self.aq['kD']) * (R **2 - r[r <= R] ** 2)
+        s[r < R] = FQ * np.log(R / r[r < R]) - N / (4 * self.aq['kD']) * (R **2 - r[r < R] ** 2)
         s = WellBase.itimize(s)
         return s
     
@@ -780,10 +786,10 @@ class wVerruijt(WellBase):
         qy = WellBase.itimize(qy)
         return (qx, qy)
         
-    def divide(self, Q=None, N=None):
+    def rdiv(self, Q=None, N=None, R=None):
         """Return radius of water divide."""        
         r = np.sqrt(Q / (np.pi * N))
-        return r if r < self.R else np.nan
+        return r if r < R else np.nan
              
    
 class wBlom(WellBase):
@@ -794,25 +800,24 @@ class wBlom(WellBase):
     """
     def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
         super().__init__(xw=xw, yw=yw, rw=rw, z1=z1, z2=z2, aqprops=aqprops)
-        WellBase.check_keys({'kD', 'c'}, self.aq)
+        WellBase.check_keys({'k', 'D', 'c'}, self.aq)
         return
 
     def h(self, Q=None, x=None, y=None, N=None, r=None):
         """Returng h using 'k' and 'D' has Hinf."""
-        WellBase.check_keys({'k', 'D'}, self.aq)
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
-        R = self.getR(Q=Q, N=N, R=R)
-        RL = R  / self.aq['lambda']
-        QR = Q - np.pi * R **2 * N     
-        Hinf = self.D
+        R = self.getR(Q=Q, N=N, R=r.mean())
+        Hinf = self.aq['D']
         HR = Hinf - N * self.aq['c']
         
         h = np.zeros_like(r) + HR
-        h[h < RL] = np.sqrt(HR ** 2 + N / (2 * self.k) * (R ** 2 - r[r < RL] ** 2)
-                            - Q / (np.pi * self.k) * np.log(R / r[r < RL]))
+        h[r < R] = np.sqrt(HR ** 2 + N / (2 * self.aq['k']) * (R ** 2 - r[r < R] ** 2) 
+                            - Q / (np.pi * self.aq['k']) * np.log(R / r[r < R]))
 
-        h[r >= R] = Hinf - QR / (2 * np.pi * self.kD) *\
+        RL = R  / self.aq['lambda']
+        QR = Q - np.pi * R **2 * N     
+        h[r >= R] = Hinf - QR / (2 * np.pi * self.aq['kD']) *\
             K0(r[r >= R] / self.aq['lambda']) / (RL * K1(RL))
             
         h = WellBase.itimize(h)
@@ -821,18 +826,19 @@ class wBlom(WellBase):
 
     def dd(self, Q=None, x=None, y=None, N=None):
         """Return drawdown using uniform kD."""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         
         r = self.radius(x, y)
         
-        R = self.getR(Q=Q, N=N, R=self.R)
-        RL = R / self.aq['lambda']
-        QR = Q - np.pi * R ** 2 * N
-        FQ = Q / (2 * np.pi * self.aq['kD'])
+        # Distance where drawdown = Nc
+        R = self.getR(Q=Q, N=N, R=r.mean())
         s = np.zeros_like(r)
-        s[r < RL] =  (FQ * np.log(R / r[r < RL])
-                - N / (4 * self.aq['kD']) * (R ** 2 - r[r < RL] ** 2) + N * self.aq['c'])
-        s[r >= R] = (QR / (2 * np.pi * self.aq['kD']) * 
+        s[r < R] =  (Q / (2 * np.pi * self.aq['kD']) * np.log(R / r[r < R])
+                - N / (4 * self.aq['kD']) * (R ** 2 - r[r < R] ** 2) + N * self.aq['c'])
+
+        RL = R / self.aq['lambda']
+        QR = Q - np.pi * R ** 2 * N        
+        s[r >= R] = (QR / (2 * np.pi * self.aq['kD']) *
                      K0(r[r >= R] / self.aq['lambda']) / (RL * K1(RL)))
         s = WellBase.itimize(s)
         return s
@@ -843,7 +849,7 @@ class wBlom(WellBase):
         
         r = self.radius(x, y)
 
-        R = self.getR(Q=Q, N=N, r=x.mean()) # use x.mean() as start for Newton iterations.
+        R = self.getR(Q=Q, N=N, r=r.mean())
         QR = Q - np.pi * R ** 2 * N        
         R_lam = R / self.aq['lambda']
         r_lam = r / self.aq['lambda']
@@ -873,7 +879,13 @@ class wBlom(WellBase):
         return rD if rD <= R else np.nan
     
     def rdivD(self, Q=None, N=None):
-        """Return location of water divide (fixed D)."""
+        """Return location of water divide (fixed D).
+        
+        In the case of Blom, there can never be a divide.
+        If there is extraction (Q > 0) the devide is at infinity.
+        When there is injection the devide might be considered the well face.
+        Always return np.nan
+        """
         R = self.getR(Q=Q, N=N, R=1.0)        
         rD = np.sqrt(Q / (np.pi * N))
         return rD if rD <= R else np.nan
@@ -1083,7 +1095,7 @@ class Blom1D(StripBase):
         Hinf = self.aq['D']
         HL = self.aq['D'] - N * self.aq['c']
         L = self.getL(Q=Q, N=N)
-        h2 = HL ** 2 + N / self.aq['k'] * (L ** 2 - x ** 2) - 2 * Q0 / (self.aq['k']) * (L - x)
+        h2 = HL ** 2 + N / self.aq['k'] * (L ** 2 - x ** 2) - 2 * Q / (self.aq['k']) * (L - x)
         if np.isscalar(x):
             if x > L:
                 return Hinf - N * self.aq['c'] * np.exp(-(x - L) / self.aq['lambda'])
@@ -1100,7 +1112,7 @@ class Blom1D(StripBase):
         x = super().check_x(x)
         L = self.getL(Q=Q, N=N)
         s = np.zeros_like(x)
-        s[x < L] = Q / self.aq['kD'] * ((L - x[x < L]) -
+        s[x < L] = (Q / self.aq['kD'] * (L - x[x < L]) -
                 N / (2 * self.aq['kD']) * (L **2 - x[x < L] ** 2) + N * self.aq['c'])
         s[x >= L] = N * self.aq['c'] * np.exp(-(x[x >= L] - L) / self.aq['lambda'])
         s = WellBase.itimize(s)
@@ -1465,31 +1477,38 @@ class Blom1D(StripBase):
 # Voor 1D berekening van de verlaging of de stijghoogte bij Verruijt moeten we afstand $L$ opgeven waar de verlaging nu is. Voor BLom is dit de afstand waarop de verlaging gelijk is aan $s_L = N c$. Bij Blom kunnen we die bij gegeven onttrekking en neerslagoverschot berekenen mits $kD$ en drainageweerstand $c$ bekend zijn.
 
 # %% [markdown]
-# ## Voorbeeld Verruijt 1D, vaste Q0, variërende L
+# ## Voorbeeld Verruijt 1D, vaste Q, variërende L
 
 # ================= E X A M P L E S ===================================
 if __name__ == '__main__':
     # %%
-    # Verruijt 1D fixed Q0 and varying L
+    # Verruijt 1D fixed Q and varying L
+    # Example with ever increasing distance L to the fixed head boundary
 
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
     pars = {'Q': 0.5, 'N': 0.003, 'L': 250}
     x = np.linspace(0, 300, 301)[1:]
+    fixed_head_distances = [50., 100., 150., 200., 250., 300.]
+    fhd = fixed_head_distances
 
     V1 = Verruijt1D(aqprops)
     h = V1.h(x=x, **pars)
     # print(h)
 
     # Head
-    ax = newfig(f"Verruijt 1D, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}", "x [m]", "head [m]",
-                figsize=(10, 6))
-
+    title = f"Verruijt 1D, unconfined, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}\n" +\
+        f"The distance to the fixed head boundary increases from {fhd[0]} to {fhd[-1]} m" 
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set(title=title, xlabel="x [m]", ylabel="head [m]")
+                
     clrs = cycle('rbgmkcy')
-    for L in [50., 100., 150., 200., 250., 300.]:
+    for L in fixed_head_distances:
         clr = next(clrs)
         pars['L'] = L
-        label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         h = V1.h(x=x, **pars)
+        label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
+        
+        # plot both the head and the head mirrord around x=0.
         ax.plot(np.hstack((-x[::-1], x)), np.hstack((h[::-1], h)), color=clr, label=label)
 
         xd = V1.xdiv(**pars)
@@ -1502,12 +1521,17 @@ if __name__ == '__main__':
 
     
     # Drawdown
-    ax = newfig(f"Verruijt 1D, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}", "x [m]", "drawdown [m]", figsize=(10, 6))
+    title = f"Verruijt 1D, confined, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}\n" +\
+        f"The distance to the fixed head boundary increases from {fhd[0]} to {fhd[-1]} m" 
+        
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set(title=title, xlabel="x [m]", ylabel="drawdown [m]")
     ax.invert_yaxis()
 
     clrs = cycle('rbgmkcy')
-    for L in [50., 100., 150., 200., 250., 300.]:
-        clr = next(clrs)        
+    for L in fixed_head_distances:
+        clr = next(clrs)
+        pars['L'] = L    
         dd = V1.dd(x=x, **pars)
         label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         ax.plot(np.hstack((-x[::-1], x)), np.hstack((dd[::-1], dd)), V1.dd(x=x, **pars), color=clr, label=label)
@@ -1519,11 +1543,11 @@ if __name__ == '__main__':
 
     ax.legend(fontsize=6, loc='lower right')
 
-    #plt.show()
+    # plt.show()
 
 
     # %% [markdown]
-    # ## Voorbeeld Verruijt 1D; vaste L, variërende Q0
+    # ## Voorbeeld Verruijt 1D; vaste L, variërende Q
     # 
     # De onttrekking en, daarmee de verlaging is stapsgewijs vergroot. Hierdoor komt de waterscheiding steeds verder weg te liggen tot deze de vaste rand $L$ bereikt.
     # 
@@ -1532,20 +1556,23 @@ if __name__ == '__main__':
     # Bij grote onttrekking is de daling van de grondwaterstand in het eeste plaatje is een stuk groter dan de verlaging in het tweede plaatje. Dit is het gevolg van de afname van de dikte van het watervoerende pakket waar in het eerste plaatje wel en in het tweede plaatje geen rekening mee is gehouden.
 
     # %%
-    # Verruijt 1D, fixed L and varying Q0
+    # Verruijt 1D, fixed L and varying Q
 
     pars['L'] = 600
     x = np.linspace(0, 1000, 5001)[1:]
+    Qs = [0., 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
 
     # head
-    ax = newfig(f"Blom 1D, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}", "x [m]", "head [m]",
-                figsize=(10, 6))
+    title = f"Blom 1D, unconfined k={aqprops['k']:.1f}, D={aqprops['D']:.1f}\n" +\
+        f"The Extraction Q increases from {Qs[0]} to {Qs[-1]} m2/d" 
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set(title=title, xlabel="x [m]", ylabel="head [m]")
 
     clrs = cycle('rbgmkcy')
-    for Q in [0., 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]:
+    for Q in Qs:
         clr = next(clrs)
         pars['Q'] = Q
-        label=f"Q0 = {pars['Q']:.3g}, N={pars['N']:.3g}"
+        label=f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         h = V1.h(x=x, **pars)
         ax.plot(np.hstack((-x[::-1], x)), np.hstack((h[::-1], h)), color=clr, label=label)
 
@@ -1560,14 +1587,17 @@ if __name__ == '__main__':
     # plt.show()
 
     # Drawdown
-    ax = newfig(f"Verruijt 1D, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}", "x [m]", "drawdown [m]",
-                figsize=(10, 6))
+    
+    title = f"Blom1D, confined, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}\n" +\
+        f"The Extraction Q increases from {Qs[0]} to {Qs[-1]} m2/d" 
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set(title=title, xlabel="x [m]", ylabel="drawdown [m]"),
     ax.invert_yaxis()
 
     clrs = cycle('rbgmkcy')
-    for Q0 in [0., 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]:
+    for Q in Qs:
         clr = next(clrs)
-        pars['Q'] = Q0
+        pars['Q'] = Q
         label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         dd = V1.dd(x=x, **pars)
         ax.plot(np.hstack((-x[::-1], x)), np.hstack((dd[::-1], dd)), color=clr, label=label)
@@ -1580,60 +1610,57 @@ if __name__ == '__main__':
     ax.text(0.1, 0.6, "Vaste pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=10, loc='lower right')
 
-    #plt.show()
+    # plt.show()
 
     
     # %% [markdown]
-    # ## Voorbeeld Blom 1D, variërende Q0
+    # ## Voorbeeld Blom 1D, variërende Q
     # 
     # Bij Blom wordt de $L$ berekend, zodanig dat de verlaging op $x=L$ gelijk is aan $N c$.
     # 
-    # In dit voorbeeld worden de grondwatertstand en de verlaging berekend voor verschillende waarden van $Q0$. Voor elke Q0 wordt de afstand $L$ berekend waarbinnen de sloten droogvallen. Op deze afstand is de verlaging gelijk aan $N c$, waardoor op afstand $L$ de sloot juist droogvalt (of beter: de sloot daar net niet meer draineert).
+    # In dit voorbeeld worden de grondwatertstand en de verlaging berekend voor verschillende waarden van $Q$. Voor elke $Q$ wordt de afstand $L$ berekend waarbinnen de sloten droogvallen. Op deze afstand is de verlaging gelijk aan $N c$, waardoor op afstand $L$ de sloot juist droogvalt (of beter: de sloot daar net niet meer draineert).
     # 
     # We zien verder dat de verlaging in het eerste plaatje, met variabele pakketdikte voor gotere onttrekkingen groter is dan die in het tweede plaatje, voor de situatie met vaste pakketdikte.
     # 
     # Voor de situatie met variabele pakketdikte zou de stijghoogte op $x > L x$ nog iets gecorrigeerd kunnen worden voor de in werkelijkheid afnemende dikte. Dit effect is echter zo klein dat het verschil in de aansluiting op het aangegeven punt, dus $x=L$ in de grafiek niet is te zien. Deze correctie kan eenvoudig worden verwaarloosd in de praktijk.In het onderhavige geval is dit een correctie van de $\lambda van $h/H = (D - s_L) / D \approx 19.5 / 20 \approx 0.98$ op de gebruikte waarde van $\lambda$, dus verwaarloosbaar.
 
     # %%
-    # Blom 1D, fixed L and varying Q0
+    # Blom 1D, fixed L and varying Q
 
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
     pars = {'Q': 0.5, 'N': 0.003}
-    x = np.linspace(0, 300., 301)[1:]
+    Qs = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+    x = np.linspace(0, 1000., 251)[1:]
+    L = 250.
 
-    B1 = Blom1D(aqprops)
-    h = B1.h(x=x, **pars)
-
-    B1.dd(x=xd, **pars)
-    x = np.linspace(0, 1000, 501)[1:]
-
+    B1 = Blom1D(aqprops=aqprops)
+    
     # head
-    ax = newfig(f"Blom 1D, stijghoogte, k={aqprops['k']:.1f} m/d, H={aqprops['D']:.1f} m, Nc={pars['N'] * aqprops['c']:.3g} m, lambda={aqprops['lambda']:.3g} m",
+    ax = newfig(f"Blom 1D, head, k={aqprops['k']:.1f} m/d, H={aqprops['D']:.1f} m, Nc={pars['N'] * aqprops['c']:.3g} m, lambda={aqprops['lambda']:.3g} m",
                 "x [m]", "drawdown [m]",
                 figsize=(10, 6))
 
     clrs = cycle('rbgmkcy')
-    for Q0 in [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]:
+    for Q in Qs:
         clr = next(clrs)
-        pars['Q'] = Q0
-        h = B1.h
+        pars['Q'] = Q
         L = B1.getL(**pars)
+        h = B1.h(x=x, **pars)        
         label=f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         h = B1.h(x=x, **pars)
         ax.plot(np.hstack((-x[::-1], x)), np.hstack((h[::-1], h)), color=clr, label=label)
 
         xd = B1.xdiv(**pars)
         hd = B1.h(x=xd, **pars)
-        hL = B1.h(x=pars['L'], **pars)    
+        hL = B1.h(x=L, **pars)    
         if not np.isnan(xd):
             ax.plot([-xd, xd], [hd, hd], 'o', color=clr, label=f"xd={xd:.3g} m, hd={hd:.3g} m")
-        
-        ax.plot([-pars['L'], pars['L']], [hL, hL], '.', color=clr, label=f'L={pars['L']:.3g} m, hL={hL:.3g} m')
+        ax.plot([-L, L], [hL, hL], '.', color=clr, label=f'L={L:.3g} m, hL={hL:.3g} m')
 
     ax.text(0.1, 0.6, "Variabele pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=10, loc='lower right')
 
-    #plt.show()
+    # plt.show()
 
     # Drawdown
     ax = newfig(f"Blom 1D, verlaging, k={aqprops['k']:.1f} m/d, D={aqprops['D']:.1f} m, Nc={pars['N'] * aqprops['c']:.3g} m, lambda={aqprops['lambda']:.3g} m",
@@ -1642,10 +1669,10 @@ if __name__ == '__main__':
     ax.invert_yaxis()
 
     clrs = cycle('rbgmkcy')
-    for Q0 in [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]:
+    for Q in Qs:
         clr = next(clrs)
-        pars['Q'] = Q0
-        L = B1.getL(**pars)
+        pars['Q'] = Q
+        L = B1.getL(**pars)  
         label = label=f"Q = {pars['Q']:.3g} m2/d, N={pars['N']:.3g} m/d"
         dd = B1.dd(x=x, **pars)
         ax.plot(np.hstack((-x[::-1], x)), np.hstack((dd[::-1], dd)), color=clr, label=label)
@@ -1654,29 +1681,25 @@ if __name__ == '__main__':
         ddnd = B1.dd(x=xd, **pars)    
         ddnL = B1.dd(x=L, **pars)
         if not np.isnan(xd):
-            ax.plot([-xd, xd], [ddnd, ddnd], 'o', color=clr, label=f"xd={xd:.3g} m")
-        ax.plot([-pars['L'], pars['L']], [ddnL, ddnL], '.', color=clr, label=f'L={pars['L']:.3g} m, dd={ddnL:.3g} m')
+            ax.plot([-xd, xd], [ddnd, ddnd], 'o', color=clr, label=f"xd={xd:.3g} m")        
+        ax.plot([-L, L], [ddnL, ddnL], '.', color=clr, label=f'L={L:.3g} m, dd={ddnL:.3g} m')
 
     ax.text(0.1, 0.6, "Vaste pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=10, loc='lower right')
 
-    plt.show()
+    # plt.show()
     
-    sys.exit()
-
     # %% [markdown]
     # ## Voorbeelden Verruijt, axiaal symmetrisch
 
     # %%
-    # Verruijt 1D fixed Q0 and varying R
+    # Verruijt 1D fixed Q and varying R
 
-    aqprops = {'k': 10., 'D': 20., 'c': 200., 'R':250.}
-    pars = {'Q0': 300, 'N': 0.003}
+    aqprops = {'k': 10., 'D': 20., 'c': 200.}
+    pars = {'Q': 300, 'N': 0.003, 'R': 250.}
     r = np.linspace(0, 300, 301)[1:]
 
-    V2 = Verruijt(**aqprops)
-    h = V2.h(r=r, **pars)
-    # print(h)
+    V2 = wVerruijt(xw=0., yw=0., aqprops=aqprops)
 
     # Head
     ax = newfig(f"Verruijt axiaal-symmetrisch, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}",
@@ -1686,20 +1709,20 @@ if __name__ == '__main__':
     clrs = cycle('rbgmkcy')
     for R in [50., 100., 150., 200., 250., 300.]:
         clr = next(clrs)
-        V2.R = R
-        label = f"Q0 = {pars['Q0']:.3g}, N={pars['N']:.3g}"
-        h = V2.h(r=r, **pars)
+        pars['R'] = R
+        label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
+        h = V2.h(x=r, **pars)
         ax.plot(np.hstack((-r[::-1], r)), np.hstack((h[::-1], h)), color=clr, label=label)
 
-        rd = V2.rdivh(**pars)
-        hd = V2.h(r=rd, **pars)
+        rd  = V2.rdiv(**pars)
+        hd = V2.h(x=pars['R'], **pars)
         ax.plot([-rd, rd], [hd, hd], 'v', color=clr, label=f"rd={rd:.3g} m, hd={hd:.3g} m")
-        ax.plot([-V2.R, V2.R], [V2.D, V2.D], '.', color=clr, label=f'R={R:.3g} m, h={V2.D:.3g} m')
+        ax.plot([-pars['R'], pars['R']], [aqprops['D'], aqprops['D']], '.', color=clr, label=f'R={pars['R']:.3g} m, h={aqprops['D']:.3g} m')
 
     ax.text(0.1, 0.6, "Variabele pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=6, loc='lower right')
 
-    plt.show()
+    # plt.show()
 
     # Drawdown
     ax = newfig(f"Verruijt axial-symmetrisch, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}",
@@ -1710,31 +1733,32 @@ if __name__ == '__main__':
     clrs = cycle('rbgmkcy')
     for R in [50., 100., 150., 200., 250., 300.]:
         clr = next(clrs)
-        V2.R = R
-        dd = V2.dd(r=r, **pars)
-        label = f"Q0 = {pars['Q0']:.3g}, N={pars['N']:.3g}"
+        pars['R'] = R    
+        dd = V2.dd(x=r, **pars)
+        label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         ax.plot(np.hstack((-r[::-1], r)), np.hstack((dd[::-1], dd)), color=clr, label=label)
 
-        rd = V2.rdivD(**pars)
-        ddnd = V2.dd(r=rd, **pars)
-        ax.plot([-rd, rd], [ddnd, ddnd], 'v', color=clr, label=f"rd={rd:.3g} m, ddnd={ddnd:.3g} m")
-        ax.plot([-V2.R, V2.R], [0., 0.], '.', color=clr, label=f'R={R:.3g} m, ddnd={0.:.3g} m')
+        rd = V2.rdiv(**pars)
+        if not np.isnan(rd):
+            ddnd = V2.dd(x=rd, **pars)
+            ax.plot([-rd, rd], [ddnd, ddnd], 'v', color=clr, label=f"rd={rd:.3g} m, ddnd={ddnd:.3g} m")
+        ax.plot([-R, R], [0., 0.], '.', color=clr, label=f'R={R:.3g} m, ddnd={0.:.3g} m')
 
     ax.text(0.1, 0.6, "Vaste pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=6, loc='lower right')
 
-    plt.show()
+    # plt.show()
 
 
     # %%
     # Bodemconstanten, gebiedsradius, voeding, onttrekking en putstraal
-    aqprops = {'k': 20, 'D': 20, 'R':1000.}
-    pars = {'Q0': 1200., 'N': 0.002}
+    aqprops = {'k': 20, 'D': 20}
+    pars = {'Q': 1200., 'N': 0.002, 'R': 1000.}
 
-    V2 = Verruijt(**aqprops)
+    V2 = wVerruijt(xw=0., yw=0., aqprops=aqprops)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.set_title(f"Verruijt k={k:.0f} m/d, H=vast={aqprops['D']:.0f} m, N={pars['N']:.3g} m/d, R={aqprops['R']:.0f} m")
+    ax.set_title(f"Verruijt k={aqprops['k']:.0f} m/d, H=vast={aqprops['D']:.0f} m, N={pars['N']:.3g} m/d, R={pars['R']:.0f} m")
     ax.set_xlabel("r [m]")
     ax.set_ylabel("h [m]"),
                 
@@ -1743,25 +1767,27 @@ if __name__ == '__main__':
     Qs =[0.001, 500, 1000, 2000, 3000]
 
     r = np.logspace(0, 3, 31)
-    R = aqprops['R']
+    R = pars['R']
     H = aqprops['D']
 
-    for Q0 in Qs:
-        pars['Q0'] = Q0
+    for Q in Qs:
+        pars['Q'] = Q
         clr = next(clrs)    
         # Stijghoogte (links en rechts)
-        dd = V2.dd(r=r, **pars)
+        dd = V2.dd(x=r, **pars)
         ax.plot(np.hstack((-r[::-1], r)), H - np.hstack((dd[::-1], dd)), color=clr,
-                label=f'Q0={Q0:.0f} m3/d')
+                label=f'Q={Q:.0f} m3/d')
 
         # Intrekgebied, radius = rI, links en rechts    
-        rI = V2.rdivD(**pars)
-        ddnI = V2.dd(r=rI, **pars)
-        ax.plot([-rI, rI], [H - ddnI, H - ddnI], ls='none', marker='v', mfc=clr,
+        rI = V2.rdiv(**pars)
+        if not np.isnan(rI):
+            ddnI = V2.dd(x=rI, **pars)
+            ax.plot([-rI, rI], [H - ddnI, H - ddnI], ls='none', marker='v', mfc=clr,
                 mec='k', ms=6, label=f'r_intr.={rI:.0f} m, dd={ddnI:.3g} m', zorder=5)    
 
     # Vaste randen
     H = aqprops['D']
+    R = pars['R']
     ax.plot([+R, +R], [0, H], '--', color='blue', lw=2, label='vaste rand')
     ax.plot([-R, -R], [0, H], '--', color='blue', lw=2, label='')
 
@@ -1779,13 +1805,13 @@ if __name__ == '__main__':
 
     # %%
     # Bodemconstanten, gebiedsradius, voeding, onttrekking en putstraal
-    aqprops = {'k': 10, 'D': 20, 'R':1000.}
-    pars = {'Q0': 1200., 'N': 0.002}
+    aqprops = {'k': 10, 'D': 20}
+    pars = {'Q': 1200., 'N': 0.002, 'R':1000.}
 
-    V2 = Verruijt(**aqprops)
+    V2 = wVerruijt(xw=0., yw=0., aqprops=aqprops)
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.set_title(f"Verruijt k={k:.0f} m/d, D=variabel, HR={aqprops['D']:.0f} m, N={pars['N']:.3g} m/d, R={aqprops['R']:.0f} m")
+    ax.set_title(f"Verruijt k={aqprops['k']:.0f} m/d, D=variabel, HR={aqprops['D']:.0f} m, N={pars['N']:.3g} m/d, R={pars['R']:.0f} m")
     ax.set_xlabel("r [m]")
     ax.set_ylabel("h [m]"),
                 
@@ -1794,21 +1820,22 @@ if __name__ == '__main__':
     Qs =[0.001, 500, 1000, 1500, 2000] #  2500]
 
     r = np.logspace(0, 3, 31)
-    R = aqprops['R']
+    R = pars['R']
 
-    for Q0 in Qs:
-        pars['Q0'] = Q0
+    for Q in Qs:
+        pars['Q'] = Q
         clr = next(clrs)    
         # Stijghoogte (links en rechts)
-        h = V2.h(r=r, **pars)
+        h = V2.h(x=r, **pars)
         ax.plot(np.hstack((-r[::-1], r)), np.hstack((h[::-1], h)), color=clr,
-                label=f'Q = {Q0:.0f}')
+                label=f'Q = {Q:.0f}')
 
         # Intrekgebied, radius = rI, links en rechts
-        rI = np.sqrt(Q0 / (np.pi * pars['N']))
-        rI = V2.rdivh(**pars)
-        hI = V2.h(r=rI, **pars)
-        ax.plot([-rI, rI], [hI, hI], ls='none', marker='v', mfc=clr,
+        rI = np.sqrt(Q / (np.pi * pars['N']))
+        rI = V2.rdiv(**pars)
+        if not np.isnan(rI):
+            hI = V2.h(x=rI, **pars)
+            ax.plot([-rI, rI], [hI, hI], ls='none', marker='v', mfc=clr,
                 mec='k', ms=6, label='intrekgrens', zorder=5)    
 
     # Vaste randen
@@ -1827,18 +1854,20 @@ if __name__ == '__main__':
     ax.text(0.6, 0.6, "Vaste pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     leg = ax.legend(loc='lower left', fontsize=10)
     leg.set_bbox_to_anchor((0.10, 0.11, 0.3, 0.5), transform=ax.transAxes)
+    
+    # plt.show()
 
     # %% [markdown]
     # ## Voorbeeld Blom, axiaal symmetrisch
 
     # %%
-    # Blom axiaal symmetrisch, fixed Q0 and varying R
+    # Blom axiaal symmetrisch, fixed Q and varying R
 
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
-    pars = {'Q0': 300, 'N': 0.003}
+    pars = {'Q': 300, 'N': 0.003}
     r = np.linspace(0, 300, 301)[1:]
 
-    B2 = Blom(**aqprops)
+    B2 = wBlom(xw=0., yw=0., aqprops=aqprops)
 
     # Head
     ax = newfig(f"Blom, axiaal-symmetrisch, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}",
@@ -1846,28 +1875,28 @@ if __name__ == '__main__':
                 figsize=(10, 6))
 
     clrs = cycle('rbgmkcy')
-    for Q0 in np.array([1., 1.5, 2., 2.5, 3.0]) * 500.:
+    for Q in np.array([1., 1.5, 2., 2.5, 3.0]) * 500.:
         clr = next(clrs)
-        pars['Q0'] = Q0
-        R = B2.getR(R=B2.R, **pars)
-        label = f"Q0 = {pars['Q0']:.3g}, N={pars['N']:.3g}"
-        h = B2.h(r=r, **pars)
+        pars['Q'] = Q
+        R = B2.getR(R=r.mean(), **pars)
+        label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
+        h = B2.h(x=r, **pars)
         ax.plot(np.hstack((-r[::-1], r)), np.hstack((h[::-1], h)), color=clr, label=label)
 
         rd = B2.rdivh(**pars)
-        hd = B2.h(r=rd, **pars)
+        hd = B2.h(x=rd, **pars)
         ax.plot([-rd, rd], [hd, hd], 'o', color=clr, label=f"rd={rd:.3g} m, hd={hd:.3g} m")
-        HR = B2.D - pars['N'] * B2.c
+        HR = B2.aq['D'] - pars['N'] * B2.aq['c']
         ax.plot([-R, R], [HR, HR], '.', color=clr, label=f'R={R:.3g} m, h={HR:.3g} m')
 
     ax.text(0.1, 0.6, "Variabele pakketdikte voor r < R", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=6, loc='lower right')
 
-    plt.show()
+    # plt.show()
 
     # %%
     # Drawdown
-    B2 = Blom(**aqprops)
+    B2 = wBlom(xw=0., yw=0., aqprops=aqprops)
 
     ax = newfig(f"Blom, axial-symmetrisch, k={aqprops['k']:.1f}, D={aqprops['D']:.1f}",
                 "r [m]", "drawdown [m]",
@@ -1875,24 +1904,21 @@ if __name__ == '__main__':
     ax.invert_yaxis()
 
     clrs = cycle('rbgmkcy')
-    for Q0 in np.array([1., 1.5, 2., 2.5, 3.0]) * 500.:
+    for Q in np.array([1., 1.5, 2., 2.5, 3.0]) * 500.:
         clr = next(clrs)
-        pars['Q0'] = Q0
-        R = B2.getR(R=B2.R, **pars)    
-        dd = B2.dd(r=r, **pars)
-        label = f"Q0 = {pars['Q0']:.3g}, N={pars['N']:.3g}"
+        pars['Q'] = Q
+        R = B2.getR(R=r.mean(), **pars)    
+        dd = B2.dd(x=r, **pars)
+        label = f"Q = {pars['Q']:.3g}, N={pars['N']:.3g}"
         ax.plot(np.hstack((-r[::-1], r)), np.hstack((dd[::-1], dd)), color=clr, label=label)
 
-        rd = B2.rdivD(**pars)
-        ddnd = B2.dd(r=rd, **pars)
-        ax.plot([-rd, rd], [ddnd, ddnd], 'o', color=clr, label=f"rd={rd:.3g} m, ddnd={ddnd:.3g} m")
-        ddnR = pars['N'] * B2.c
-        ax.plot([-R, R], [ddnR, ddnR], '.', color=clr, label=f'R={R:.3g} m, ddnd={0.:.3g} m')
+        ddR = B2.dd(x=R, **pars)
+        ax.plot([-R, R], [ddR, ddR], '.', color=clr, label=f'R={R:.3g} m, ddnd={0.:.3g} m')
 
     ax.text(0.1, 0.6, "Vaste pakketdikte voor r < R", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=6, loc='lower right')
 
-    plt.show()
+    # plt.show()
 
     # %% [markdown]
     # ### Demonstratie van de voortgang van het iteratieproces volgens Newton om R te vinden waar de verlaging gelijk is aan Nc
@@ -1902,12 +1928,82 @@ if __name__ == '__main__':
     # Voor de iteraties is de afgeleide nodig van de fuctie $y(R)$ zie boven. De tweede grafiek toont de afgeleide, zowel analytisch als numeriek berekent ter controle.
 
     # %%
-    aqprops = {'k': 30.0, 'D': 20.0, 'c': 200.0, 'R': 1.0}
-    pars = {'Q0': 1200., 'N':0.02}
+    aqprops = {'k': 30.0, 'D': 20.0, 'c': 200.0}
+    pars = {'Q': 1200., 'N':0.02, 'R': 1.0}
 
-    B2 = Blom(**aqprops)
-    ax = B2.plot_newton_progress(R=1., Q0=1500.0, N=0.002)
+    B2 = wBlom(xw=0., yw=0., aqprops=aqprops)
+    ax = B2.plot_newton_progress(R=1., Q=1500.0, N=0.002)
     ax.set_ylim(-0.5, 2.5)
 
-    ax = B2.plot_derivative_of_y(R=1, Q0=1200.0, N=0.002)
+    ax = B2.plot_derivative_of_y(R=1, Q=1200.0, N=0.002)
 
+    # plt.show()
+
+    # %% Bruggeman 370_01 example
+    # Drawdown due to a well in a leaky aquifer were kD and c jump at x=0 
+    
+    # Aquifer parameters
+    kD1, kD2, c1, c2 = 250., 1000., 250, 1000.
+    aqprops = {'kD1': kD1, 'kD2': kD2, 'c1': c1, 'c2': c2}
+    Q = 1500. # m3/d
+    pars = {'Q': Q}
+    # Coordinates
+    x = np.linspace(-2000, 2000, 401)
+    y = None
+
+    # Well position
+    xw = 200.
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    
+    ax.set_title("Bruggeman 370_01, verification, \n" +
+                 fr"xw={xw:.4g} m, Qw={Q:.4g} m3/d\nkD1={kD1:.4g} m2/d, kD2={kD2:.4g} m2/d, c1={c1:.4g} d, c2={c2:.4g} d", fontsize=12)
+    ax.set_xlabel("x [m]")
+    ax.set_ylabel("phi [m]")
+    ax.grid(True)
+
+
+    # Show symmetrie for xw > 0 and xw < 0 by interchanging kD1 <-> kD2, c1 <-> c2 
+    Br1 = Brug370_1(xw=xw, yw=0., aqprops={'kD1': kD1, 'kD2': kD2, 'c1': c1, 'c2': c2})
+    X, Y, Phi1 = Br1.dd(x, y, **pars)
+
+    Br2 = Brug370_1(xw=xw, yw=0., aqprops={'kD1': kD2, 'kD2': kD1, 'c1': c2, 'c2': c1})
+    X, Y, Phi2 = Br2.dd(x, y, **pars)
+
+    # Compare Brug370_01 with De Glee leaky aquifer solution
+    Br3 = Brug370_1(xw=xw, yw=0, aqprops={'kD1': kD1, 'kD2': kD1, 'c1': c1, 'c2': c1})
+    X, Y, Phi3 = Br3.dd(x, y, **pars)
+    
+    # Using same kD2 and c2 should give De Glee
+    dGlee1 = wDeGlee(xw=xw, yw=0, aqprops={'kD': kD1, 'c': c1})
+    PhiGl1 = dGlee1.dd(x, y, **pars)
+
+    # Compare Brug370_01 with De Glee leaky aquifer solution
+    Br4 = Brug370_1(xw=xw, yw=0, aqprops={'kD1': kD2, 'kD2': kD2, 'c1': c2, 'c2': c2})
+    X, Y, Phi4 = Br4.dd(x, y, **pars)
+
+    # Using same kD1 and c1 should give De Glee
+    dGlee2 = wDeGlee(xw=xw, yw=0, aqprops={'kD': kD2, 'c': c2})
+    PhiGl2 = dGlee1.dd(x, y, **pars)
+
+    # Show the combined results
+    if X.ndim == 1:
+        ax.invert_yaxis()
+        ax.plot(X, Phi1, label=f"Brug initial   {Br1.aq}")
+        ax.plot(X, Phi2, label=f"Brug reversed, {Br2.aq}")
+        ax.plot(X, Phi3, label=f"As dGlee1, {Br3.aq}")
+        ax.plot(X, Phi4, '.', label=f"As dGlee2, {Br4.aq}")
+        ax.plot(X, PhiGl1, label=f"dGlee1, {dGlee1.aq}")
+        ax.plot(X, PhiGl2, '.', label=f"dGlee2, {dGlee2.aq}")
+    else: # If X and Y are 2D, then contour
+        levels = 15
+        CS = ax.contour(X, Y, Phi1, levels=levels)
+        ax.clabel(CS, levels=CS.levels, fmt="{:.2f}")
+        
+    ax.legend(loc='best', fontsize='x-small')
+    
+    
+    plt.show()
+
+
+# %%
