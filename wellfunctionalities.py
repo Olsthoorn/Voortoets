@@ -1,47 +1,35 @@
-# %% [markdown]
-# # Analytische oefeningen t.b.v de Voortoets
-# 
-# @Theo Olsthoorn (12-03-2024 .. 30-11-2024)
-# 
-# # Intro, verantwoording
-# 
-# Na de vorige vergadering van 12 maart 2024 heb ik een aantal aspecten geanalyseerd die van belang zouden kunnen zijn voor een relatief eenvoudige, analytische analyse van de impact van een ingreep op een grondwatersysteem. De analyse heb ik uitgevoerd en gedocumenteerd in voorliggend Jupyter (Python) notebook, dat uitleg en code bevat om het uitgelegde te kwantificeren en te laten zien.
-# 
-# Voor een aantal complexere concepten zoals vertraagde nalevering, debietverloop van een bemaling met constante verlaging, hoe lang het duurt voor de verlaging stationair wordt e.d. zijn vereenvoudigingen voorgesteld die in de praktijk goed zullen werken.
-# 
-# Voor een zinvolle analyse van een fysische ingreep in het grondwatersysteem, zoals een nieuwe puntonttrekking, bemaling of verandering van de loop of het niveau van oppervlaktewater, is een beeld nodig van de opbouw van de ondergrond en van de drainage in het gebied (de randvoorwaarden). Bovendien is men geïnteresseerd in de overlap van de impact met bijzondere beschermingsgebieden. Deze drie vormen van informatie zijn gebonden aan beschikbare kaarten zoals die van de habitatgebieden, het oppervlaktewater, en bodemlagen. De laatste twee zijn aanwezig in de kaarten waarop het grondwatermodel van Vlaanderen is gebaseerd. Deze kaarten bevatten ook de benodigde informatie over de waarden van de bodemconstanten, zoals doorlaatvermogen, weerstand tussen lagen en bergingscoëfficiënten. Mogelijk kunnen op basis van de beschikbare laagverbreidingskaarten ook complexere situaties worden gesignaleerd, zoals breuken en andere scherpere overgangen tussen gebieden,  die niet met eenvoudige formules kunnen worden geanalyseerd of waarvoor een aangepaste berekening kan worden voorgesteld of voorgeschreven. Het uit kaarten halen van de randvoorwaarden voor een berekening is vermoedelijk het meest complex of valt in de praktijk het meest op af te dingen. Uiteraard kunnen randvoorwaarden worden voorgeschreven zoals een invloedsradius of duur van de onttrekking waarmee moet worden gerekend, zoals dat nu reeds in de Voortoets het geval is.
-# 
-# Voor de benodigde onderliggende gegevens moet er i de Voortoets toegreep zijn tot het Vlaamse grondwatermodel, of althans de kaarten waar dit op gebaseerd is, zodat deze kaarten als een ruimtelijke database kunnen worden beschouwd en bevrraagd op bodemconstanten die voor een gegeven locatie moeten worden gebruikt.
-# 
-# Door op een dergelijke manier de voor elke vraag benodigde informatie op te vragen, kan de onderliggende machinerie van de voortoets steeds gemakkelijk worden aangepast en verbeterd naar nieuwe inzichten.
-# 
-# Het resultaat van de Voortoets zol op deze wijze ook steeds in lijn zijn met de eventueel naderhand uit te voeren bredere analyse, waar dan zonodig een ruimtelijk grondwatermodel aan te pas komt, dat immers op dezelfde gegevens is gebaseerd. Een kernpunt zou dus moeten zijn dat de gegevens die gebruikt worden in de voortoets dezelfde zijn als die in het ruimtelijke model van Vlaanderen, waarbij de voortoetsberekeningen zich zullen baseren op de ondergrond gegevens ter plaatse van de ingreep en het ruimtelijk model met de ruimtelijke variatie rekening houdt. 
-# 
-# De info-vraag van de Voortoets zal altijd zeer beperkt zijn, zodat de ICT-belasting navenant laag blijft en de informatie dus real-time over het internet (via een URL) moet kunnen worden opgevraagd en worden opgezocht op de ruimtelijke kaarten.
-# 
+# %% ImportS
 
-# %% [markdown]
-# # Imports voor de benodigde functionaliteit
-
-# %%
 import os
-import sys
 from abc import ABC, abstractmethod
-import matplotlib.pyplot as plt
-from matplotlib import patches
-import numpy as np
-from scipy.special import exp1
-from scipy.special import k0 as K0, k1 as K1
-from scipy.integrate import quad
-import pandas as pd
-from itertools import cycle
 from importlib import reload
 from inspect import signature
+from itertools import cycle
 
-# %% [markdown]
-# # Basisfuncties die verderop worden gebruikt:
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import patches
+from matplotlib.patches import PathPatch
+from matplotlib.path import Path
+from scipy.integrate import quad
+from scipy.signal import filtfilt
+from scipy.special import erfc, exp1
+from scipy.special import k0 as K0
+from scipy.special import k1 as K1
 
-# %% Theis and Hantush functions
+# %% Basic functionality
+
+class Dirs:
+    """Namespace for directories in project"""
+    def __init__(self):
+        self.home = '/Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/'
+        self.data = os.path.join(self.home, 'data')
+        self.images = os.path.join(self.home, 'images')
+    
+dirs = Dirs()
+os.path.isdir(dirs.data)
+os.path.isdir(dirs.images)
+
 
 def newfig(title, xlabel, ylabel, xlim=None, ylim=None, xscale=None, yscale=None, figsize=None):
     """Set up a new figure with a single axes and return the axes."""
@@ -59,6 +47,8 @@ def newfig(title, xlabel, ylabel, xlim=None, ylim=None, xscale=None, yscale=None
         ax.set_yscale(yscale)
     ax.grid(True)
     return ax
+
+# %% Theis and Hantush well functions
 
 def Wt(u):
     """Return Theis well function.
@@ -154,33 +144,54 @@ def Wb1(tau, rho=0):
     return Wh(u, rho)
 
 def SRtheis(T=None, S=None, r=None, t=None):
-    """Return Step Responss for the Theis well function."""
+    """Return Step Response for the Theis well function.
+    
+    The step response is a function of time (tau).
+    It's just the Theis drawdown for unit extraction (Q=0).
+    Result = 0 for tau=0 is guaranteed.
+    """
     dt = np.diff(t)
     assert(np.all(np.isclose(dt[0], dt))), "all dt must be the same."
     u = r ** 2 * S / (4  * T * t[1:])
     return np.hstack((0, 1 / (4 * np.pi * T) * exp1(u)))
 
 def BRtheis(T=None, S=None, r=None, t=None):
-    """Return Block Response for the Theis well function"""
+    """Return Block Response for the Theis well function.
+    
+    The block response is a function of time (tau).
+    Results is 0 for tau = 0 is guaranteed.
+    """
     SR = SRtheis(T, S, r, t)
     return np.hstack((0, SR[1:] - SR[:-1]))
 
 def IRtheis(T=None, S=None, r=None, t=None):
+    """Return the impulse response for the Theis well drawdown.
+    
+    The impulse response is the derivative of the step response.
+    In practice it only has theoretical value.
+    It can be used instead of the block response, but then the
+    time step must be sufficiently small, much smaller than the
+    usual time step of one day.
+    """
     dt = np.diff(t)
     assert np.all(np.isclose(dt[0], dt))
     u = np.hstack((np.nan, r ** 2 * S / (4 * T * t[1:])))
     return np.hstack((0, 1 / (4 * np.pi * T) *  np.exp(-u[1:]) / t[1:])) * dt[0]
 
-#u = np.logspace(-4, 1, 51)
-u, rho = 0.004, 0.03
-print("Wh(u={:.4g}, rho={:.4g}) = {}".format(u, rho, Wh(u, rho)))
-tau = rho ** 2 / (4 * u)
-print("Wb(tau={:.4g}, rho={:.4g}) = {}".format(tau, rho, Wb(tau, rho)))
+# Check Hantush and Bruggeman functions for a well in a leaky aquifer.
+# u, rho = 0.004, 0.03
+# print("Wh(u={:.4g}, rho={:.4g}) = {}".format(u, rho, Wh(u, rho)))
+# tau = rho ** 2 / (4 * u)
+# print("Wb(tau={:.4g}, rho={:.4g}) = {}".format(tau, rho, Wb(tau, rho)))
 
 
 # %% Wells
 class WellBase(ABC):
-    """Base class for several well functions"""
+    """Base class for all well functions that follow.
+    
+    The abstractmethod decorator makes sure that all
+    well subclasses implement these method.
+    """
         
     def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
         """Initialize a well.
@@ -240,7 +251,7 @@ class WellBase(ABC):
 
     @staticmethod
     def check_xyt(x, y, t):
-        """Return checke x, y and t.
+        """Return check of x, y and t.
         
         x and y must both be floats of t is an array and vice versa.
         If x and y are arrays they must have the same shape.
@@ -327,6 +338,7 @@ class WellBase(ABC):
                 raise
         return r
     
+
 class wTheis(WellBase):
     """Class for handling drawdown and other calcuations according to Theis"""
     
@@ -402,6 +414,7 @@ class wTheis(WellBase):
         qx = WellBase.itimize(qx)
         qy = WellBase.itimize(qy)
         return (qx, qy)
+
 
 class wHantush(WellBase):
     """Clas for computing drawdown and other values according to Hantush."""
@@ -494,6 +507,7 @@ class wHantush(WellBase):
     
 
 class wDupuit(WellBase):
+    """General implementation of the Dupuit well function."""
     
     def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
         """Return drawdown according to Dupuit.
@@ -572,6 +586,7 @@ class wDupuit(WellBase):
         """Return radius of water divide."""
         return np.NaN     
 
+
 class wDeGlee(WellBase):
     """Axial symmetric flow to well in semi-confiende aqufier according to De Glee.
     
@@ -644,8 +659,14 @@ class wDeGlee(WellBase):
         qx = WellBase.itimize(qx)
         qy = WellBase.itimize(qy)
         return (qx, qy)
-        
+
+
 class Brug370_1(WellBase):
+    """Class that implemnents Bruggemans solution 370_01, which
+    implements the steady-state drawdown due to a well in a leaky aquifer of
+    which the transmissivity and the resistance of the overlying
+    aquitard jump at x=0.
+    """
 
     def __init__(self, xw=None, yw=None,  rw=None, z1=None, z2=None, aqprops={}):
         """Return drawdown according to Bruggeman's (1999) solution 370_01.
@@ -780,7 +801,7 @@ class Brug370_1(WellBase):
     def qxqy(self, *args, **kwargs):
         raise NotImplementedError("qxqy is not implemented for Brug370_1")
 
-# %% Verruijt (WellBase)
+
 class wVerruijt(WellBase):
     """Axial symmetric flow according to Verruijt and Blom.
     
@@ -1120,6 +1141,7 @@ class wBlom(WellBase):
         ax.legend()
         return ax
 
+# %% Implementation of function computing drawdown or head in a 1D cross section.
 
 class StripBase(ABC):
     """Base class for several 1D groundwater flow functions."""
@@ -1149,12 +1171,7 @@ class StripBase(ABC):
     def Qx(self, *args, **kwargs):
         """Return the dicharge at x values."""
         pass
-    
-    @abstractmethod
-    def h(self, *args, **kwargs):
-        """Return head in water table aquifer."""
-        pass
-    
+        
     @staticmethod
     def check_x(x=None):
         """Return x as float array for values >= 0"""       
@@ -1173,9 +1190,130 @@ class StripBase(ABC):
         return x, t
     
 
-class Verruijt1D(StripBase):
-    """Verruijt 1D solution."""
+class Section(StripBase):
+    """This class implements the head or drawdown in a cross section that between xL and xR
+    is a water table aquifer or a confined aquifer with recharge. Outside, i.e. for x < xL
+    and x > xR the aquifer is semi.confined. The flow and the head are both continuous
+    at x = xL and x=xR. This solution is meant to simulate a cross section through 
+    a high and dry area bounde on both sides by a low marshy, well-drained area.
+    Only steady-state flow is considered.
+    """
     
+    def __init__(self, boundaries={}, aqprops={}):
+        """Return a Section object.
+        
+        The aquifer section has uniform kD.
+        For xL < x< xR it has recharge N.
+        For x < xL and x > xR the aquifer is leaky with the given values for lamb_L and lamb_R.
+        For fixed heads at xL and xR set lamb_L and lamb_R to zero and the
+        head at xL and xR will be hL and hR respectively.
+
+        This head, therefore shows the head in a strip of land between xL and xR
+        bounded on both sides by marshy or well-drained areas characterized by
+        their characteristic length lambda, which can be different at the left and
+        at the right.
+
+        Parameters
+        ----------
+        boundaries: dictionary {xL, xR, hL, hR}
+            physical boundaries of the section.
+        aqprops: dictionary {kD, lambda_L, lambda_R}
+            aquifer properties
+        """        
+        self.aq = aqprops
+        if not {'kD', 'lambda_L', 'lambda_R'}.issubset(aqprops):
+            raise ValueError("kD, lambda_L and or Lambda_R missing in aqprops!")
+        
+        self.bnd = boundaries
+        if not {'xL', 'xR', 'hL', 'hR'}.issubset(boundaries):
+            raise ValueError("xL, xR, hL and or hR missing in boundaries dict.")
+        return 
+            
+
+    def h(self, x, N=None):
+        """Return head for the given x-values.
+        
+        Parameters
+        ----------
+        x: np.ndarray or float
+            Coordinate(s) where head is computed. x may extend beyond xL and xR.
+        N: float
+            Recharge.
+        """
+        xL, xR = self.bnd['xL'], self.bnd['xR']
+        hL, hR = self.bnd['hL'], self.bnd['hR']
+        kD, lamb_L, lamb_R = self.aq['kD'], self.aq['lambda_L'], self.aq['lamb_R']
+        L = xR - xL        
+        
+        # Flow at left-hand area boundary (at x=xL)
+        QL = self.Q(x=x, N=N)
+        QR = QL + N * L
+                
+        # Head above hL and HR caused by QL and QR respectively
+        dhR = +QR  * lamb_R / kD
+        dhL = -QL  * lamb_L / kD
+        
+        x = StripBase.check_x(x)
+        h = np.zeros_like(x)
+        
+        # Deal with the three area separately
+        mask_L = x < xL
+        mask_R = x > xR
+        mask_C = ~(mask_L | mask_R)
+        
+        # Center area
+        h[mask_C] = (hL - QL * lamb_L / kD - QL / kD * (x[mask_C] - xL)
+                    - N / (2 * kD) * (x[mask_C] - xL) ** 2)
+        # Left area
+        h[mask_L] = hL + dhL * np.exp(+(x[mask_L] - xL) / lamb_L)
+        # Right area
+        h[mask_R] = hR + dhR * np.exp(-(x[mask_R] - xR) / lamb_R)
+        
+        return WellBase.itimize(h)
+
+
+    def Qx(self, x, N=None):
+        """Return the discharge Qx for given x-values.
+        
+        Parameters
+        ----------
+        x: np.ndarray or float
+            Coordinate(s) where head is computed. x may extend beyond xL and xR.
+        N: float
+            Recharge.        
+        """
+        xL, xR = self.bnd['xL'], self.bnd['xR']
+        kD, lamb_L, lamb_R = self.aq['kD'], self.aq['lambda_L'], self.aq['lambda_R']
+        L = xR - xL
+            
+        # Discharge at xL
+        QL = (-kD / (L + lamb_L + lamb_R)  * (hR - hL + N / (2 * kD) * L ** 2 +
+                                            N / kD * L * lamb_R))
+        QR = QL + N * L
+        
+        x = StripBase.check_x(x)
+        Q = np.zeros_like(x)
+        
+        # Deal with the three area separately
+        mask_L = x < self.bnd.xL
+        mask_R = x > self.bnd.xR
+        mask_C = ~(mask_L | mask_R)
+
+        Q[mask_L] = QL * np.exp(+(x[mask_L] - self.bnd.xL) / (lamb_L))
+        Q[mask_C] = QL + N * (x[mask_C] - self.bnd.xL)
+        Q[mask_R] = QR * np.exp(-(x[mask_R] - self.bnd.xR) / (lamb_R))
+        
+        return WellBase.itimize(Q)
+
+
+class Verruijt1D(StripBase):
+    """Verruijt 1D solution.
+    
+    The assumptions are the same as for the axial symmetric Verruijt solution.
+    Hence, the extraction is at x=0, while head is unaltered (drawdown = 0) at
+    x = L. It's a cross section with steady state flow, for x >= 0 with
+    recharge on top.
+    """    
     def __init__(self, aqprops={}):
         """Return a 1D Verruijt object.
         
@@ -1257,8 +1395,25 @@ class Blom1D(StripBase):
     """Class for Blom's solutions for 1D flow.
     
     Blom has Verruijt for x < x[dd == Nc] and mazure for x > x[dd == Nc]
+    Mazure is steady state flow into or from a leaky aquifer with
+    zero head on top and a given head at x=0. h(x) = h(0) exp(- x/lambda)
+    
+    It is meant to simulate an area (x>0) where for smaller x values
+    the drawdown is high enough to stop drainage in which the recharge
+    feeds the aquifer instead of flowing to the drainage ditches and drains,
+    while for larger distance, the drawdown is not sufficient to capture
+    al recharge, where some of the recharge is still drained.
+    The boundary between the two zones is where the drawdown equals Nc
+    with N the recharge and c the drainage resistance.
     """
     def __init__(self, aqprops={}):
+        """Return a Blom1D object.
+        
+        Parameters
+        ----------
+        aqprops: dictonary
+            aquifer properties {'kD', 'c'} or {'k', 'D', 'c'}
+        """
         super().__init__(aqprops=aqprops)
         
         WellBase.check_keys({'kD', 'c'}, self.aq)
@@ -1318,347 +1473,199 @@ class Blom1D(StripBase):
             return np.nan
         
         
+# %% Generate a line that can illustrate ground surface elevation
+
+def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
+    """Return a ground surface elevation for visualization purposes.
+    
+    The elevation will be 0 at xL and xR and approach yM in the middle.
+    
+    Random numbers are used that are smoothed by filfilt using integer Lfilt
+    as the filter width, and are finally multiplied
+    
+    $$ y_M \times np.sqrt{\cos \left(\pi \frac{x - xM}{L}\right)}$$
+    
+    where $yM$ is the maximum elevation.
+
+    Lfilt can be adapted to the number points in x.
+
+    Parameters
+    ----------
+    x : ndarray
+        Coordinates.
+    xL, xR : floats, optional
+        Left and right coordinate bounds for the surface. Defaults to first and last x values.
+    yM : float, optional
+        Approximate maximum height of the surface before smoothing. Default is 1.
+    Lfilt : int, optional
+        Length of the smoothing filter applied with scipy.signal.filtfilt. Default is 20.
+    seed : int, optional
+        Random seed for reproducibility.
+
+    Returns
+    -------
+    ndarray
+        Smooth ground surface elevation.
+    
+    @TO 2025-02-10
+    """
+    # The points of zero elevation, xL and xR are optional
+    if xL is None:
+        xL = x[0]
+    if xR is None:
+        xR = x[-1]
+        
+    L, xM = xR - xL, 0.5 * (xL + xR)
+    
+    y = yM * np.sqrt(np.abs(np.cos(np.pi * (x - xM) / L)))
+
+    # Ensure Lfilt is at least 2 to avoid issues with filtfilt
+    Lfilt = max(Lfilt, 2)
+
+    # Random noise generation with optional seed
+    rng = np.random.default_rng(seed)
+    z = rng.random(len(x))
+
+    # Apply smoothing and return elevation (method 'gust' prevents padding problems)
+    filtered = y * filtfilt(np.ones(Lfilt) / Lfilt, 1, z, method='gust')
+    return filtered
+
+
 # %%
+class Mirrors():
+    """Class to compute mirror ditches plus signs or mirror wells plus signs
+    
+    In case of ditches the position of the ditches are returned with their signs.
+    In case of a well, the mirror well positions are returned.
+    """
+    def __init__(self, xL, xR, xw=None, N=30, Lclosed=False, Rclosed=False):
+        """Return x-coordinate of mirror points given a strip between xL and xR, xp of point of well.
 
-# %% [markdown]
-# # Formule van Verruijt versus die van Dupuit en de formule van Blom
-# 
-# ## Het idee achter deze formules
-# 
-# Het idee achter de formule van Verruijt is een onttrekking in het centrum van een circulair gebied dat gevoed wordt met een constant en uniform neerslagoverschot. Het stroombeeld is hiermee uniek bepaald. Het stijghoogtebeeld is echter alleen bepaald wanneer deze ergens, op een, op zichzelf willekeurige afstand van de put wordt gefixeeerd. De formule van Verruijt is stationair and kan direct worden afgeleid voor een watervoerend pakket met vrije watertafel, waarin de effectieve dikte van het watervoerend pakket varieert met de hoogte van de watertafel. Als het gebied groot genoeg is, is er altijd een afstand waarbinnen de voeding van de put geheel richting put stroomt, en waarbuiten dit van de put af stroomt. Deze afstand vormt de waterscheiding, waarop de watertafel horizontaal is. De afstand tot deze waterscheiding neemt toe met de grootte van de onttrekking.
-# 
-# De wiskundige oplossing voor de situatie die Verruijt voor ogen had, is direct  vergelijkbaar met die volgens Dupuit, die geen rekening hield met het neerslagoverschot. De verlaging volgens Verruijt en Dupuit, dat wil zeggen de oorspronkelijke stijghoogte minus de nieuwe, verlaagde stijghoogte, is voor beide situaties dezelfde.
-# 
-# De situatie die Blom voor ogen had, is een put in heen gebied met voldoende sloten, zodat de weerstand de sloten mag worden beschouwd als een vlakdekkende drainageweerstand. Voorafgaand aan de onttrekking draineren deze sloten de voeding van het gebied vanuit het neerslagoverschot. Binnen een nader te bepalen afstand rond de put vallen alle sloten droog; daarbuiten blijven zijn draineren. De drainage door de sloten die droogvallen komt volledig ten goede aan het door de put onttrokken water. Buiten het gebied met de nu droge sloten is de drainage afgenomen maar niet tot nul, en komt zodoende alleen de afgenomen drainage ten goede aan het onttrokken water. De drainage op de grens van het gebied met droge sloten is juist gelijk aan nul, daarbuiten neemt de deze asymptotisch toe tot het totale neerslagoverschot.
-# 
-# Bij een vlakdekkende drainageweerstand $c$, per definitie gelijk aan de gemiddelde grondwaterstand boven het slootpeil, $h$ gedeeld door het neerslagoverschot $N$, is de verlaging $s_R$ op de grens van het gebide met drooggevallen sloten en niet-drooggevallen sloten gelijk aan $s_R=Nc$.
-# 
+        Parameters
+        ----------
+        xL, xR: floats
+            x-coordinates of left and right of strip between the two head boundaries
+        N: int
+            number of mirror wells positions
+        """
+        if xL > xR:
+            xL, xR = xR, xL
+        self.xw = xw
+        self.xL = xL
+        self.xR = xR
+        self.Lclosed = Lclosed
+        self.Rclosed = Rclosed
+        self.N = N
+        
+        # The actual well (May be None for just mirroring ditches)
+        self.xw = xw
+        self.sw = 1
 
-# %% [markdown]
-# ## Verruijt voor 1D stroming alleen langs de x-as
-# 
-# We kunnen de Formule van Verruijt zowel afleiden voor radiale situatie als die met uitsluitend stroming in de $x$-richting. Beide formules kunnen in de praktijk van pas komen en onderlinge vergelijking geeft een beter inzicht in het gedrag dat ze beschrijven.
-# 
-# In de eendimensionale situatie is de onttrekking geen put maar ene lijnonttrekking en is de cirkelvormige rand een rechte rand met gegeven grondwaterstand op een gegeven afstand $L$. De lijnonttrekking $Q$ heeft dimensie [L2/T] in plaats van [L2/T] bij de axiaal symmetrische situatie.
-# 
-# De waterbalans op afstand $x$ van de onttrekking bij neerslagoverschot $N$ is dan
-# 
-# $$ Q(x) = Q(0) - N x = + kh \frac{dh}{dx}$$
-# 
-# waarbij de stroming naar de onttrekking toe (links) posiftief wordt genomen tegen de richting $x$ in, zodat een onttrekking postief is.
-# 
-# $$ Q_0 x - \frac 1 2 N x^2 = \frac 1 2 k h^2 + C$$
-# 
-# en met gegeven stijghoogte $H$ op $x=L$ volgt voor $C$
-# 
-# $$ Q_0 L - \frac 1 2 N L^2 = \frac 1 2 k H^2 + C$$
-# 
-# Deze twee vergelijkingen van ekaar aftrekken elimineert constante $C$, zodat
-# 
-# $$ Q_0 (x - L) - \frac 1 2 N (x^2 - L^2) = \frac 1 2 k (h^2 - H^2) $$
-# 
-# oftewel
-# 
-# $$ h^2 - H^2  = \frac N k (L^2 - x^2) - \frac {2 Q_0} k (L - x)$$
-# 
-# #### Waterscheiding
-# 
-# $$ 2 h \frac{dh}{dx} |_{x=x_D} = - 2 \frac N k x_D + 2 \frac{Q_0} k = 0. \,\,\,\,\,\,\rightarrow\,\,\,\,\,\, x_D =\frac {Q_0} N$$
-# 
-# 
-# 
-# Bij constant doorlaatvermogen kunnen we $h + H$ afsplitsen en schrijven als $2D$ met $D$ de pakketdikte
-# 
-# $$ h^2 - H^2 = (h - H)(h + H) = (h - H) 2D $$
-# 
-# Zodat in bij uniform doorlaatvermogen $kD$ geldt
-# 
-# $$ h - H  = \frac N {2kD} (L^2 - x^2) - \frac {Q_0} {kD} (L - x)$$
-# 
-# Met $h-H = -s$ de verlaging, volgt voor deze verlaging de volgende uitdrukking
-# 
-# $$ s  = \frac {Q_0} {kD} (L - x) -\frac N {2kD} (L^2 - x^2)$$
+        # Starting values for the coordinates of the mirrors
+        # The right ditch (xR) and the left ditch (xL)
+        xRD, xLD = [xR], [xL]
+        
+        # first mirror wells signs are opposite to self.sw
+        if self.xw is not None:
+            sRD = [self.sw if Rclosed else -self.sw]
+            sLD = [self.sw if Lclosed else -self.sw] 
+        
+        # No wells, just ditches. First ditches have positive sign
+        # that may be inverted later based on Lclosed and Rclosed
+        else:
+            sRD, sLD = [1], [1]
 
-# %% [markdown]
-# ## Formule van Blom, ééndimensionaal
-# 
-# Bij blom is de stijghoogte op $x=L$ niet gefixeerd, maar is de drainage daar net nul. Er is daar dus nog een restverlaging die wordt veroorzaakt door de lek (afvoerreductie) die de onttrekking veroorzaakt in het gebied waar de sloten nog wel blijven drainenen, zij het niet het volledige neerslagoverschot. Schrijven we de grondwaterstand op $x=\infty$ gelijk aan $H_\infty$ en die op $x=L$ als $H_L$ dan volgt met $h^2 - H_L^2 = (h^2 - H_\infty^2) - (H_L^2 - H_\infty^2)$
-# 
-# 
+        # Get mirror ditch or well coordinates starting with
+        # either the right ditch (xRD) or with the left  ditch (xLD)
+        for i in range(1, N):
+            if i % 2 == 1:
+                xRD.append(xL - (xRD[-1] - xL))
+                xLD.append(xR - (xLD[-1] - xR))
+                sRD.append(sRD[-1] if Lclosed else -sRD[-1])
+                sLD.append(sLD[-1] if Rclosed else -sLD[-1])
+            else:
+                xRD.append(xR - (xRD[-1] - xR))
+                xLD.append(xL - (xLD[-1] - xL))
+                sRD.append(sRD[-1] if Rclosed else -sRD[-1])
+                sLD.append(sLD[-1] if Lclosed else -sLD[-1])
+                
+        self.xLD = xLD
+        self.xRD = xRD
+        self.sLD = sLD
+        self.sRD = sRD
+        
+        # If a well position was given we don't want the mirror ditches but the mirror wells:
+        if self.xw is not None:
+            xM = 0.5 * (xR + xL)
+            deltaR = xR - xw     # mirror position over right ditch
+            deltaL = xL - xw     # mirror position over left  ditch
+            for i in range(len(xRD)):
+                if self.xRD[i] > xM:
+                    self.xRD[i] += deltaR
+                else:
+                    self.xRD[i] -= deltaR
+            for i in range(len(xLD)):
+                if self.xLD[i] < xM:
+                    self.xLD[i] += deltaL
+                else:
+                    self.xLD[i] -= deltaL
+        return
 
-# %% [markdown]
-# ### Bij variabele pakketdikte
-# 
-# $$ h^2 - H_\infty^2  = \frac N k (L^2 - x^2) - \frac {2 Q_0} k (L - x) + (H_R^2 - H_\infty^2)$$
-# 
-# De afgeleide naar $x$ is
-# 
-# $$ 2 h_L \frac{dh}{dx} = - 2 \frac {N L} k + \frac {2 Q_0} k$$
-# 
-# $$ \frac{dh}{dx} = - \frac {N x} {k h} + \frac {Q_0} {k h}$$
-# 
-# en op $x=L$ is dit
-# 
-# $$ \frac{dh}{dx}|_{x=L} = - \frac {N L} {k h_L} + \frac {Q_0} {k h_L}$$
+    def show(self, ax=None, figsize=(8, 2), fcs=('yellow', 'orange')):
+        """Return picture of the ditches and the direction of the head change.
+        
+        Parameters
+        ----------
+        ax: matplotlib.Axes.axes or None
+            axis to plot on
+        fcs: tuple  of two strings
+            colors of the mirror strips and the central strips respectively
+        """
+        L = self.xR - self.xL
+        
+        if not ax:
+            _, ax = plt.subplots(figsize=figsize)   
 
-# %% [markdown]
-# ### Bij vaste pakkedite $D$ 
-# 
-# Hier geldt $h^2 - H_\infty^2 = -s\,2D$ en $H_R^2 - H_\infty^2 = -s_L\,2D$
-# 
-# Zodat in dat geval
-# 
-# $$ h - H_\infty  = \frac N {2kD} (L^2 - x^2) - \frac {Q_0} {kD} (L - x) + (H_R - H_\infty)$$
-# 
-# $$ -s = \frac N {2kD} (L^2 - x^2) - \frac {Q_0} {kD} (L - x) - s_L$$
-# 
-# en tenslotte
-# 
-# $$ s = \frac {Q_0} {kD} (L - x) - \frac N {2kD} (L^2 - x^2) + s_L$$
-# 
-# Met als afgeleide
-# 
-# $$ \frac{ds}{dx} = -\frac {Q_0} {kD} + \frac {Nx} {kD}$$
-# 
-# en voor $x=L$
-# 
-# $$ \frac{ds}{dx}|_{x=L} = -\frac {Q_0} {kD} + \frac {NL} {kD}$$
-# 
-# Behalve het teken is de wiskundige vorm van de afgeleide hetzelfde voor de situatie met als voor die zonder vaste pakketdikte. Bij variabele pakketdikte moet in plaats van de gehele pakketdikte $D$ die ter plekke van $x=L$ moet worden gebruikt $h_L$ worden ingevuld. In veel situaties is het verschil klein. Wanneer dit verschil relevant is, moet het verhang in de situatie met variabele pakketdikte iteratief worden berekend.
+        # Draw arrows for xLD ditches
+        for x, sgn in zip(self.xLD, self.sLD):
+            if sgn > 0:
+                y1, y2 = sgn, 0   # upward arrow
+            else:
+                y1, y2 = 0, -sgn  # downward arrow
+            ax.annotate("", xy=(x, y1), xytext=(x, y2),
+                        arrowprops=dict(arrowstyle="->", color="red"))
+            
+        # Draw arrow for xRD ditches
+        for x, sgn in zip(self.xRD, self.sRD):
+            if sgn > 0:
+                y1, y2 = sgn , 0
+            else:
+                y1, y2 = 0, -sgn
+            ax.annotate("", xy=(x, y1), xytext=(x, y2),
+                        arrowprops=dict(arrowstyle="->", color="blue")) 
 
-# %% [markdown]
-# ### Voor $x > L$, waar voeding door lek (verminderde afvoer) vanuit de sloten optreedt.
-# 
-# Voor $x > L$  hebben we voeding door lek vanuit de sloten via de drainageweerstand, die wordt gekarakteriseerd door de spreidingslengte $\lambda=\sqrt{kD c}$ met $c$ de drainageweerstand. De drainageweerstand is per definitie gelijk aan de gemiddelde grondwaterstand in het gebied met de sloten gedeeld doo de voeding, dus $c = (h_{gemiddeld} - H_{sloot}) / N$, met dimensie [L].
-# 
-# De oplossing voor de eendimensionale stationaire stroming in het gebied met nog drainerende sloten is dan
-# 
-# $$ s_{x>L} = s_L \exp(-\frac {x - L} \lambda),\,\,\,\,\,\, \lambda = \sqrt{kD c} $$
-# 
-# en de stroming
-# 
-# $$Q_{x \ge L} = s_L \frac{kD}{\lambda} \exp \left(-\frac {x-L} \lambda \right) $$
+        # Plot the strips and accentuate the central one
+        for xl in np.sort(np.hstack((self.xL - np.arange(self.N) * L, self.xR + np.arange(self.N - 1) * L))):
+            xr = xl + L
+            fc = fcs[1] if xl < 0 and xr > 0 else fcs[0]        
+            p = Path(np.array([[xl, xr, xr, xl, xl], [0, 0, -1, -1, 0]]).T, closed=True)
+            ax.add_patch(PathPatch(p, fc=fc, ec='black'))
 
-# %% [markdown]
-# Onttrekking Q_0 [m2/d] op $x=0$, met voeding uit neerslag gelijk aan N, waarbij de sloten tot $x=L$ droogvallen en daarbuiten bijven draineren. Waar voor de onttrekking alle sloten de voeding wegdraineerden, is dat voor $x < L$ niet meer het geval. Deze voeding komt nu ten goede aan de onttrekking. De situatie is dan hetzelfde als in het eendimensionale geval van Verruijt.
-# 
-#  Bij constante aangenomen doorlaatvermogen $kD$ geeft dit de volgende verlaging
-# 
-# $$ s = \frac{Q_0 (L - x)}{kD} - \frac{N \left(L^2 - x^2\right)}{2 kD} + s_L$$
-# 
-# met $s_L$ de verlaging op $x=L$
-# 
-# De afgeleide op $x=L$
-# 
-# $$ \frac{ds}{dx}|_{x=L} = -\frac{Q_0 L}{kD} + \frac{NL}{kD}$$
-# 
-# 
-# Voor $x > L$ wordt het pakket uitsluitend gevoed door lek, die wordt gekarakteriseerd door de spreidingslengte
-# 
-# $$\lambda = \sqrt{kD c}$$
-# 
-# waarin $c$ de zogenoemde drainageweerstand. Dit is de gemiddelde grondwaterstand tussen de sloten gedeeld door het het gedraigneeerde neerslagoverschot. De verlaging voor $x>L$ is dan
-# 
-# $$s_x = s_L \exp \left(- \frac {x-L} \lambda \right)$$ 
-# 
-# En het debiet $Q_{x \ge L} = -kD \frac{ds}{dx}$. Merk op dat $Q$ steeds positief is genomen in de negatieve $x$-richting, dus wanneer de stijghoogte met $x$ toeneemt en de verlaging met $x$ afneemt
-# 
-# $$ Q_{x \ge L} = -s_L \frac{kD} \lambda \exp \left(- \frac {x-L} \lambda \right)$$
-# 
-# end dus met voor $x=L$, waar $Q_L = Q_0 - L N$
-# 
-# $$ Q_0 - L N =  -s_L \frac{kD} \lambda$$
-# 
-# We kennen ook de verlaging $s_L$ voor $x=L$, want daar is de voeding gelijk aan de lek via de drainageweerstand
-# 
-# $$x=L \,\,\,\,\,\,\rightarrow\,\,\,\,\,\, N=\frac{H_\infty - H_L}{c} = \frac {s_L}{c}\,\,\,\,\,\,\rightarrow\,\,\,\,\,\, s_L = N c$$
-# 
-# met $ N c kD / \lambda = N c \lambda$ volgt
-# 
-# $$ Q_{x \ge L} = -N \lambda \exp \left(- \frac {x-L} \lambda \right)$$
-# 
-# en dus hebben wel voor $x=L$
-# 
-# $$Q_0 - L N = N c \frac{kD} \lambda$$
-# 
-# $$Q_0 - L N = N \lambda$$
-# 
-# en tenslotte
-# 
-# $$L = \frac{Q_0}{N} - \lambda$$
-# 
-# Voor de situatie met variabele dikte kan een correctie hierop worden uitgevoerd
-# 
-# $$L = \frac{Q_0}{N} - \frac {kh_Lc} \lambda =  \frac{Q_0}{N} - \frac{k h_L c}{\sqrt{kDc}} = \frac{Q_0}{N} - \lambda \sqrt{\frac {h_L} D} $$
+        ax.plot(0.5 * (self.xL + self.xR), 0, 'ro')
+        
+        if self.xw is not None:
+            ax.annotate("", xy=(self.xw, self.sw), xytext=(self.xw, 0),
+                        arrowprops=dict(arrowstyle="->", color="green")) 
+        
+        ax.set_title(f"Mirror ditches with     Left: {"closed" if self.Lclosed else "open"}, Right: {"closed" if self.Rclosed else "open"}")
+        ax.set_ylim(-1, 1.1)
+        
+        # Don't want no yticks and no ticklabels
+        ax.set_yticks([])
+        return ax
+    
+        
 
-# %% [markdown]
-# 
-# #### Voor drainageweerstand $c=0$, gaat de formule van Blom over in die van Verruijt
-# 
-# Voor $c=0$ verloopt de voeding vanuit de sloten zonder enige weerstand. De plossing is dan dezelfde als met een vaste rand op $x=L$. Met toenemende weerstand en of doorlaatvermogen neemt $L$ af. $L=0$ wanneer $\frac{Q_0} N = \lambda$ dus wanneer
-# 
-# $$Q_L = Q_0 = N \lambda$$
-# 
-# Dit is de situatie wanneer de verlaging op $x=0$ exact gelijk is aan $N c$ en de sloot op $x=0$ dus net niet meer draineert.
-# 
-# En wanneer $L=0$ geldt in feite dat de verlaging op $x=0$ kleiner of gelijk is aan $N c$ en de sloot op $x=0$ nog wel (enigszins) draineert.
-# 
-# $$ s_{x>0} = s_0 \exp \left(-\frac x \lambda \right)\,\,\,\,\,\, met\,\,\,\,\,\, Q_0 = s_0 \frac {kD} \lambda
-# \le  N c \frac{kD} \lambda = N \frac {\lambda^2} \lambda = N \lambda$$
-# 
-# en daar hier $s_0 = N c$ volgt
-# 
-# $$ Q_0 = N c \frac {kD} \lambda  = N \lambda$$
-# 
-# Dus, $L=0$ wanneer de onttrekking zodanig is dat de verlaging op $x=0$ precies gelijk is aan de voeding.
-# 
-# Wellicht is interessant op te merken, dat de totale toestroming vanuit het gebied met nog wel drainerende sloten, $r \ge R$ gelijk is aan $N \lambda$ dus als het ware geschiedt vanuit een strook sloten ter breedte $\lambda$.
-# 
-# In de situatie met sloten die deels droogvallen kan de afstand $L$ tot waar dat het geval is direct worden berekend uit
-# 
-# $$L = \frac{Q_0}{N} - \lambda$$
-# 
-# Zoals we zullen zien is dit is bij axiaal symmetrische stroming niet het geval.
-
-# %% [markdown]
-# ## Verruijt axiaal symmetrisch
-
-# %% [markdown]
-# ### Variabele pakketdikte $h$
-# 
-# De formule van Verruijt voor axiale stroming naar een put gaat er ook van uit dat de onttrekking geheel wordt gevoed vanuit het neerslagoverschot. Ook hier is de stroming volledig bepaald door de onttrekking en het neerslagoverschot
-# 
-# $$ Q_r = Q_0 - \pi r^2 N = 2 \pi r k h \frac{dh}{dr} = \pi r k \frac {dh^2}{dr} $$
-# 
-# oftewel
-# 
-# $$ \frac{dh^2}{dr} = \frac {Q_0}{\pi k r} - \frac {r N }{k}$$
-# 
-# Integratie levert
-# 
-# $$ h^2 = \frac{Q_0}{\pi k} \ln r - \frac N {2 k} r^2 + C $$
-# 
-# De constante invullen geeft
-# 
-# $$ h_R^2 = \frac{Q_0}{\pi k} \ln R - \frac N {2 k} R^2 + C $$
-# 
-# Beide vergelijkingen van elkaar aftrekken elimineert deze integratieconstante
-# 
-# $$ h^2 - h_R^2 =  -\frac{Q_0}{\pi k} \ln \frac R r + \frac N {2 k} \left(R^2 - r^2\right) $$
-# 
-# de afgeleide van $dh/dr$ is
-# 
-# $$ \frac{dh}{dr}=\frac{Q_0}{2 \pi k h} \frac 1 r - \frac{N r}{ 2 k h} $$
-# 
-# In deze uitdrukking komt de nog onbekende pakketikte $h$ in het rechter lid voor, maar valt eruit op de waterscheiding, $r=R_S$, wanneer we de afgeleide gelijk aan nul stellen. dit levert
-# 
-# $$ \frac{Q_0}{2 \pi k h} \frac 1 R_S = \frac{N R_S}{k h} $$
-# 
-# Oftewel
-# 
-# $$ R_S = \sqrt{\frac{Q_0}{\pi N}} $$
-
-# %% [markdown]
-# ### Constante pakkedikte $D$
-# 
-# En voor een constante pakketdikte $D$, met $h^2 - h_R^2 = (h - h_R) \, 2 D$ en $h-h_R = -s$, wordt de verlaging 
-# 
-# $$ h - h_R = -s =-\frac{Q_0}{2 \pi kD} \ln \frac R r + \frac N {4 kD} \left(R^2 - r^2\right) $$
-# 
-# En dus geldt
-# 
-# $$ s = \frac{Q_0}{2 \pi kD} \ln \frac R r - \frac N {4 kD} \left(R^2 - r^2\right) $$
-# 
-# De afgeleide $ds/dr$ is
-# 
-# $$ \frac {ds}{dr} = -\frac{Q_0}{2 \pi kD} \frac 1 r + \frac {N r}{2 kD} $$
-# 
-# Het teken van de twee termen in het rechter lid zijn dan precies omgekeerd. De afgeleide gelijk aan nul stellen, voor de waterbalans, voor $r=R_S$ levert nu
-# 
-# $$ Q_0 = \pi R_S^2 N $$
-# 
-# Of
-# 
-# $$ R_S = \sqrt{\frac{Q_0}{\pi N}}$$
-# 
-# Dit volgde natuurlijk al direct uit de waterbalans. Dit is ookk de reden dat de ligging van de waterscheiding voor variabele en constante pakketdikte dezelfde is.
-# 
-
-# %% [markdown]
-# ## BLom axiaal-symmetrisch
-# 
-# De situatie die Verruijt voor ogen heeft is dezelfde als die van Blom met uitzondering van wat er gebeurt buiten radius $R$. Bij Verruijt is radius $R$ een vaste rand met verlaging nul en waarbinnen de situatie kan worden opgevat als het gebied met drooggevallen sloten waarbinnen het neerslagoverschot niet meer wordt gedraineerd, maar richting de put stroomt. Bij Blom markeert de radius $R$ ook het gebied zonder sloten, maar stroomt er ook buiten deze radius nog water in de richting van de put. De grondwaterstroom $Q_R$ is zowel bij Verruijt als bij Blom  gelijk aan $Q_0 - \pi R^2 N$. De grondwaterstroming over deze rand is bij Verruijt afkomstig van de vaste rand op $r=R$ en bij Blom komt die van grotere afstanden uit verminderde slootafvoer. Er is bij Blom op $r>R$ dus nog steeds verlaging in tegenstelling to bij Verruijt. Om dezelfde reden als hiervoor is de verlaging op $r=R$ gelijk aan $s_R = N c $.
-
-# %% [markdown]
-# ### Verlaging voor $r \le R$
-# 
-# De verlaging voor $r \le R$ is dezelfde als die bij Verruijt met dien verstande dat de velaging op $r=R$ niet nul is maar $s_R = N c $
-# 
-# 
-
-# %% [markdown]
-# ### Verlaging voor $r \ge R$ (De Glee (1930))
-# 
-# Bij Blom vallen de sloten droog binnen een straal gelijk aan $R$. De stroom $Q_R$ op $r=R$ volgt uit de waterbalans en is gelijk aan $Q_r = Q_0 - \pi R^2 N$. Het gebied voor $r>R$ fungeert als een semi-gespannen aquifer, die gevoed wordt uit verminderde drainage door de sloten, die gelijk is aan de verlaging ter plekke gedeeld door de drainageweerstand. De wiskundige oplossing voor de grondwaterstromign in deze situatie is volgens De Glee (1930); zij bestaat alleen voor constante pakketdikte:
-# 
-# $$ s_{r\ge R} = \frac{Q_R}{2 \pi kD}\cdot \frac{K_0 \left(\frac r \lambda\right)}{\frac R \lambda K_1\left(\frac R \lambda\right)} $$
-# 
-# $$ Q(r) = Q_R \cdot \frac r R \cdot \frac{K_1\left(\frac r \lambda\right)}{K_1\left(\frac R \lambda\right)}$$
-# 
-# $Q_R$ volgt direct uit de waterbalans over het gebied gegeven door $r\le R$
-# 
-# $$ Q_R = Q_0 - \pi R^2 N$$
-# 
-# De verlaging op $r=R$ is gelijk aan $s_R$
-# 
-# $$ s_R = \frac{Q_R}{2 \pi kD}\cdot \frac{K_0 \left(\frac R \lambda\right)}{\frac R \lambda K_1\left(\frac R \lambda\right)} $$
-# 
-# De verlaging op $r=R$ is ook gelijk aan $s_R = N c$ omdat daar de verminderde drainage juist de resterende drainage nul maakt. Hiermee hebben we een vergelijking waarmee de radius kan worden berekend waarbinnen de sloten droog vallen
-# 
-# $$ N c = \frac{Q_R}{2 \pi kD}\cdot \frac{K_0 \left(\frac R \lambda\right)}{\frac R \lambda K_1\left(\frac R \lambda\right)} $$
-# 
-# We kunnen $R$ alleen iteratief berekenen, bijvoobeeld met de Newton methode. Deze methode maakt van bovenstaande expressie een functie van $y(R)$ waarvan $R$ het nulpunt is dat moet worden gevonden.
-# 
-# $$ y(R) = - N c + \frac{Q_R}{2 \pi kD}\cdot \frac{K_0 \left(\frac R \lambda\right)}{\frac R \lambda K_1\left(\frac R \lambda\right)} $$
-# 
-# De Newton methode vindt het nulpunt iteratief als volgt
-# 
-# $$R_{n+1} = R_N - \frac{y(R)}{y \prime{R}}$$
-# 
-# waarin $y \prime(R)$ de afgeleide is van $y(R)$ naar $R$ en $n$ de betreffende iteratie.
-# 
-# Deze methode is eenvoudig, maar vergt wel de afgeleide van $y(R)$. Deze kan zowel numeriek met $y(R)$ worden berekend als anlytisch. Voor dit laatste moeten we $y(R)$ differentiëren naar $R$.
-# 
-# Voor de afgeleide van $y$ naar $R$ hebben we de afgeleide van de factor met de besselfuncties nodig
-# 
-# Gebruik makend van $\frac{d K_0 z}{dz} = -K_1 z$ en $\frac{d (z K_1 z)}{dz} = -z K_0 z$ volgt na enige uitwerking
-# 
-# $$\frac{d}{dr}\left(\frac{K_0\left(\frac R \lambda\right)}{\frac R \lambda K_1\left(\frac R \lambda\right)}\right) 
-# = \frac 1 R \left( \frac{K_0^2 \left(\frac R \lambda\right)}{K_1^2\left(\frac R \lambda\right)} - 1\right) 
-# $$
-# 
-
-# %% [markdown]
-# 
-# waarmee uiteindelijk na invoegen in de gehele uitdrukking voor $dy(R)/dr$
-# 
-# $$\frac{dy(R)}{dr} = -\frac{\lambda N}{kD} \cdot \frac{K_0\left(\frac R \lambda\right)}{K_1\left(\frac R \lambda\right)} -
-# \left(\frac{Q_0 / R}{2 \pi kD} - \frac{N R} {2 kD} \right)
-# \cdot\left(
-#     1 -\frac{K_0^2\left(\frac R \lambda\right)}{K_1^2\left(\frac R \lambda\right)}
-# \right)$$
-# 
-# Deze functie $y(R)$ en $dy(R)/dR=y'(R)$ worden hierna geïmplementeerd en meegenomen in de Newton methoden om $R$ iteratief te bepalen. We zullen daarbij de analytische bepaalde afgeleide controleren met de numeriek bepaalde afgeleide.
-# 
-# Wanneer we $R$ kennen, kunnen we zowel de verlaging voor $r\le R$ als die voor $r\ge R$ berekenen.
-
-# %% [markdown]
-# ## Implementatie Verruijt en Blom eendimensionaal
-# 
-# Voor 1D berekening van de verlaging of de stijghoogte bij Verruijt moeten we afstand $L$ opgeven waar de verlaging nu is. Voor BLom is dit de afstand waarop de verlaging gelijk is aan $s_L = N c$. Bij Blom kunnen we die bij gegeven onttrekking en neerslagoverschot berekenen mits $kD$ en drainageweerstand $c$ bekend zijn.
-
-# %% [markdown]
-# ## Voorbeeld Verruijt 1D, vaste Q, variërende L
 
 # ================= E X A M P L E S ===================================
 if __name__ == '__main__':
@@ -1675,6 +1682,182 @@ if __name__ == '__main__':
         ax.plot(1/u, Wh(u, rho), label=f"rho = {rho}")
     ax.legend(loc='lower right', fontsize='small')
     # plt.show()
+
+    # %%
+    # Example, Use of mirror wells, which immediately shows all 4 possibilities
+    # The problem is an aquifer between xL and xR with as boundaries that the aquifer
+    # at xL and or xR is fixed or closed.
+    
+    # Set aquifer properties
+    kD, S, c= 600, 0.001, 200
+    lambda_ = np.sqrt(kD * c)
+    
+    # Set system extension properties and coordinates
+    xL, xR, xw, Nmirror= -200, 200, 100, 30
+    Lclosed, Rclosed = False, False # right and or left size of strip closed?
+    L = xR - xL
+    n = 0
+    x = np.linspace(xL - n * L, xR + n * L, 1201)
+    
+    # Set extraction
+    Q = -1200.
+
+    # Show result of well between two fixed-head boundaries (using mirror wells)
+    md = Mirrors(xL, xR, xw=xw, N=Nmirror, Lclosed=Lclosed, Rclosed=Rclosed)
+    
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
+    ax1 = md.show(ax=ax1, figsize=(8, 2), fcs=('yellow', 'orange'))
+
+    s = np.zeros_like(x)
+    
+    # The drawdown of the well itself, which is at md.xw with sign md.sw
+    r = np.sqrt((md.xw - x) ** 2)
+    s = md.sw * Q / (2 * np.pi * kD) * K0( r / lambda_)
+    
+    # Add the drawdown due to mirror wells starting with the left one
+    for xw, sgn in zip(md.xLD, md.sLD):
+        r = np.sqrt((xw - x) ** 2)
+        s += sgn * Q / (2 * np.pi * kD) * K0(r / lambda_)
+        
+    # Add the drawdown due to mirror well starting with the right one
+    for xw, sgn in zip(md.xRD, md.sRD):
+        r = np.sqrt((xw - x) ** 2)
+        s += sgn * Q / (2 * np.pi * kD) * K0(r / lambda_)
+
+    ax2.set_title(f"Verlaging door put met Q={Q} m3/d op xw={md.xw} m tussen randen met vaste $h$\n" +
+    fr"op xL={xL} en xR={xR} m. kD={kD} m2/d, $\lambda$={lambda_:.0f} m, {Nmirror} maal gespiegeld.",
+                 fontsize=10)
+    ax2.set(xlabel="x [m]", ylabel='head [m]')
+    ax2.plot(x, s, label=f"Q = {Q} m3/d")
+    ax2.plot(xL, 0, 'ro', label='linker rand vast op 0.')
+    ax2.plot(xR, 0, 'bo', label='rechter rand vast op 0.')
+    ax2.grid()
+    ax2.legend()
+    # plt.show()
+    
+    # %% Example of using mirror ditches to simulate transient filling of a basin
+
+    # Aquifer properties and coordinates
+    kD, S = 600., 0.2
+    xL, xR, AL, AR = -100., 100., 1.0, 1.0
+    x = np.linspace(xL, xR, 201)
+    
+    b = (xR - xL) / 2 # Half width of the basin
+    
+    # Times for the simulation
+    T50 = 0.28 * b ** 2 * S / kD # Halftime of the drainage of the basin
+    ts = np.arange(7) * T50 # times to show
+    ts[0] = 0.01 * T50 # First time should be > zero
+    
+    # Using xw=None in the call of Mirrors generates coords of mirror ditaches
+    md = Mirrors(xL, xR, xw=None, N=30, Lclosed=False, Rclosed=False)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    ax.set_title(f"Basin kD={kD} m2/d, S={S}, T50={T50:.4g} d")
+    ax.set(xlabel="x [m]", ylabel="head [m]")
+    
+    for t in ts:
+        s = np.zeros_like(x) # Initialize
+        
+         # Use xM to see what ditch coordinates are to the left
+         # and what are to the right of the center of basin.
+        xM = 0.5 * (xL + xR)
+        
+        # Ditches that started with the left one
+        for xD, sgn in zip(md.xLD, md.sLD):            
+            x_ = xD - x if xD >= xM else x - xD
+            u = x_ * np.sqrt(S / (4 *  kD * t))
+            s += sgn * AL * erfc(u)
+            
+        # Ditches that started with the right one
+        for xD, sgn in zip(md.xRD, md.sRD):
+            x_ = xD - x if xD >= xM else x - xD
+            u = x_ * np.sqrt(S / (4 *  kD * t))
+            s += sgn * AR * erfc(u)
+            
+        ax.plot(x, s, label=f"t = {t:.3f} = {t/T50:.4g} T50d")
+    ax.grid()
+    ax.legend(loc="lower right")
+    # plt.show()
+
+
+    # %% Testing the function "ground_surface"
+    
+    xL, xR = -2500., 2500.
+    x = np.linspace(-4000., 4000., 801)
+    
+    # Use yM to set max elevation (approximately, adapt by trial and error)
+    yM = 2.
+    
+    # Filter length in filtfilt. Adaept by trial and error to length of x
+    Lfilt = 20
+    
+    # Set seed to an integer to get the same results each time.
+    # Adept by trial and error.
+    seed = 1
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.set_title(
+        f"Generated ground surface for xL={xL}, xR={xR}, yM={yM}, Lfilt={Lfilt}")
+    ax.set_xlabel("x [m]")
+    ax.set_ylabel("Elevation [m]")
+    
+    h_grsurf = ground_surface(x, xL=xL, xR=xR, yM=yM, Lfilt=Lfilt, seed=1)
+    
+    ax.plot(x, h_grsurf, label=f"seed={seed}")
+    ax.legend()
+    ax.grid()
+    # plt.show()
+
+    # %%
+    # #head in strip with adjacent leaky aquifers
+    
+    # Parameters for the cross section
+    N, kD, xL, xR, hL, hR = 0.001, 600, -2500, 2500, 20, 22
+    lamb_L, lamb_R = 100., 300.,
+    boundaries = {'xL': xL, 'xR': xR, 'hL': hL, 'hR': hR}
+    aqprops = {'kD': kD, 'lambda_L': lamb_L, 'lambda_R': lamb_R}
+    
+    sec1 = Section(boundaries=boundaries, aqprops=aqprops)
+    sec2 = Section(boundaries=boundaries, aqprops={'kD': kD, 'lambda_L': 0., 'lambda_R': 0.})
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set_title("Head in high area bounded by drained areas\n" +
+                fr"kD={sec1.aq['kD']:.4g} m2/d, N={N:.4g} m/d, $\lambda_L$={sec1.aq['lambda_L']:.4g} m, $\lambda_R$={sec1.aq['lambda_R']:.4g} m")
+    ax.set(xlabel="x [m]", ylabel="TAW [m]")
+    ax.grid()
+
+    ax.plot(x, ground_surface(x, xL=xL, xR=xR, yM=1, Lfilt=8) + sec1.h(x, N), label='maaiveld')
+
+    # Case with soft center-area boundaries
+    ax.plot(x, sec1.h(x, N), 
+            label=f'h with hare area boundaries. N={N} m/d, kD={sec1.aq['kD']} m2/d, op xL={xL} m en xR={xR} m')
+
+    # Case with hard center-area boundaries
+    ax.plot(x, sec2.h(x, N),
+            label=fr'h with leaky adjacent areas. N={N} m/d, kD={ssec2.aq['kD']} m2/d $\lambda_L$={sec2.aq['lambda_L']} m, $\lambda_R$={sec2.aq['lambda_R']} m')
+
+    # Plot the boundary locations
+    # Compute the head at the boundary locations
+    hxL = sec1.h(xL, N)
+    hxR = sec1.h(xR, N)
+    
+    ax.plot([xL, xR], [hxL, hxR], 'go',
+            label=fr"Boundary be with leaky area with $\lambda_L$={sec1.aq['lamb_L']} en $\lambda_R$={sec1.aq['lamb_R']} m")
+    
+    # Annotate boundaries
+    ax.annotate("Area boundary", xy=(xL, 20.), xytext=(xL, 24.5), ha='center',
+                arrowprops={'arrowstyle': '-'})
+    ax.annotate("Area boundary", xy=(xR, 20), xytext=(xR, 24.5), ha='center',
+                arrowprops={'arrowstyle': '-'})
+
+    # Mark the head at both boundaries with a red dot
+    hxL = sec2.h(xL, N)
+    hxR = sec2.h(xR, N)
+    ax.plot([xL, xR], [hxL, hxR], 'ro', label=f"Hard boundary hL={sec2.bnd['hL']}, hR={sec2.bnd['hR']} m op  resp. x={sec2.bnd['xL']} en x={sec2.bnd['xR']}  m")
+
+
+    plt.show()
 
 
     # %%
