@@ -193,7 +193,7 @@ class WellBase(ABC):
     well subclasses implement these method.
     """
         
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         """Initialize a well.
         
         Parameters
@@ -248,6 +248,16 @@ class WellBase(ABC):
         if isinstance(a, np.ndarray) and len(a) == 1:
             a = a.item()
         return a
+    
+    @staticmethod
+    def check_pars_presence(dict):
+        none_item_keys=set()
+        for k, item in dict.items():
+            if item is None:
+                none_item_keys.add(k)
+        if len(none_item_keys) > 0:            
+                raise ValueError(f"{none_item_keys} must not be None!")
+        return
 
     @staticmethod
     def check_xyt(x, y, t):
@@ -336,13 +346,14 @@ class WellBase(ABC):
             except Exception as e:
                 print(e)
                 raise
+        r[r < self.rw] = self.rw
         return r
     
 
 class wTheis(WellBase):
     """Class for handling drawdown and other calcuations according to Theis"""
     
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         super().__init__(xw=xw, yw=yw, rw=rw, z1=z1, z2=z2, aqprops=aqprops)
         WellBase.check_keys({'kD, S'}, self.aq)
         return
@@ -402,9 +413,112 @@ class wTheis(WellBase):
         Qr_ = WellBase.itimize(Qr_)        
         return Qr_
     
-    def qxqy(self, Q=None, x=None,  y=None):
+    def qxqy(self, Q=None, x=None,  y=None, t=None):
         """Return the specific dicharge components at x, and y."""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xyt(x, y, t)
+        if y is None:
+            y = np.zeros_like(x)     
+        r = self.radius(x, y)
+        qr = self.Qr(Q, x, y) / (2 * np.pi * r)
+        qx = qr * (self.xw - x) / r
+        qy = qr * (self.yw - y) / r
+        qx = WellBase.itimize(qx)
+        qy = WellBase.itimize(qy)
+        return (qx, qy)
+
+
+class wTheisSimple(WellBase):
+    """Class for handling drawdown and other calcuations according to simplified Theis Function
+    
+    The simplified Theis well fuction is ln (2.25 kD t/ (r ^2 S))
+    Or with gamma=0.577216, s = ln(e^(-0.577216) / u) = 'ln(0.5615  / u)
+    """
+    
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
+        super().__init__(xw=xw, yw=yw, rw=rw, z1=z1, z2=z2, aqprops=aqprops)
+        WellBase.check_keys({'kD, S'}, self.aq)
+        self.gamma = 0.577216
+        return
+    
+    def h(self, Q=None, x=None, y=None, t=None):
+        """Return head in wate table aquifer."""
+        raise NotImplementedError("h not implemented for Theis well type.")
+
+    def dd(self, x=None, y=None, t=None, Q=None):
+        """Return well's drawdown according to Theis.
+        
+        Note, if t is an array, x (and y of not None) must be scalars.
+        If t is a scalar, x (and y if not None) may be an array.
+        
+        Parameters
+        ----------
+        Q: float
+            constant extraction by the well
+        x: float or np.ndarray of floats
+            x coordinate[s] of drawdown point.
+        y: None or float or np.ndarray
+            y coordinate[s] or None
+        t: float or np.ndarray
+            times to compute dd (all dd[t <= 0] =0)        
+        """        
+        
+        def W(u):
+            """Return simplified Theis well function."""
+            u = np.atleast_1d(u).astype(float)            
+            gu = np.exp(-self.gamma) /u
+            w = np.zeros_like(u)
+            w[ gu >= 1] = np.log(gu)
+            return w
+        
+        x, y, t = WellBase.check_xyt(x, y, t)
+        
+        r = self.radius(x, y)
+        
+        FQ = Q / (4 * np.pi * self.aq['kD'])
+        
+        if isinstance(t, np.ndarray):
+            u = np.zeros_like(t)
+            s = np.zeros_like(u)
+            u = r ** 2 * self.aqprops['S']  / 4 * self.aq['kD'] * t[u > 1]
+            s[t > 0] = FQ * W(u)
+        else:
+            u = r ** 2 * self.aq['S'] / (4 * self.aq['kD'] * t)    
+            s = FQ * W(u)
+        
+        s = WellBase.itimize(s)
+        return s
+    
+    def Qr(self, Q=None, x=None, y=None, t=None):
+        x, y, t = WellBase.check_xyt(x, y, t)
+        
+        def fq(u):
+            """Return approximate flow for Q=1.
+            
+            Notice that for the simplified Theis solution,
+            Q=Q for gu > 1 and 0 for gu <= 1.            
+            """
+            u = np.atleast_1d(u).astype(float)
+            gu = np.exp(-self.gamma) / u
+            q = np.zeros_like(u)
+            q [gu > 1] = 1.
+            return q
+
+        r = self.radius(x, y)
+        if isinstance(t, np.ndarray):
+            Qr_ = np.zeros_like(t) + Q
+            u = r ** 2 * self.aq['S'] / (4 * self.aq['kD'] * t[t > 0])
+            Qr_[t > 0] = Q * fq(u)
+        else:
+            Qr_ = np.zeros_like(r) + Q
+            u = r[r > 0] ** 2 * self.aq['S'] / (4 * self.aq['kD'] * t)
+            Qr_[r > 0] = Q * fq(u)
+            
+        Qr_ = WellBase.itimize(Qr_)        
+        return Qr_
+    
+    def qxqy(self, Q=None, x=None,  y=None, t=None):
+        """Return the specific dicharge components at x, and y."""
+        x, y = WellBase.check_xyt(x, y, t)
         if y is None:
             y = np.zeros_like(x)     
         r = self.radius(x, y)
@@ -419,7 +533,7 @@ class wTheis(WellBase):
 class wHantush(WellBase):
     """Clas for computing drawdown and other values according to Hantush."""
     
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         super().__init__(xw=xw, yw=yw, rw=rw, z1=z1, z2=z2, aqprops=aqprops)
         WellBase.check_keys({'kD', 'c'}, self.aq)
 
@@ -492,9 +606,9 @@ class wHantush(WellBase):
         Qr_ = WellBase.itimize(Qr_)
         return Qr_
     
-    def qxqy(self, Q=None, x=None,  y=None):
+    def qxqy(self, Q=None, x=None,  y=None, t=None):
         """Return the specific dicharge components at x, and y."""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xyt(x, y, t)
         if y is None:
             y = np.zeros_like(x)     
         r = self.radius(x, y)
@@ -509,7 +623,7 @@ class wHantush(WellBase):
 class wDupuit(WellBase):
     """General implementation of the Dupuit well function."""
     
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         """Return drawdown according to Dupuit.
         
         The drawdown in a confined or unconfined aquifer with fixed head
@@ -526,6 +640,7 @@ class wDupuit(WellBase):
         
         This is the same as Verruijt for N=0.        
         """
+        WellBase.check_pars_presence({'R': R})
         WellBase.check_keys({'k', 'D'}, self.aq)
         x, y = WellBase.check_xy(x, y)
         
@@ -536,30 +651,31 @@ class wDupuit(WellBase):
         FQ = Q / (np.pi * self.aq['k'])
         
         h2 = H ** 2 * np.ones_like(r)        
-        h2[r >= R] = H ** 2  - FQ * np.log(R / r[r >= R])
+        h2[r <= R] = H ** 2  - FQ * np.log(R / r[r <= R])
 
         h = np.sqrt(h2)
         h = WellBase.itimize(h)
         return h
 
-    def dd(self, x=None, y=None, Q=None, R=None, N=None):
+    def dd(self, x=None, y=None, Q=None, R=None):
         """Return drawdown according to Dupuit.
         
         This is the same as Verrijt for N=0.        
         """
-        x, y = WellBase.check_xyt(x, y)
+        WellBase.check_pars_presence({'R': R})
+        x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         FQ = Q / (2 * np.pi * self.aq['kD'])
         s = np.zeros_like(r)
-        s = FQ * np.log(R / r[r <= R])
-
+        s[r <= R] = FQ * np.log(R / r[r <= R])
         return WellBase.itimize(s)
     
-    def Qr(self, Q=None, N=None, x=None, y=None):
+    def Qr(self, Q=None, x=None, y=None, R=None):
         """Return the flow at a distance given by x and y.
         
         This is the same as Verrijt for N=0 --> just Q.
         """
+        WellBase.check_pars_presence({'R': R})
         x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         
@@ -568,14 +684,15 @@ class wDupuit(WellBase):
         
         return WellBase.itemize(Qr_)
     
-    def qxqy(self, Q=None, x=None,  y=None):
+    def qxqy(self, Q=None, x=None,  y=None, R=None):
         """Return the specific dicharge components at x, and y."""
+        WellBase.check_pars_presence({'R': R})
         qx, qy = WellBase.qxqy(Q, self.xw, self.yw, x, y)
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         if y is None:
             y = np.zeros_like(x)     
         r = self.radius(x, y)
-        qr = self.Qr(Q, x, y) / (2 * np.pi * r)
+        qr = self.Qr(Q, x, y, R=R) / (2 * np.pi * r)
         qx = qr * (self.xw - x) / r
         qy = qr * (self.yw - y) / r
         qx = WellBase.itimize(qx)
@@ -593,7 +710,7 @@ class wDeGlee(WellBase):
     This the same as Blom for r > [dd == Nc]
     
     """
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         """Return the steady state drawdown caused by a well in a semi-confined aquifer.
         
         Parameters
@@ -611,7 +728,7 @@ class wDeGlee(WellBase):
         WellBase.check_keys({'kD', 'c'}, self.aq)
         return
     
-    def h(self, Q=None, x=None, y=None, t=None):
+    def h(self, Q=None, x=None, y=None):
         """Return head in wate table aquifer.
         
         The aquifer is semi-confined and, therefore, has constant kD.
@@ -640,7 +757,7 @@ class wDeGlee(WellBase):
         
     def Qr(self, Q=None, x=None,  y=None):
         """Return Q(r)"""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         
         r = self.radius(x, y)
         Qr_ = Q / (2 * np.pi * self.aq['lambda']) * K1(r / self.aq['lambda'])
@@ -649,7 +766,7 @@ class wDeGlee(WellBase):
     
     def qxqy(self, Q=None, x=None,  y=None):
         """Return the specific dicharge components at x, and y."""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         if y is None:
             y = np.zeros_like(x)     
         r = self.radius(x, y)
@@ -668,7 +785,7 @@ class Brug370_1(WellBase):
     aquitard jump at x=0.
     """
 
-    def __init__(self, xw=None, yw=None,  rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=None, yw=None,  rw=0.2, z1=None, z2=None, aqprops={}):
         """Return drawdown according to Bruggeman's (1999) solution 370_01.
         
         This solution is for the steady state drawdown caused by a well in a
@@ -747,13 +864,13 @@ class Brug370_1(WellBase):
         if self.xw < 0:
             # When xw < 0 just revers the x-coordinates and the properties
             aqprops = {}
-            for p1, p2 in zip(['kD1', 'kD2', 'c', 'c2'], ['kD2', 'kD1', 'c2', 'c1']):
+            for p1, p2 in zip(['kD1', 'kD2', 'c1', 'c2'], ['kD2', 'kD1', 'c2', 'c1']):
                 aqprops[p1] = self.aq[p2]
             # And then run the reversed case.
-            w = Brug370_1(xw=self.xw, yw=self.yw,  rw=self.rw,
+            w = Brug370_1(xw=-self.xw, yw=self.yw,  rw=self.rw,
                           z1=self.z1, z2=self.z2, aqprops=aqprops)
                 
-            x, y, phi = w.dd(Q=Q, x=-x, y=y, aqprops=aqprops)
+            x, y, phi = w.dd(Q=Q, x=-x, y=y)
             # Reverse x again before returning.
             return -y, y, phi
 
@@ -808,7 +925,7 @@ class wVerruijt(WellBase):
     Verruijt is Dupuit + Recharge N for r <= R. So set N=0 to get Dupuit.
         
     """
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         """Return a Verruijt well object.
         
         Parameters
@@ -828,10 +945,13 @@ class wVerruijt(WellBase):
         WellBase.check_keys({'kD'}, self.aq)
         return
 
-    def h(self, Q=None, x=None, y=None, R=None, N=None):
+    def h(self, x=None, y=None, Q=None, R=None, N=None):
         """Return wetted aquifer thickness according to Verruijt."""
+        WellBase.check_pars_presence({'R': R, 'N': N})
         WellBase.check_keys({'k', 'D'}, self.aq)
         x, y = WellBase.check_xy(x, y)
+        if R is None or N is None:
+            raise ValueError("in wVerruijt.h R and N must not be None!")
         
         r = self.radius(x, y)
 
@@ -847,8 +967,9 @@ class wVerruijt(WellBase):
         h = WellBase.itimize(h)
         return h
 
-    def dd(self, Q=None, x=None, y=None, R=None, N=None):
+    def dd(self, x=None, y=None, Q=None, R=None, N=None):
         """Return drawdown according to Verrijt."""
+        WellBase.check_pars_presence({'R': R, 'N': N})
         x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         FQ = Q / (2 * np.pi * self.aq['kD'])
@@ -857,7 +978,7 @@ class wVerruijt(WellBase):
         s = WellBase.itimize(s)
         return s
     
-    def Qr(self, Q=None, N=None, x=None, y=None):
+    def Qr(self, x=None, y=None, Q=None, N=None):
         """Return the flow at the distance r computed from x and y.
         
         Parameters
@@ -871,6 +992,7 @@ class wVerruijt(WellBase):
         y: float, optional
             y-coordinate(s). Ignored if None
         """
+        WellBase.check_pars_presence({'R': R, 'N': N})
         x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         
@@ -880,20 +1002,21 @@ class wVerruijt(WellBase):
         Qr_ = WellBase.itimize(Qr_)
         return Qr_
     
-    def qxqy(self, Q=None, x=None,  y=None):
+    def qxqy(self, x=None,  y=None, Q=None, R=None, N=None):
         """Return the specific dicharge components at x, and y."""
-        x, y = WellBase.check_xyt(x, y)
+        WellBase.check_pars_presence({'R': R, 'N': N})
+        x, y = WellBase.check_xy(x, y)
         if y is None:
             y = np.zeros_like(x)     
         r = self.radius(x, y)
-        qr = self.Qr(Q, x, y) / (2 * np.pi * r)
+        qr = self.Qr(Q, x, y, R=R, N=N) / (2 * np.pi * r)
         qx = qr * (self.xw - x) / r
         qy = qr * (self.yw - y) / r
         qx = WellBase.itimize(qx)
         qy = WellBase.itimize(qy)
         return (qx, qy)
         
-    def rdiv(self, Q=None, N=None, R=None):
+    def rhdiv(self, Q=None, R=None, N=None):
         """Return radius of water divide.
         
         The water divide exists when the head or drawdown gradient
@@ -908,8 +1031,29 @@ class wVerruijt(WellBase):
         R: float
             The radius of fixed head or zero drawdown.
         """      
+        WellBase.check_pars_presence({'R': R, 'N': N})        
+        r = np.sqrt(Q / (np.pi * N))
+        return r if r < R else R
+    
+    def rdiv(self, Q=None, R=None, N=None):
+        """Return radius of water divide.
+        
+        The water divide exists when the head or drawdown gradient
+        is zero for some r < R. This is the returned water divide.
+        
+        Parameters
+        ----------
+        Q: float
+            The well's extraction.
+        N: float
+            The recharge.
+        R: float
+            The radius of fixed head or zero drawdown.
+        """      
+        WellBase.check_pars_presence({'R': R, 'N': N})        
         r = np.sqrt(Q / (np.pi * N))
         return r if r < R else np.nan
+
              
    
 class wBlom(WellBase):
@@ -918,7 +1062,7 @@ class wBlom(WellBase):
     Blom equals Verruijt for R < R[dd == Nc] and DeGlee for R >= R[dd == Nc]
     
     """
-    def __init__(self, xw=0., yw=0., rw=None, z1=None, z2=None, aqprops={}):
+    def __init__(self, xw=0., yw=0., rw=0.2, z1=None, z2=None, aqprops={}):
         """Return a Blom well object.
         
         A Blom well applies Verruijt for r smaller than where dd > Nc and
@@ -994,7 +1138,7 @@ class wBlom(WellBase):
     
     def Qr(self, Q=None, x=None,  y=None, N=None):
         """Return Q(r)"""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         
         r = self.radius(x, y)
 
@@ -1010,7 +1154,7 @@ class wBlom(WellBase):
     
     def qxqy(self, Q=None, x=None,  y=None):
         """Return the specific dicharge components at x, and y."""
-        x, y = WellBase.check_xyt(x, y)
+        x, y = WellBase.check_xy(x, y)
         if y is None:
             y = np.zeros_like(x)     
         r = self.radius(x, y)
@@ -1176,7 +1320,7 @@ class StripBase(ABC):
     def check_x(x=None):
         """Return x as float array for values >= 0"""       
         x = np.atleast_1d(x).astype(float)
-        return x[x >= 0]
+        return x
         
     @staticmethod
     def check_xt(x=None, t=None):
@@ -1221,6 +1365,8 @@ class Section(StripBase):
             aquifer properties
         """        
         self.aq = aqprops
+        if {'k', 'D'}.issubset(aqprops):
+            aqprops.update(kD=aqprops['k'] * aqprops['D'])
         if not {'kD', 'lambda_L', 'lambda_R'}.issubset(aqprops):
             raise ValueError("kD, lambda_L and or Lambda_R missing in aqprops!")
         
@@ -1230,7 +1376,7 @@ class Section(StripBase):
         return 
             
 
-    def h(self, x, N=None):
+    def h(self, x=None, N=None):
         """Return head for the given x-values.
         
         Parameters
@@ -1240,13 +1386,14 @@ class Section(StripBase):
         N: float
             Recharge.
         """
+        eps = 1e-6
         xL, xR = self.bnd['xL'], self.bnd['xR']
         hL, hR = self.bnd['hL'], self.bnd['hR']
-        kD, lamb_L, lamb_R = self.aq['kD'], self.aq['lambda_L'], self.aq['lamb_R']
+        kD, lamb_L, lamb_R = self.aq['kD'], self.aq['lambda_L'], self.aq['lambda_R']
         L = xR - xL        
         
         # Flow at left-hand area boundary (at x=xL)
-        QL = self.Q(x=x, N=N)
+        QL = self.Qx(x=xL, N=N)
         QR = QL + N * L
                 
         # Head above hL and HR caused by QL and QR respectively
@@ -1265,14 +1412,27 @@ class Section(StripBase):
         h[mask_C] = (hL - QL * lamb_L / kD - QL / kD * (x[mask_C] - xL)
                     - N / (2 * kD) * (x[mask_C] - xL) ** 2)
         # Left area
-        h[mask_L] = hL + dhL * np.exp(+(x[mask_L] - xL) / lamb_L)
+        h[mask_L] = hL + dhL * np.exp(+(x[mask_L] - xL) / (lamb_L + eps))
         # Right area
-        h[mask_R] = hR + dhR * np.exp(-(x[mask_R] - xR) / lamb_R)
+        h[mask_R] = hR + dhR * np.exp(-(x[mask_R] - xR) / (lamb_R + eps))
         
         return WellBase.itimize(h)
 
 
-    def Qx(self, x, N=None):
+    def dd(self, x=None, N=None):
+        """Return head change for the given x-values.
+        
+        Parameters
+        ----------
+        x: np.ndarray or float
+            Coordinate(s) where head is computed. x may extend beyond xL and xR.
+        N: float
+            Recharge.
+        """
+        raise NotImplementedError("Method dd not implemented, it's not useful here, use method h(x, N) instead")
+
+
+    def Qx(self, x=None, N=None):
         """Return the discharge Qx for given x-values.
         
         Parameters
@@ -1282,7 +1442,8 @@ class Section(StripBase):
         N: float
             Recharge.        
         """
-        xL, xR = self.bnd['xL'], self.bnd['xR']
+        eps = 1e-6
+        xL, xR, hL, hR = self.bnd['xL'], self.bnd['xR'], self.bnd['hL'], self.bnd['hR']
         kD, lamb_L, lamb_R = self.aq['kD'], self.aq['lambda_L'], self.aq['lambda_R']
         L = xR - xL
             
@@ -1295,14 +1456,13 @@ class Section(StripBase):
         Q = np.zeros_like(x)
         
         # Deal with the three area separately
-        mask_L = x < self.bnd.xL
-        mask_R = x > self.bnd.xR
+        mask_L = x < xL
+        mask_R = x > xR
         mask_C = ~(mask_L | mask_R)
 
-        Q[mask_L] = QL * np.exp(+(x[mask_L] - self.bnd.xL) / (lamb_L))
-        Q[mask_C] = QL + N * (x[mask_C] - self.bnd.xL)
-        Q[mask_R] = QR * np.exp(-(x[mask_R] - self.bnd.xR) / (lamb_R))
-        
+        Q[mask_L] = QL * np.exp(+(x[mask_L] - xL) / (lamb_L + eps))
+        Q[mask_C] = QL + N * (x[mask_C] - xL)
+        Q[mask_R] = QR * np.exp(-(x[mask_R] - self.bnd['xR']) / (lamb_R + eps))
         return WellBase.itimize(Q)
 
 
@@ -1476,7 +1636,7 @@ class Blom1D(StripBase):
 # %% Generate a line that can illustrate ground surface elevation
 
 def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
-    """Return a ground surface elevation for visualization purposes.
+    r"""Return a ground surface elevation for visualization purposes.
     
     The elevation will be 0 at xL and xR and approach yM in the middle.
     
