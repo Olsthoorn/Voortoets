@@ -311,7 +311,7 @@ class WellBase(ABC):
         # kD is guaranteed so make c and lambda consistent if either c or lambda in aqprops
         if 'c' in aqprops.keys():
             aqprops['lambda'] = np.sqrt(aqprops['kD'] * aqprops['c'])
-        if 'lambda' in aqprops.keys():
+        elif 'lambda' in aqprops.keys():
             aqprops['c'] = aqprops['kD'] ** 2  / aqprops['lambda']
                               
         # Then if c or lambda is required by subset but still not in aqprops --> ValueError  
@@ -1096,8 +1096,9 @@ class wBlom(WellBase):
         WellBase.check_keys({'k', 'D', 'c'}, self.aq)
         return
 
-    def h(self, Q=None, x=None, y=None, N=None, r=None):
+    def h(self, x=None, y=None, Q=None, N=None):
         """Returng h using 'k' and 'D' has Hinf."""
+        WellBase.check_pars_presence({'N': N, 'Q': Q})
         x, y = WellBase.check_xy(x, y)
         r = self.radius(x, y)
         R = self.getR(Q=Q, N=N, R=r.mean())
@@ -1117,14 +1118,15 @@ class wBlom(WellBase):
         return h
 
 
-    def dd(self, Q=None, x=None, y=None, N=None):
+    def dd(self, x=None, y=None, Q=None, N=None):
         """Return drawdown using uniform kD (as in a confined aquifer)."""
+        WellBase.check_pars_presence({'N': N, 'Q': Q})
         x, y = WellBase.check_xy(x, y)
         
         r = self.radius(x, y)
         
         # Distance where drawdown = Nc
-        R = self.getR(Q=Q, N=N, R=r.mean())
+        R = self.getR(Q=Q, N=N, R=2 * self.rw)
         s = np.zeros_like(r)
         s[r < R] =  (Q / (2 * np.pi * self.aq['kD']) * np.log(R / r[r < R])
                 - N / (4 * self.aq['kD']) * (R ** 2 - r[r < R] ** 2) + N * self.aq['c'])
@@ -1136,13 +1138,14 @@ class wBlom(WellBase):
         s = WellBase.itimize(s)
         return s
     
-    def Qr(self, Q=None, x=None,  y=None, N=None):
+    def Qr(self, x=None,  y=None, Q=None, N=None):
         """Return Q(r)"""
+        WellBase.check_pars_presence({'N': N, 'Q': Q})
         x, y = WellBase.check_xy(x, y)
         
         r = self.radius(x, y)
 
-        R = self.getR(Q=Q, N=N, r=r.mean())
+        R = self.getR(r=r.mean(), Q=Q, N=N)
         QR = Q - np.pi * R ** 2 * N        
         R_lam = R / self.aq['lambda']
         r_lam = r / self.aq['lambda']
@@ -1152,7 +1155,7 @@ class wBlom(WellBase):
         Qr_ = WellBase.itimize(Qr_)
         return Qr_
     
-    def qxqy(self, Q=None, x=None,  y=None):
+    def qxqy(self, x=None,  y=None, Q=None):
         """Return the specific dicharge components at x, and y."""
         x, y = WellBase.check_xy(x, y)
         if y is None:
@@ -1198,15 +1201,15 @@ class wBlom(WellBase):
                 (1 - k0k1  ** 2)
 
     # Newton Raphson functions
-    def dydR(self, R=None, Q=None, N=None, dr=0.1):
+    def dydR(self, R=None, Q=None, N=None, dr=0.01):
         """Return numerical derivative of y in Newton iterations."""
-        return (self.y(R=R + 0.5 * dr, Q=Q, N=N) -
-                self.y(R=R - 0.5 * dr, Q=Q, N=N)) / dr
+        return (self.y(R=R + dr, Q=Q, N=N) -
+                self.y(R=R - dr, Q=Q, N=N)) / (2 * dr)
                 
-    def getR(self, Q=None, N=None, R=1.0, tolR=0.1, n=50,  verbose=False):
+    def getR(self, R=1.0, Q=None, N=None, tolR=0.1, n=50,  verbose=False):
         """Return R by Newton's method using the input's R as starting value.
         
-        The function of which the zero is te be found is mooths, so that
+        The function of which the zero is to be found is mooth, so that
         the Newton method should always work.
         
         Parameters
@@ -1229,6 +1232,7 @@ class wBlom(WellBase):
             print(f"R initial={R:.3g} m")
         for i in range(n):
             dR = -self.y(R=R, Q=Q, N=N) / self.y1(R=R, Q=Q, N=N)
+            #dR = -self.y(R=R, Q=Q, N=N) / self.dydR(R=R, Q=Q, N=N)
             R += dR
             if verbose:
                 print(f"iteration {i}, R={R:.3g} m, dR = {dR:.3g} m")
@@ -1259,18 +1263,21 @@ class wBlom(WellBase):
         fig, ax = plt.subplots(figsize=figsize)
         ax.set(title=title, xlabel="r [m]", ylabel="y(r) [m]")
         
-        ax.plot(r, self.y(R=r, Q=Q, N=N), label='y(r)')
+        Nc = N * self.aq['c']
+        ax.plot(r, self.y(R=r, Q=Q, N=N) + Nc, label='y(r)')
         
         for _ in range(20):
             #y, y1 = self.y(R=R, Q=Q, N=N), self.dydR(R=R, Q=Q, N=N)     
             y, y1 = self.y(R=R, Q=Q, N=N), self.y1(R=R, Q=Q, N=N)
-            ax.plot([R, R], [0, y], 'k')     
-            ax.plot(R, y, 'bo', mfc='none')
+            ax.plot([R, R], [0, y + Nc], 'k')     
+            ax.plot(R, y + Nc, 'bo', mfc='none')
             dR = - y / y1
-            ax.plot([R, R + dR], [y, 0], 'k')            
+            ax.plot([R, R + dR], [y + Nc, 0], 'k')            
             R += dR
             if abs(dR) < 0.1:
-                break            
+                break
+        ax.grid()
+        ax.plot(ax.get_xlim(), (Nc, Nc), 'k--', label=fr"$N c = {Nc}\, m$")          
         ax.legend()
         return ax
         
