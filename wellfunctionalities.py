@@ -388,7 +388,7 @@ class wTheis(WellBase):
         if isinstance(t, np.ndarray):
             u = np.zeros_like(t)
             s = np.zeros_like(u)
-            u = r ** 2 * self.aqprops['S']  / 4 * self.aq['kD'] * t[t > 0]
+            u = r ** 2 * self.aq['S']  / (4 * self.aq['kD'] * t[t > 0])
             s[t > 0] = FQ * Wt(u)            
         else:
             u = r ** 2 * self.aq['S'] / (4 * self.aq['kD'] * t)
@@ -425,6 +425,28 @@ class wTheis(WellBase):
         qx = WellBase.itimize(qx)
         qy = WellBase.itimize(qy)
         return (qx, qy)
+    
+    def SR(self, r=None, t=None):
+        """Return Step Response for the Theis well function.
+
+        The step response is a function of time (tau).
+        It's just the Theis drawdown for unit extraction (Q=0).
+        Result = 0 for tau=0 is guaranteed.
+        """
+        dt = np.diff(t)
+        if not np.all(np.isclose(dt[0], dt)):
+            raise ValueError("Stepsize must all be the same!")
+        u = r ** 2 * self.aq['S'] / (4  * self.aq['kD'] * t[1:])
+        return np.hstack((0, 1 / (4 * np.pi * self.aq['kD']) * exp1(u)))
+
+    def BR(self, r=None, t=None):
+        """Return Block Response for the Theis well function.
+
+        The block response is a function of time (tau).
+        Results is 0 for tau = 0 is guaranteed.
+        """
+        sr = self.SR(r=r, t=t)
+        return np.hstack((0, sr[1:] - sr[:-1]))
 
 
 class wTheisSimple(WellBase):
@@ -479,7 +501,7 @@ class wTheisSimple(WellBase):
         if isinstance(t, np.ndarray):
             u = np.zeros_like(t)
             s = np.zeros_like(u)
-            u = r ** 2 * self.aqprops['S']  / 4 * self.aq['kD'] * t[u > 1]
+            u = r ** 2 * self.aq['S']  / (4 * self.aq['kD'] * t[u > 1])
             s[t > 0] = FQ * W(u)
         else:
             u = r ** 2 * self.aq['S'] / (4 * self.aq['kD'] * t)    
@@ -528,6 +550,32 @@ class wTheisSimple(WellBase):
         qx = WellBase.itimize(qx)
         qy = WellBase.itimize(qy)
         return (qx, qy)
+    
+    def SR(self, r=None, t=None):
+        """Return Step Response for the simplified Theis well function.
+
+        The step response is a function of time (tau).
+        It's just the Theis drawdown for unit extraction (Q=0).
+        Result = 0 for tau=0 is guaranteed.
+        """
+        dt = np.diff(t)
+        if not np.all(np.isclose(dt[0], dt)):
+            raise ValueError("Stepsize must all be the same!")
+        u = r ** 2 * self.aq['S'] / (4  * self.aq['kD'] * t[1:])
+        gu = np.exp(-self.gamma) / u
+        gu[gu < 1] = 1.
+        sr = np.hstack((0, 1 / (4 * np.pi * self.aq['kD']) * np.log(gu)))
+        return WellBase.itimize(sr[sr > 0.]) # Truncated where sr=0.
+
+    def BR(self, r=None, t=None):
+        """Return Block Response for the Theis well function.
+
+        The block response is a function of time (tau).
+        Results is 0 for tau = 0 is guaranteed.
+        """
+        sr = self.SR(r=r, t=t)
+        return np.hstack((0, sr[1:] - sr[:-1]))
+
 
 
 class wHantush(WellBase):
@@ -619,6 +667,30 @@ class wHantush(WellBase):
         qy = WellBase.itimize(qy)
         return (qx, qy)
     
+    def SR(self, r=None, t=None):
+        """Return Step Response for the Hantus well function.
+
+        The step response is a function of time (tau).
+        It's just the Theis drawdown for unit extraction (Q=0).
+        Result = 0 for tau=0 is guaranteed.
+        """
+        dt = np.diff(t)
+        if not np.all(np.isclose(dt[0], dt)):
+            raise ValueError("Stepsize must all be the same!")
+        u = r ** 2 * self.aq['S'] / (4  * self.aq['kD'] * t[1:])
+        rho = r / self.aq['lambda']
+        return np.hstack((0, 1 / (4 * np.pi * self.aq['kD']) * Wh(u, rho)))
+
+    def BR(self, r=None, t=None):
+        """Return Block Response for the Theis well function.
+
+        The block response is a function of time (tau).
+        Results is 0 for tau = 0 is guaranteed.
+        """
+        sr = self.SR(r=r, t=t)
+        return np.hstack((0, sr[1:] - sr[:-1]))
+
+    
 
 class wDupuit(WellBase):
     """General implementation of the Dupuit well function."""
@@ -650,12 +722,11 @@ class wDupuit(WellBase):
         
         FQ = Q / (np.pi * self.aq['k'])
         
-        h2 = H ** 2 * np.ones_like(r)        
+        h2 = np.zeros_like(r) + H ** 2       
         h2[r <= R] = H ** 2  - FQ * np.log(R / r[r <= R])
+        h2[h2 < 0] = 0.
+        return WellBase.itimize(np.sqrt(h2))        
 
-        h = np.sqrt(h2)
-        h = WellBase.itimize(h)
-        return h
 
     def dd(self, x=None, y=None, Q=None, R=None):
         """Return drawdown according to Dupuit.
@@ -954,18 +1025,14 @@ class wVerruijt(WellBase):
             raise ValueError("in wVerruijt.h R and N must not be None!")
         
         r = self.radius(x, y)
-
-        H = self.aq['D']
-        
+        H = self.aq['D']        
         FQ = Q / (np.pi * self.aq['k'])
         
-        h2 = H ** 2 * np.ones_like(r)        
+        h2 = np.zeros_like(r) + H ** 2       
         h2[r < R] = H ** 2  - FQ * np.log(R / r[r < R]) +\
             N / (2 * self.aq['k']) * (R ** 2 - r[r < R] ** 2)
-
-        h = np.sqrt(h2)
-        h = WellBase.itimize(h)
-        return h
+        h2[h2 < 0] = 0.        
+        return WellBase.itimize(np.sqrt(h2))        
 
     def dd(self, x=None, y=None, Q=None, R=None, N=None):
         """Return drawdown according to Verrijt."""
@@ -1105,9 +1172,11 @@ class wBlom(WellBase):
         Hinf = self.aq['D']
         HR = Hinf - N * self.aq['c']
         
-        h = np.zeros_like(r) + HR
-        h[r < R] = np.sqrt(HR ** 2 + N / (2 * self.aq['k']) * (R ** 2 - r[r < R] ** 2) 
+        h2 = np.zeros_like(r) + HR ** 2
+        h2[r < R] = HR ** 2 + (N / (2 * self.aq['k']) * (R ** 2 - r[r < R] ** 2) 
                             - Q / (np.pi * self.aq['k']) * np.log(R / r[r < R]))
+        h2[h2 <= 0] = 0.
+        h = np.sqrt(h2)
 
         RL = R  / self.aq['lambda']
         QR = Q - np.pi * R **2 * N     
