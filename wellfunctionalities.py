@@ -943,7 +943,7 @@ class Brug370_1(WellBase):
                 
             x, y, phi = w.dd(Q=Q, x=-x, y=y)
             # Reverse x again before returning.
-            return -y, y, phi
+            return -x, y, phi
 
         # Compute characteristic length for $x<0$ and $x>0$
         L1 = np.sqrt(self.aq['kD1'] * self.aq['c1'])
@@ -1330,18 +1330,18 @@ class wBlom(WellBase):
         r = np.linspace(0, 300, 101)[1:]
         title = f"y(R) and progress of Newton iterations for Q={Q:.4g} , N={N:.4g}, c={self.aq['c']:.4g}"
         fig, ax = plt.subplots(figsize=figsize)
-        ax.set(title=title, xlabel="r [m]", ylabel="y(r) [m]")
+        ax.set(title=title, xlabel="r [m]", ylabel="y(r) + Nc [m]")
         
         Nc = N * self.aq['c']
-        ax.plot(r, self.y(R=r, Q=Q, N=N) + Nc, label='y(r)')
+        ax.plot(r, self.y(R=r, Q=Q, N=N) + Nc, label='y(r) + Nc')
         
         for _ in range(20):
             #y, y1 = self.y(R=R, Q=Q, N=N), self.dydR(R=R, Q=Q, N=N)     
             y, y1 = self.y(R=R, Q=Q, N=N), self.y1(R=R, Q=Q, N=N)
-            ax.plot([R, R], [0, y + Nc], 'k')     
+            ax.plot([R, R], [Nc, y + Nc], 'k')     
             ax.plot(R, y + Nc, 'bo', mfc='none')
             dR = - y / y1
-            ax.plot([R, R + dR], [y + Nc, 0], 'k')            
+            ax.plot([R, R + dR], [y + Nc, Nc], 'k')            
             R += dR
             if abs(dR) < 0.1:
                 break
