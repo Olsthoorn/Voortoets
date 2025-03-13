@@ -1,9 +1,20 @@
+# %% [markdown]
+# # Aanleiding
+#
+# Dit bestand bevat de implementatie van de functies die gebruikt worden voor de analytische berekening
+# van grondwaterstandsverlagingen ten behoeven van de update van de Voortoets.
+# 
+# Deze functionaliteit wordt gebruikt in het notebook VoorToetsIllustraties.iynb.
+# 
+# 
+# @T.N.Olsthoorn Maart 2025
+
 # %% ImportS
 
 import os
+
 from abc import ABC, abstractmethod
 from importlib import reload
-from inspect import signature
 from itertools import cycle
 
 import matplotlib.pyplot as plt
@@ -17,8 +28,10 @@ from scipy.special import erfc, exp1
 from scipy.special import k0 as K0
 from scipy.special import k1 as K1
 
-# %% Basic functionality
+# %% [markdown]
+## Basic functionality
 
+# %%
 class Dirs:
     """Namespace for directories in project"""
     def __init__(self):
@@ -48,8 +61,10 @@ def newfig(title, xlabel, ylabel, xlim=None, ylim=None, xscale=None, yscale=None
     ax.grid(True)
     return ax
 
-# %% Theis and Hantush well functions
+# %% [markdown]
+## Theis and Hantush well functions
 
+# %%
 def Wt(u):
     """Return Theis well function.
     
@@ -178,6 +193,7 @@ def IRtheis(T=None, S=None, r=None, t=None):
     u = np.hstack((np.nan, r ** 2 * S / (4 * T * t[1:])))
     return np.hstack((0, 1 / (4 * np.pi * T) *  np.exp(-u[1:]) / t[1:])) * dt[0]
 
+# %% [markdown]
 # Check Hantush and Bruggeman functions for a well in a leaky aquifer.
 # u, rho = 0.004, 0.03
 # print("Wh(u={:.4g}, rho={:.4g}) = {}".format(u, rho, Wh(u, rho)))
@@ -185,7 +201,10 @@ def IRtheis(T=None, S=None, r=None, t=None):
 # print("Wb(tau={:.4g}, rho={:.4g}) = {}".format(tau, rho, Wb(tau, rho)))
 
 
-# %% Wells
+# %% [markdown]
+## Wells
+
+# %%
 class WellBase(ABC):
     """Base class for all well functions that follow.
     
@@ -862,6 +881,9 @@ class Brug370_1(WellBase):
         This solution is for the steady state drawdown caused by a well in a
         semi-confined aquifer in which the properties kD and c jump at x=0.
         
+        Make sure the coordinates are such that x=0 corresponds with the
+        jump in the aquifer properties.
+        
         Parameters
         ----------
         xw, yw: float
@@ -916,6 +938,7 @@ class Brug370_1(WellBase):
         ----------
         x, y: floats or arrays
             x, y coordinates
+            Make sure that x corresponds with the jump in the aquifer properties.
         Q: float
             extraction
             
@@ -1361,8 +1384,10 @@ class wBlom(WellBase):
         ax.legend()
         return ax
 
-# %% Implementation of function computing drawdown or head in a 1D cross section.
+# %% [markdown]
+## Implementation of functions for computing drawdown or head in a 1D cross section.
 
+# %%
 class StripBase(ABC):
     """Base class for several 1D groundwater flow functions."""
         
@@ -1709,7 +1734,10 @@ class Blom1D(StripBase):
             return np.nan
         
         
-# %% Generate a line that can illustrate ground surface elevation
+# %% [markdown]
+## Generate a line that can illustrate ground surface elevation
+
+# %%
 
 def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
     r"""Return a ground surface elevation for visualization purposes.
@@ -1766,6 +1794,9 @@ def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
     filtered = y * filtfilt(np.ones(Lfilt) / Lfilt, 1, z, method='gust')
     return filtered
 
+
+# %% [markdown]
+## Generate coordinates for mirror wells and mirror ditches
 
 # %%
 class Mirrors():
@@ -1847,7 +1878,7 @@ class Mirrors():
                     self.xLD[i] -= deltaL
         return
 
-    def show(self, ax=None, figsize=(8, 2), fcs=('yellow', 'orange')):
+    def show(self, ax=None, figsize=(10, 6), fcs=('yellow', 'orange')):
         """Return picture of the ditches and the direction of the head change.
         
         Parameters
@@ -1902,11 +1933,14 @@ class Mirrors():
     
         
 
+# %% [markdown]
+## === E X A M P L E S ===
 
-# ================= E X A M P L E S ===================================
+# %%
 if __name__ == '__main__':
-    # %% 
-    # Theis and Hantush type curves
+    # %% [markdown]
+    ### Theis and Hantush type curves
+    # %%
     fig, ax = plt.subplots(figsize=(10, 6))
     title = "Theis and Hantush's type function for drawdown caused by well"               
     ax.set(title=title, xlabel="1/u", ylabel="well function values",
@@ -1919,11 +1953,12 @@ if __name__ == '__main__':
     ax.legend(loc='lower right', fontsize='small')
     # plt.show()
 
-    # %%
-    # Example, Use of mirror wells, which immediately shows all 4 possibilities
+    # %% [markdown]
+    ### Example, Use of mirror wells, which immediately shows all 4 possibilities
     # The problem is an aquifer between xL and xR with as boundaries that the aquifer
     # at xL and or xR is fixed or closed.
     
+    # %%
     # Set aquifer properties
     kD, S, c= 600, 0.001, 200
     lambda_ = np.sqrt(kD * c)
@@ -1942,7 +1977,7 @@ if __name__ == '__main__':
     md = Mirrors(xL, xR, xw=xw, N=Nmirror, Lclosed=Lclosed, Rclosed=Rclosed)
     
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
-    ax1 = md.show(ax=ax1, figsize=(8, 2), fcs=('yellow', 'orange'))
+    ax1 = md.show(ax=ax1, figsize=(10, 3), fcs=('yellow', 'orange'))
 
     s = np.zeros_like(x)
     
@@ -1971,7 +2006,10 @@ if __name__ == '__main__':
     ax2.legend()
     # plt.show()
     
-    # %% Example of using mirror ditches to simulate transient filling of a basin
+    # %% [markdown]
+    ### Example of using mirror ditches to simulate transient filling of a basin
+    
+    # %%
 
     # Aquifer properties and coordinates
     kD, S = 600., 0.2
@@ -2017,8 +2055,10 @@ if __name__ == '__main__':
     # plt.show()
 
 
-    # %% Testing the function "ground_surface"
+    # %%[markdown]
+    ### Testing the function "ground_surface"
     
+    # %%
     xL, xR = -2500., 2500.
     x = np.linspace(-4000., 4000., 801)
     
@@ -2032,7 +2072,7 @@ if __name__ == '__main__':
     # Adept by trial and error.
     seed = 1
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.set_title(
         f"Generated ground surface for xL={xL}, xR={xR}, yM={yM}, Lfilt={Lfilt}")
     ax.set_xlabel("x [m]")
@@ -2045,9 +2085,10 @@ if __name__ == '__main__':
     ax.grid()
     # plt.show()
 
-    # %%
-    # #head in strip with adjacent leaky aquifers
+    # %% [markdown]
+    ### Head in strip with adjacent leaky aquifers
     
+    # %%
     # Parameters for the cross section
     N, kD, xL, xR, hL, hR = 0.001, 600, -2500, 2500, 20, 22
     lamb_L, lamb_R = 100., 300.,
@@ -2071,7 +2112,7 @@ if __name__ == '__main__':
 
     # Case with hard center-area boundaries
     ax.plot(x, sec2.h(x, N),
-            label=fr'h with leaky adjacent areas. N={N} m/d, kD={ssec2.aq['kD']} m2/d $\lambda_L$={sec2.aq['lambda_L']} m, $\lambda_R$={sec2.aq['lambda_R']} m')
+            label=fr'h with leaky adjacent areas. N={N} m/d, kD={sec2.aq['kD']} m2/d $\lambda_L$={sec2.aq['lambda_L']} m, $\lambda_R$={sec2.aq['lambda_R']} m')
 
     # Plot the boundary locations
     # Compute the head at the boundary locations
@@ -2079,7 +2120,7 @@ if __name__ == '__main__':
     hxR = sec1.h(xR, N)
     
     ax.plot([xL, xR], [hxL, hxR], 'go',
-            label=fr"Boundary be with leaky area with $\lambda_L$={sec1.aq['lamb_L']} en $\lambda_R$={sec1.aq['lamb_R']} m")
+            label=fr"Boundary be with leaky area with $\lambda_L$={sec1.aq['lambda_L']} en $\lambda_R$={sec1.aq['lambda_R']} m")
     
     # Annotate boundaries
     ax.annotate("Area boundary", xy=(xL, 20.), xytext=(xL, 24.5), ha='center',
@@ -2093,13 +2134,14 @@ if __name__ == '__main__':
     ax.plot([xL, xR], [hxL, hxR], 'ro', label=f"Hard boundary hL={sec2.bnd['hL']}, hR={sec2.bnd['hR']} m op  resp. x={sec2.bnd['xL']} en x={sec2.bnd['xR']}  m")
 
 
-    plt.show()
+    # plt.show()
 
 
-    # %%
-    # Verruijt 1D fixed Q and varying L
+    # %% [markdown]
+    ### Verruijt 1D fixed Q and varying L
     # Example with ever increasing distance L to the fixed head boundary
 
+    # %%
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
     pars = {'Q': 0.5, 'N': 0.003, 'L': 250}
     x = np.linspace(0, 300, 301)[1:]
@@ -2170,9 +2212,10 @@ if __name__ == '__main__':
     # 
     # Bij grote onttrekking is de daling van de grondwaterstand in het eeste plaatje is een stuk groter dan de verlaging in het tweede plaatje. Dit is het gevolg van de afname van de dikte van het watervoerende pakket waar in het eerste plaatje wel en in het tweede plaatje geen rekening mee is gehouden.
 
-    # %%
-    # Verruijt 1D, fixed L and varying Q
+    # %% [markdown]
+    ### Verruijt 1D, fixed L and varying Q
 
+    # %%
     pars['L'] = 600
     x = np.linspace(0, 1000, 5001)[1:]
     Qs = [0., 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
@@ -2239,9 +2282,10 @@ if __name__ == '__main__':
     # 
     # Voor de situatie met variabele pakketdikte zou de stijghoogte op $x > L x$ nog iets gecorrigeerd kunnen worden voor de in werkelijkheid afnemende dikte. Dit effect is echter zo klein dat het verschil in de aansluiting op het aangegeven punt, dus $x=L$ in de grafiek niet is te zien. Deze correctie kan eenvoudig worden verwaarloosd in de praktijk.In het onderhavige geval is dit een correctie van de $\lambda van $h/H = (D - s_L) / D \approx 19.5 / 20 \approx 0.98$ op de gebruikte waarde van $\lambda$, dus verwaarloosbaar.
 
+    # %% [markdown]
+    ### Blom 1D, fixed L and varying Q
+    
     # %%
-    # Blom 1D, fixed L and varying Q
-
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
     pars = {'Q': 0.5, 'N': 0.003}
     Qs = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
@@ -2305,11 +2349,12 @@ if __name__ == '__main__':
     # plt.show()
     
     # %% [markdown]
-    # ## Voorbeelden Verruijt, axiaal symmetrisch
+    ## Voorbeelden Verruijt, axiaal symmetrisch
 
+    # %% [markdown]
+    ### Verruijt 1D fixed Q and varying R
+    
     # %%
-    # Verruijt 1D fixed Q and varying R
-
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
     pars = {'Q': 300, 'N': 0.003, 'R': 250.}
     r = np.linspace(0, 300, 301)[1:]
@@ -2365,8 +2410,10 @@ if __name__ == '__main__':
     # plt.show()
 
 
+    # %% [markdown]
+    ### Bodemconstanten, gebiedsradius, voeding, onttrekking en putstraal
+    
     # %%
-    # Bodemconstanten, gebiedsradius, voeding, onttrekking en putstraal
     aqprops = {'k': 20, 'D': 20}
     pars = {'Q': 1200., 'N': 0.002, 'R': 1000.}
 
@@ -2418,8 +2465,10 @@ if __name__ == '__main__':
     leg = ax.legend(loc='lower left', fontsize=10)
     leg.set_bbox_to_anchor((0.10, 0.11, 0.3, 0.5), transform=ax.transAxes)
 
+    # %% [markdown]
+    ### Bodemconstanten, gebiedsradius, voeding, onttrekking en putstraal
+    
     # %%
-    # Bodemconstanten, gebiedsradius, voeding, onttrekking en putstraal
     aqprops = {'k': 10, 'D': 20}
     pars = {'Q': 1200., 'N': 0.002, 'R':1000.}
 
@@ -2473,11 +2522,12 @@ if __name__ == '__main__':
     # plt.show()
 
     # %% [markdown]
-    # ## Voorbeeld Blom, axiaal symmetrisch
+    ## Voorbeeld Blom, axiaal symmetrisch
+
+    # %% [markdown]
+    ### Blom axiaal symmetrisch, fixed Q and varying R
 
     # %%
-    # Blom axiaal symmetrisch, fixed Q and varying R
-
     aqprops = {'k': 10., 'D': 20., 'c': 200.}
     pars = {'Q': 300, 'N': 0.003}
     r = np.linspace(0, 300, 301)[1:]
@@ -2536,7 +2586,7 @@ if __name__ == '__main__':
     # plt.show()
 
     # %% [markdown]
-    # ### Demonstratie van de voortgang van het iteratieproces volgens Newton om R te vinden waar de verlaging gelijk is aan Nc
+    ### Demonstratie van de voortgang van het iteratieproces volgens Newton om R te vinden waar de verlaging gelijk is aan Nc
     # 
     # De afstand van de put waarop de verlaging precies gelijk is aan Nc, het critierium voor juist droogvallen van de sloten wordt iteratief berekend met de methode van Newton. Het voorschrijden van dit iteatieproces wordt hieronder grafisch weergegeven.
     # 
@@ -2569,7 +2619,7 @@ if __name__ == '__main__':
     # Well position
     xw = 200.
 
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(10, 6))
     
     ax.set_title("Bruggeman 370_01, verification, \n" +
                  fr"xw={xw:.4g} m, Qw={Q:.4g} m3/d\nkD1={kD1:.4g} m2/d, kD2={kD2:.4g} m2/d, c1={c1:.4g} d, c2={c2:.4g} d", fontsize=12)
