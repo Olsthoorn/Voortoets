@@ -641,7 +641,7 @@ class Fdm3():
                 raise ValueError(
                     f"""DRN must have dtype:\n{self.dtype['drn']}\nnot\n{DRN.dtype}"""
                 )
-            DRN = self.__class__.extend_dtype(DRN, fields=[('Q', float)])
+            DRN = self.__class__.extend_dtype(DRN, fields=[('Q', float), ('phi', float)])
             
         # RIV boundaries
         if RIV is not None:
@@ -649,7 +649,7 @@ class Fdm3():
                 raise ValueError(
                     f"""RIV must have dtype:\n{self.dtype['riv']}\nnot\n{RIV.dtype}"""
                 )
-            RIV = self.__class__.extend_dtype(RIV, fields=[('Q', float)])
+            RIV = self.__class__.extend_dtype(RIV, fields=[('Q', float), ('phi', float)])
 
             
         # General head boundaries
@@ -657,7 +657,7 @@ class Fdm3():
             if not GHB.dtype == self.dtype['ghb']:
                 raise ValueError(
                     f"""GHB must have dtype:\n{self.dtype['ghb']}\nnot\n{GHB.dtype}""")
-            GHB = self.__class__.extend_dtype(GHB, fields=[('Q', float)])
+            GHB = self.__class__.extend_dtype(GHB, fields=[('Q', float), ('phi', float)])
             
         # Free drainage boundaries (kind of drains)
         if DRN1 is not None:
@@ -699,6 +699,7 @@ class Fdm3():
             # Add the boundary conditions
             if DRN is not None:
                 Ig = DRN['Ig']
+                DRN['phi'] = Phi[Ig]
                 mask = Phi[Ig] > DRN['h'] # select cells that actually leak
                 if True: # Non-linear          
                     adiag[Ig[mask]] += DRN['C'][mask]
@@ -709,6 +710,7 @@ class Fdm3():
 
             if RIV is not None:
                 Ig =RIV['Ig']
+                RIV['phi'] = Phi[Ig]
                 if True: # Non-linear
                     mask = Phi[Ig] > RIV['rbot']        
                     adiag[Ig[mask]] += RIV['C'][mask]
@@ -720,6 +722,7 @@ class Fdm3():
 
             if GHB is not None:
                 Ig = GHB['Ig']
+                GHB['phi'] = Phi[Ig]
                 adiag[Ig] += GHB['C']
                 RHS[  Ig, 0] += GHB['C'] * GHB['h']
 
@@ -741,6 +744,7 @@ class Fdm3():
                     DRN1['beta']  = (DRN1['w'] / 2) / np.sqrt(y)
                     DRN1['C'] = dphi_h0 * gr.Area.ravel()[Ig] / DRN1['ge']
                 else:
+                    DRN1['phi'] = Phi[Ig]
                     dphi_h0 = Phi[Ig] - DRN1['h0']
                     mask = dphi_h0 > lamb
                     DRN1['C'][ mask] = dphi_h0[mask]
@@ -776,57 +780,112 @@ class Fdm3():
                 Phi[active] = la.spsolve((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active] )                
                 print("No outer iterations needed.")
                 break
-            
+
+
+        # Prepare output, all items are returned in a single dictionary out
+        out=dict()
+        out.update(gr=gr)
+        
         # reshape Phi to shape of grid
         Phi = Phi.reshape(self.gr.shape)
+        out.update(Phi=Phi)
 
         # Net cell inflow
         Q = self.gr.const(0.)
         Q.ravel()[active]  = (self.A + sp.diags(adiag, 0))[active][:,active] @ Phi.ravel()[active]
+        out.update(Q=Q)
         
         #Flows across cell faces
         Qx =  -np.diff(Phi, axis=2) * self.Cx
         Qy =  +np.diff(Phi, axis=1) * self.Cy
         Qz =  +np.diff(Phi, axis=0) * self.Cz
-        
-        out=dict()
-        out.update(Phi=Phi, Q=Q, Qx=Qx, Qy=Qy, Qz=Qz)
+        out.update(Qx=Qx, Qy=Qy, Qz=Qz)
+                
+        Qfh = (self.A + sp.diags(self.adiag, 0))[:, fxhd] @ Phi.ravel()[fxhd]
+    
+        out.update(Qfq=FQ, Qfh=Qfh)
         
         if DRN is not None:                      
             mask = Phi.ravel()[DRN['Ig']] > DRN['h']
             DRN['Q'][mask] = DRN['C'][mask] * (DRN['h'][mask] - Phi.ravel()[DRN['Ig'][mask]])
-            Qdrn = self.gr.const(0.)
-            Qdrn.ravel()[DRN['Ig']] = DRN['Q']     
-            out.update(Qdrn=Qdrn)
+            out.update(DRN=DRN)
 
         if RIV is not None:            
             mask = Phi.ravel()[RIV['Ig']] > RIV['rbot']
             RIV['Q'][ mask] = RIV['C'][ mask] * (RIV['h'][ mask] - Phi.ravel()[RIV['Ig'][mask]])
             RIV['Q'][~mask] = RIV['C'][~mask] * (RIV['h'][~mask] - RIV['rbot'][~mask])
-            Qriv = self.gr.const(0.)
-            Qriv.ravel()[RIV['Ig']] = RIV ['Q']     
-            out.update(Qriv=Qriv)
+            out.update(RIV=RIV)
 
         if GHB is not None:            
             GHB['Q'] = GHB['C'] * (GHB['h'] - Phi.ravel()[GHB['Ig']])
-            Qghb = self.gr.const(0.)
-            Qghb.ravel()[GHB['Ig']] = GHB['Q']
-            out.update(Qghb=Qghb)
+            out.update(GHB=GHB)
 
         if DRN1 is not None:            
             mask = Phi.ravel()[DRN1['Ig']] > DRN1['h0']
             DRN1['Q'][mask] = DRN1['C'][mask] * (DRN1['h'][mask] - Phi.ravel()[DRN1['Ig'][mask]])
-            Qdrn1 = self.gr.const(0.)
-            Qdrn1.ravel()[DRN1['Ig']] = DRN1['Q']
-            out.update(Qdrn1=Qdrn1)
-            
-            # c = 1 / (np.pi * np.log(D  / Omega))
+            out.update(DRN1=DRN1)
 
-            # set inactive cells to np.nan
+        # Finally: set inactive cells to np.nan
         out['Phi'][inact.reshape(self.gr.shape)] = np.nan # put np.nan at inactive locations
 
         return out
+    
+def watbal(out):
+    """Print the water budget of the model divided according to boundary types.
+    
+    The resulting Q1 is the net inflow in each cell based on A @ RHS, internal flows from each cell to each neighbors.
+    Q2 is the total flow into the model by all boundary types.
+    Q2 is then split over Qfh, Qfq, Qghb, Qriv, Qdrn and Qdrn1.
+    
+    All values are model totals.
+    Q1 should be close to Q2
 
+    @TO 20250320
+
+    Parameters
+    ----------
+    out: dictionary
+        Output of Fem3D simulation.
+    """
+    print("\n===== Water balance of the entire model =====")
+    Q1 = out['Q'].sum()
+    print(f"Q1    = {Q1:10.2f} m3/d, total internal flow into cells.")
+    
+    print("Boundary components:")
+    Qfh = out['Qfh'].sum()
+    print(f"fQfh  = {Qfh:10.2f} m3/d, flow from FH cells.")
+    Q2 = Qfh
+    
+    Qfq = out['Qfq'].sum()
+    print(f"Qfq   = {Qfq:10.2f} m3/d, flow from FQ cells.")
+    Q2 += Qfq
+    
+    if 'DRN' in out:
+        Qdrn = out['DRN']['Q'].sum()
+        print(f"Qdrn  = {Qdrn:10.2f} m3/d, flow form DRN cell.s")
+        Q2 += Qdrn
+        
+    if 'GHB' in out:
+        Qghb = out['GHB']['Q'].sum()
+        print(f"Qghb  = {Qghb:10.2f} m3/d, flow from GHB cells.")
+        Q2 += Qghb
+        
+    if 'RIV' in out:
+        Qriv = out['RIV']['Q'].sum()
+        print(f"Qriv  = {Qriv:10.2f} m3/d, flow from RIV cells.")
+        Q2 += Qriv
+        
+    if 'DRN1' in out:
+        Qdrn1 = out['DRN1']['Q'].sum()
+        print(f"Qdrn1 = {Qdrn1:10.2f} m3/d, flow from DRN1 cells.")
+        Q2 += Qdrn1
+    
+    print()
+    print("Total waterbalance for model")
+    print(f"Q1 (internal)    = {Q1:10.2f} m3/d, total internal flow")
+    print(f"Q2 (boundaries)  = {Q1:10.2f} m3/d, total from bounaries")
+    print("===== end of water balance =====\n")
+    return
 
 def mazure(kw):
     """1D flow in semi-confined aquifer example
@@ -1016,8 +1075,9 @@ if __name__ == "__main__":
     # out2 = deGlee_GHB(cases['DeGlee'])
     # out3 = freeDrainage(cases['FreeDrainage'])
     
-    r = np.hstack((0., np.logspace(-1., 3., 25)))
+    r = np.hstack((0., np.logspace(-1., np.log10(5000.), 25)))
     r = np.unique(np.hstack((r, r[-1] - r)))
+    r = np.linspace(0, 5000., 101)
     
     z = np.array([1., -0., -50.])
     # gr = mfgrid.Grid(r, None, z, axial=True)
@@ -1029,7 +1089,8 @@ if __name__ == "__main__":
     HI = gr.const(0.)
     FQ = gr.const(0.)
     # Q = -1200.
-    Q = -1.0
+    Q = -10.0
+    Q = 0.
     N = 0.002
     FQ[-1, 0, 0] = Q
     ilay = 1
@@ -1070,7 +1131,7 @@ if __name__ == "__main__":
         HI[-1, 0, -1] = 1.0
         FQ = gr.const(0.)
         FQ[-1, 0, 0] = Q
-        FQ[0] = gr.Area * N  
+        FQ[-1] += gr.Area * N  
         mdl_ghb = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
     
         GHB = np.zeros(gr.nx, dtype=mdl_ghb.dtype['ghb'])
@@ -1086,8 +1147,9 @@ if __name__ == "__main__":
         IBOUND = gr.const(1, dtype=int)
         # IBOUND[-1, 0, -1] = -1         
         FQ = gr.const(0.)
-        FQ[0] = gr.Area * N
         FQ[-1, 0, 0] = Q
+        FQ[-1] += gr.Area * N
+        
         HI = gr.const(0.)
         HI[-1, 0, -1] = 1.0
         mdl_drn = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
@@ -1106,9 +1168,9 @@ if __name__ == "__main__":
         # IBOUND[-1, 0, -1] = -1   
         HI = gr.const(0.)
         HI[-1, 0, -1] = 1.0     
-        FQ = gr.const(0.)
-        FQ[0] = gr.Area * N   
+        FQ = gr.const(0.)        
         FQ[-1, 0, 0] = Q
+        FQ[-1] += gr.Area * N   
         mdl_riv = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
 
         RIV = np.zeros(gr.nx, dtype=mdl_riv.dtype['riv'])
@@ -1128,8 +1190,8 @@ if __name__ == "__main__":
         HI = gr.const(0.)
         HI[-1, 0, -1] = 1.0       
         FQ = gr.const(0.)
-        FQ[0] = gr.Area * N
         FQ[-1, 0, 0] = Q
+        FQ[-1] += gr.Area * N        
         mdl_drn1 = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
 
         DRN1 = np.zeros(gr.nx, dtype=mdl_drn1.dtype['drn1'])
@@ -1141,65 +1203,21 @@ if __name__ == "__main__":
         DRN1['N']   = N
 
         out_drn1 = mdl_drn1.simulate(DRN1=DRN1)
-        ax.plot(gr.xm, out_drn1['Phi'][ilay][0], label=f"DRN1, Phi[{ilay}]")    
+        ax.plot(gr.xm, out_drn1['Phi'][ilay][0], label=f"DRN1, Phi[{ilay}]")
+        
+        ax.plot(gr.xm, DRN1['phi'], '--', label='DRN1-phi')
+        ax.plot(gr.xm, DRN1['h'], '-.', label='DRN1-h')
+        ax.plot(gr.xm, DRN1['h0'], '--', label='DRN1-h0')   
     
     ax.grid()
     ax.legend()
-    plt.show()
-    print('Done')
     
-    
-
-        # class CGCallback:
-        #     def __init__(self, A, RHS, adiag, DRN, RIV, GHB, DRN1, FQ, HI, active, fxhd):
-        #         self.A = A
-        #         self.Act = A[active, active] 
-        #         self.RHS = RHS 
-        #         self.adiag = adiag
-        #         self.DRN = DRN
-        #         self.RIV = RIV
-        #         self.GHB = GHB
-        #         self.DRN1 = DRN1
-        #         self.FQ = FQ                
-        #         self.HI = HI
-        #         self.active = active
-        #         self.fxhd   = fxhd
-        #         
-            # def __call__(self, xk):
-            #     adiag = self.adiag.copy()
-            #     rhs = FQ.ravel()[:, np.newaxis]
-            #     if np.any(fxhd):
-            #         rhs -= (self.A + sp.diags(adiag, 0))[:, self.fxhd] @ HI[self.fxhd]
-
-            #     if self.GHB:
-            #         adiag[GHB['Ig']] += GHB['C']
-            #         rhs[GHB['Ig']] += GHB['C'] * GHB['h']
-            #     if self.DRN:
-            #         mask = xk[DRN['Ig']] > DRN['h']
-            #         adiag[DRN['Ig'][mask]] += DRN['C'][mask]
-            #         rhs[DRN['Ig'][mask]] += DRN['C'][mask] * DRN['h'][mask]
-            #     if self.RIV:
-            #         mask = xk[RIV['Ig']] > RIV['rbot']
-            #         adiag[RIV['Ig'][mask]] += RIV['C'][mask]
-            #         rhs[RIV['Ig'][mask]] += RIV['C'][mask] * RIV['h'][mask]
-            #         rhs[RIV['Ig'][~mask]] += RIV['C'][~mask] * (RIV['h'][~mask] - RIV['rbot'][~mask])
-            #     if self.DRN1:
-            #         delta = 0.01
-            #         G = (self.gamma + self.eta) ** 2                    
-            #         lambda_ = np.exp(1) * delta * G      
-            #         dphi = xk[DRN1['Ig']] - DRN1['h0']
-            #         mask = dphi > 0
-            #         C = np.zeros_like(rhs)
-            #         C[mask] = dphi[mask] / G
-            #         C[~mask] = delta * np.exp(dphi[~mask] / lambda_)
-            #         adiag[DRN1['Ig']] += C
-            #         rhs[DRN1['Ig']] += C * DRN1['h0']
-            #     Iact = gr.NOD.ravel()[active]                    
-            #     for i, ia in enumerate(Iact):
-            #         self.Act[i, i] = adiag[ia]
-            #         self.RHS[i] = rhs[ia]
-                
-        # cb = CGCallback(self.A, RHS, self.adiag, DRN, RIV, GHB, DRN1, FQ, HI, active, fxhd)
-        # cb(RHS)
-        # Phi, info = la.cg(self.A[active, active], RHS[active], callback=cb)
+    watbal(out_ccc)
+    watbal(out_ghb)
+    watbal(out_drn)
+    watbal(out_riv)
+    watbal(out_drn1)
         
+    print('Done')
+    plt.show()
+    
