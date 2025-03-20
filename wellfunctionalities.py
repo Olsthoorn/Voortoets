@@ -1924,7 +1924,7 @@ class Mirrors():
             ax.annotate("", xy=(self.xw, self.sw), xytext=(self.xw, 0),
                         arrowprops=dict(arrowstyle="->", color="green")) 
         
-        ax.set_title(f"Mirror ditches with     Left: {"closed" if self.Lclosed else "open"}, Right: {"closed" if self.Rclosed else "open"}")
+        ax.set_title(f"Mirror ditches with     Left: {'closed' if self.Lclosed else 'open'}, Right: {'closed' if self.Rclosed else 'open'}")
         ax.set_ylim(-1, 1.1)
         
         # Don't want no yticks and no ticklabels
@@ -2108,11 +2108,11 @@ if __name__ == '__main__':
 
     # Case with soft center-area boundaries
     ax.plot(x, sec1.h(x, N), 
-            label=f'h with hare area boundaries. N={N} m/d, kD={sec1.aq['kD']} m2/d, op xL={xL} m en xR={xR} m')
+            label=f"h with hare area boundaries. N={N} m/d, kD={sec1.aq['kD']} m2/d, op xL={xL} m en xR={xR} m")
 
     # Case with hard center-area boundaries
     ax.plot(x, sec2.h(x, N),
-            label=fr'h with leaky adjacent areas. N={N} m/d, kD={sec2.aq['kD']} m2/d $\lambda_L$={sec2.aq['lambda_L']} m, $\lambda_R$={sec2.aq['lambda_R']} m')
+            label=fr"h with leaky adjacent areas. N={N} m/d, kD={sec2.aq['kD']} m2/d $\lambda_L$={sec2.aq['lambda_L']} m, $\lambda_R$={sec2.aq['lambda_R']} m")
 
     # Plot the boundary locations
     # Compute the head at the boundary locations
@@ -2172,7 +2172,7 @@ if __name__ == '__main__':
         hd = V1.h(x=xd, **pars)
         ax.plot([-xd, xd], [hd, hd], 'v', color=clr, label=f"xd={xd:.3g} m")
         ax.plot([-pars['L'], pars['L']], [aqprops['D'], aqprops['D']], '.',
-                color=clr, label=f'L={pars['L']}')
+                color=clr, label=f"L={pars['L']}")
 
     ax.legend(fontsize=6, loc='lower right')
 
@@ -2196,7 +2196,7 @@ if __name__ == '__main__':
         xd = V1.xdiv(**pars)
         ddnd = V1.dd(x=xd, **pars)
         ax.plot([-xd, xd], [ddnd, ddnd], 'v', color=clr, label=f"xd={xd:.3g} m")
-        ax.plot([-pars['L'], pars['L']], [0., 0.], '.', color=clr, label=f'L={pars['L']}')
+        ax.plot([-pars['L'], pars['L']], [0., 0.], '.', color=clr, label=f"L={pars['L']}")
 
     ax.legend(fontsize=6, loc='lower right')
 
@@ -2237,7 +2237,7 @@ if __name__ == '__main__':
         xd = V1.xdiv(**pars)
         hd = V1.h(x=xd, **pars)
         ax.plot([-xd, xd], [hd, hd], 'v', color=clr, label=f"xd={xd:.3g} m")
-        ax.plot([-pars['L'], pars['L']], [aqprops['D'], aqprops['D']], '.', color=clr, label=f'L={pars['L']}')
+        ax.plot([-pars['L'], pars['L']], [aqprops['D'], aqprops['D']], '.', color=clr, label=f"L={pars['L']}")
 
     ax.text(0.1, 0.6, "Variabele pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=10, loc='lower right')
@@ -2263,7 +2263,7 @@ if __name__ == '__main__':
         xd = V1.xdiv(**pars)
         ddnd = V1.dd(x=xd, **pars)
         ax.plot([-xd, xd], [ddnd, ddnd], 'v', color=clr, label=f"xd={xd:.3g} m")
-        ax.plot([-pars['L'], pars['L']], [0., 0.], '.', color=clr, label=f'L={pars['L']}')
+        ax.plot([-pars['L'], pars['L']], [0., 0.], '.', color=clr, label=f"L={pars['L']}")
 
     ax.text(0.1, 0.6, "Vaste pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=10, loc='lower right')
@@ -2314,7 +2314,7 @@ if __name__ == '__main__':
         hL = B1.h(x=L, **pars)    
         if not np.isnan(xd):
             ax.plot([-xd, xd], [hd, hd], 'o', color=clr, label=f"xd={xd:.3g} m, hd={hd:.3g} m")
-        ax.plot([-L, L], [hL, hL], '.', color=clr, label=f'L={L:.3g} m, hL={hL:.3g} m')
+        ax.plot([-L, L], [hL, hL], '.', color=clr, label=f"L={L:.3g} m, hL={hL:.3g} m")
 
     ax.text(0.1, 0.6, "Variabele pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=10, loc='lower right')
@@ -2377,7 +2377,7 @@ if __name__ == '__main__':
         rd  = V2.rdiv(**pars)
         hd = V2.h(x=pars['R'], **pars)
         ax.plot([-rd, rd], [hd, hd], 'v', color=clr, label=f"rd={rd:.3g} m, hd={hd:.3g} m")
-        ax.plot([-pars['R'], pars['R']], [aqprops['D'], aqprops['D']], '.', color=clr, label=f'R={pars['R']:.3g} m, h={aqprops['D']:.3g} m')
+        ax.plot([-pars['R'], pars['R']], [aqprops['D'], aqprops['D']], '.', color=clr, label=f"R={pars['R']:.3g} m, h={aqprops['D']:.3g} m")
 
     ax.text(0.1, 0.6, "Variabele pakketdikte", transform=ax.transAxes, bbox=dict(facecolor='gray', alpha=0.3))
     ax.legend(fontsize=6, loc='lower right')

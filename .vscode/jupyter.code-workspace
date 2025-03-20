@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../../GRWMODELS/python/tools/fdm"
+		}
+	],
+	"settings": {
+			"python.pythonPath": "/Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/.venv/bin/python"
+	}
+}
