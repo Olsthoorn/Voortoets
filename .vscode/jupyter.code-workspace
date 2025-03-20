@@ -9,5 +9,17 @@
 	],
 	"settings": {
 			"python.pythonPath": "/Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/.venv/bin/python"
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Python Debugger: Python File",
+				"type": "debugpy",
+				"request": "launch",
+				"program": "${file}",
+				"console": "integratedTerminal"
+			}
+		]
 	}
 }

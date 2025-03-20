@@ -103,7 +103,7 @@ def psi(Qx, row=0):
     return Psi
 
 
-def fdm3(gr=None, K=None, c=None, FQ=None, HI=None, IBOUND=None, DRN=None, RIV=None, GHB=None, DRN1=None, axial=False, tolh=0.0001, maxiter=50):
+def fdm3(gr=None, K=None, c=None, S=None, t=None, FQ=None, HI=None, IBOUND=None, DRN=None, RIV=None, GHB=None, DRN1=None, tolh=0.0001, maxiter=50):
     '''Compute a 3D steady state finite diff. model
 
     Parameters
@@ -118,6 +118,14 @@ def fdm3(gr=None, K=None, c=None, FQ=None, HI=None, IBOUND=None, DRN=None, RIV=N
         else: kx = ky = kz = K
     c: np.ndarray (nlay - 1, nrow, ncol) or None of not used
         Resistance agains vertical flow between the layers [d]
+    S: Storage coefficient per cell, will be multiplied by cell area.
+        Only used here to stabilize solutions with non-linear boundaries
+        Default Sy=0.2 in top layer, S=0.001 in lower layers.
+    t: np.ndarray of increasing times or float
+        times from which time steps are obtained.
+        t[0] or the float will be the first time step.
+        t is only used here to stabilize non-linear boundaries.
+        Default = 1 d.
     DRN: array of dtype:
         dtype = dtype([('Ig', 'O'), ('h', float), ('C', float)]) 
     GHB: array (ncell, 3)
@@ -396,7 +404,7 @@ def fdm3(gr=None, K=None, c=None, FQ=None, HI=None, IBOUND=None, DRN=None, RIV=N
 class Fdm3():
     """Finite difference model class."""
 
-    def __init__(self, gr=None, K=None, c=None, IBOUND=None, HI=None, FQ=None):
+    def __init__(self, gr=None, K=None, c=None, S=None, IBOUND=None, HI=None, FQ=None):
         """Return intantiated model with grid and aquifer properties but without its boundaries.
         
         Parameters
@@ -411,6 +419,10 @@ class Fdm3():
             else: kx = ky = kz = K
         c: np.ndarray (nlay - 1, nrow, ncol) or None of not used
             Resistance agains vertical flow between the layers [d]
+        S: np.ndarray or float
+            Storage coefficients for the cells.
+            Will be multiplied by gr.Area.
+            A 1D sequence will be interpreted as layer values.
         IBOUND: np.ndarray of ints (nlay, nrow, ncol)
             the boundary array like in MODFLOW
             with values denoting:
@@ -426,7 +438,7 @@ class Fdm3():
         # dtypes for the boundary types (alike those of flopy)    
         self.dtype = {
             "drn":  np.dtype([('Ig', int), ('h', float), ('C', float)]),
-            "riv":  np.dtype([('Ig', int), ('h', float), ('C', float), ('hbot', float)]),
+            "riv":  np.dtype([('Ig', int), ('h', float), ('C', float), ('rbot', float)]),
             "ghb":  np.dtype([('Ig', int), ('h', float), ('C', float)]),
             "drn1": np.dtype([('Ig', int), ('phi',   float), ('h', float),
                             ('h0', float), ('N', float), ('w', float)]), # For free runoff
@@ -536,6 +548,24 @@ class Fdm3():
         self.adiag = np.array(-self.A.sum(axis=1))[:,0]
         self.Cx, self.Cy, self.Cz = Cx, Cy, Cz
         
+        # Get storage from input line if None or not None
+        if S is None:
+            Sy, S = 0.2, 0.001            
+            self.Sto    = gr.AREA * S
+            self.Sto[0] = gr.Area * Sy
+        elif np.all(gr.shape == S.shape):
+            self.Sto = S
+        elif np.isscalar(S):
+            self.Sto = gr.const(S) * gr.AREA
+        else:            
+            S = np.atleast_1d(S).flatten() 
+            if len(S) <= gr.nz:
+                self.Sto = gr.const(S[-1])
+                self.Sto[:len(S), :, :] = S[:, np.newaxis, np.newaxis]
+                self.Sto = gr.const(S)
+                self.Sto *= gr.AREA
+            else:
+                raise ValueError(f"S must have shape {gr.shape} or len nz={gr.nz}")
         return
     
     @staticmethod
@@ -557,7 +587,7 @@ class Fdm3():
         return extended_data
 
         
-    def simulate(self, DRN=None, RIV=None, GHB=None, DRN1=None, tolh=0.0001, maxiter=50):
+    def simulate(self, DRN=None, RIV=None, GHB=None, DRN1=None, dt0=None, htol=0.00001, maxiter=50):
         """Compute a 3D steady state finite diff. model
 
         Parameters
@@ -573,30 +603,37 @@ class Fdm3():
         c: np.ndarray (nlay - 1, nrow, ncol) or None of not used
             Resistance agains vertical flow between the layers [d]
         DRN: array of dtype:
-            dtype = dtype([('Ig', 'O'), ('h', float), ('C', float)]) 
-        GHB: array (ncell, 3)
-            dtype = dtype([('Ig', 'O'), ('hbound', float), ('C', float)])
-            list of sequence, cellid may also be the global cell index
-            [[(k,j ,i), h, cond],
-            [...]]
-        RIV: array of 
-            dtype = dtype([('Ig', 'O'), ('h', float), ('C', float)], ('rbot', float)])         
-        DRN1: array of
-            dtype([('Ig', 'O'), ('phi, float), ('hN', float), ('h0', float), ('N', float), ('wN', float)])
+            dtype = dtype([('Ig', 'int'), ('h', float), ('C', float)]) 
+        GHB: array ncell of the following dtype:
+            dtype = dtype([('Ig', 'int'), ('h', float), ('C', float)])
+            Ig = global cell index, h = fixed head and C = conductance
+        RIV: array of dtype
+            dtype = dtype([('Ig', 'I'), ('h', float), ('C', float)], ('rbot', float)])
+            Ig = global index, h = river stage, C = conductance, rbot is river bottom elevation.
+        DRN1: array of dtype
+            dtype([('Ig', 'int'), ('phi, float), ('h', float), ('h0', float), ('N', float), ('w', float)])
+            Ig is global index,
             phi = head at mean recharge N
-            hN = drainage level at mean recharge N
+            h = drainage level at mean recharge N
             h0 = bottom elevation of (deepest) ditches
-            N = average recharge
-            wN = ditch width at mean recharge N    
+            N = mean recharge
+            w = ditch width at mean recharge N
+        dt0: None | float
+            Initial time step to stabilize non-linear behavior caused by DRN, RIV and DRN1 boundaries.
+            With each outer iteration dt is doubled to make sure we reach the steady state.
+            We will make maxouter at least 25, which turns dt0 in 33 million.
+        atol, rtol: float (defaults: 0.0 and 1e-5)
+            absolute and relative tolerance in sparse.linalg.cg (conjugate gradient) solver.
 
         Returns
         -------
         out: dict
-            a dict with fields Phi, Qx, Qy, Qz and cell flow Q
-            Output shapes are
-            (Ny,Nx,Nz) (Ny,Nx-1,Nz), (Ny-1,Nx,Nz), (Ny,Nx,Nz-1), (Ny, Nx, Nz)
+            a dict with fields Phi, cell flow Q, Qx, Qy, Qz, RIV, DRN, GHB, DRN1
+            Output shapes are (Nz, Ny, Nx) for Phi and Q and
+            (Nz, Ny,Nx-1) for Qx, (Nz,Ny-1,Nx) for Qy, (Nz-1,Ny,Nx) for Qz, while
+            DRN, RIV, GHB, DRN1 have a column that holds the discharge for the the given nodes.
 
-        TO 160905,, 240316
+        TO 160905,, 240316, 250320
         """
         # DRN boundaries
         if DRN is not None:
@@ -636,41 +673,50 @@ class Fdm3():
             
         #cell numbers for neighbors
         
-        active = (self.IBOUND>0 ).reshape(self.gr.nod,)  # boolean vector denoting the active cells
-        inact  = (self.IBOUND==0).reshape(self.gr.nod,) # boolean vector denoting inacive cells
-        fxhd   = (self.IBOUND<0 ).reshape(self.gr.nod,)  # boolean vector denoting fixed-head cells
+        active = (self.IBOUND > 0).reshape(self.gr.nod,)  # boolean vector denoting the active cells
+        inact  = (self.IBOUND ==0).reshape(self.gr.nod,) # boolean vector denoting inacive cells
+        fxhd   = (self.IBOUND < 0).reshape(self.gr.nod,)  # boolean vector denoting fixed-head cells
 
         nod = int(self.gr.nod)
         
         HI = self.HI.copy().reshape(nod, 1)
+        
+        # Set up the initial head vector
         Phi = HI[:, 0].copy()
 
         # Outer iterations
+        dt = dt0 if dt0 is not None else 1.
         for iouter in range(maxiter):
             # Keep A's diagonal as a 1D vector
             adiag = self.adiag.copy()
 
             # St up up the Right-hand side vector, just using FQ, which is a gr.shape array.
-            RHS = self.FQ.reshape(nod, 1)
+            RHS = self.FQ.copy().reshape(nod, 1)
+
             if np.any(fxhd):
                 RHS -= (self.A + sp.diags(adiag, 0))[:, fxhd] @ HI[fxhd]
 
-            # Set up the initial head vector    
-            Phi[:] = HI[:, 0]
-            
             # Add the boundary conditions
             if DRN is not None:
                 Ig = DRN['Ig']
-                mask = Phi[Ig] > DRN['h'] # select cells that actually leak             
-                adiag[Ig[mask]] += DRN['C'][mask]
-                RHS[Ig[mask], 0] += DRN['C'][mask] * DRN['h'][mask]
-                
+                mask = Phi[Ig] > DRN['h'] # select cells that actually leak
+                if True: # Non-linear          
+                    adiag[Ig[mask]] += DRN['C'][mask]
+                    RHS[Ig[mask], 0] += DRN['C'][mask] * DRN['h'][mask]
+                else: # Linear
+                    adiag[Ig] += DRN['C']
+                    RHS[Ig, 0] += DRN['C'] * DRN['h']
+
             if RIV is not None:
                 Ig =RIV['Ig']
-                mask = Phi[Ig] > RIV['rbot']        
-                adiag[Ig[mask]] += RIV['C'][mask]
-                RHS[Ig[ mask], 0] += RIV['C'][mask] * RIV['h'][mask]
-                RHS[Ig[~mask], 0] += RIV['C'] * (RIV['h'][~mask] - RIV['rbot'][~mask])        
+                if True: # Non-linear
+                    mask = Phi[Ig] > RIV['rbot']        
+                    adiag[Ig[mask]] += RIV['C'][mask]
+                    RHS[Ig[ mask], 0] += RIV['C'][mask] * RIV['h'][mask]
+                    RHS[Ig[~mask], 0] += RIV['C'][~mask] * (RIV['h'][~mask] - RIV['rbot'][~mask])
+                else: # L inear
+                    adiag[Ig] += RIV['C']
+                    RHS[Ig, 0] += RIV['C'] * RIV['h']
 
             if GHB is not None:
                 Ig = GHB['Ig']
@@ -689,34 +735,43 @@ class Fdm3():
                     if not np.all(DRN1['N'] > 0):
                         raise ValueError("Initially we must have DRN1['N'] > 0")
                     DRN1['c'] = (dphi_h0 - y) / DRN1['N']
-                    DRN1['gamma'] = DRN1['c'] *  np.sqrt(DRN1['N'])
+                    DRN1['gamma'] = DRN1['c'] * np.sqrt(DRN1['N'])
                     DRN1['eta'  ] = y / np.sqrt(DRN1['N'])
                     DRN1['ge'] = (DRN1['gamma'] + DRN1['eta']) ** 2
-                    DRN1['beta']  = (DRN1['w'] / 2) / N
-                    DRN1['C'] = dphi_h0
+                    DRN1['beta']  = (DRN1['w'] / 2) / np.sqrt(y)
+                    DRN1['C'] = dphi_h0 * gr.Area.ravel()[Ig] / DRN1['ge']
                 else:
-                    dphi_h0 = Phi[Ig] - DRN['h0']
+                    dphi_h0 = Phi[Ig] - DRN1['h0']
                     mask = dphi_h0 > lamb
                     DRN1['C'][ mask] = dphi_h0[mask]
                     DRN1['C'][~mask] = delta * np.exp(dphi_h0[~mask] / lamb)
-                DRN1['C'] *=  gr.Area[Ig] / DRN1['ge'][mask]                    
+                    DRN1['C'] *=  gr.Area.ravel()[Ig] / DRN1['ge']
+                    DRN1['C'] = gr.Area.ravel()[Ig] / 200. # Temporarily
                 adiag[Ig] += DRN1['C']
                 RHS[Ig, 0] += DRN1['C'] * DRN1['h0']
-                        
-            
+                
+            # Quasi time stepping to stabilize non linear behavior
+
             if np.any(np.array([p is not None for p in [DRN, RIV, DRN1]])).item():
                 # If any of the non-linear boundaries are not None, use cg and use outer iterations
                 
-                Phi[active], info = la.cg((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active], x0=HI[active], rtol=1e-5, atol=0.0, maxiter=50)
+                adiag += self.Sto.ravel() / dt
+                RHS[:, 0] += self.Sto.ravel() / dt * Phi                
+                
+                Phi[active] = la.spsolve((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active] )                
+                # Phi[active], info = la.cg((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active], x0=HI[active], rtol=rtol, atol=atol, maxiter=250)
+                info = 1 # temporarily
                 err = np.abs(Phi[active] - HI.ravel()[active]).max()
+                
                 print(f"iouter = {iouter}, info={info}, err={err:.5g} m")                
-                if info == 0:
+                if err < htol:
                     print("Converged, normal termination.")
                     break
                 elif iouter == maxiter - 1:                    
                     print("Not converged!")
                 else:
                     HI[:, 0] = Phi
+                    dt = dt / 2                    
             else:
                 Phi[active] = la.spsolve((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active] )                
                 print("No outer iterations needed.")
@@ -745,8 +800,8 @@ class Fdm3():
             out.update(Qdrn=Qdrn)
 
         if RIV is not None:            
-            mask = Phi[RIV['Ig']] > RIV['rbot']
-            RIV['Q'][ mask] = RIV['C'][ mask] * (RIV['h'][ mask] - Phi[RIV['cellID'][mask]])
+            mask = Phi.ravel()[RIV['Ig']] > RIV['rbot']
+            RIV['Q'][ mask] = RIV['C'][ mask] * (RIV['h'][ mask] - Phi.ravel()[RIV['Ig'][mask]])
             RIV['Q'][~mask] = RIV['C'][~mask] * (RIV['h'][~mask] - RIV['rbot'][~mask])
             Qriv = self.gr.const(0.)
             Qriv.ravel()[RIV['Ig']] = RIV ['Q']     
@@ -961,107 +1016,133 @@ if __name__ == "__main__":
     # out2 = deGlee_GHB(cases['DeGlee'])
     # out3 = freeDrainage(cases['FreeDrainage'])
     
-    r = np.hstack((0., np.logspace(-1., 4., 51)))
+    r = np.hstack((0., np.logspace(-1., 3., 25)))
+    r = np.unique(np.hstack((r, r[-1] - r)))
+    
     z = np.array([1., -0., -50.])
-    gr = mfgrid.Grid(r, None, z, axial=True)
+    # gr = mfgrid.Grid(r, None, z, axial=True)
+    gr = mfgrid.Grid(r, None, z, axial=False)
     kx, kz = 10., 1000.
     K = (gr.const(kx), gr.const(kx), gr.const(kz))
     c = gr.const(100.)[0:1]
     IBOUND = gr.const(1, dtype=int)
     HI = gr.const(0.)
     FQ = gr.const(0.)
-    Q = -1200.
+    # Q = -1200.
+    Q = -1.0
     N = 0.002
     FQ[-1, 0, 0] = Q
-    
-    
-    # Basic, De Glee
-    dGlee = wf.wDeGlee(xw=0., yw=0., rw=gr.xm[0], z1=None, z2=None, aqprops={'kD':kx * gr.dz[-1], 'c':c[0, 0, 0]})
-    ddGl = dGlee.dd(x=gr.xm, Q=Q)
+    ilay = 1
 
-    # Basic, using c (resistance  
-    # IBOUND = gr.const(0, dtype=int)
-    # IBOUND[0] = -1
-    # HI = gr.const(0)
-    # FQ = gr.const(0.)
-    # FQ[-1, 0, 0] = Q
-    # mdl_ccc = Fdm3(gr=gr, K=K, c=c, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    # out_ccc = mdl_ccc.simulate()
+    variants= {'Glee', 'ccc', 'DRN', 'GHB', 'RIV', 'DRN1'}
+    variants= {'Glee', 'ccc', 'DRN', 'GHB', 'RIV'}
+    # variants= {'Glee', 'ccc', 'DRN', 'GHB'}
+    variants= {'ccc', 'DRN', 'GHB', 'RIV', 'DRN1'}
     
-    # Using GHB (should be the same as De Glee or ccc)
-    IBOUND = gr.const(1, dtype=int)
-    HI = gr.const(0.)
-    FQ = gr.const(0.)
-    FQ[-1, 0, 0] = Q
-    FQ[0] = gr.Area * N  
-    mdl_ghb = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    
-    GHB = np.zeros(gr.nx, dtype=mdl_ghb.dtype['ghb'])
-    GHB['Ig'] = gr.NOD[0, 0, :]
-    GHB['C'] = gr.AREA[0, 0, :] /  c[0, 0, :]
-    GHB['h'] = HI[0, 0, :]
-    
-    out_ghb = mdl_ghb.simulate(GHB=GHB)
-    
-    # Using DRN (should be the same Blom)
-    IBOUND = gr.const(1, dtype=int)
-    IBOUND[-1, 0, -1] = -1         
-    FQ = gr.const(0.)
-    FQ[0] = gr.Area * N
-    FQ[-1, 0, 0] = Q
-    mdl_drn = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    
-    DRN = np.zeros(gr.nx, dtype=mdl_drn.dtype['drn'])
-    DRN['Ig'] = gr.NOD[0, 0, :]
-    DRN['C']  = gr.Area[0, :] /  c[0, 0, :]
-    DRN['h']  = HI[0, 0, :]
-    
-    out_drn = mdl_drn.simulate(DRN=DRN)
-
-    # Using RIV (river)
-    IBOUND = gr.const(1, dtype=int)
-    IBOUND[-1, 0, -1] = -1         
-    FQ = gr.const(0.)    
-    FQ[-1, 0, 0] = Q
-    mdl_riv = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    
-    RIV = np.zeros(gr.nx, dtype=mdl_riv.dtype['riv'])
-    RIV['Ig'] = gr.NOD[0, 0, :]
-    RIV['C'] = gr.Area[0, :] /  c[0, 0, :]
-    RIV['h']   = HI[0, 0, :]
-    RIV['rbot']  = RIV['h'] - 1.0
-    
-    out_riv = mdl_riv.simulate(RIV=RIV)
-
-
-    # Using DRN1 (free runoff)
-    IBOUND = gr.const(1, dtype=int)
-    IBOUND[-1, 0, -1] = -1         
-    FQ = gr.const(0.)
-    FQ[0] = gr.Area * N
-    FQ[-1, 0, 0] = Q
-    mdl_drn1 = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    
-    DRN1 = np.zeros(gr.nx, dtype=mdl_drn1.dtype['drn1'])
-    DRN1['Ig'] = gr.NOD[0, 0, :]
-    DRN1['phi'] = 0.4
-    DRN1['h']   = 0.0
-    DRN1['h0']  = -1.0
-    DRN1['N']   = N
-    
-    out_drn1 = mdl_drn1.simulate(DRN1=DRN1)
-
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.set(title="Fdm3", xlabel="r [m]", ylabel="head [m]", xscale="linear") # "log")
     
-    ax.plot(gr.xm, ddGl, '.', label='De Glee')
+    # Basic, De Glee
+    if 'Glee' in variants:
+        dGlee = wf.wDeGlee(xw=0., yw=0., rw=gr.xm[0], z1=None, z2=None, aqprops={'kD':kx * gr.dz[-1], 'c':c[0, 0, 0]})
+        ddGl = dGlee.dd(x=gr.xm, Q=Q)
+        ax.plot(gr.xm, ddGl, '.', label='De Glee')
+
+    # Basic, using c (resistance
+    if 'ccc' in variants:
+        IBOUND = gr.const(1, dtype=int)
+        IBOUND[0] = -1
+        # IBOUND[-1, 0, -1] = -1
+        HI = gr.const(0)
+        HI[-1, 0, -1] = 1.0
+        FQ = gr.const(0.)
+        FQ[-1, 0, 0] = Q
+        FQ[-1] += gr.Area * N
+        mdl_ccc = Fdm3(gr=gr, K=K, c=c, IBOUND=IBOUND, HI=HI, FQ=FQ)
+        out_ccc = mdl_ccc.simulate()
+        ax.plot(gr.xm, out_ccc['Phi'][ilay][0], '-.',  label=f"ccc, Phi[{ilay}]")
+        
+    # Using GHB (should be the same as De Glee or ccc)
+    if 'GHB' in variants: 
+        IBOUND = gr.const(1, dtype=int)
+        # IBOUND[-1, 0, -1] = -1
+        HI = gr.const(0.)
+        HI[-1, 0, -1] = 1.0
+        FQ = gr.const(0.)
+        FQ[-1, 0, 0] = Q
+        FQ[0] = gr.Area * N  
+        mdl_ghb = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
     
-    ilay = 1
-    # ax.plot(gr.xm, out_ccc['Phi'][ilay][0], label=f"ccc, Phi[{ilay}]")
-    ax.plot(gr.xm, out_ghb['Phi'][ilay][0], label=f"GHB, Phi[{ilay}]")
-    ax.plot(gr.xm, out_drn['Phi'][ilay][0], label=f"DRN, Phi[{ilay}]")
-    ax.plot(gr.xm, out_riv['Phi'][ilay][0], label=f"RIV, Phi[{ilay}]")
-    ax.plot(gr.xm, out_drn1['Phi'][ilay][0], label=f"DRN1, Phi[{ilay}]")    
+        GHB = np.zeros(gr.nx, dtype=mdl_ghb.dtype['ghb'])
+        GHB['Ig'] = gr.NOD[0, 0, :]
+        GHB['C'] = gr.AREA[0, 0, :] /  c[0, 0, :]
+        GHB['h'] = HI[0, 0, :]
+
+        out_ghb = mdl_ghb.simulate(GHB=GHB)
+        ax.plot(gr.xm, out_ghb['Phi'][ilay][0], '-', label=f"GHB, Phi[{ilay}]")
+    
+    # Using DRN (should be the same Blom)
+    if 'DRN' in variants:
+        IBOUND = gr.const(1, dtype=int)
+        # IBOUND[-1, 0, -1] = -1         
+        FQ = gr.const(0.)
+        FQ[0] = gr.Area * N
+        FQ[-1, 0, 0] = Q
+        HI = gr.const(0.)
+        HI[-1, 0, -1] = 1.0
+        mdl_drn = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
+
+        DRN = np.zeros(gr.nx, dtype=mdl_drn.dtype['drn'])
+        DRN['Ig'] = gr.NOD[0, 0, :]
+        DRN['C']  = gr.Area[0, :] /  c[0, 0, :]
+        DRN['h']  = HI[0, 0, :]
+
+        out_drn = mdl_drn.simulate(DRN=DRN)
+        ax.plot(gr.xm, out_drn['Phi'][ilay][0], '-', label=f"DRN, Phi[{ilay}]")
+
+    # Using RIV (river)
+    if 'RIV' in variants:
+        IBOUND = gr.const(1, dtype=int)
+        # IBOUND[-1, 0, -1] = -1   
+        HI = gr.const(0.)
+        HI[-1, 0, -1] = 1.0     
+        FQ = gr.const(0.)
+        FQ[0] = gr.Area * N   
+        FQ[-1, 0, 0] = Q
+        mdl_riv = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
+
+        RIV = np.zeros(gr.nx, dtype=mdl_riv.dtype['riv'])
+        RIV['Ig'] = gr.NOD[0, 0, :]
+        RIV['C'] = gr.Area[0, :] /  c[0, 0, :]
+        RIV['h']   = HI[0, 0, :]
+        RIV['rbot']  = RIV['h']
+
+        out_riv = mdl_riv.simulate(RIV=RIV)
+        ax.plot(gr.xm, out_riv['Phi'][ilay][0], label=f"RIV, Phi[{ilay}]")
+
+
+    # Using DRN1 (free runoff)
+    if 'DRN1' in variants:
+        IBOUND = gr.const(1, dtype=int)
+        # IBOUND[-1, 0, -1] = -1
+        HI = gr.const(0.)
+        HI[-1, 0, -1] = 1.0       
+        FQ = gr.const(0.)
+        FQ[0] = gr.Area * N
+        FQ[-1, 0, 0] = Q
+        mdl_drn1 = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
+
+        DRN1 = np.zeros(gr.nx, dtype=mdl_drn1.dtype['drn1'])
+        DRN1['Ig'] = gr.NOD[0, 0, :]
+        DRN1['phi'] = 0.4
+        DRN1['h']   = 0.0
+        DRN1['h0']  = -1.0
+        DRN1['w'] = 1.0
+        DRN1['N']   = N
+
+        out_drn1 = mdl_drn1.simulate(DRN1=DRN1)
+        ax.plot(gr.xm, out_drn1['Phi'][ilay][0], label=f"DRN1, Phi[{ilay}]")    
+    
     ax.grid()
     ax.legend()
     plt.show()
