@@ -781,18 +781,16 @@ class Fdm3():
                 print("No outer iterations needed.")
                 break
 
-
         # Prepare output, all items are returned in a single dictionary out
         out=dict()
-        out.update(gr=gr)
+        out.update(gr=self.gr)
         
         # reshape Phi to shape of grid
         Phi = Phi.reshape(self.gr.shape)
         out.update(Phi=Phi)
 
         # Net cell inflow
-        Q = self.gr.const(0.)
-        Q.ravel()[active]  = (self.A + sp.diags(adiag, 0))[active][:,active] @ Phi.ravel()[active]
+        Q = (np.array((self.A + sp.diags(self.adiag, 0)) @ Phi.ravel())).reshape(self.gr.shape)
         out.update(Q=Q)
         
         #Flows across cell faces
@@ -801,9 +799,13 @@ class Fdm3():
         Qz =  +np.diff(Phi, axis=0) * self.Cz
         out.update(Qx=Qx, Qy=Qy, Qz=Qz)
                 
-        Qfh = (self.A + sp.diags(self.adiag, 0))[:, fxhd] @ Phi.ravel()[fxhd]
-    
-        out.update(Qfq=FQ, Qfh=Qfh)
+        # Put Qfh in an array met dtype to keep their Ig numbers.
+        nfh = fxhd.sum()        
+        Qfh = np.zeros(nfh, dtype=np.dtype([('Ig', int), ('Q', float)]))
+        Qfh['Ig'] = self.gr.NOD.ravel()[fxhd]
+        Qfh['Q']  = Q.ravel()[Qfh['Ig']]
+        
+        out.update(Qfq=self.FQ, Qfh=Qfh)
         
         if DRN is not None:                      
             mask = Phi.ravel()[DRN['Ig']] > DRN['h']
