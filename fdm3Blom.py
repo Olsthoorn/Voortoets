@@ -158,7 +158,6 @@ class Fdm3():
         @TO 20250322
         """
         self.gr = gr
-        self.K  = K
         self.c = c
         self.IBOUND = IBOUND
         self.HI = HI
@@ -183,6 +182,8 @@ class Fdm3():
             raise AssertionError("shape of ky {0} differs from that of model {1}".format(ky.shape, self.gr.shape))
         if kz.shape != self.gr.shape:
             raise AssertionError("shape of kz {0} differs from that of model {1}".format(kz.shape, self.gr.shape))
+
+        self.kx, self.ky, self.kz = kx, ky, kz
 
         # from this we have the width of columns, rows and layers
         dx = self.gr.dx.reshape(1, 1, Nx)
@@ -303,14 +304,107 @@ class Fdm3():
         return extended_data
     
     @staticmethod
-    def mk_soft(x, transition_width=0.05):
+    def itimize(x):
+        """Return scalar if len(x) == 1."""
+        if len(x.ravel()) == 1:
+            x = x.item()
+        return x
+    
+    @staticmethod
+    def mk_fmask(x, transition_width=0.05):
         """Return factor to soften transition when x goes through 0.
         
         The factor varies between 0 and 1 and is > 0.5 voor x > 0
         """
-        return 1 / (1 + np.exp(-np.clip(x / transition_width, -50, 50)))                 
+        return 1 / (1 + np.exp(-np.clip(x / transition_width, -50, 50)))
+    
+    @staticmethod                
+    def get_q(dphi, c):
+        """Return the net inflow [L/T].
+        
+        Parameters
+        ----------
+        dphi: float or np.ndarray
+            phi - h (head minus ditch water level).
+        c: float
+            Drainage resistance (>=0).        
+        """
+        dphi = np.atleast_1d(dphi).astype(float)
+        delta = 0.01
+        lam = 2 * delta
+        mask = dphi <= delta
+        dphi[mask] = delta * np.exp(np.clip(dphi[mask] / lam, -50, 50))
+        q = dphi / c
+        return Fdm3.itimize(q)
+        
 
+    @staticmethod
+    def omega(y=None, beta=None):
+        """Return wet circumference of parabolic ditch profile given water depth y.
+        
+        beta is the half-width of the ditch when y = 1
+        
+        Parameters
+        ----------
+        y: float or np.ndarray
+            Actual ditch water depth.
+        beta: float or np.ndarray
+            Ditch half width at y=1.
+        """
+        y = np.atleast_1d(y).astype(float)
+        L = np.zeros_like(y) # Half length of Omega
 
+        # In cases where y < yhat (a small value) make sure Omega does not get zero
+        yhat = 0.01
+        mask = y > yhat
+
+        # y > yhat
+        b = beta ** 2 / 4
+        L[mask] = np.sqrt(y[mask] * (b + y)[mask]) + b[mask] * np.arctanh(np.sqrt(y[mask] / (b + y)[mask]))
+        
+        # y <= yhat
+        lam = 2 * yhat
+        A = beta * np.sqrt(yhat) / np.exp(0.5)        
+        L[~mask] = yhat * np.exp(np.clip(y[~mask] / lam, -50, 50))
+                
+        return 2 * Fdm3.itimize(L)
+
+    @ staticmethod
+    def cdrainage(y=None, kx=None, kz=None, cy0=None, y0=None, beta=None):
+        """Return the drainage resistance for given ditch water depth.
+        
+        Parameters
+        ----------
+        y: float or np.ndarray of float
+            Actual ditch water depths.
+        kx, ky: floats
+            Horizontal and vertical hydraulic conductivities.
+        cy0: float or np.ndarray
+            Drainage resistance at average recharge.
+        y0: float or np.ndarray
+            Ditch depth at average recharge.
+        beta: float or np.ndarray
+            Half width of ditch at y=y0.
+        
+        Returns
+        -------
+        c: float or np.ndarray
+            Actual drainage resistance.        
+        """
+        y = np.atleast_1d(y).astype(float)
+        
+        delta_crad = 1 / (np.pi * np.sqrt(kx * kz)) * np.log(
+                    Fdm3.omega(y=y0, beta=beta) / Fdm3.omega(y=y, beta=beta))
+        
+        cdr = cy0 + delta_crad
+
+        # Prevent negative cdr        
+        delta = 0.1 # d (minimum drainage resistance)
+        lam = np.e * delta
+        cdr[cdr < lam] = delta * np.exp(np.clip(cdr[cdr < lam] / lam, -50, 50))        
+        
+        return Fdm3.itimize(cdr)
+        
 
         
     def simulate(self, DRN=None, RIV=None, GHB=None, FDR=None, tm=None, htol=1e-7, maxiter=50, verbose=False):
@@ -318,16 +412,6 @@ class Fdm3():
 
         Parameters
         ----------
-        gr: mfgrid.Grid object instance
-            object holding the grid/mesh (see mfgrid.Grid)
-        K: np.ndarray of floats (nlay, nrow, nocl) or a 3-tuple of such array
-            if 3-tuple then the 2 np.ndarrays are kx, ky and kz
-                kx  --- array of cell conductivities along x-axis (Ny, Nx, Nz)
-                ky  --- same for y direction (if None, then ky=kx )
-                kz  --- same for z direction
-            else: kx = ky = kz = K
-        c: np.ndarray (nlay - 1, nrow, ncol) or None of not used
-            Resistance agains vertical flow between the layers [d]
         DRN: array of dtype:
             dtype = dtype([('Ig', 'int'), ('h', float), ('C', float)]) 
         GHB: array ncell of the following dtype:
@@ -351,14 +435,20 @@ class Fdm3():
             The trick is to simulate transiently with ever increasing time steps to reach steady state.                      
         htol : float (defaults: 1e-5)
             max head difference in successive outer iterations.
+        maxiter: int
+            Maximum number of outer iterations
+            Outer iterations are only applied when non-linear boundaries are used.
+        verbose: bool
+            If True a plot is made of the convergence progress.
 
         Returns
         -------
         out: dict
-            a dict with fields Phi, cell flow Q, Qx, Qy, Qz, RIV, DRN, GHB, FDR
+            a dict with fields Phi, cell flow Q, Qx, Qy, Qz, RIV, DRN, GHB, FDR, Qfq, Qfh
             Output shapes are (Nz, Ny, Nx) for Phi and Q and
             (Nz, Ny,Nx-1) for Qx, (Nz,Ny-1,Nx) for Qy, (Nz-1,Ny,Nx) for Qz, while
-            DRN, RIV, GHB, FDR have a column that holds the discharge for the the given nodes.
+            DRN, RIV, GHB, FDR are recarrays having a column 'Q' that holds the discharge for the the given nodes.
+            Qfq is a full array of gr.shape and Qfh is a recarray with fields 'Ig' and 'Q'
 
         TO 160905,, 240316, 250320
         """
@@ -376,7 +466,7 @@ class Fdm3():
                 raise ValueError(
                     f"""DRN must have dtype:\n{self.__class__.dtype['drn']}\nnot\n{DRN.dtype}"""
                 )
-            DRN = self.__class__.extend_dtype(DRN, fields=[('Q', float), ('phi', float), ('soft', float)])
+            DRN = self.__class__.extend_dtype(DRN, fields=[('Q', float), ('phi', float), ('fmask', float)])
             
         # RIV boundaries
         if RIV is not None:
@@ -384,7 +474,7 @@ class Fdm3():
                 raise ValueError(
                     f"""RIV must have dtype:\n{self.__class__.dtype['riv']}\nnot\n{RIV.dtype}"""
                 )
-            RIV = self.__class__.extend_dtype(RIV, fields=[('Q', float), ('phi', float), ('soft', float)])
+            RIV = self.__class__.extend_dtype(RIV, fields=[('Q', float), ('phi', float), ('fmask', float)])
 
             
         # General head boundaries
@@ -392,7 +482,7 @@ class Fdm3():
             if not GHB.dtype == self.__class__.dtype['ghb']:
                 raise ValueError(
                     f"""GHB must have dtype:\n{self.__class__.dtype['ghb']}\nnot\n{GHB.dtype}""")
-            GHB = self.__class__.extend_dtype(GHB, fields=[('Q', float), ('phi', float),('soft', float)])
+            GHB = self.__class__.extend_dtype(GHB, fields=[('Q', float), ('phi', float),('fmask', float)])
             
         # Free drainage boundaries (kind of drains)
         if FDR is not None:
@@ -401,7 +491,7 @@ class Fdm3():
                     f"""FDR must have dtype:\n{self.__class__.dtype['fdr']}\nnot\n{FDR.dtype}"""
                 )
             FDR = self.__class__.extend_dtype(FDR, fields=[('Q', float), ('C', float), ('c', float),
-                                                             ('gamma', float), ('eta', float), ('beta', float), ('ge', float), ('soft', float)])    
+                                                             ('gamma', float), ('eta', float), ('beta', float), ('ge', float), ('fmask', float)])    
                 
             # Compute the initial coefficients taking phi=phiN, h=hN, q=N
             # Make sure phiN > hN and hN > h0, N>0, so that dphi>0 and y>0 initially
@@ -409,12 +499,13 @@ class Fdm3():
 
         non_linear_options = [name for (name, p) in zip(['DRN', 'RIV', 'FDR'], [DRN, RIV, FDR]) if p is not None]
         
+        # Initial heads
         HI = self.HI.copy().reshape(nod, 1)
         
         # Set up the initial head vector
         Phi = HI[:, 0].copy()
 
-        # Outer iterations
+        # Outer iterations get first dt and step multiplier
         if tm is None:
             dt, dtmult = 1., 2.
         elif np.isscalar(tm):
@@ -424,16 +515,19 @@ class Fdm3():
         
         
         if verbose:
+            # Make a plot of the progress of phi
             _, ax = plt.subplots(figsize=(10, 6))
             title=f"Phi during the outer iterations: non linear options ={non_linear_options}"
             ax.set(title=title, xlabel='x', ylabel='Phi', xscale='linear', yscale='linear')        
                 
         for iouter in range(maxiter):
 
-            # Keep A's diagonal as a 1D vector
+            # Keep A's diagonal as a 1D vector.
+            # Restart fresh in each loop cycle
             adiag = self.adiag.copy()
 
-            # St up up the Right-hand side vector, just using FQ, which is a gr.shape array.
+            # Set up up the Right-hand side vector, using FQ.
+            # Restart fresh in each loop cycle
             RHS = self.FQ.copy().reshape(nod, 1)
 
             if np.any(fxhd):
@@ -441,50 +535,82 @@ class Fdm3():
 
             # Add the boundary conditions
             if DRN is not None:
+                # Drains as in Modflow
                 Ig = DRN['Ig']
                 DRN['phi'] = Phi[Ig]                
-                DRN['soft'] = self.__class__.mk_soft(DRN['phi'] - DRN['h'])
-                adiag[Ig]  += DRN['soft'] * DRN['C']
-                RHS[Ig, 0] += DRN['soft'] * DRN['C'] * DRN['h']
+                DRN['fmask'] = self.__class__.mk_fmask(DRN['phi'] - DRN['h'])
+                adiag[Ig]  += DRN['fmask'] * DRN['C']
+                RHS[Ig, 0] += DRN['fmask'] * DRN['C'] * DRN['h']
 
             if RIV is not None:
+                # River cells as in Modflow
                 Ig =RIV['Ig']
                 RIV['phi'] = Phi[Ig]                   
                 if True: # Non-linear
-                    RIV['soft'] = self.__class__.mk_soft(Phi[Ig] - RIV['rbot'])                    
-                    adiag[Ig]  += RIV['C'] * RIV['soft']
-                    RHS[Ig, 0] += RIV['C'] * (RIV['soft'] * RIV['h'] + (1 - RIV['soft']) * (RIV['h'] - RIV['rbot']))
+                    RIV['fmask'] = self.__class__.mk_fmask(Phi[Ig] - RIV['rbot'])                    
+                    adiag[Ig]  += RIV['C'] * RIV['fmask']
+                    RHS[Ig, 0] += RIV['C'] * (RIV['fmask'] * RIV['h'] + (1 - RIV['fmask']) * (RIV['h'] - RIV['rbot']))
                 else: # L inear
                     adiag[Ig] += RIV['C']
                     RHS[Ig, 0] += RIV['C'] * RIV['h']
 
             if GHB is not None:
+                # GHB cells as in Modflow.
+                # No outer iterations are needed.
                 Ig = GHB['Ig']
                 GHB['phi'] = Phi[Ig]
                 adiag[Ig] += GHB['C']
                 RHS[  Ig, 0] += GHB['C'] * GHB['h']
 
-            if FDR is not None:                
+            if FDR is not None:
+                # Free drainage situation.
+                # As mathematically derived.               
                 Ig = FDR['Ig']
+                math_cdr = np.any(FDR['w'] == 0.) or np.any(np.isnan(FDR['w']))                
                 if iouter == 0:
-                    # delta = 0.01
-                    # lamb = delta * np.exp(1)
-                    dphi_h0 = FDR['phi'] - FDR['h0']
-                    y = FDR['h'] - FDR['h0']
+                    if math_cdr:
+                        print("Using FDR, with mathematical drainage.")
+                    else:
+                        print("Using FDR with physical drainage.")
+                        
+                    # Initialize, using the initial values passed in with FDR                    
+                    
+                    # Validate input
                     if not np.all((FDR['phi'] > FDR['h']) & (FDR['h'] > FDR['h0'])):
                         raise ValueError("Initially we must have FDR['phi'] > FDR['h] > FDR['h0']")
                     if not np.all(FDR['N'] > 0):
                         raise ValueError("Initially we must have FDR['N'] > 0")
-                    FDR['c'] = (dphi_h0 - y) / FDR['N']
-                    FDR['gamma'] = FDR['c'] * np.sqrt(FDR['N'])
-                    FDR['eta'  ] = y / np.sqrt(FDR['N'])
-                    FDR['ge'] = (FDR['gamma'] + FDR['eta']) ** 2
-                    FDR['beta']  = (FDR['w'] / 2) / np.sqrt(y)
-                    FDR['C'] = dphi_h0 * self.gr.Area.ravel()[Ig] / FDR['ge']
+                    
+                    y0 = FDR['h'] - FDR['h0'] # Initial water depth in ditch.
+                    FDR['eta'  ] = y0 / np.sqrt(FDR['N'])    # eta in y = eta sqrt(q)                
+                    FDR['c'] = (FDR['phi'] - FDR['h']) / FDR['N'] # Initial drainage resistance
+                    cy0  = FDR['c'].copy() # We need y0 also in subsequent cycles
+                    if math_cdr:
+                        # Using the mathematical drainage resistance approach
+                        FDR['gamma'] = FDR['c'] * np.sqrt(FDR['N'])                        
+                        FDR['ge'] = (FDR['gamma'] + FDR['eta']) ** 2                        
+                        FDR['C'] = self.gr.Area.ravel()[Ig] * (FDR['phi'] - FDR['h0']) / FDR['ge']
+                    
+                    else:
+                        # Using the physical drainage resistance approach
+                        FDR['beta']  = (FDR['w'] / 2) / np.sqrt(y0)
+                        kx = self.kx.ravel()[Ig]
+                        kz = self.kz.ravel()[Ig]                        
+                
                 else:
+                    # During further cycles of the outer loop
                     FDR['phi'] = Phi[Ig]
-                    FDR['soft'] = self.__class__.mk_soft(Phi[Ig] - FDR['h0'])                    
-                    FDR['C'] =  FDR['soft'] * self.gr.Area.ravel()[Ig] / FDR['ge']
+                    FDR['fmask'] = Fdm3.mk_fmask(Phi[Ig] - FDR['h0'])                    
+                    
+                    if math_cdr:  
+                        FDR['C'] = self.gr.Area.ravel()[Ig] * FDR['fmask'] / FDR['ge']
+                    
+                    else: # phisical drainage formula
+                        q = Fdm3.get_q(FDR['phi'] - FDR['h'], FDR['c'])
+                        y = FDR['eta'] * np.sqrt(q)
+                        FDR['c'] = Fdm3.cdrainage(y=y, kx=kx, kz=kz, cy0=cy0, y0=y0, beta=FDR['beta'])
+                        FDR['C'] = self.gr.Area.ravel()[Ig] / (FDR['c'] + FDR['eta'] / np.sqrt(q))
+                FDR['fmask'] = Fdm3.mk_fmask(FDR['phi'] - FDR['h0'])
                 adiag[Ig] +=  FDR['C']
                 RHS[Ig, 0] += FDR['C'] * FDR['h0']
                 
@@ -549,12 +675,12 @@ class Fdm3():
         out.update(Qfq=self.FQ, Qfh=Qfh)
         
         if DRN is not None:                                        
-            DRN['Q'] = DRN['soft'] * DRN['C'] * (DRN['h'] - Phi.ravel()[DRN['Ig']])
+            DRN['Q'] = DRN['fmask'] * DRN['C'] * (DRN['h'] - Phi.ravel()[DRN['Ig']])
             out.update(DRN=DRN)
 
         if RIV is not None:            
-            RIV['Q'] = ( RIV['soft']  * RIV['C'] * (RIV['h'] - Phi.ravel()[RIV['Ig']]) + 
-                    (1 - RIV['soft']) * RIV['C'] * (RIV['h'] - RIV['rbot'])
+            RIV['Q'] = ( RIV['fmask']  * RIV['C'] * (RIV['h'] - Phi.ravel()[RIV['Ig']]) + 
+                    (1 - RIV['fmask']) * RIV['C'] * (RIV['h'] - RIV['rbot'])
             )
             out.update(RIV=RIV)
 
@@ -563,7 +689,7 @@ class Fdm3():
             out.update(GHB=GHB)
 
         if FDR is not None:                        
-            FDR['Q'] = FDR['soft'] * FDR['C'] * (FDR['h0'] - Phi.ravel()[FDR['Ig']])
+            FDR['Q'] = FDR['fmask'] * FDR['C'] * (FDR['h0'] - Phi.ravel()[FDR['Ig']])
             out.update(FDR=FDR)
 
         # Finally: set inactive cells to np.nan
@@ -703,120 +829,73 @@ def deGlee(kw):
     return out
     
     
-def deGlee_GHB(kw):
-    """Run Axial symmetric example, as before, but now using GHB instead of an extra layer on top.
+def axial_all_boundary_types(kw):
+    """Run Axial symmetric examples, but now using GHB each of the boundary types instead,
+    just a single layer so simulate drainage:
+        GHB General head boundaries
+        DRN drains.
+        RIV river cells. Setting h=rbot, so that RIV is equivalent to DRN
+        FDR free drainage, once using math resitance, once using physical drainage resistance
     
-    This requires that c=None in the call to Fdm3 and the Conductance is computed to be usedin GHB recarray.
-    This is done below using no extra data.
+    Simulating leakage using boundary types instead of a resistance layer. Allows using only a single
+    aquifer.
+    With a single aquifer, resistance layers (c) cannot be used.
     """
     kD = (kw['k'] * kw['D'])[-1]      # m2/d, transmissivity of regional aquifer
     lambda_  = np.sqrt(kD * float(kw['c'])) # spreading length of regional aquifer
     
+    # Set up the grid
     r = np.hstack((0., kw['rw'], kw['r'][kw['r'] > kw['rw']]))
-
     z = (kw['z0'] - np.cumsum(np.hstack((0., kw['D']))))[1:] # no top layer
-    
     gr = mfgrid.Grid(r, None, z, axial=True)   # generate grid
     
-    FQ = gr.const(0.)
-    FQ[0] = gr.Area * kw['N']
-    FQ[-1, 0, 0] += kw['Q']     # m3/d fixed flows
+    FQ = gr.const(0.)                   # m3/d fixed flows
+    FQ[0] = gr.Area * kw['N']           # Recharge areal
+    FQ[-1, 0, 0] += kw['Q']             # Add extraction   
     HI = gr.const(0.)                   # m, initial heads
     
-    IBOUND = gr.const(1, dtype=int)         # modflow like boundary array
+    IBOUND = gr.const(1, dtype=int)     # modflow like boundary array
     
-    k = gr.const(kw['k'][-1])               # full 3D array of conductivities
+    k = gr.const(kw['k'][-1])           # full 3D array of hydraulic conductivities
     
-    Ig = gr.NOD[0].ravel()
+    # Set up the various boundary types to be used in turn for comparison
+    Ig = gr.NOD[0].ravel() # Select the cells that will be part of the boundary
+    
     GHB = np.zeros(len(Ig), dtype=Fdm3.dtype['ghb'])
     GHB['Ig'], GHB['h'], GHB['C'] = Ig, HI.ravel()[Ig], gr.Area.ravel() / kw['c']
         
-    DRN = GHB.copy()
+    DRN = GHB.copy() # Same parameters
     
     RIV = np.zeros(len(Ig), dtype=Fdm3.dtype['riv'])
     RIV['Ig'], RIV['h'], RIV['C'], RIV['rbot'] = Ig, HI.ravel()[Ig], gr.Area.ravel() / kw['c'], HI.ravel()[Ig]
     
+    # Free drainage
     FDR = np.zeros(len(Ig), dtype=Fdm3.dtype['fdr'])
     phi, Nc = HI.ravel()[Ig], kw['N'] * kw['c']
-    FDR['Ig'], FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'] = Ig, phi, phi - Nc, phi - Nc - 1.0, kw['N'], kw['w']
+    FDR['Ig'], FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'] = Ig, phi, phi - Nc, phi - Nc - kw['y0'], kw['N'], kw['w1']
     
     mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ) # run model    
     out_ghb = mdl.simulate(GHB=GHB) # run model
     out_drn = mdl.simulate(DRN=DRN, tm=[1., 5.]) # run model
     out_riv = mdl.simulate(RIV=RIV, tm=[1., 5.]) # run model
-    out_fdr = mdl.simulate(FDR=FDR, tm=[1., 5.]) # run model
+    out_fdr1 = mdl.simulate(FDR=FDR, tm=[1., 5.]) # run model
+    
+    FDR['w'] = kw['w2']
+    out_fdr2 = mdl.simulate(FDR=FDR, tm=[1., 5.]) # run model
     
     title = kw['title'] + ' (Using GHB)'
     _, ax = plt.subplots(figsize=(10, 6))
     ax.set(title=title, xlabel='r [m]', ylabel='s [m]', xscale='log', xlim=[1e-3, r[-1]])
     ax.plot(gr.xm, kw['Q']/(2 * np.pi * kD) * K0(gr.xm / lambda_) / (kw['rw']/ lambda_ * K1(kw['rw']/ lambda_)), '.',label='De Glee Analytic')
-    ax.plot(gr.xm, out_ghb['Phi'][-1, 0, :], '--', label='Fdm3 GHB')
-    ax.plot(gr.xm, out_drn['Phi'][-1, 0, :], '-.', label='Fdm3 DRN')
-    ax.plot(gr.xm, out_riv['Phi'][-1, 0, :], ':', lw=3, label='Fdm3 RIV')
-    ax.plot(gr.xm, out_fdr['Phi'][-1, 0, :], '-', lw=3, label='Fdm3 FDR')
+    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :], '--', lw=1, label='Fdm3 GHB')
+    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], '-.', lw=1, label='Fdm3 DRN')
+    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :], ':',  lw=1, label='Fdm3 RIV, h=rbot')
+    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :], '-',  lw=1, label='Fdm3 FDR, math. drainage')
+    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :], '-',  lw=1, label='Fdm3 FDR, phys. drainage')
         
     ax.grid()
     ax.legend()
-    return out_ghb, out_drn
-
-def freeDrainage(kw):
-    """Run Axial symmetric example, as before, but now using GHB instead of an extra layer on top.
-    """
-    kD = (kw['k'] * kw['D'])[-1]      # m2/d, transmissivity of regional aquifer
-    lambda_  = np.sqrt(kD * float(kw['c'])) # spreading length of regional aquifer
-    
-    r = np.hstack((0., kw['rw'], kw['r'][kw['r'] > kw['rw']]))
-
-    z = (kw['z0'] - np.cumsum(np.hstack((0., kw['D']))))[1:] # no top layer
-    
-    gr = mfgrid.Grid(r, None, z, axial=True)   # generate grid
-    
-    FQ = gr.const(0.)
-    FQ[0] = gr.Area * kw['N']
-    FQ[-1, 0, 0] = kw['Q']     # m3/d fixed flows
-    HI = gr.const(0.)                       # m, initial heads
-    
-    IBOUND = gr.const(1, dtype=int)         # modflow like boundary array
-    k = gr.const(kw['k'][-1])                         # full 3D array of conductivities
-        
-    Ig = gr.NOD[0, 0, :]
-    
-    # Use GHB
-    GHB = np.zeros(len(Ig), dtype=Fdm3.dtype['ghb'])
-    GHB['Ig'], GHB['h'], GHB['C'] = Ig, kw['h'], gr.Area.ravel() / kw['c']
-    mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, FQ=FQ, HI=HI) # run model
-    out_ghb = mdl.simulate(GHB=GHB) # run model
-
-    # Use DRN
-    DRN = np.zeros(len(Ig), dtype=Fdm3.dtype['drn'])
-    DRN['Ig'], DRN['h'], DRN['C'] = Ig, kw['h'], gr.Area.ravel() / kw['c']
-    mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, FQ=FQ, HI=HI) # run model
-    out_drn = mdl.simulate(DRN=DRN, dt0=1.) # run model
-
-    # Use RIV
-    RIV = np.zeros(len(Ig), dtype=Fdm3.dtype['riv'])
-    h, rbot = kw['h'], kw['h'] # Use RIV as DRN by making rbot = h
-    RIV['Ig'], RIV['h'], RIV['C'], RIV['rbot'] = Ig, h, gr.Area.ravel() / kw['c'], rbot
-    mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, FQ=FQ, HI=HI) # run model
-    out_riv = mdl.simulate(RIV=RIV, dt0=1.) # run model
-
-    # Use FDR
-    FDR = np.zeros(len(Ig), dtype=Fdm3.dtype['fdr'])
-    FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'] = kw['phi'], kw['h'], kw['h0'], kw['N'], kw['w']
-    out_fdr = mdl.simulate(FDR=FDR, dt0=1.) # run model
-    
-    title = kw['title'] + ' (Using FDR)'
-    
-    _, ax = plt.subplots(figsize=(10, 6))
-    ax.set(title=title, xlabel='r [m]', ylabel='s [m]', xscale='log', xlim=[1e-3, r[-1]])
-    # ax.plot(gr.xm, kw['Q']/(2 * np.pi * kD) * K0(gr.xm / lambda_) / (kw['rw']/ lambda_ * K1(kw['rw']/ lambda_)), '.',label='analytic')
-    ax.plot(gr.xm, out_ghb['Phi'][-1, 0, :], '--', label='Fdm3 + GHB')
-    ax.plot(gr.xm, out_drn['Phi'][-1, 0, :], '-.', label='Fdm3 + DRN')
-    # ax.plot(gr.xm, out_riv['Phi'][-1, 0, :], ':', label='Fdm3 + RIV')
-    # ax.plot(gr.xm, out_fdr['Phi'][-1, 0, :], '-', label='Fdm3 + FDR (free drainage.)')
-    ax.grid()
-    ax.legend()
-    return out_ghb, out_drn, out_riv, out_fdr
+    return {'ghb': out_ghb, 'drn': out_drn, 'riv': out_riv, 'fdr1': out_fdr1, 'fdr2': out_fdr2}
 
 cases = {
     'Mazure': {
@@ -838,20 +917,18 @@ cases = {
         'c': np.array([[250.]]), # d, vertical resistance of semi-confining layer
         'k': np.array([np.inf, 10.]),        
         },
-    'DeGlee': {
-        'title': 'Deglee axial symmetric flow',
-        'comment': """Axial symmetric example, well in semi-confined aquifer (De Glee case)
-            De Glee was a Dutch engineer/groundwater hydrologist and later the
-            first director of the water company of the province of Groningen.
-            His PhD (1930) solved the axial symmetric steady state flow to a well
-            in a semi confined aquifer using the Besselfunctions of the second kind,
-            known as K0 and K1.
-            The example computes the heads in the regional aquifer below a semi confining
-            layer with a fixed head above. It uses two model layers a confining one in
-            which the heads are fixed and a semi-confined aquifer with a prescribed
-            extraction at r=rw. If rw>>0, both K0 and K1 Bessel functions are needed.
-            The grid is signaled to use inteprete the grid as axially symmetric.
-            """,
+    'axial_data': {
+        'title': 'Axially symmetric flow',
+        'comment': """Axial symmetric examples. All for a well simulating
+                extraction in a aquifer with drainage. The drainage is simulated
+                using different boundary conditions, both linear and non-linear:
+                GHB: Gneral Head Boundaries.            
+                DRN: drain boundaries. (Non linear).
+                RIV: riv boundaries. (Non linear, made idential to DRN by setting h=rbot).
+                FDR: free drainage boundaries
+                    Version one: drainage resistance using a math root function.
+                    Version two: drainage resistance using a physical function with ditch width.
+                """,
         'z0': 0.,
         'Q': -2500.,
         'rw':   .25,
@@ -860,177 +937,19 @@ cases = {
         'k' :  np.array([np.inf, 10]),  # m/d conductivity of regional aquifer
         'r' : np.logspace(-2, 4, 61),  # distance to well center        
         'N' : 0.001, # Reference recharge
-        'ddepth': 1.0, # Ditch depth
-        'w' : 1.0
-    },
-    'FreeDrainage': {
-        'title': 'Free drainage axial symmetric flow',
-        'comment': """fill in later
-            """,
-        'z0': 0.,
-        'Q': -1200.,
-        'rw':   .25,
-        'D' : np.array([10., 50.]),
-        'c' :  np.array([[250.]]),
-        'k' :  np.array([np.inf, 10]),  # m/d conductivity of regional aquifer
-        'r' : np.logspace(-2, 4, 61),  # distance to well center
-        'phi': 0.4, # Average groundwater head at reference N
-        'h':   0.0, # Ditch water level at reference N
-        'h0': -1.0, # Ditch bottom elevation
-        'N': 0.002, # reference recharge
-        'w': 1,     # ditch width at recharge = N        
+        'y0': 1.0,   # Ditch depth for reference situation        
+        'w1' : np.nan, # Use math function for drainage resistance
+        'w2' : 1.0,     # Ditch width, use physical formula for dr. res.
     },
 }  
 
 if __name__ == "__main__":
     # out1 = mazure(cases['Mazure'])
-    # out2 = deGlee(cases['DeGlee'])
-    out2 = deGlee_GHB(cases['DeGlee'])
-    # out3 = freeDrainage(cases['FreeDrainage'])
+    out_all = axial_all_boundary_types(cases['axial_data'])
     
-    # r = np.hstack((0., np.logspace(-1., np.log10(5000.), 25)))
-    # r = np.unique(np.hstack((r, r[-1] - r)))
-    # r = np.linspace(0, 5000., 101)
-    
-    # z = np.array([1., -0., -50.])
-    # # gr = mfgrid.Grid(r, None, z, axial=True)
-    # gr = mfgrid.Grid(r, None, z, axial=False)
-    # kx, kz = 10., 1000.
-    # K = (gr.const(kx), gr.const(kx), gr.const(kz))
-    # c = gr.const(100.)[0:1]
-    # IBOUND = gr.const(1, dtype=int)
-    # HI = gr.const(0.)
-    # FQ = gr.const(0.)
-    # # Q = -1200.
-    # Q = -10.0
-    # Q = 0.
-    # N = 0.002
-    # FQ[-1, 0, 0] = Q
-    # ilay = 1
-
-    # variants= {'Glee', 'ccc', 'DRN', 'GHB', 'RIV', 'FDR'}
-    # variants= {'Glee', 'ccc', 'DRN', 'GHB', 'RIV'}
-    # # variants= {'Glee', 'ccc', 'DRN', 'GHB'}
-    # variants= {'ccc', 'DRN', 'GHB', 'RIV', 'FDR'}
-    
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # ax.set(title="Fdm3", xlabel="r [m]", ylabel="head [m]", xscale="linear") # "log")
-    
-    # # Basic, De Glee
-    # if 'Glee' in variants:
-    #     dGlee = wf.wDeGlee(xw=0., yw=0., rw=gr.xm[0], z1=None, z2=None, aqprops={'kD':kx * gr.dz[-1], 'c':c[0, 0, 0]})
-    #     ddGl = dGlee.dd(x=gr.xm, Q=Q)
-    #     ax.plot(gr.xm, ddGl, '.', label='De Glee')
-
-    # # Basic, using c (resistance
-    # if 'ccc' in variants:
-    #     IBOUND = gr.const(1, dtype=int)
-    #     IBOUND[0] = -1
-    #     # IBOUND[-1, 0, -1] = -1
-    #     HI = gr.const(0)
-    #     HI[-1, 0, -1] = 1.0
-    #     FQ = gr.const(0.)
-    #     FQ[-1, 0, 0] = Q
-    #     FQ[-1] += gr.Area * N
-    #     mdl_ccc = Fdm3(gr=gr, K=K, c=c, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    #     out_ccc = mdl_ccc.simulate()
-    #     ax.plot(gr.xm, out_ccc['Phi'][ilay][0], '-.',  label=f"ccc, Phi[{ilay}]")
+    for name, out in out_all.items():
+        print(name)
+        watbal(out)
         
-    # # Using GHB (should be the same as De Glee or ccc)
-    # if 'GHB' in variants: 
-    #     IBOUND = gr.const(1, dtype=int)
-    #     # IBOUND[-1, 0, -1] = -1
-    #     HI = gr.const(0.)
-    #     HI[-1, 0, -1] = 1.0
-    #     FQ = gr.const(0.)
-    #     FQ[-1, 0, 0] = Q
-    #     FQ[-1] += gr.Area * N  
-    #     mdl_ghb = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-    
-    #     GHB = np.zeros(gr.nx, dtype=mdl_ghb.dtype['ghb'])
-    #     GHB['Ig'] = gr.NOD[0, 0, :]
-    #     GHB['C'] = gr.AREA[0, 0, :] /  c[0, 0, :]
-    #     GHB['h'] = HI[0, 0, :]
-
-    #     out_ghb = mdl_ghb.simulate(GHB=GHB)
-    #     ax.plot(gr.xm, out_ghb['Phi'][ilay][0], '-', label=f"GHB, Phi[{ilay}]")
-    
-    # # Using DRN (should be the same Blom)
-    # if 'DRN' in variants:
-    #     IBOUND = gr.const(1, dtype=int)
-    #     # IBOUND[-1, 0, -1] = -1         
-    #     FQ = gr.const(0.)
-    #     FQ[-1, 0, 0] = Q
-    #     FQ[-1] += gr.Area * N
-        
-    #     HI = gr.const(0.)
-    #     HI[-1, 0, -1] = 1.0
-    #     mdl_drn = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-
-    #     DRN = np.zeros(gr.nx, dtype=mdl_drn.dtype['drn'])
-    #     DRN['Ig'] = gr.NOD[0, 0, :]
-    #     DRN['C']  = gr.Area[0, :] /  c[0, 0, :]
-    #     DRN['h']  = HI[0, 0, :]
-
-    #     out_drn = mdl_drn.simulate(DRN=DRN)
-    #     ax.plot(gr.xm, out_drn['Phi'][ilay][0], '-', label=f"DRN, Phi[{ilay}]")
-
-    # # Using RIV (river)
-    # if 'RIV' in variants:
-    #     IBOUND = gr.const(1, dtype=int)
-    #     # IBOUND[-1, 0, -1] = -1   
-    #     HI = gr.const(0.)
-    #     HI[-1, 0, -1] = 1.0     
-    #     FQ = gr.const(0.)        
-    #     FQ[-1, 0, 0] = Q
-    #     FQ[-1] += gr.Area * N   
-    #     mdl_riv = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-
-    #     RIV = np.zeros(gr.nx, dtype=mdl_riv.dtype['riv'])
-    #     RIV['Ig'] = gr.NOD[0, 0, :]
-    #     RIV['C'] = gr.Area[0, :] /  c[0, 0, :]
-    #     RIV['h']   = HI[0, 0, :]
-    #     RIV['rbot']  = RIV['h']
-
-    #     out_riv = mdl_riv.simulate(RIV=RIV)
-    #     ax.plot(gr.xm, out_riv['Phi'][ilay][0], label=f"RIV, Phi[{ilay}]")
-
-
-    # # Using FDR (free drainage)
-    # if 'FDR' in variants:
-    #     IBOUND = gr.const(1, dtype=int)
-    #     # IBOUND[-1, 0, -1] = -1
-    #     HI = gr.const(0.)
-    #     HI[-1, 0, -1] = 1.0       
-    #     FQ = gr.const(0.)
-    #     FQ[-1, 0, 0] = Q
-    #     FQ[-1] += gr.Area * N        
-    #     mdl_drn1 = Fdm3(gr=gr, K=K, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
-
-    #     FDR = np.zeros(gr.nx, dtype=mdl_drn1.dtype['fdr'])
-    #     FDR['Ig'] = gr.NOD[0, 0, :]
-    #     FDR['phi'] = 0.4
-    #     FDR['h']   = 0.0
-    #     FDR['h0']  = -1.0
-    #     FDR['w'] = 1.0
-    #     FDR['N']   = N
-
-    #     out_drn1 = mdl_drn1.simulate(FDR=FDR)
-    #     ax.plot(gr.xm, out_drn1['Phi'][ilay][0], label=f"FDR, Phi[{ilay}]")
-        
-    #     ax.plot(gr.xm, FDR['phi'], '--', label='FDR-phi')
-    #     ax.plot(gr.xm, FDR['h'], '-.', label='FDR-h')
-    #     ax.plot(gr.xm, FDR['h0'], '--', label='FDR-h0')   
-    
-    # ax.grid()
-    # ax.legend()
-    
-    # watbal(out_ccc)
-    # watbal(out_ghb)
-    # watbal(out_drn)
-    # watbal(out_riv)
-    # watbal(out_drn1)
-        
-    # print('Done')
     plt.show()
     
