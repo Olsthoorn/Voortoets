@@ -110,7 +110,7 @@ class Fdm3():
             "riv":  np.dtype([('Ig', int), ('h', float), ('C', float), ('rbot', float)]),
             "ghb":  np.dtype([('Ig', int), ('h', float), ('C', float)]),
             "fdr": np.dtype([('Ig', int), ('phi',   float), ('h', float),
-                            ('h0', float), ('N', float), ('w', float)]), # For free drainage
+                            ('h0', float), ('N', float), ('w', float), ('L', float)]), # For free drainage
             # phi at N, h at N, and w at N are all for q=N, h0 is ditch bottom elev. w=ditch width
         }
     
@@ -355,7 +355,8 @@ class Fdm3():
         L = np.zeros_like(y) # Half length of Omega
 
         # In cases where y < yhat (a small value) make sure Omega does not get zero
-        yhat = 0.01
+        delta = 0.01
+        yhat = np.e * (delta / beta) ** 2
         mask = y > yhat
 
         # y > yhat
@@ -364,13 +365,12 @@ class Fdm3():
         
         # y <= yhat
         lam = 2 * yhat
-        A = beta * np.sqrt(yhat) / np.exp(0.5)        
-        L[~mask] = yhat * np.exp(np.clip(y[~mask] / lam, -50, 50))
+        L[~mask] = delta * np.exp(np.clip(y[~mask] / lam, -50, 50))
                 
         return 2 * Fdm3.itimize(L)
 
     @ staticmethod
-    def cdrainage(y=None, kx=None, kz=None, cy0=None, y0=None, beta=None):
+    def cdrainage(y=None, kx=None, kz=None, cy0=None, y0=None, beta=None, L=None):
         """Return the drainage resistance for given ditch water depth.
         
         Parameters
@@ -385,6 +385,8 @@ class Fdm3():
             Ditch depth at average recharge.
         beta: float or np.ndarray
             Half width of ditch at y=y0.
+        L: float or np.ndarray
+            Average distance between ditches.
         
         Returns
         -------
@@ -393,7 +395,7 @@ class Fdm3():
         """
         y = np.atleast_1d(y).astype(float)
         
-        delta_crad = 1 / (np.pi * np.sqrt(kx * kz)) * np.log(
+        delta_crad = L / (np.pi * np.sqrt(kx * kz)) * np.log(
                     Fdm3.omega(y=y0, beta=beta) / Fdm3.omega(y=y, beta=beta))
         
         cdr = cy0 + delta_crad
@@ -421,13 +423,14 @@ class Fdm3():
             dtype = dtype([('Ig', 'I'), ('h', float), ('C', float)], ('rbot', float)])
             Ig = global index, h = river stage, C = conductance, rbot is river bottom elevation.
         FDR: array of dtype
-            dtype([('Ig', 'int'), ('phi, float), ('h', float), ('h0', float), ('N', float), ('w', float)])
+            dtype([('Ig', 'int'), ('phi, float), ('h', float), ('h0', float), ('N', float), ('w', float), ('L', float)])
             Ig is global index,
             phi = head at mean recharge N
             h = drainage level at mean recharge N
             h0 = bottom elevation of (deepest) ditches
             N = mean recharge
             w = ditch width at mean recharge N
+            L = aveage ditch distance.
         tm: None | float | two floats default = [1., 1.5]
             First is the initial time step. The second the time step multiplyer used in outer iterations
             which are needed when non-linear boundary conditions are applied. i.c. DRN, RIV and FDR.
@@ -566,7 +569,7 @@ class Fdm3():
                 # Free drainage situation.
                 # As mathematically derived.               
                 Ig = FDR['Ig']
-                math_cdr = np.any(FDR['w'] == 0.) or np.any(np.isnan(FDR['w']))                
+                math_cdr = np.any(FDR['w'] == 0.) or np.any(np.isnan(FDR['w'])) or np.any(FDR['L'] == 0.) or np.any(np.isnan(FDR['L']))               
                 if iouter == 0:
                     if math_cdr:
                         print("Using FDR, with mathematical drainage.")
@@ -608,7 +611,7 @@ class Fdm3():
                     else: # phisical drainage formula
                         q = Fdm3.get_q(FDR['phi'] - FDR['h'], FDR['c'])
                         y = FDR['eta'] * np.sqrt(q)
-                        FDR['c'] = Fdm3.cdrainage(y=y, kx=kx, kz=kz, cy0=cy0, y0=y0, beta=FDR['beta'])
+                        FDR['c'] = Fdm3.cdrainage(y=y, kx=kx, kz=kz, cy0=cy0, y0=y0, beta=FDR['beta'], L=FDR['L'])
                         FDR['C'] = self.gr.Area.ravel()[Ig] / (FDR['c'] + FDR['eta'] / np.sqrt(q))
                 FDR['fmask'] = Fdm3.mk_fmask(FDR['phi'] - FDR['h0'])
                 adiag[Ig] +=  FDR['C']
