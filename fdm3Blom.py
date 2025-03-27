@@ -854,9 +854,9 @@ def oneD_all_boundary_types(kw):
     gr = mfgrid.Grid(x, None, z, axial=False)   # generate grid
     
     FQ = gr.const(0.)                   # m3/d fixed flows
-    FQ[0] = gr.Area * kw['N']           # Recharge areal
+    FQ[0] = gr.Area * kw['N']           # Recharge area
     FQ[-1, 0, 0] += kw['Q']             # Add extraction   
-    HI = gr.const(0.)                   # m, initial heads
+    HI = (kw['h'] + kw['N'] * kw['c']) * gr.const(1.)  # m, initial heads
     
     IBOUND = gr.const(1, dtype=int)     # modflow like boundary array
     
@@ -866,17 +866,17 @@ def oneD_all_boundary_types(kw):
     Ig = gr.NOD[0].ravel() # Select the cells that will be part of the boundary
     
     GHB = np.zeros(len(Ig), dtype=Fdm3.dtype['ghb'])
-    GHB['Ig'], GHB['h'], GHB['C'] = Ig, HI.ravel()[Ig], gr.Area.ravel() / kw['c']
+    GHB['Ig'], GHB['h'], GHB['C'] = Ig, kw['h'], gr.Area.ravel() / kw['c']
         
     DRN = GHB.copy() # Same parameters
     
     RIV = np.zeros(len(Ig), dtype=Fdm3.dtype['riv'])
-    RIV['Ig'], RIV['h'], RIV['C'], RIV['rbot'] = Ig, HI.ravel()[Ig], gr.Area.ravel() / kw['c'], HI.ravel()[Ig]
+    RIV['Ig'], RIV['h'], RIV['C'], RIV['rbot'] = Ig, kw['h'], gr.Area.ravel() / kw['c'], kw['h']
     
     # Free drainage
     FDR = np.zeros(len(Ig), dtype=Fdm3.dtype['fdr'])
-    phi, Nc = HI.ravel()[Ig], kw['N'] * kw['c']
-    FDR['Ig'], FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'], FDR['L'] = Ig, phi, phi - Nc, phi - Nc - kw['y0'], kw['N'], kw['w1'], kw['L']
+    Nc = kw['N'] * kw['c']
+    FDR['Ig'], FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'], FDR['L'] = Ig, kw['h'] + Nc, kw['h'], kw['h'] - kw['y0'], kw['N'], kw['w1'], kw['L']
     
     mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ) # run model    
     out_ghb = mdl.simulate(GHB=GHB) # run model
@@ -890,12 +890,12 @@ def oneD_all_boundary_types(kw):
     title = kw['title'] + ' (Using GHB)'
     _, ax = plt.subplots(figsize=(10, 6))
     ax.set(title=title, xlabel='x [m]', ylabel='s [m]', xscale='linear', xlim=[1e-3, x[-1]])
-    ax.plot(gr.xm, kw['Q'] * lambda_ / kD * np.exp(-gr.xm / lambda_), '.',label='Mazure')
-    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :], '--', lw=1, label='Fdm3 GHB')
-    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], '-.', lw=1, label='Fdm3 DRN')
-    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :], ':',  lw=1, label='Fdm3 RIV, h=rbot')
-    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :], '-',  lw=1, label='Fdm3 FDR, math. drainage')
-    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :], '-',  lw=1, label='Fdm3 FDR, phys. drainage')
+    ax.plot(gr.xm, Nc.item() + kw['Q'] * lambda_ / kD * np.exp(-gr.xm / lambda_),'+', label='Mazure')
+    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :], label='Fdm3 GHB')
+    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], 'x', label='Fdm3 DRN')
+    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :], label='Fdm3 RIV, h=rbot')
+    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :], label='Fdm3 FDR, math. drainage')
+    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :], label='Fdm3 FDR, phys. drainage')
         
     ax.grid()
     ax.legend()
@@ -924,8 +924,9 @@ def axial_all_boundary_types(kw):
     
     FQ = gr.const(0.)                   # m3/d fixed flows
     FQ[0] = gr.Area * kw['N']           # Recharge areal
-    FQ[-1, 0, 0] += kw['Q']             # Add extraction   
-    HI = gr.const(0.)                   # m, initial heads
+    FQ[-1, 0, 0] += kw['Q']             # Add extraction
+    Nc = kw['N'] * kw['c']
+    HI = (kw['h'] + Nc) * gr.const(1.)                   # m, initial heads
     
     IBOUND = gr.const(1, dtype=int)     # modflow like boundary array
     
@@ -935,17 +936,16 @@ def axial_all_boundary_types(kw):
     Ig = gr.NOD[0].ravel() # Select the cells that will be part of the boundary
     
     GHB = np.zeros(len(Ig), dtype=Fdm3.dtype['ghb'])
-    GHB['Ig'], GHB['h'], GHB['C'] = Ig, HI.ravel()[Ig], gr.Area.ravel() / kw['c']
+    GHB['Ig'], GHB['h'], GHB['C'] = Ig, kw['h'], gr.Area.ravel() / kw['c']
         
     DRN = GHB.copy() # Same parameters
     
     RIV = np.zeros(len(Ig), dtype=Fdm3.dtype['riv'])
-    RIV['Ig'], RIV['h'], RIV['C'], RIV['rbot'] = Ig, HI.ravel()[Ig], gr.Area.ravel() / kw['c'], HI.ravel()[Ig]
+    RIV['Ig'], RIV['h'], RIV['C'], RIV['rbot'] = Ig, kw['h'], gr.Area.ravel() / kw['c'], kw['h']
     
     # Free drainage
-    FDR = np.zeros(len(Ig), dtype=Fdm3.dtype['fdr'])
-    phi, Nc = HI.ravel()[Ig], kw['N'] * kw['c']
-    FDR['Ig'], FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'], FDR['L'] = Ig, phi, phi - Nc, phi - Nc - kw['y0'], kw['N'], kw['w1'], kw['L']
+    FDR = np.zeros(len(Ig), dtype=Fdm3.dtype['fdr'])    
+    FDR['Ig'], FDR['phi'], FDR['h'], FDR['h0'], FDR['N'], FDR['w'], FDR['L'] = Ig, kw['h'] + Nc, kw['h'], kw['h'] - kw['y0'], kw['N'], kw['w1'], kw['L']
     
     mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ) # run model    
     out_ghb = mdl.simulate(GHB=GHB) # run model
@@ -958,14 +958,15 @@ def axial_all_boundary_types(kw):
     
     title = kw['title'] + ' (Using GHB)'
     _, ax = plt.subplots(figsize=(10, 6))
-    ax.set(title=title, xlabel='r [m]', ylabel='s [m]', xscale='log', xlim=[1e-3, r[-1]])
-    ax.plot(gr.xm, kw['Q']/(2 * np.pi * kD) * K0(gr.xm / lambda_) / (kw['rw']/ lambda_ * K1(kw['rw']/ lambda_)), '.',label='De Glee Analytic')
-    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :], '--', lw=1, label='Fdm3 GHB')
-    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], '-.', lw=1, label='Fdm3 DRN')
-    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :], ':',  lw=1, label='Fdm3 RIV, h=rbot')
-    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :], '-',  lw=1, label='Fdm3 FDR, math. drainage')
-    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :], '-',  lw=1, label='Fdm3 FDR, phys. drainage')
-        
+    ax.set(title=title, xlabel='r [m]', ylabel='s [m]', xscale='linear', xlim=[1e-3, r[-1]])
+    ax.plot(gr.xm, Nc.item() + kw['Q']/(2 * np.pi * kD) * K0(gr.xm / lambda_) / (kw['rw']/ lambda_ * K1(kw['rw']/ lambda_)), '+',label='De Glee Analytic')
+    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :], label='Fdm3 GHB')
+    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], 'x', label='Fdm3 DRN')
+    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :], label='Fdm3 RIV, h=rbot')
+    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :], label='Fdm3 FDR, math. drainage')
+    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :], label='Fdm3 FDR, phys. drainage')
+    ax.set_xlim(0, 2000)
+    ax.set_ylim(-3., 1.)
     ax.grid()
     ax.legend()
     return {'ghb': out_ghb, 'drn': out_drn, 'riv': out_riv, 'fdr1': out_fdr1, 'fdr2': out_fdr2}
@@ -998,7 +999,8 @@ cases = {
                     Version two: drainage resistance using a physical function with ditch width.
                 """,
         'Q': -2500.,
-        'rw':   .25,          
+        'rw':   .25,
+        'r': np.logspace(-1, 4, 201)         
     },
     'general_data': {        
         'z0': 0.,                
@@ -1006,6 +1008,7 @@ cases = {
         'c' :  np.array([[1000.]]),
         'k' :  np.array([np.inf, 10]),  # m/d conductivity of regional aquifer        
         'N' : 0.001, # Reference recharge
+        'h' : 0.0, # drainage basis reference situation
         'y0': 1.0,   # Ditch depth for reference situation        
         'w1' : np.nan, # Use math function for drainage resistance
         'w2' : 1.0,     # Ditch width, use physical formula for dr. res.
