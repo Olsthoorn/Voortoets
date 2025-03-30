@@ -321,12 +321,12 @@ class Fdm3():
 
 
     @staticmethod
-    def mk_fmask(x, transition_width=0.005):
+    def mk_fmask(x, transition_width=0.01):
         """Return factor to soften transition when x goes through 0.
         
         The factor varies between 0 and 1 and is > 0.5 for x > 0
         """
-        return 1 / (1 + np.exp(-np.clip(x / transition_width, -50, 50)))
+        return 1 / (1 + np.exp(-np.clip((x -transition_width) / transition_width, -50, 50)))
         # return Fdm3.keep_positive(x, delta=0.001)
     
     
@@ -455,35 +455,35 @@ class Fdm3():
 
         # DRN boundaries
         if DRN is not None:
-            if not DRN.dtype == self.__class__.dtype['drn']:
+            if not DRN.dtype == Fdm3.dtype['drn']:
                 raise ValueError(
-                    f"""DRN must have dtype:\n{self.__class__.dtype['drn']}\nnot\n{DRN.dtype}"""
+                    f"""DRN must have dtype:\n{Fdm3.dtype['drn']}\nnot\n{DRN.dtype}"""
                 )
-            DRN = self.__class__.extend_dtype(DRN, fields=[('Q', float), ('q', float), ('phi', float), ('fmask', float)])
+            DRN = Fdm3.extend_dtype(DRN, fields=[('Q', float), ('q', float), ('phi', float), ('fmask', float)])
             
         # RIV boundaries
         if RIV is not None:
-            if not RIV.dtype == self.__class__.dtype['riv']:
+            if not RIV.dtype == Fdm3.dtype['riv']:
                 raise ValueError(
-                    f"""RIV must have dtype:\n{self.__class__.dtype['riv']}\nnot\n{RIV.dtype}"""
+                    f"""RIV must have dtype:\n{Fdm3.dtype['riv']}\nnot\n{RIV.dtype}"""
                 )
-            RIV = self.__class__.extend_dtype(RIV, fields=[('Q', float), ('q', float),  ('phi', float), ('fmask', float)])
+            RIV = Fdm3.extend_dtype(RIV, fields=[('Q', float), ('q', float),  ('phi', float), ('fmask', float)])
 
             
         # General head boundaries
         if GHB is not None:
-            if not GHB.dtype == self.__class__.dtype['ghb']:
+            if not GHB.dtype == Fdm3.dtype['ghb']:
                 raise ValueError(
-                    f"""GHB must have dtype:\n{self.__class__.dtype['ghb']}\nnot\n{GHB.dtype}""")
-            GHB = self.__class__.extend_dtype(GHB, fields=[('Q', float), ('q', float), ('phi', float),('fmask', float)])
+                    f"""GHB must have dtype:\n{Fdm3.dtype['ghb']}\nnot\n{GHB.dtype}""")
+            GHB = Fdm3.extend_dtype(GHB, fields=[('Q', float), ('q', float), ('phi', float),('fmask', float)])
             
         # Free drainage boundaries (kind of drains)
         if FDR is not None:
-            if not FDR.dtype == self.__class__.dtype['fdr']:
+            if not FDR.dtype == Fdm3.dtype['fdr']:
                 raise ValueError(
-                    f"""FDR must have dtype:\n{self.__class__.dtype['fdr']}\nnot\n{FDR.dtype}"""
+                    f"""FDR must have dtype:\n{Fdm3.dtype['fdr']}\nnot\n{FDR.dtype}"""
                 )
-            FDR = self.__class__.extend_dtype(FDR, fields=[('Q', float), ('q', float), ('C', float), ('cdr', float), ('c', float),
+            FDR = Fdm3.extend_dtype(FDR, fields=[('Q', float), ('q', float), ('C', float), ('cdr', float), ('c', float),
                                                              ('gamma', float), ('eta', float), ('beta', float), ('ge', float)])    
                 
             # Compute the initial coefficients taking phi=phiN, h=hN, q=N
@@ -529,11 +529,10 @@ class Fdm3():
             # Add the boundary conditions
             if DRN is not None:
                 # Drains as in Modflow
+                # Note that DRN['C'] and DRN['h'] are specified by the user.
                 Ig = DRN['Ig']
                 DRN['phi'] = Phi[Ig]                
-                DRN['fmask'] = self.__class__.mk_fmask(DRN['phi'] - DRN['h'])
-                # adiag[Ig]  += DRN['fmask'] * DRN['C']
-                # RHS[Ig, 0] += DRN['fmask'] * DRN['C'] * DRN['h']
+                DRN['fmask'] = Fdm3.mk_fmask(DRN['phi'] - DRN['h'])
                 adiag[Ig]  += DRN['fmask'] * DRN['C']
                 RHS[Ig, 0] += DRN['fmask'] * DRN['C'] * DRN['h']
 
