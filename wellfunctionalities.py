@@ -1247,6 +1247,16 @@ class wBlom(WellBase):
         Qr_ = WellBase.itimize(Qr_)
         return Qr_
     
+    def q(self, x=None, y=None, Q=None, N=None):
+        """Return the recharge q."""
+        r = self.radius(x, y)
+        R = self.getR(R=r.mean(), Q=Q, N=N)        
+        q = np.zeros_like(r)
+        q[r <= R] = N
+        q[r >  R] = N * K0(r[r > R] / self.aq['lambda']) / K0(R / self.aq['lambda'])
+        return WellBase.itimize(q)
+
+    
     def qxqy(self, x=None,  y=None, Q=None):
         """Return the specific dicharge components at x, and y."""
         x, y = WellBase.check_xy(x, y)
@@ -1307,7 +1317,7 @@ class wBlom(WellBase):
         Parameters
         ----------
         Q: float
-            Well extraction.
+            Well extraction Q > 0).
         N: float
            Recharge effective in the Verruit part (r < R-final)
         R: float
@@ -1322,6 +1332,9 @@ class wBlom(WellBase):
         """
         if verbose:
             print(f"R initial={R:.3g} m")
+        if Q < 0:
+            print(f"Warning: Q < 0 = {Q:.4g} [m3/d]; abs value is used instead.")
+            Q = abs(Q)
         for i in range(n):
             dR = -self.y(R=R, Q=Q, N=N) / self.y1(R=R, Q=Q, N=N)
             #dR = -self.y(R=R, Q=Q, N=N) / self.dydR(R=R, Q=Q, N=N)
@@ -1682,6 +1695,9 @@ class Blom1D(StripBase):
 
     def getL(self, Q=None, N=None):
         """Return L where drawdown is Nc."""
+        if Q < 0:
+            print(f"Warning, Q < 0,  {Q:.4g} m2/d, abs value is used.")
+            Q = abs(Q)
         L = Q / N - self.aq['lambda']
         L = L if L > 0. else 0.
         return L
@@ -1703,6 +1719,15 @@ class Blom1D(StripBase):
         h[x >= L] = Hinf - N * self.aq['c'] * np.exp(-(x[x >= L] - L) / self.aq['lambda'])
         h = WellBase.itimize(h)
         return h
+
+    def q(self, Q=None, x=None, N=None):
+        """Return the recharge q."""
+        x = super().check_x(x)
+        L = self.getL(Q=Q, N=N)
+        q = np.zeros_like(x)
+        q[x < L] = N
+        q[x >= L] = N * np.exp(-(x[x >= L] - L) / self.aq['lambda'])
+        return WellBase.itimize(q)
 
     def dd(self, Q=None, x=None, N=None):
         """Return drawdown using uniform 'kD' of aquifer."""

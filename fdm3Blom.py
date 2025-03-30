@@ -321,12 +321,14 @@ class Fdm3():
 
 
     @staticmethod
-    def mk_fmask(x, transition_width=0.05):
+    def mk_fmask(x, transition_width=0.005):
         """Return factor to soften transition when x goes through 0.
         
         The factor varies between 0 and 1 and is > 0.5 for x > 0
         """
         return 1 / (1 + np.exp(-np.clip(x / transition_width, -50, 50)))
+        # return Fdm3.keep_positive(x, delta=0.001)
+    
     
     @staticmethod                
     def get_q(dphi, c=None):
@@ -397,7 +399,7 @@ class Fdm3():
         
 
         
-    def simulate(self, DRN=None, RIV=None, GHB=None, FDR=None, tm=None, htol=1e-7, maxiter=50, verbose=False):
+    def simulate(self, *, DRN=None, RIV=None, GHB=None, FDR=None, tm=None, htol=1e-7, maxiter=50, verbose=False):
         """Compute a 3D steady state finite diff. model
 
         Parameters
@@ -530,6 +532,8 @@ class Fdm3():
                 Ig = DRN['Ig']
                 DRN['phi'] = Phi[Ig]                
                 DRN['fmask'] = self.__class__.mk_fmask(DRN['phi'] - DRN['h'])
+                # adiag[Ig]  += DRN['fmask'] * DRN['C']
+                # RHS[Ig, 0] += DRN['fmask'] * DRN['C'] * DRN['h']
                 adiag[Ig]  += DRN['fmask'] * DRN['C']
                 RHS[Ig, 0] += DRN['fmask'] * DRN['C'] * DRN['h']
 
@@ -802,35 +806,7 @@ def OneD_examples(kw):
     ax.legend()
     return out
 
-
-def deGlee(kw):
-    """Simulate steady axial flow to fully penetrating well in semi-confined aquifer"""
-    z = kw['z0'] - np.cumsum(np.hstack((0., kw['D'])))
-    r = np.hstack((0., kw['rw'], kw['r'][kw['r'] > kw['rw']]))
-    gr = mfgrid.Grid(r, None, z, axial=True)
-    k = gr.const(kw['k'])
-    c = gr.const(kw['c'])
-    kD = (kw['k'] * kw['D'])[-1]      # m2/d, transmissivity of regional aquifer
-    lambda_  = np.sqrt(kD * float(kw['c'])) # spreading length of regional aquifer
-    
-    FQ = gr.const(0.)
-    FQ[-1, 0, 0] = kw['Q']   # m3/d fixed flows
-    HI = gr.const(0.)                           # m, initial heads
-    
-    IBOUND = gr.const(1); IBOUND[0, :, :] = -1  # modflow like boundary array
-    
-    mdl = Fdm3(gr=gr, K=k, c=c, IBOUND=IBOUND, FQ=FQ, HI=HI) # run model
-    out = mdl.simulate() # run model
-    
-    _, ax = plt.subplots(figsize=(10, 6))
-    ax.set(title=kw['title'], xlabel='r [m]', ylabel='s [m]', xscale='log', xlim=[1e-3, r[-1]])
-    ax.plot(gr.xm, out['Phi'][-1, 0, :], 'ro', label='fdm3')
-    ax.plot(gr.xm, kw['Q']/(2 * np.pi * kD) * K0(gr.xm / lambda_) / (kw['rw']/ lambda_ * K1(kw['rw']/ lambda_)), 'b-',label='analytic')
-    ax.grid()
-    ax.legend()
-    return out
-    
-    
+  
 def oneD_all_boundary_types(kw):
     """Run 1D cross ection examples, using all aviable boundary types,
     just a single layer so simulate drainage:
@@ -899,6 +875,20 @@ def oneD_all_boundary_types(kw):
         
     ax.grid()
     ax.legend()
+    
+    title="Infiltration or leakage m/d"
+    _, ax = plt.subplots(figsize=(10, 6))
+    ax.set(title=title, xlabel='x [m]', ylabel='q [m/d]', xscale='linear', xlim=[1e-3, x[-1]])
+    
+    ax.plot(gr.XM.ravel()[out_ghb['GHB']['Ig']], out_ghb[ 'GHB']['q'], label='Fdm3 GHB')
+    ax.plot(gr.XM.ravel()[out_drn['DRN']['Ig']], out_drn[ 'DRN']['q'], label='Fdm3 DRN')
+    ax.plot(gr.XM.ravel()[out_riv['RIV']['Ig']], out_riv[ 'RIV']['q'], '+', label='Fdm3 RIV')
+    ax.plot(gr.XM.ravel()[out_fdr1['FDR']['Ig']], out_fdr1[ 'FDR']['q'], label='Fdm3 FDR1')
+    ax.plot(gr.XM.ravel()[out_fdr2['FDR']['Ig']], out_fdr2[ 'FDR']['q'], label='Fdm3 FDR2')
+    ax.grid()
+    ax.legend()
+    
+    
     return {'ghb': out_ghb, 'drn': out_drn, 'riv': out_riv, 'fdr1': out_fdr1, 'fdr2': out_fdr2}
 
 
@@ -969,12 +959,30 @@ def axial_all_boundary_types(kw):
     ax.set_ylim(-3., 1.)
     ax.grid()
     ax.legend()
+    
+    
+    title = "Axial symmetric flow, discharges q [m/d]"
+    _, ax = plt.subplots(figsize=(10, 6))
+    ax.set(title=title, xlabel='r [m]', ylabel='s [m]', xscale='linear',
+           xlim=(0, 2000.), ylim=(-0.002, 0.0012))
+
+    ax.plot(gr.XM.ravel()[out_ghb['GHB']['Ig']], out_ghb[ 'GHB']['q'], label='Fdm3 GHB')
+    ax.plot(gr.XM.ravel()[out_drn['DRN']['Ig']], out_drn[ 'DRN']['q'], label='Fdm3 DRN')
+    ax.plot(gr.XM.ravel()[out_riv['RIV']['Ig']], out_riv[ 'RIV']['q'], '+', label='Fdm3 RIV')
+    ax.plot(gr.XM.ravel()[out_fdr1['FDR']['Ig']], out_fdr1[ 'FDR']['q'], label='Fdm3 FDR1')
+    ax.plot(gr.XM.ravel()[out_fdr2['FDR']['Ig']], out_fdr2[ 'FDR']['q'], label='Fdm3 FDR2')
+    ax.grid()
+    ax.legend()
+
+    
+    
     return {'ghb': out_ghb, 'drn': out_drn, 'riv': out_riv, 'fdr1': out_fdr1, 'fdr2': out_fdr2}
 
 cases = {
     'sectioin1D_data': {
         'title': '1D Cross section',
-        'comment': """1D flow in semi-confined aquifer example
+        'comment': """Drainage in a 1D cross section.
+        
         Mazure was Dutch professor in the 1930s, concerned with leakage from
         polders that were pumped dry. His situation is a cross section perpendicular
         to the dike of a regional aquifer covered by a semi-confining layer with
