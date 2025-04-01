@@ -9,7 +9,7 @@ from collections import Counter
 
 def export_lyx_to_tex(lyx_file):
     tex_file = lyx_file.replace(".lyx", ".tex")
-    cmd = ["lyx", "--export", "latex", lyx_file]
+    cmd = ["/System/Volumes/Data/Applications/LyX.app/Contents/MacOS/lyx", "--export", "latex", lyx_file]
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode == 0 and os.path.exists(tex_file):
         print(f"Export geslaagd: {tex_file}")
@@ -57,11 +57,21 @@ def main(lyx_file):
     
     if mistakes:
         print("Fout gespelde woorden (gesorteerd op frequentie):")
-        for word, count in mistakes.most_common():
-            print(f"{word}: {count}")
+        
+        with open("/Users/Theo/Entiteiten/Hygea/2022-AGT/Doc_rapportage/mistakes.txt", 'w') as f:
+            for word, count in mistakes.most_common():
+                f.write(f"{word}: {count}\n")
+                print(f"{word}: {count}")
     else:
         print("Geen spellingsfouten gevonden!")
     
-if __name__ == "__main__":
-    lyx_file = input("Voer het pad in naar je LyX-bestand: ")
+if __name__ == "__main__":    
+    pth = '/Users/Theo/Entiteiten/Hygea/2022-AGT/Doc_rapportage'
+    
+    os.chdir(pth)
+    
+    lyx_file = os.join(pth, "VrijeAfwatering.lyx")
+    
+    print(os.path.isfile(lyx_file))
+    #lyx_file = input("Voer het pad in naar je LyX-bestand: ")
     main(lyx_file)
