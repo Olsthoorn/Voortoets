@@ -605,14 +605,13 @@ class Fdm3():
                                                            
                     if math_cdr:
                         FDR['cdr'] = FDR['gamma'] / np.sqrt(FDR['q'])
-                        FDR['c'] =   (FDR['gamma'] + FDR['eta']) / np.sqrt(FDR['q'])
-                        FDR['C'] = self.gr.Area.ravel()[Ig] / FDR['c']
                     
-                    else: # phisical drainage formula
+                    else: # physical drainage formula
                         y = FDR['eta'] * np.sqrt(FDR['q'])
-                        FDR['cdr'] = Fdm3.cdrainage(y=y, kx=kx, kz=kz, cy0=cy0, y0=y0, beta=FDR['beta'], L=FDR['L'])                        
-                        FDR['c'] = FDR['cdr'] + FDR['eta'] / np.sqrt(FDR['q'])
-                        FDR['C'] = self.gr.Area.ravel()[Ig] / FDR['c']                
+                        FDR['cdr'] = Fdm3.cdrainage(y=y, kx=kx, kz=kz, cy0=cy0, y0=y0, beta=FDR['beta'], L=FDR['L'])
+                                             
+                    FDR['c'] = FDR['cdr'] + FDR['eta'] / np.sqrt(FDR['q'])
+                    FDR['C'] = self.gr.Area.ravel()[Ig] / FDR['c']                
                 adiag[Ig] +=  FDR['C']
                 RHS[Ig, 0] += FDR['C'] * FDR['h0']
                 
