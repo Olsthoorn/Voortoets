@@ -493,10 +493,10 @@ class Fdm3():
         non_linear_options = [name for (name, p) in zip(['DRN', 'RIV', 'FDR'], [DRN, RIV, FDR]) if p is not None]
         
         # Initial heads
-        HI = self.HI.copy().reshape(nod, 1)
+        HI = self.HI.copy().flatten()
         
         # Set up the initial head vector
-        Phi = HI[:, 0].copy()
+        Phi = HI.copy()
 
         # Outer iterations get first dt and step multiplier
         if tm is None:
@@ -521,7 +521,7 @@ class Fdm3():
 
             # Set up up the Right-hand side vector, using FQ.
             # Restart fresh in each loop cycle
-            RHS = self.FQ.copy().reshape(nod, 1)
+            RHS = self.FQ.copy().flatten()
 
             if np.any(fxhd):
                 RHS -= (self.A + sp.diags(adiag, 0))[:, fxhd] @ HI[fxhd]
@@ -533,8 +533,8 @@ class Fdm3():
                 Ig = DRN['Ig']
                 DRN['phi'] = Phi[Ig]                
                 DRN['fmask'] = Fdm3.mk_fmask(DRN['phi'] - DRN['h'])
-                adiag[Ig]  += DRN['fmask'] * DRN['C']
-                RHS[Ig, 0] += DRN['fmask'] * DRN['C'] * DRN['h']
+                np.add.at(adiag, Ig, DRN['fmask'] * DRN['C'])
+                np.add.at(RHS, Ig, DRN['fmask'] * DRN['C'] * DRN['h'])
 
             if RIV is not None:
                 # River cells as in Modflow
@@ -543,19 +543,19 @@ class Fdm3():
 
                 if True: # Non-linear
                     RIV['fmask'] = Fdm3.mk_fmask(Phi[Ig] - RIV['rbot'])                    
-                    adiag[Ig]  += RIV['C'] * RIV['fmask']
-                    RHS[Ig, 0] += RIV['C'] * (RIV['fmask'] * RIV['h'] + (1 - RIV['fmask']) * (RIV['h'] - RIV['rbot']))
+                    np.add.at(adiag, Ig, RIV['C'] * RIV['fmask'])
+                    np.add.at(RHS, Ig, RIV['C'] * (RIV['fmask'] * RIV['h'] + (1 - RIV['fmask']) * (RIV['h'] - RIV['rbot'])))
                 else: # L inear
-                    adiag[Ig] += RIV['C']
-                    RHS[Ig, 0] += RIV['C'] * RIV['h']
+                    np.add.at(adiag, Ig, RIV['C'])
+                    np.add.at(RHS, Ig, RIV['C'] * RIV['h'])
 
             if GHB is not None:
                 # GHB cells as in Modflow.
                 # No outer iterations are needed.
                 Ig = GHB['Ig']
                 GHB['phi'] = Phi[Ig]
-                adiag[Ig] += GHB['C']
-                RHS[  Ig, 0] += GHB['C'] * GHB['h']
+                np.add.at(adiag, Ig, GHB['C'])
+                np.add.at(RHS, Ig, GHB['C'] * GHB['h'])
 
             if FDR is not None:
                 # Free drainage situation.
@@ -586,7 +586,7 @@ class Fdm3():
                         FDR['gamma'] = FDR['cdr'] * np.sqrt(FDR['N'])                        
                         FDR['ge'] = (FDR['gamma'] + FDR['eta']) ** 2
                         FDR['c'] =  (FDR['gamma'] + FDR['eta']) / np.sqrt(FDR['q'])
-                        FDR['C'] = self.gr.Area.ravel()[Ig] * (FDR['phi'] - FDR['h0']) / FDR['ge']
+                        FDR['C'] = self.gr.AREA.ravel()[Ig] * (FDR['phi'] - FDR['h0']) / FDR['ge']
                     
                     else:
                         # Using the physical drainage resistance approach
@@ -595,7 +595,7 @@ class Fdm3():
                         kx = self.kx.ravel()[Ig]
                         kz = self.kz.ravel()[Ig]                        
                         FDR['c'] = FDR['cdr'] + FDR['eta'] / np.sqrt(FDR['q'])                        
-                        FDR['C'] = self.gr.Area.ravel()[Ig] / FDR['c']                  
+                        FDR['C'] = self.gr.AREA.ravel()[Ig] / FDR['c']                  
                 
                 else:
                     # During further cycles of the outer loop
@@ -611,9 +611,9 @@ class Fdm3():
                         FDR['cdr'] = Fdm3.cdrainage(y=y, kx=kx, kz=kz, cy0=cy0, y0=y0, beta=FDR['beta'], L=FDR['L'])
                                              
                     FDR['c'] = FDR['cdr'] + FDR['eta'] / np.sqrt(FDR['q'])
-                    FDR['C'] = self.gr.Area.ravel()[Ig] / FDR['c']                
-                adiag[Ig] +=  FDR['C']
-                RHS[Ig, 0] += FDR['C'] * FDR['h0']
+                    FDR['C'] = self.gr.AREA.ravel()[Ig] / FDR['c']                
+                np.add.at(adiag, Ig, FDR['C'])
+                np.add.at(RHS, Ig, FDR['C'] * FDR['h0'])
                 
             # Quasi time stepping to stabilize non linear behavior
 
@@ -622,12 +622,12 @@ class Fdm3():
                     print(f"Non-linear options: {non_linear_options}, starting outer iterations:")
                 # Add storage to stabilize the solution (make it transient to reach steady state)
                 adiag += self.Sto.ravel() / dt
-                RHS[:, 0] += self.Sto.ravel() / dt * HI[:, 0]                
+                RHS += self.Sto.ravel() / dt * HI
                 
                 Phi[active] = la.spsolve((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active] )                
                 # Phi[active], info = la.cg((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active], x0=HI[active], rtol=rtol, atol=atol, maxiter=250)                
-                err = np.abs(Phi[active] - HI.ravel()[active]).max()
-                errBalance = (self.Sto.ravel() * (Phi - HI.ravel())).sum()
+                err = np.abs(Phi[active] - HI[active]).max()
+                errBalance = (self.Sto.ravel() * (Phi - HI)).sum()
                 
                 print(f"iouter = {iouter:4}, err = {err:10.5g} m, errBalance = {errBalance:10.5g}")                
                 if err < htol:
@@ -638,7 +638,7 @@ class Fdm3():
                 else:
                     if verbose:
                         ax.plot(self.gr.xm, Phi, label=f'iouter={iouter}')
-                    HI[:, 0] = Phi
+                    HI[:] = Phi
                     dt *= dtmult                     
             else:
                 Phi[active] = la.spsolve((self.A + sp.diags(adiag, 0))[active][:,active], RHS[active] )                
@@ -677,19 +677,19 @@ class Fdm3():
         
         if DRN is not None:                                        
             DRN['Q'] = DRN['fmask'] * DRN['C'] * (DRN['h'] - Phi.ravel()[DRN['Ig']])
-            DRN['q'] = -DRN['Q'] / self.gr.Area.ravel()[DRN['Ig']]
+            DRN['q'] = -DRN['Q'] / self.gr.AREA.ravel()[DRN['Ig']]
             out.update(DRN=DRN)
 
         if RIV is not None:            
             RIV['Q'] = ( RIV['fmask']  * RIV['C'] * (RIV['h'] - Phi.ravel()[RIV['Ig']]) + 
                     (1 - RIV['fmask']) * RIV['C'] * (RIV['h'] - RIV['rbot'])
             )
-            RIV['q'] = -RIV['Q'] / self.gr.Area.ravel()[RIV['Ig']]
+            RIV['q'] = -RIV['Q'] / self.gr.AREA.ravel()[RIV['Ig']]
             out.update(RIV=RIV)
 
         if GHB is not None:            
             GHB['Q'] = GHB['C'] * (GHB['h'] - Phi.ravel()[GHB['Ig']])
-            GHB['q'] = -GHB['Q'] / self.gr.Area.ravel()[GHB['Ig']]
+            GHB['q'] = -GHB['Q'] / self.gr.AREA.ravel()[GHB['Ig']]
             out.update(GHB=GHB)
 
         if FDR is not None:                        
