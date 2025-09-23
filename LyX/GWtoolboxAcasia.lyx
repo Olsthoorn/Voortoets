@@ -1,0 +1,1550 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\usepackage{epstopdf} % to include .eps graphics files with pdfLaTeX
+\usepackage{flafter}   % Don't place floats before their definition
+%\usepackage{topcapt}  % Define \topcation for placing captions above tables (not in gwTeX)
+
+\usepackage{xurl}      % better URL setting, uses old url package
+
+\usepackage{xcolor}
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\usepackage[]{hyperref} % Generates all cross references
+\hypersetup{            % Setting options for hyperref package
+	breaklinks=true,    % break line with long hyperlinks
+	colorlinks=true,    % coloured links
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=darkblue,
+	citecolor=blue,
+	backref=page
+} 
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{alltt}
+
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% \lstdefinestyle{mystyle}{
+%   language=Python,
+%   numbers=left
+% }
+
+% Put lstset here, after lstdefinestyle
+% \lstset{style=mystyle}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language dutch
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command biber
+\index_command default
+\float_placement h
+\float_alignment center
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\listings_params "language=Python,extendedchars=false,frameround=fttt,numbers=left,% line numbers use none,numberstyle={\tiny},stepnumber=2,% line numbers only every so many,numbersep=9pt,% how far line numbers from text?,showspaces=false,showstringspaces=false,showtabs=false,tab={\rightarrowfill},basicstyle={\small},keywordstyle={\color{blue}},commentstyle={\color{green}},stringstyle={\ttfamily \color{magenta}},identifierstyle={\color{black}}"
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+GWtoolkit van de Waterschappen
+\begin_inset Newline newline
+\end_inset
+
+Ontwikkeld oor Acasia-water,
+ te Gouda (2012)
+\end_layout
+
+\begin_layout Author
+T.N.Olsthoorn
+\end_layout
+
+\begin_layout Date
+02-04-2025
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/GWtoolkit.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+De GWtoolbox en vergunningverlening door Waterschappen
+\end_layout
+
+\begin_layout Section
+Intro
+\end_layout
+
+\begin_layout Standard
+Vergunningverlening voor bemalingen en andere ingrepen in het oppervlakte- en grondwatersysteem is rond de eeuwwisseling overgegaan van provincies naar de waterschappen.
+ Uitzondering hierop zijn onttrekkingen voor de drink- en industriewatervoorziening.
+ De waterschappen zouden zodoende een grote stroom vergunningaanvragen moeten gaan behandelen.
+ Om in de nodige opleiding te voorzien en een uniforme benadering van de beoordeling mogelijk te maken is op initiatie van enkele waterschappen onder leiding van het Stowa de ontwikkeling van een een grondwatertoolkit gefinancierd,
+ waarvan de ontwikkeling werd opgedragen aan Acacia-water in Gouda.
+ Deze ontwikkeling heeft geleid tot een GWtoolbox als gebruikersvriendelijke schil binnen Excel.
+ Tevens zijn cursussen gegeven waaraan medewerkers van verschillende Waterschappen hebben deelgenomen.
+ Ook zou een website worden gerealiseerd waar ook aanvragers van gebruik zouden kunnen maken.
+ Na enkele jaren bleek de belangstelling om de toolbox in de lucht te houden te zijn verdwenen,
+ werd de financiering ingetrokken,
+ stopten de cursussen en verdween de website.
+\end_layout
+
+\begin_layout Standard
+De GWtoolbox bleek ruimt tien jaar later nog bij sommige medwerkers en bij Acasia-water op de computer aan wezig te zijn en de auteurs dezes kreeg toestemming van Acasia water om hem te bestuderen in het kader van het onderhavige project ter modernisering van de Voortoets en heeft daartoe het Excel-bestand met de GWtoolbox ontvangen.
+\end_layout
+
+\begin_layout Standard
+De onderbouwing van de berekeningen in de Voortoets is te vinden in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Brond12"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Wat zit er in de GWtoolbox
+\end_layout
+
+\begin_layout Standard
+De GWtoolbox bestaat nu uit een uitgebreid Excel workbook dat middels VBasic is omgezet in een gebruikersvriendelijke omgeving die enigszins is te vergelijken met de website van de Voortoets,
+ maar dan zonder achterliggende kaarten of dabases voor de bodemgegevens.
+ Het is dus veeleer een applicatie die de gebruiker stuurt in keuzes om grondwaterberekeningen te maken ter onderbouwing van de vergunningaanvrage.
+\end_layout
+
+\begin_layout Standard
+De GWtoolbox kent een hoofdindeling die gebaseerd is op het doel van de aanvrage:
+\end_layout
+
+\begin_layout Enumerate
+Bemaling
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Freatisch
+\end_layout
+
+\begin_layout Enumerate
+Freatisch boven semi-spanningswater
+\end_layout
+
+\begin_layout Enumerate
+Semi-spanningswater
+\end_layout
+
+\begin_layout Enumerate
+Spanningswater
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Drainage
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Hooghoudt
+\end_layout
+
+\begin_layout Enumerate
+Ernst (drains boven scheiding)
+\end_layout
+
+\begin_layout Enumerate
+Ernst (drains onder scheiding
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Grond
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Opbarsting
+\end_layout
+
+\begin_layout Enumerate
+Stoftransport
+\end_layout
+
+\begin_layout Enumerate
+Peilverandering
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Overige berekeningen
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Reikwijdte bemaling
+\end_layout
+
+\begin_layout Enumerate
+Opstuwing in een drainagesysteem
+\end_layout
+
+\begin_layout Enumerate
+Tussen-c
+\end_layout
+
+\begin_layout Enumerate
+Gemiddelde k-waarde
+\end_layout
+
+\begin_layout Enumerate
+Equivalente straal bouwput
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Hierna wordt deze hoofdindeling gevolgd en de verschillende punten uit de GWtoolbox besproken.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Bemaling
+\end_layout
+
+\begin_layout Section
+Freatisch
+\end_layout
+
+\begin_layout Subsection
+Stationair
+\end_layout
+
+\begin_layout Standard
+Bij een onttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+ uit een freatisch pakket met uniforme vlakke bodem en uniforme doorlatendheid 
+\begin_inset Formula $k$
+\end_inset
+
+ en een oorspronkelijk natte dikte 
+\begin_inset Formula $H$
+\end_inset
+
+ en een vaste rand op 
+\begin_inset Formula $r=R$
+\end_inset
+
+ voldoet de grondwaterstand 
+\begin_inset Formula $h$
+\end_inset
+
+ aan 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H^{2}-h^{2}=\frac{Q}{\pi k}\ln\left(\frac{R}{r}\right)
+\]
+
+\end_inset
+
+en dus aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h=\sqrt{H^{2}-\frac{Q}{\pi k}\ln\left(\frac{R}{r}\right)}
+\]
+
+\end_inset
+
+Voor de verlaging in de bouwput moet de bouwputstraal worden ingevuld.
+ 
+\end_layout
+
+\begin_layout Standard
+Voor het stationaire onttrekkingsdebiet geldt in deze situatie
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q=\frac{\pi k\left(H^{2}-h^{2}\right)}{\ln\left(\frac{R}{r}\right)}
+\]
+
+\end_inset
+
+Voorwaarde voor de geldigheid is dat er een zinvolle waarde voor 
+\begin_inset Formula $R$
+\end_inset
+
+ kan worden gevonden.
+\end_layout
+
+\begin_layout Subsection
+Stationair bij open water
+\end_layout
+
+\begin_layout Standard
+Verondersteld wordt dat zich een langerekt open water in de buurt van de bouwput bevindt dat in direct contact staat met de freatische laag waaruit wordt onttrokken.
+ De verlaging wordt nu bepaald door spiegeling van de onttrekking ten opzichte van de oever van het open water.
+ Het onttrekkingsdebiet is dan tweemaal zo groot.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H^{2}-h^{2}=\frac{Q}{\pi k}\ln\left(\frac{r_{2}}{r_{1}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $r_{1}$
+\end_inset
+
+ de afstand van het observatiepunt tot het hart van de bouwput en 
+\begin_inset Formula $r_{2}$
+\end_inset
+
+ de afstand van het observatiepunt tot het hart van de gespiegelde bouwput.
+ Om het debiet van de bouwput te bepalen neemt men als observatiepunt het punt op de rand van de bouwput dat zo dicht mogelijk ligt bij de oever zodat 
+\begin_inset Formula $r_{1}$
+\end_inset
+
+ de straal van de bouwput is.
+ Voor 
+\begin_inset Formula $r_{2}$
+\end_inset
+
+ kiest men dan de afstan van ditzelfde observatiepunt tot de rand van de gespielgelde bouwput,
+ 
+\begin_inset Formula $2e,$
+\end_inset
+
+ met 
+\begin_inset Formula $e$
+\end_inset
+
+ de afstand van het observatiepunt tot de oever
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q=\frac{\pi k\left(H^{2}-h^{2}\right)}{\ln\left(\frac{2e}{r_{1}}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $H$
+\end_inset
+
+ de oorspronkelijke natte pakketdikte en 
+\begin_inset Formula $h=H-s$
+\end_inset
+
+ met 
+\begin_inset Formula $s$
+\end_inset
+
+ de gewenste verlaging in de bouwput.
+\end_layout
+
+\begin_layout Subsection
+Stationair bij onvolkomen bronnen
+\end_layout
+
+\begin_layout Standard
+In de praktijk worden meestal onvolkomen bronnen toegepast,
+ bronnen die alleen bovenin de watervoerende laag een filter hebben.
+ Minder diep boren is goedkoper en de lokale verlaging direct onder de bouwput is wat groter.
+ Voor de verlaging op afstand van de bouwput is echter alleen de totale onttrekking van belang.
+ De detailberekening van de bemaling van de bouwput zelf is geen aspect bij de Voortoets en kan hier verder buiten beschouwing blijven.
+\end_layout
+
+\begin_layout Subsection
+Niet-stationair
+\end_layout
+
+\begin_layout Standard
+Voor de niet-stationaire verlaging door bemaling wordt verwezen naar 
+\begin_inset Quotes pld
+\end_inset
+
+Theis-Jacob-Edelman
+\begin_inset Quotes prd
+\end_inset
+
+.
+ De alegemene formule voor verlaging 
+\begin_inset Formula $s$
+\end_inset
+
+ door constante onttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+ in een oneindig uitgestrekt uniform pakket met constant doorlaatvermogen 
+\begin_inset Formula $kD$
+\end_inset
+
+ en berginscoëfficiënt 
+\begin_inset Formula $S$
+\end_inset
+
+,
+ is die volgens Theis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\frac{Q}{4\pi kD}W\left(u\right),\,\,\,\,u=\frac{r^{2}S}{4kDt}
+\]
+
+\end_inset
+
+Een benadering voor 
+\begin_inset Formula $s$
+\end_inset
+
+ is volgens Jacob
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s\approx\frac{Q}{4\pi kD}\ln\left(\frac{2.25kDt}{r^{2}S}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het debiet volgt uit omkeren van deze vergelijkingen.
+ Maar voor de berekening moet dan een tijd worden ingevuld of een reikwijdte gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R=\sqrt{\frac{2.25kDt}{S}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+waardoor de vergelijking van Jacob overgaat in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s\approx\frac{Q}{2\pi kD}\ln\left(\frac{R}{r}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is de formule van Dupuit,
+ waarin 
+\begin_inset Formula $R$
+\end_inset
+
+ echter van de tijd afhangt.
+ Wanneer de reikwijdte gelijk is geworden aan de radius waarop de verlaging is gefixeerd,
+ is de laatste vergelijking de stationaire eindverlaging volgens Dupuit.
+ In de praktijk zal veelal gezocht worden aan een geschikte 
+\begin_inset Formula $R$
+\end_inset
+
+ voor de eindverlaging.
+\end_layout
+
+\begin_layout Standard
+De formules van Edelman gelden niet voor onttrekking door putten of min of meer ronde bouwputten,
+ maar voor lange sleuv en,
+ sloten or drains.
+ Dit wordt in de GWtoolbox niet verder uitgediept.
+\end_layout
+
+\begin_layout Section
+Freatisch boven spanningswater
+\end_layout
+
+\begin_layout Subsection
+Stationair
+\end_layout
+
+\begin_layout Standard
+De essentie is dat de verlaging nabij de bouwput een relatief groot deel van het oorspronkelijke freatisch pakket droogtrekt,
+ wat mogelijk bemaling in meerdere trappen noodzakelijk maakt.
+ Voorts is een kernmerk van deze situatie dat de stijghoogte onder de scheidende laag beneden de bouwput hoog is ten opzichte van de vloerhoogte van de bouwput waardoor risico bestaat dat de vloer van de bouwput opbarst.
+ Opbarsten wordt elders in de GWtoolbox behandeld.
+\end_layout
+
+\begin_layout Standard
+Voor de verlaging wordt de fromule van 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Glee30"
+literal "false"
+
+\end_inset
+
+ voorgesteld die geldt voor onttrekking uit een semi-gespannen pakket met een scheidende deklaag waarboven een vast peil heerst.
+ In dit geval bevindt de scheidende laag zich onder het freatische pakkat.
+ De voorgestelde formule is voor de berekening niet geheel geschikt omdat nu de stijghoogte in de laag onder de scheidende laag met zekerheid niet constant blijft.
+ Enerzijds is het verwaarlozen van de verlaging in de diepere laag ongevaarlijk omdat het voor het opbarsten een ongunstig is zodat de situatie veiliger zal zijn dan wanneer deze verlaging wel zou worden meegenomen.
+ Anderzijds wordt hiermee de in de diepere laag opgewekte hoirzontale stroming verwaarloosd,
+ waardoor het totale waterbezwaar van de bouwput hoger zal zijn dan wanneer de verlaging in de diepere laag wel zou zijn meegenomen.
+ Maar dit meenemen vergt een analytische oplossing voor een tweelaags systeem,
+ die een stuk ingerwikkelder is en blijbaar buiten het kader van de GWtoolbox valt.
+\end_layout
+
+\begin_layout Subsection
+Niet-stationair
+\end_layout
+
+\begin_layout Standard
+Voor de niet-statonaire situatie wordt de formule van Hantush voorgesteld die geldt voor de tijdsafhankelijke verlaging door onttrekking aan een semi-gespannen pakket.
+ Voor toepassing hiervan in een situatie met een scheidende laag onder in plaat van boven het watervoerende pakket gelden dezelfde aandachtspunten als hiervoor zijn beschreven.
+ Tegelijkertijd dient vanwege het freatische karakter van de toplaag hier de freatisch bergingscoëfficiënt worden gebruikt.
+\end_layout
+
+\begin_layout Section
+Semi-spanningswater
+\end_layout
+
+\begin_layout Standard
+De bemaling vindt nu plaats in een watervoerende laag die wordt afgedekt door een slecht doorlatende laag.
+ Deze situatie komt geregeld voor in gebieden die gekenmerkt worden door een deklaag.
+ Zulke gebieden zijn van nature drassig zodat de deklaag goed wordt ontwaterd om geschikt te zijn voor landbouw of veeteelt;
+ of het gebied is een moeras,
+ waarin de deklaag permement dras is.
+ In elk geval bevindt zich op de deklaag voldoende water om de grondwaterstand bovenin de deklaag goed vast te houden ondanks de bemaling.
+\end_layout
+
+\begin_layout Standard
+Deze situatie kennen we als het schema van Blom.
+ Binnen een bepaalde straal zakt het grondwaterniveau mogelijk tot onder de basis van de deklaag.
+ Hier geldt dan een vaste voeding van het grondwater gelijk aan de grondwaterstand bovenin de deklaag minus de hoogte van de onderzijde van de deklaag gedeeld door de weerstand van de deklaag.
+ Hierbuiten is de grondwatestand minder verlaagd en blijft deze geheel binnen de deklaag.
+ Daar is de voeding die de verlaging opwekt evenredig met de verlaging.
+ Zonder verlaging is er geen voeding,
+ dan wordt al het neerslagoverschot direct afgevoerd naar het lokale oppervlaktewater zonder ooit het watervoerende pakket eronder te bereiken.
+ Het pakket onder de deklaag kan dan stagnant zijn,
+ maar meestal ontvangt het water uit kwel en toestroming uit hoger terrein in de wijde omgeving.
+ Dit is het geval in overgangsgebieden,
+ waar een hoog gebied met diepe grondwaterstanden zonder oppervlaktewater overgaat in een laag gebied zoals een beekdal,
+ met ondiepe grondwaterstanden dat goed wordt ontwaterd en wordt gekenmerkt door kwel.
+ Beekdalen,
+ moerassen,
+ maar ook lage polders vallen hieronder.
+\end_layout
+
+\begin_layout Standard
+In situaties waarin het goed ontwaterde gebied niet is afgedekt door een deklaag of waarin de deklaag nog een aanzienlijke doorlatendheid heeft,
+ kan het daar dichte oppervlaktewaterstelsel worden samengevat door een drainageweerstand.
+ Dit is het scheme van vrije ontwatering volgens 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Blom73"
+literal "false"
+
+\end_inset
+
+,
+ waarbij de verlaging een binnengebied veroorzaakt waarin de grondwaterstand tot onder de slootbodems zakt.
+ De verminderde afvoer was vantevoren gelijk aan het neerslagoverschot plus kwel en voedt nu in zijn geheel het grondwater.
+ Buiten de ring waarop de het gronwater juist tot aan de slootbodems is verlaagd is de extra voeding door verminderde afvoer evenredig met de verlaging.
+ De sloten voeren daar nog steeds het resterende deel van het neerslagoverschot af.
+ Het verschil tussen de situatie met de dikkere deklaag en die zonder deklaag maar met vrije ontwatering is het niveau waarop het grondwater los raakt van het lokale oppervlaktewater.
+ In de situatie die de GWtoolbox schetst is dat de onderzijde van de deklaag;
+ in de situatie volgens Blom met vrije ontwatering is dat de hoogte van de slootbodems.
+ Zolang we de weerstand van de deklaag of de drainageweerstand constant mogen beschouwen,
+ zijn de formules voor beide situaties hetzelfde.
+ Bij vrije afwatering varieert de drainageweerstand echter met de slootdiepte en wordt oneindig groot op het moment dat de sloten droog vallen.
+ De GWtoolbox gaat niet op deze verschillen in.
+\end_layout
+
+\begin_layout Standard
+De stationaire verlaging in een pakket met semi-spanningswater met constante weerstand van de deklaag is volgens 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Glee30"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\frac{Q}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right)
+\]
+
+\end_inset
+
+Binnen de ring met radius 
+\begin_inset Formula $R$
+\end_inset
+
+ waarbinnen de verlaging onder de basis van de deklaag zakt is de verlaging gelijk aan 
+\begin_inset Formula $s=H-h$
+\end_inset
+
+ met
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H^{2}-h^{2}=\frac{Q}{\pi k}\left(\frac{R}{r}\right)+\frac{N}{\pi k}\left(R^{2}-r^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $N$
+\end_inset
+
+ de lek door de deklaag bij daling van de stijghoogte tot aan zijn basis vermeederd met eventuele lokale kwel 
+\begin_inset Formula $\kappa$
+\end_inset
+
+ afkomstig uit de hogere wijdere omgeving.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+N=\frac{H-h_{b}}{c}+\kappa
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De radius waarop het freatische binnengebied overgaat in het semi-gespannen buitengebied kan alleen iteratief worden bepaald.
+\end_layout
+
+\begin_layout Standard
+In de situatie zonder deklaag maar een intensieve ontwatering is de voeding van het binnengebied gelijk aan het neerslagoverschot vermeerderd met eventuele kwel.
+ De grens tussen binnen- en buitengebied wordt daar bepaald tot de ring waarop de verlaging gelijk is aan 
+\begin_inset Formula $N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In een numeriek grondwatermodel als Modflow kan deze situatie worden gemodelleerd met zogenoemde RIV randvoorwaarden.
+ Deze laten in- en exfiltratie toe zolang de grondwaterstand zich boven de sloot/rivierbodem bevindt maar daaronder is alleen infiltratie mogelijk die constant is en gelijk aan de riverdiepte gedeeld door de weerstand.
+\end_layout
+
+\begin_layout Standard
+Bij vrije drainage dient de weerstand toe te nemen met de verlaging.
+ Hiervoor zijn geen analytische oplossingen beschikbaar,
+ maar deze situaties kunnen wel worden gemodelleerd door de reciproke drainageweerstand boven de slootbodem te laten afnemen van 0 tot de reciproke drainageweerstand die geldt voor de gemiddelde situatie,
+ die met gemiddelde slootpeilen,
+ grondwaterstanden en gemiddeld neerslagoverschot voorafgaand aan de bemaling.
+\end_layout
+
+\begin_layout Section
+Bemaling bij spanningswater (ondoorlatende deklaag)
+\end_layout
+
+\begin_layout Standard
+Verondersteld wordt dat de bouwput zich in een watervoerende laag bevindt die wordt afgedekt door een waterdichte deklaag.
+ Deze situatie is feitelijk niet van belang omdat in de praktijk een deklaag nooit geheel waterdicht is.
+ Een hoge weerstand kan best voorkomen,
+ maar geheel waterdicht komt in de praktijk niet voor.
+ Bovendien zouden we zonder lek ook geen grens voor de verlaging kunnen aangeven,
+ want daarvoor is een vaste stijghoogte in het pakket of boven de deklaag nodig waar het grondwater in de watervoerende laag mee in contact staat.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Drainage
+\end_layout
+
+\begin_layout Section
+Hooghoudt en Ernst (opbolling en drainafstand)
+\end_layout
+
+\begin_layout Standard
+Het hoofdstuk drains in GWtoolbox gaat in feite over het ontwerpen van drains in situaties met twee lagen.
+ Bij Hooghoudt bevinden de drains zich aan de onderzijde van de eerste laag,
+ zeg de ploegbasis De formules zijn gebaseerd op Hooghoudt en Ernst.
+ Verschillen tussen buisdrains,
+ drains in een grindkoffer en sloten betreffen alleen de radiale weerstand als gevolg van contractie van stroomlijnen waarvoor Hooghoudt afzonderlijke formules hanteert.
+ Ernst veragemeniseerde de formules van Hoogshoudt voor drains die binnend de eerste laag liggen.
+ Ernst veralgemeniseerde ook de drainageweerstand en de radiale weerstand,
+ die nu kunnen direct wiskundig kunnen worden berekend voor elke vorm van drain of sloot.
+ Met Ernst is Hooghoudt niet meer nodig.
+\end_layout
+
+\begin_layout Standard
+Voor de speelt het ontwerp van buisdrainage echter geen rol,
+ waardoor dit onderwerp hier niet verder wordt uitgediept.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Grond
+\end_layout
+
+\begin_layout Section
+Opbarsting
+\end_layout
+
+\begin_layout Standard
+Opbarsten van de bouwputbodem is een serieus vraagstuk overal waar de zich onder de bouwput nog een deel van de deklaag of een anderszins dunne slecht doorlatende laag bevindt waarin de stijghoogte hoger is dan de bodem van de bemalen bouwput.
+ Voor de Voortoets speelt opbaserten geen rol omdat de Voortoets zich richt op de gevolgen voor de ruimere omgeving wanneer zich daar natuur bevindt in een speciale beschermingszone.
+\end_layout
+
+\begin_layout Section
+Zetting
+\end_layout
+
+\begin_layout Standard
+Zettingen zijn altijd belangrijk wanneer grondwaterstanden worden verlaagd bodems bestaande uit zachte klei en veen.
+ Voor klei dit is vooral het geval wanneer de gronwaterstand wordt verlaagd tot onder eerder voorgekomen lage grondwaterstanden,
+ maar voor veen geldt dit ook voor minder grote verlagingen,
+ omdat verlaging van de grondwatestand gepaard gaat met verdroging en de oxydatie van veen die daarvan het gevolg is.
+ Dit leidt niet alleen tot doorgaande verlaging maar ook tot het vrijkomen van voedingsstoffen die tot een vorm van vermesting leiden met verandering van de vegetatie als gevolg,
+ vooral van tegenwoordig zeldzame soorten die afhangen van een voedingsarme omgeving.
+\end_layout
+
+\begin_layout Standard
+In de Voortoets worden zettingen niet direct meegenomen,
+ omdat zettingen nadere analyse vergen waar de Voortoets niet voor is bedoeld.
+ De Voortoets concentreert zich op de verlaging van de grondwaterstanden en door die te overlappen met kaarmateriaal met informatie over zettingsgevoeligheid,
+ kan het risico van zettingen al in de Voortoets worden gesignaliseerd,
+ zonder deze expliciet binnen de Voortoets te hoeven berekenen.
+ Om deze reden kunnen zettingen hier verder buiten beschouwing blijven.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Stoftransport
+\end_layout
+
+\begin_layout Section
+Invloedssfeer van de bemaling
+\end_layout
+
+\begin_layout Standard
+Eer wordt op deze pagina van de GWtoolbox gesproken over de invloedssfeer van de bemaling.
+ Voor de niet-stationaire situatie wordt deze gelijk gesteld aan de invloedsstraal volgens de formule van Jacob (vereenvoudige Theis-formule)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R=\sqrt{\frac{2.25kDt}{S}}
+\]
+
+\end_inset
+
+met 
+\begin_inset Formula $S$
+\end_inset
+
+ niet de porositeit maar de freatische bergingscoëfficiënt.
+\end_layout
+
+\begin_layout Standard
+Er wordt op deze pagina van de GWtoolbox nog een andere reikwijdte genoemd als die waarbij de verlaging minder is dan 5 cm.
+ Het is mij alleen niet duidelijk waar de daarbij gegeven op gebaseerd is evenmin als de grafiek in het plaatje op de pagina.
+ De verlaging volgens Jacob (en grotendeels ook Theis) moet op halflogschaal lineair zijn,
+ wat de grafiek niet is.
+ 
+\end_layout
+
+\begin_layout Standard
+De pagina over stoftransport gaat in feite niet over stoftransport maar over de reikwijdte van de verlaging.
+ Dezelfde reikwijdte van de verlaging wordt ook bij de pagina's van de freatische verlaging zelfd gegeven.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Peilverandering
+\end_layout
+
+\begin_layout Standard
+De tijdsafhankelijke verlaging door een peilverandering (of door een sleufbemaling) op 
+\begin_inset Formula $t=0$
+\end_inset
+
+ ter plaatse van 
+\begin_inset Formula $x=0$
+\end_inset
+
+ wordt evenals in de Voortoets het geval is berekend met de eendimensionale formule die in de GWtoolbox niet aan de gebruiker wordt geopenbaard maar wel op de achtergrond wordt toegepast
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\Delta s\,\,\mathtt{erfc}\left(u\right),\,\,\,u=\sqrt{\frac{x^{2}S}{4kDt}}
+\]
+
+\end_inset
+
+waarbij
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathtt{erfc\left(u\right)=\frac{2}{\sqrt{\pi}}\intop_{u}^{\infty}e^{-y^{2}}dy}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het debiet per meter sloot of drain 
+\begin_inset Formula $q$
+\end_inset
+
+ [L
+\begin_inset Formula $^{2}$
+\end_inset
+
+/T] gelijk is aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+q=\Delta s\,\,kD\frac{2}{\sqrt{\pi}}e^{-u^{2}}\frac{u}{x}=\Delta s\,\,\sqrt{\frac{kDS}{\pi t}}e^{-u^{2}}
+\]
+
+\end_inset
+
+zodat voor 
+\begin_inset Formula $x=0$
+\end_inset
+
+ met 
+\begin_inset Formula $q=q_{0}$
+\end_inset
+
+volgt dat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+q_{0}=\Delta s\,\,\sqrt{\frac{kDS}{\pi t}}
+\]
+
+\end_inset
+
+Bij stroming van twee zijden en over een lengte 
+\begin_inset Formula $L$
+\end_inset
+
+ moet 
+\begin_inset Formula $q_{0}$
+\end_inset
+
+ met 
+\begin_inset Formula $2L$
+\end_inset
+
+ worden vermenigvuldigd,
+ wat de uitdrukking oplevert die in de GWtoolbox wordt gegeven.
+\end_layout
+
+\begin_layout Standard
+Er wordt in dit deel van de GWtoolbox niet gerept over een stationaire verlaging die mogelijk is wanneer er op een bepaalde afstand een andere waterloop aanwezig is die verdere verlaging voorkomt of wanneer de verlaging in een gebied optreedt met zoveel oppervlaktewater dat dit kan worden geschematiseerd tot een vlakdekkende drainageweerstand.
+ Beide situaties zullen in de praktijk van belang zijn.
+ Voor de stationaire eindverlaging in geval van een onttrekking onder een deklaag met gegeven weerstand of in een gebied waarin het oppervlaktewater is geschematiseerd tot een drainageweerstand,
+ ontstaat een binnengebied waarin de grondwaterstand tot onder de deklaag wordt verlaagd en een buitengebied waarin dit niet het geval is.
+ In het binnengebied is de voeding van het grondwater dan constant en in het buitengebied is deze evenredig met de verlaging.
+ In dit gebied ligt de grens tussen binnen- en buitengebied op de afstand waarop de grondwaterstand is verlaagd tot de onderzijde van de deklaag;
+ in de situatie met drainageweerstand ligt deze grens op de afstand waarop de grondwaterstand is verlaagd met 
+\begin_inset Formula $Nc$
+\end_inset
+
+ met 
+\begin_inset Formula $N$
+\end_inset
+
+ het neerslagoverschot en 
+\begin_inset Formula $c$
+\end_inset
+
+ drainageweerstand.
+ In gebieden met kwel moet deze bij het neerslagoverschot worden opgeteld.
+ Deze situatie wordt voor de Voortoets uitgewerkt maar ontbreekt in de GWtoolbox.
+\end_layout
+
+\begin_layout Standard
+De stationaire eindverlaging 
+\begin_inset Formula $s$
+\end_inset
+
+ in de semi-gespannen situatie,
+ dus in het buitengebied voldoet aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=s_{L}e^{-\frac{L-x}{\lambda}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $s_{L}=s_{x=L}=Nc$
+\end_inset
+
+ in een gebied met drainageweerstand of met 
+\begin_inset Formula $s_{L}=h_{sloot}-z_{deklaag}$
+\end_inset
+
+ in gebied met een dikkere deklaag.
+ Voor 
+\begin_inset Formula $x<L$
+\end_inset
+
+ geldt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s_{x<L}=Nc+\frac{Q}{kD}\left(L-x\right)-\frac{N}{2kD}\left(L^{2}-x^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+met 
+\begin_inset Formula $L=\frac{q_{0}}{N}-\lambda$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Overige berekeningen
+\end_layout
+
+\begin_layout Subsection
+Reikwijdte bemaling
+\end_layout
+
+\begin_layout Standard
+De pagina die dit de keuzen binnen onderwerp en de formules weergeeft is engiszins verwaarden.
+ Er wordt onderscheid gemaakt naar langdurige en kortdurende bemaling.
+ De voorgeschotelde formules zijn hoofdzakelijk empirisch.
+ De reikwijdte voor een langdurige niet-stationaire verlaging in dw GWoolbox
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R=1.5\sqrt{\frac{kD}{\epsilon}t}
+\]
+
+\end_inset
+
+is gelijk aan de formule die in de Voortoets wordt gebruikt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+r=\sqrt{\frac{2.25kDt}{S}}
+\]
+
+\end_inset
+
+mits 
+\begin_inset Formula $S=\epsilon$
+\end_inset
+
+.
+ Hierbij mag voor 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ niet de porositeit worden gebruikt van 35%,
+ zoals in de GWtoolbox als uitgangswaarde staat ingevuld.
+\end_layout
+
+\begin_layout Standard
+Voor kortdurende bemaling geeft de GWtoolbox een reikwijdte volgens Sichardt,
+ die echter al decennia achterhaald is (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Olst76"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+De verlaging in semi-spanningswater volgt de besselfunctie 
+\begin_inset Formula $K_{0}\left(r/\lambda\right)$
+\end_inset
+
+ die voor 
+\begin_inset Formula $r<0.2\lambda$
+\end_inset
+
+ praktisch gelijk is aan 
+\begin_inset Formula $\ln\left(1.123\lambda/r\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+K_{0}\left(\frac{r}{\lambda}\right)\approx\ln\left(\frac{1.123\lambda}{r}\right)\,\,\,\mathtt{voor}\,\,\,r<0.2\lambda
+\]
+
+\end_inset
+
+Door de verlaging volgens de benaderende functie,
+ hier de 
+\begin_inset Formula $\ln\left(...\right)$
+\end_inset
+
+ gelijk aan nul te stellen,
+ dus het argument van de 
+\begin_inset Formula $\ln(...)$
+\end_inset
+
+ gelijk aan 1,
+ verkrijgt men een radius
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R=1.123\lambda
+\]
+
+\end_inset
+
+die echter niets met een reikwijdte van doen heeft.
+ De reikwijdte voor de verlaging in semi-spanningswater ligt op ongeveer 
+\begin_inset Formula $3\lambda$
+\end_inset
+
+ en is dus veel groter dan de 
+\begin_inset Formula $R$
+\end_inset
+
+ die de GWtoolbox voor deze situatie gebruikt.
+\end_layout
+
+\begin_layout Standard
+Voor de reikwijdte van drains gebruikt de GWtoolbox een empirische formule
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R=1750\Delta h\sqrt{k}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Zonder dat duidelijk is waar die formule op is gebaseerd.
+\end_layout
+
+\begin_layout Standard
+De stationaire verlaging door een sleuf of drain voldoet zonder andere randvoorwaarden aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\Delta he^{-\frac{x}{\lambda}}
+\]
+
+\end_inset
+
+Stel dat de verlaging mag worden verwaarloosd wanneer deze nog 5% is van 
+\begin_inset Formula $\Delta h$
+\end_inset
+
+,
+ dan vogt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+e^{-\frac{x}{\lambda}}=0.05\rightarrow x\approx3\lambda
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+net als bij semi-spanningswater.
+ Voor freatisch water wordt de invloedsafstand bepaald door de randvoorwaarden en wanneer het oppervlaktewatersysteem gebiedsdekkend als drainageweerstand kan worden beschouwd door 
+\begin_inset Formula $3\lambda$
+\end_inset
+
+ waarbij 
+\begin_inset Formula $\lambda=\sqrt{kDc}$
+\end_inset
+
+ met 
+\begin_inset Formula $c$
+\end_inset
+
+ de drainageweerstand.
+ Zonder randvoorwaarden of drainageweerstand kan niet zinvol een invloedsgrens worden afgebakend.
+\end_layout
+
+\begin_layout Standard
+Voor het begrip reikwijdte biedt de GWtoolkit geen duidelijk en consistent verhaal.
+ Wat ook ontbreekt is de basis waarop de formules berusten.
+ Er wordt wel verwezen naar SBR,
+ 2003,
+ pag.
+ 27-28.
+\end_layout
+
+\begin_layout Subsection
+Opstuwing in drainagebuizen
+\end_layout
+
+\begin_layout Standard
+Hiervoor bestaan standaard formules.
+ Valt echter buiten bestek van de Voortoets.
+\end_layout
+
+\begin_layout Subsection
+Tussen-c
+\end_layout
+
+\begin_layout Standard
+Hiermee wordt bedoeld de weerstand tussen twee lagen waarvan de dikte en de verticale doorlatendheid zijn gegeven,
+ gerekend vanaf het midden van de eerste tot het midden van de tweede laag.
+ Deze tussen-c speelt alleen bij grondwatermodellen die het watervoerende pakket een meer lagen onderverdelen.
+ Bij watervoerende lagen heeft de tussen-c in de regel een verwaarloosbare invloed op de verlaging.
+ Deze tussen-c kan altijd worden berekend als
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c=\frac{1}{2}\left[\frac{D_{1}}{k_{z1}}+\frac{D_{2}}{k_{z2}}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+De gemiddelde 
+\begin_inset Formula $k$
+\end_inset
+
+-waarde
+\end_layout
+
+\begin_layout Standard
+De gemiddelde horizontale doorlatendheid van een gelaagd watervoerende pakket kan altijd worden berekend uit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{k}_{h}=\frac{\sum_{i=1}^{n}D_{i}k_{i}}{\sum_{i=1}^{n}D_{i}}
+\]
+
+\end_inset
+
+De gemiddelde verticale doorlatendheid van een gelaagd pakket kan altijd worden berekend uit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{k}_{v}=\frac{\sum_{i=1}^{n}D_{i}}{\sum_{i=1}^{n}c_{i}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Equivalente straal van een bouwput
+\end_layout
+
+\begin_layout Standard
+Zolang de vorm van de bouwput min of meer rond tot vierkant is kan de equivalente straal van een bouwput worden geraamd op basis van zijn oppervlak
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\pi R^{2}=bd
+\]
+
+\end_inset
+
+of op basis van zijn omtrek
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+2\pi R=2\left(b+d\right)
+\]
+
+\end_inset
+
+Voor 
+\begin_inset Formula $b=d$
+\end_inset
+
+ volgt 
+\begin_inset Formula $R=d/\sqrt{\pi}=0.56\,d$
+\end_inset
+
+ en 
+\begin_inset Formula $R=2d/\pi=0.63\,d$
+\end_inset
+
+.
+ Het verschil is zo niet groot.
+\end_layout
+
+\begin_layout Standard
+De GWtoolbox hanteert de laatste benadering,
+ maar het is niet duidelijk op grond waarvan.
+\end_layout
+
+\begin_layout Standard
+Wat betreft de verlaging door de bemaling van de bouwput is voor de invloed op de omgeving uitsluitend de totale onttrekking van belang.
+ De grootte daarvan wordt bepaald door wat nodig is om de verlaging tot in alle hoeken van de bouwput op het gewenste niveau te houden.
+ Dit vergt in de praktijk een aparte berekening.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Referenties}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Blom (1973)"
+key "Blom73"
+literal "false"
+
+\end_inset
+
+Blom,
+ J.
+ (1973).
+ Verlagingen van het freatisch vlak bij grondwateronttrekking in een gebied met vrije afwatering.
+ RID mededeling 74-7.
+ Rijkswaterstaat Instituut Drinkwatervoorziening,
+ Den Haag.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Bronders et al. (2012)"
+key "Brond12"
+literal "false"
+
+\end_inset
+
+Bronders J,
+ Patyn J,
+ Van Keer I,
+ Desmet N,
+ Vos J,
+ Peelaerts Q,
+ Decorte L,
+ Gobin A.
+ (2013) Voortoets,
+ Module 3 - Inhoudelijke uitwerking van module 3 in de online toepassing van de voortoets:
+ het bepalen van de reikwijdte van effecten voor de indirecte effectgroepen - Thema grondwater.
+ Studie uitgevoerd in opdracht van ANB,
+ 2013/RMA/R/120.
+ VITO NV,
+ Mol,
+ B.
+ 84pp.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "De Glee (1930)"
+key "Glee30"
+literal "false"
+
+\end_inset
+
+De Glee,
+ C.
+ (1930).
+ De invloed van grondwateronttrekkingen op de grondwaterstand.
+ Proefschrift,
+ Universiteit van Amsterdam.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Olsthoorn (1976)"
+key "Olst76"
+literal "false"
+
+\end_inset
+
+Olsthoorn,
+ TN (1976).
+ De Sichardt-snelheid en het maximaal toelaatbare debiet van waterwinningsputten.
+ H2O,
+ 9(11):
+ 212-2014
+\end_layout
+
+\end_body
+\end_document

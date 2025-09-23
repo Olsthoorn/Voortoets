@@ -1,0 +1,5610 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\usepackage{epstopdf} % to include .eps graphics files with pdfLaTeX
+\usepackage{flafter}   % Don't place floats before their definition
+%\usepackage{topcapt}  % Define \topcation for placing captions above tables (not in gwTeX)
+
+\usepackage{xurl}      % better URL setting, uses old url package
+
+\usepackage{xcolor}
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\usepackage[]{hyperref} % Generates all cross references
+\hypersetup{            % Setting options for hyperref package
+	breaklinks=true,    % break line with long hyperlinks
+	colorlinks=true,    % coloured links
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=darkblue,
+	citecolor=blue,
+	backref=page
+} 
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{alltt}
+
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% \lstdefinestyle{mystyle}{
+%   language=Python,
+%   numbers=left
+% }
+
+% Put lstset here, after lstdefinestyle
+% \lstset{style=mystyle}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language dutch
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command biber
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\listings_params "language=Python,extendedchars=false,frameround=fttt,numbers=left,% line numbers use none,numberstyle={\tiny},stepnumber=2,% line numbers only every so many,numbersep=9pt,% how far line numbers from text?,showspaces=false,showstringspaces=false,showtabs=false,tab={\rightarrowfill},basicstyle={\small},keywordstyle={\color{blue}},commentstyle={\color{green}},stringstyle={\ttfamily \color{magenta}},identifierstyle={\color{black}}"
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Voortoets ANB
+\begin_inset Newline newline
+\end_inset
+
+Methodologische concepten inzake het thema grondwater
+\end_layout
+
+\begin_layout Author
+T.N.
+ Olsthoorn
+\end_layout
+
+\begin_layout Date
+3 april 2025
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/lijnbronnen_contours.png
+	width 80text%
+
+\end_inset
+
+a
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Methodologische concepten onder de analytische berekeningen
+\end_layout
+
+\begin_layout Section
+Inleiding
+\end_layout
+
+\begin_layout Standard
+De Voortoets is een online instrument voor om vroegtijdig aanvragen voor een vergunning voor activiteiten die ingrijpen in het (grond)watersysteem te scheiden in zulke die wel en die geen wezenlijke invloed op gebieden met bijzondere beschermingsstatus hebben in het kader van Natura 2000,
+ de zogenoemde speciale beschermingszones (SBZ's).
+ De Voortoets kijkt hierbij uitsluitend naar beïnvloeding via verandering van de omstandigheden van het grondwater,
+ en richt zich op de verandering,
+ meestal de verlaging van grondwaterstanden in gebieden met bijzondere beschermingsstatus.
+\end_layout
+
+\begin_layout Standard
+De online Voortoets past binnen de taak van de vergunningverlener om vooraf te beoordelen in hoeverre menselijke activiteiten met invloed op het grondwater de natuurlijke toestand of ontwikkeling binnen en rond Natura2000 gebieden verstoren.
+\end_layout
+
+\begin_layout Standard
+Bronders et al.
+ geven de inhoudelijke onderbouwing van de huidige Voortoets 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+.
+ In het voorliggende rapport wordt deze onderbouwing en de daarin beschreven berekeningswijze tegen het licht gehouden,
+ met het doel het fundament onder de Voortoets te verstevigen,
+ zonder deze wezenlijke ingewikkelder te maken.
+ Dit laatste impliceert ook dat in dit rapport geen gebruik wordt gemaakt van numerieke grondwatermodellen.
+\end_layout
+
+\begin_layout Standard
+Met grondwater wordt het water bedoeld in de verzadigde zone,
+ waarbinnen ingrepen een ruimtelijke uitstraling op de omgeving kunnen hebben.
+ Bij ingrepen in de onverzadigde zone is er niet of nauwelijks sprake van ruimtelijke uitstraling.
+\end_layout
+
+\begin_layout Standard
+Uitgangspunt is dat wijziging van de grondwaterstand en grondwaterstroming de belangrijkste oorzaak is van de gevolgen die ingrepen in het watersysteem kunnen hebben op de ecologie van Natura2000-gebieden.
+ Achteruitgang van de ecologische toestand van natuurgebieden,
+ zoals door eutrofiëring,
+ verzuring,
+ verzoeting,
+ verzilting of verontreiniging zijn hier in de regel een secundair gevolg van.
+ De aandacht in de Voortoets gaat daarom uit naar de wijziging van de grondwatersituatie als onderliggende (potentële) oorzaak van de natuurlijke toestand van Natura2000 gebieden.
+\end_layout
+
+\begin_layout Standard
+Bepaalde menselijke activiteiten grijpen niet direct in op het grondwatersysteem,
+ maar beïnvloeden dat uiteindelijk toch een wijziging van de voeding van het grondwater,
+ dat daar dan het gevolg van is.
+ Voorbeelden zijn ontbossing of bebossing en verharding.
+\end_layout
+
+\begin_layout Standard
+De ecologische toestand van de natuur kan ook achteruit gaan door directe of indirecte verontreiniging zoals via depositie of via infiltrerend oppervlaktewater.
+ Indirecte beïnvloeding door menselijk handelen of door verontreiniging worden in de Voortoets niet meegenomen,
+ omdat de effecten hiervan steeds een dieper gaande studie vereisen.
+\end_layout
+
+\begin_layout Standard
+Een essentieel uitgangspunt van de Voortoets is om de de analyze te beperken tot freatisch grondwater (grondwater met een vrije waterspiegel).
+ Deze keuze is gemaakt omdat de Voortoets is bedoeld voor het screenen van de meer eenvoudige ingrepen,
+ die praktisch altijd betrekking hebben op of plaatsvinden in het freatische grondwater.
+ Echter binnen de SBZ worden semi-gespannen grondwaterlagen,
+ bij wijze van meest ongunstige situatie,
+ wel meegenomen in de analyse.
+\end_layout
+
+\begin_layout Standard
+Voor de beoordeling binnen de Voortoets zijn uiteraard de locatie,
+ aard en duur en omvang van de ingreep van belang.
+ Voor de screening zijn ook de opbouw van de ondergrond en de hydraulische eigenschappen van de relevante grondwatervoerende lagen essentieel,
+ zoals de doorlatendheden,
+ de laagdiktes,
+ en bergingscoëfficiënten.
+ Op basis van de coördinaten van de ingreep en de BSZ,
+ worden deze binnen de Voortoets automatisch geselecteerd uit een ruimtelijke database.
+\end_layout
+
+\begin_layout Section
+Beschrijving van de effecten
+\end_layout
+
+\begin_layout Standard
+De volgende ingrepen worden in de Voortoets onderscheiden (
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Itemize
+Bemalen van bouwputten.
+\end_layout
+
+\begin_layout Itemize
+De wisselwerking tussen oppervlaktewater en grondwater (bijv.
+ vermindering beekafvoeren door onttrekking)
+\end_layout
+
+\begin_layout Itemize
+Wijzigen van de topografie (bijv.
+ afgraven).
+\end_layout
+
+\begin_layout Itemize
+Onttrekken van grondwater (puntbronnen,
+ putten).
+\end_layout
+
+\begin_layout Itemize
+Veranderen van van het drainagesysteem (aanleg en demping van watergangen,
+ drainage).
+\end_layout
+
+\begin_layout Itemize
+Verharden van oppervlakken (minder grondwateraanvulling).
+\end_layout
+
+\begin_layout Itemize
+Ont- en bebossen (minder of meer grondwateraanvulling)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Berekening van de wijziging van de grondwaterstand per type bron (primair effect)
+\end_layout
+
+\begin_layout Section
+Puntbronnen
+\end_layout
+
+\begin_layout Subsection
+Vaste of variabele dikte van het freatische pakket
+\end_layout
+
+\begin_layout Standard
+Er is grondwatertechnisch gezien geen verschil tussen de wijziging van de grondwaterstand door een puntbron of door een bemaling;
+ voor afstanden buiten de bouwput speelt alleen de omvang van de onttrekking een rol.
+ Evenmin speelt de vraag een rol of er in de berekening van de verlaging wel of niet rekening wordt gehouden met de afname van de verzadigde pakketdikte als gevolg van de verlaging van de grondwaterstand.
+ Wanneer de afname van de pakketdikte minder is dan ca.
+ 20% is het verschil te verwaarlozen.
+ Dit is dus altijd het geval ter plaatse van de 5 cm verlagingscontour,
+ waarop de beoordeling van de reikwijdte stoelt.
+ Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-Dupuit"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft de verlaging volgens Thiem-Dupuit bij onttrekking aan 10 m dik pakket met vaste rand om 
+\begin_inset Formula $R=1000$
+\end_inset
+
+ m.
+ De zwarte lijn is berekend met vaste dikte 
+\begin_inset Formula $D=10$
+\end_inset
+
+ m en de blauwe lijn is berekend met inachtname van de dikte die zelf afneemt door de verlaging.
+ Het verschil heeft alleen relevantie in de buurt van de onttrekking en is derhalve irrelevant in de Voortoets,
+ waar het in wezen gaat om de 5 cm verlagingscontour.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/dupuit_h_dd_vgl.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-Dupuit"
+
+\end_inset
+
+Verlaging door een bron volgens Thiem-Dupuit,
+ met en zonder variabele pakketdikte
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Formule van Verruijt:
+ Dupuit + Neerslagoverschot
+\end_layout
+
+\begin_layout Standard
+In de Voortoets wordt de verlaging door een of meer puntbronnen berekend middels de Theim-Dupuit oplossing met neerslag.
+ Deze oplossing staat ook bekend als de oplossing van Verruijt en wordt genoemd in de Leiddraad Grondwatermodellering van 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "NB21"
+literal "false"
+
+\end_inset
+
+.
+ De formule is gemakkelijk af te leiden.
+ Het idee daarachter is dat de grondwaterstand niet verandert in een cirkelvormig gebied met straal 
+\begin_inset Formula $R$
+\end_inset
+
+,
+ en dat daarbinnen het grondwater alleen stroomt als gevolg van de onttrekking in het centrum en een uniform neerslagoverschot (voeding).
+ Bij voldoend grote gebiedsradius 
+\begin_inset Formula $R$
+\end_inset
+
+,
+ is de totale neerslag op het gebied groter dan de onttrekking.
+ Er ontstaat dan een intrekgebied van de bron binnen de gebiedsradius,
+ waarbinnen a het neerslagoverschot in de richting van de bron stroomt,
+ en waarbuiten al het neerslagoverschot in de richting van de gebiedsrand stroomt.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/verruijt_fR.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Grondwaterstandsverloop-volgens-Verruijt"
+
+\end_inset
+
+Verloop van de grondwaterstand volgens Verruijt (Dupuit + Neerslagoverschot)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Grondwaterstandsverloop-volgens-Verruijt"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat zien wat de formule van Verruijt uitrekent bij toename van de gebiedsradius 
+\begin_inset Formula $R$
+\end_inset
+
+.
+ Bij voldoend grote 
+\begin_inset Formula $R$
+\end_inset
+
+ is er altijd een intrekgebied binnen het gebied dat in de figuur is aangegeven op de punt waar het grondwaterverloop horizontaal is (waterscheiding).
+ Dit interne intrekgebied is altijd hetzelfde,
+ want voldoet aan de waterbalans 
+\begin_inset Formula $\pi r^{2}=Q$
+\end_inset
+
+.
+ Dit intrek gebied heeft dus niets te maken met de gebiedsradius en evenmin met de verlaging die de onttrekking veroorzaakt.
+ De verlaging is het verschil tussen de rode lijn die de situatie aangeeft zonder onttrekking en de groene daaronder,
+ die het grondwaterverloop aangeeft bij dezelfde gebiedsradius.
+ De verlaging is het verschil tussen de rode en e groen lijn en geldt voor de betreffende gebiedsradius.
+ Voor elke andere radius kan zo de verlaging worden gevisualiseerd.
+ De verlaging in de formule van Verruijt loopt altijd door tot aan de vaste rand van het gebied.
+ Verbindt men de markers met de waterscheiding met elkaar dan is de ruimte eronder het intrekgebied van de bron.
+ Deze is alleen relevant als men wel weten of verontreiniging naar de bron stroomt of naar de gebiedsrand.
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verruijt-fQ"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het grondwaterverloop voor vaste gebiedsradius en verschillende groottes van de onttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+.
+ We zien hier dat het intrek gebied pas ontstaat wanneer de onttreking minder is dan het totale neerslagoverschot op het cirkelvormige gebied.
+ Daarbij neemt de grondwaterstand toe maar wordt de intrekkegel kleiner.
+ De verlaging reikt altijd tot aan de gebiedsrand en is het verschil tussen de lijn met onttrekking en de rode boog zonder onttrekking.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/verruijt_fQ.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verruijt-fQ"
+
+\end_inset
+
+Verruijt bij vaste gebiedsradius en verschillende groottes van de onttrekking
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het is echter een vergissing om deze intrekgrens te beschouwen als grens invloedsgrens van de ingreep.
+ De laatste is en blijft de gebiedsradius zelf want deze is onafhankelijk van de hoeveelheid neerslag en de grootte van de onttrekking.
+ Als het erom gaat om de invloed van de onttrekking op de grondwaterstand te berekenen,
+ dan speelt het neerslagoverschot geen enkele rol,
+ omdat de neerslag niet wordt beïnvloed door de onttrekking zelf;
+ omdat er tussen de onttrekking en de neerslag geen terugkoppeling bestaat.
+\end_layout
+
+\begin_layout Subsection
+Schema van Blom:
+ Verruijt + De Glee
+\end_layout
+
+\begin_layout Standard
+Er zijn echter uitzonderingen op deze regel,
+ waarin de formule van Verruijt wel een zinvol uitgangspunt is,
+ of,
+ liever dan Verruijt zelf,
+ het idee achter het schema van Blom 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Blom73"
+literal "false"
+
+\end_inset
+
+.
+ Blom behandelde verlaging in gebieden met vrije afwatering,
+ maar het schema kan ook als volgt worden samengevat.
+ In een vlak gebied met veel drainagemiddelen,
+ zoals sloten,
+ grachten en of drains,
+ voeren deze drainagemiddelen gemiddeld het totale neerslagoverschot lokaal af.
+ Wordt in zo'n gebied een onttrekking geplaatst,
+ dan veroorzaakt zijn verlaging een afname van de afvoer naar de drainagemiddelen.
+ Deze afname komt dus ten goede aan het grondwater,
+ want er is in deze situatie wel een terugkoppeling tussen de verlaging van de grondwaterstand en de voeding van het grondwater.
+ Aan deze extra voeding door vermindering van de drainage zit echter een maximum,
+ namelijk het neerslagoverschot zelf.
+ Is de verlaging groter dan het punt waarop de afvoer gelijk aan nul wordt,
+ dan blijft de extra voeding van het grondwater gelijk aan dit maximum,
+ dat gelijk is aan het neerslagoverschot.
+ Dit is precies wat de formule van Verruijt en vooral het schema van Blom zegt.
+\end_layout
+
+\begin_layout Standard
+Echter buiten deze zone waarbinnen de drainage stopt door de onttrekking,
+ is de verlaging minder dan tot het punt waarop de afvoer geheel wegvalt.
+ De extra voeding is dan slechts een deel van het neerslagoverschot en is evenredig met de verlaging zelf.
+ Het grondwater en de verlaging van de grondwaterstand in deze zone gedragen zich als in een semi-gespannen pakket,
+ waarin de voeding eveneens evenredig is aan de verlaging.
+ In deze zone is derhalve de formule van De Glee van toepassing,
+ die geldt voor de stationaire verlaging door onttrekking aan een semi-gespannen watervoerend pakket 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Glee30"
+literal "false"
+
+\end_inset
+
+.
+ In plaats van de weerstand van een afdekkende laag,
+ waarvan De Glee uitging,
+ hebben we nu de drainageweerstand.
+ Dit is een vervangende weerstand die in de plaats komt van een dicht netwerk aan drainagemiddelen.
+ Hierbij is 
+\begin_inset Quotes pld
+\end_inset
+
+dicht
+\begin_inset Quotes prd
+\end_inset
+
+ te verstaan op de subregionale schaal,
+ een schaal waarop de individuele sloten en drains niet meer individueel zichtbaar zijn of een rol spelen.
+ De drainageweerstand is dan per definitie de gemiddelde grondwaterstand boven het drainageniveau (bijv.
+ het polderpeil) gedeeld door het neerslagoverschot.
+ Deze is te berekenen maar ook goed in het veld te bepalen aan de hand van grondwaterstanden,
+ sloot- en drainagepeilen en het neerslagoverschot.
+\end_layout
+
+\begin_layout Standard
+Deze twee zones bij elkaar,
+ dus Verruijt voor het binnengebied en De Glee daarbuiten,
+ is het schema van Blom.
+ De vraag hierbij is waar de grens tussen beide zones ligt.
+ Deze grens wordt bepaald door de afstand van de bron waarop de verlaging gelijk is aan 
+\begin_inset Formula $Nc$
+\end_inset
+
+,
+ de voeding 
+\begin_inset Formula $N$
+\end_inset
+
+ maal de drainageweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+.
+ De voeding kan hierbij worden opgevat als het neerslagoverschot,
+ maar kan eventueel worden vermeerderd met de gebiedskwel,
+ wanneer deze een rol speelt.
+ De essentie van het schema van Blom is dus,
+ dat de voeding toeneemt door de onttrekking tot een maximum dat bereikt wordt op het punt waar de afvoer naar de drainagemiddelen stopt.
+ 
+\end_layout
+
+\begin_layout Standard
+Omdat van tevoren bekend is bij welke verlaging dit punt ligt,
+ kan deze grens ook direct worden berekend en kan een continue verlagingslijn worden getekend tussen de bron en oneindig,
+ de afstand waarop volgens De Glee de verlaging theoretisch nul blijft.
+ De zo gecombineerde formules van Verruijt en De Glee (samen Blom) zijn toepasbaar waar het zinvol is om met een drainageweerstand te werken in plaats van met afzonderlijke rivieren,
+ beken,
+ kanalen,
+ grachten,
+ sloten en drains.
+ Dit is het geval in natte (lage) intensief gedraineerde gebieden met gemiddeld ondiepe grondwaterstanden,
+ zoals polders.
+ Waar dit niet het geval is,
+ mag geen rekening worden gehouden met een toename van de voeding door de onttrekking en reikt de verlaging tot aan de 
+\begin_inset Quotes pld
+\end_inset
+
+vaste
+\begin_inset Quotes prd
+\end_inset
+
+ rand van het beschouwde gebied,
+ ongeacht hoe ver die van de bron ligt.
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-volgens-Blom"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ illustreert de verlaging volgens Blom.
+ Waar de verlaging kleiner is dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ (streepjeslijn) geldt de verlaging volgens De Glee met drainageweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ en waar de verlaging groter is dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ geldt de formule van Verruijt.
+ Bij Blom ontstaat nooit een waterscheiding binnen en bepaalde gebiedsgrootte.
+ De reden is dat het neerslagoverschot buiten de gebiedsovergang geheel of gedeeltelijk door sloten wordt afgevoerd waardoor er geen verhoging van de grondwaterstand kan ontstaan.
+ De verlaging reikt nu,
+ net als bij De Glee voor een semi-gespannen pakket theoretisch tot aan 
+\begin_inset Formula $r\rightarrow\infty$
+\end_inset
+
+.
+ Het begrip gebiedsgrootte is nu niet meer relevant.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/blom_verl_permanent.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-volgens-Blom"
+
+\end_inset
+
+Verlaging volgens Blom (De Glee in het buitengebied en Verruijt in het binnengebied)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Harde en zachte gebiedsovergang
+\end_layout
+
+\begin_layout Standard
+Frequent treft men overgangsgebieden aan,
+ waarin een hoog gebied met diepe grondwaterstanden en met nauwelijks drainerende wateren overgaat in een laag gebied met ondiepe grondwaterstanden met veel drainagemiddelen.
+ Vaak bevindt zich op de overgang tussen deze gebieden een stevige watergang of kanaal om het peil te beheren en de kwel uit het hoge gebied af te vangen.
+ Een onttrekking in een dergelijk gebied veroorzaakt verlagingen top op de gebiedsgrens aan beide zijden,
+ zoals weergegeven in figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Srip-met-harde-randen-en-bron"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/puntbron_dupuit_strip_A.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Srip-met-harde-randen-en-bron"
+
+\end_inset
+
+Bron in een gebied tussen twee evenwijdige vaste randen.
+ De verlaging reikt tot aan de deze vaste (harde) randen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Waar er geen diepe watergang het hoge gebied scheidt van het lage,
+ hebben we te maken met een zachte overgang van hoog naar laag.
+ Deze lage gebieden worden doorgaans gekenmerkt door veel kwel omdat een groot deel van het grondwater uit het hoge gebied over een beperkte afstand achter de gebiedsovergang via kwel uitstroomt.
+ Dit natte,
+ lage en goed gedraineerde gebied kan evenals het voorgaande voorbeeld worden gezien als een gebied met drainageweerstand.
+ Grondwatertechnisch betekent dit,
+ dat het hoge gebied zonder drainage op 
+\begin_inset Quotes pld
+\end_inset
+
+zachte wijze
+\begin_inset Quotes prd
+\end_inset
+
+,
+ overgaat in een gebied met drainage waardoor deze rand in de berekening niet als harde rand met vaste stijghoogte mag worden beschouwd.
+ Dit impliceert ook dat de invloed van een onttrekking in het hoge gebied doorwerkt tot in het lage gebied,
+ dat dikwijls samenvalt met het natte natuurgebied,
+ dat een SBZ status kan hebben.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/sectie_zacht_en_hard.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Grondwaterverloop-in-gebied-met-zachtegebiedsovergaing"
+
+\end_inset
+
+Grondwaterverloop in gebied tussen evenwijdige randen met op de randen een harde en een zachte gebiedsovergang.
+ Zie tekst voor uitleg.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Grondwaterverloop-in-gebied-met-zachtegebiedsovergaing"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ illustreert het verschil tussen de gebieden.
+ De groene lijn is de grondwaterstand bij harde overgang (op plek van de groene markers) van het gebied tussen twee sloten naar dat erbuiten,
+ waar de verlaging dus nul is.
+ De oranje lijn geeft het verloop van de grondwaterstand wanneer het middengebied zonder vaste randen (op plek van de rode markers) overgaat in een buitengebied met veel drainerende waterlopen die gezamenlijk vlakdekkend als drainageweerstand kunnen worden geschematiseerd.
+ Doordat het neerslagoverschot uit het middengebied nu via de drainageweerstand in de buitengebieden moet worden afgevoerd,
+ gaat daar de grondwaterstand daar flink omhoog.
+ In de figuur gaat de groen punt over in de rode.
+ In het buitengebied neemt de stijghoogte vervolgens exponentieel af tot de drainagebasis (in figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Grondwaterverloop-in-gebied-met-zachtegebiedsovergaing"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+:
+ links +20m,
+ rechts +22 m).
+ Echter ook een onttrekking in het middengebied veroorzaakt bij zachte gebiedsovergang een verlaging die doorwerkt in het buitengebied.
+ Dit is wat de rode lijn aangeeft.
+ De verlaging is het verschil tussen oranje lijn en de rode lijn.
+ Het is dus van belang om bij een dergelijke gebiedsovergang rekening te houden met de verlaging in het buitengebied en die niet af te kappen op de gebiedsrand.
+\end_layout
+
+\begin_layout Standard
+Er zijn niet veel analytische oplossingen die met deze situatie rekening houden,
+ maar het kan deels wel.
+ Het is eenvoudig om een doorsnede te beschouwen waarin deze overgang zit.
+ Bruggeman geeft een analytische oplossing voor de onttekking in een semi-gespannen pakket waarin op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ de eigenschappen 
+\begin_inset Formula $kD$
+\end_inset
+
+ en 
+\begin_inset Formula $c$
+\end_inset
+
+ verspringen 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Brug99"
+literal "false"
+
+\end_inset
+
+.
+ Hiermee kan de besproken situatie worden berekend door de 
+\begin_inset Formula $kD$
+\end_inset
+
+ niet te laten verspringen maar de (drainage)weerstand in het hoge gebied een zeer grote waarde te geven en voor het lage gebied een kleine waarde toe te passen die overeenkomt met de drainageweerstand.
+ De oplossing van Bruggeman is hier toegepast om de verlaging te berekenen en deze van de oranje lijn af te trekken,
+ wat de rode oplevert.
+ De paarse lijn is verkregen door de put 30 keer te spiegelen rond de harde gebiedsovergang en het resultaat daarvan af te trekken van de groene lijn.
+ Dit levert een verlaging van nul op ter plaatse van de harde gebiedsranden.
+\end_layout
+
+\begin_layout Subsubsection
+Stationair versus niet-stationair
+\end_layout
+
+\begin_layout Standard
+De hiervoor besproken analytische oplossingen zijn alleen geldig voor een stationaire,
+ dus permanente situatie.
+ De vraag is echter wanneer het voldoende is om met een stationaire berekening te volstaan en wanneer een tijdsafhankelijke berekening essentieel moet worden geacht.
+ Kortdurende onttrekkingen veroorzaken evident tijdsafhankelijke verlagingen,
+ maar bij langdurende of permanente onttrekkingen is de noodzaak van een tijdsafhankelijke benadering in eerste aanleg minder vanzelfsprekend.
+\end_layout
+
+\begin_layout Standard
+Hoge,
+ grote gebieden met nauwelijks drainerend oppervlaktewater hebben echter een groot tijdsgeheugen,
+ waarin het in de tijd fluctuerende neerslagoverschot uit voorgaande jaren zijn sporen nog lang kan nalaten.
+ Lage,
+ natte gebieden met veel drainagemiddelen bestaan uit een mozaïek van subgebieden,
+ waarin het grondwater op veel kleinere ruimtelijke schaal werkt en daardoor nauwelijks tijdsgeheugen heeft.
+ In zulke lage gebieden kan het zinvol zijn om stationaire berekeningen te maken,
+ althans in tijden met gemiddeld een neerslagoverschot,
+ dus in de natte perioden (of bij permanente kwel).
+ In tijden met gemiddeld een neerslagtekort,
+ zakken de grondwaterstanden,
+ en dit vaak tot beneden de slootbodems,
+ waarbij sloten ook droogvallen.
+ In zulke droge perioden bieden de sloten dan geen houvast voor het grondwater;
+ de randvoorwaarden vallen dan weg en de verlaging zal zich dan fundamenteel tijdsafhankelijk gedragen.
+ Met andere woorden,
+ een verlaging die in een nat gebied in natte perioden als stationair mag worden beschouwd,
+ kan in droge perioden gemakkelijk tijdsafhankelijk worden.
+ In de zomer breidt zo'n verlaging zich radiaal uit zodra de sloten droogvallen,
+ waarna,
+ in de late herfst,
+ wanneer de dan weer stijgende grondwaterstanden de slootbodems bereiken,
+ de verlagingscontouren zich weer terugtrekken tot hun min of meer stationaire wintersituatie.
+ De verlagingscontouren 
+\begin_inset Quotes pld
+\end_inset
+
+ademen
+\begin_inset Quotes prd
+\end_inset
+
+ in zulke gebieden tussen hun zomer- en winteromvang.
+\end_layout
+
+\begin_layout Standard
+Wanneer het erom gaat de verlaging van een onttrekking te berekenen,
+ zal het naast de stationaire situatie zinvol en vaak noodzakelijk zijn om deze voor de zomerperiode dynamisch te berekenen,
+ zonder vaste randen.
+ De duur van deze zomersituatie moet daarbij worden geschat,
+ maar kan 3 tot 6 maanden zijn.
+ De beoordeling in de Voortoets zou dan het beste kunnen worden gebaseerd op de grootste verlaging,
+ dus die aan het einde van de zomer.
+ Deze niet-stationaire berekening wordt hierna besproken in het kader van de bouwput,
+ maar geldt evenzeer voor putbronnen en zeker voor onttrekkingen voor irrigatie.
+\end_layout
+
+\begin_layout Subsection
+Oppervlaktebron- bouwput
+\end_layout
+
+\begin_layout Standard
+Een homogene en vlakke bouwput in een freatische watervoerende laag kan,
+ voor punten buiten de bouwput,
+ grondwatertechnisch worden beschouwd als een puntonttrekking in het centrum van de bouwput.
+ Voor de berekende stationaire verlaging buiten de bouwput is alleen de totale onttrekking binnen de bouwput van belang.
+ Voor de tijdsafhankelijke verlaging is er aanvankelijk een klein verschil omdat de verlaging binnen de bouwput bij schematisering tot een enkele centrale bron groter is dan de vlakke verlaging die binnen ontstaat wanneer de onttrekking plaats vindt met bronnen langs de omtrek van de bouwput.
+ Maar naarmate de tijd voortschrijdt,
+ neemt het verschil af.
+ In feite is het verschil in de praktijk steeds verwaarloosbaar.
+ Voorts geldt voor de bouwput hetzelfde als wat hiervoor is gezegd over de brononttrekking:
+ grondwatertechnisch en wat betreft de te gebruiken formules geen verschil met een brononttrekking.
+\end_layout
+
+\begin_layout Standard
+Er is wel een verschil in die zin dat de duur van de bouwputbemaling in de regel beperkt is tot weken of maanden,
+ zelden langer.
+ Bij onttrekkig gedurende de natte periode,
+ in een gebied met veel drainagemiddelen zou kunnen worden volstaan met een berekening volgens het schema van Blom,
+ dat hiervoor is uitgelegd.
+ Bij onttrekking in een groot gebied of met name in de zomer in een nat gebied,
+ is het essentieel om voor een juiste beoordeling een tijdsafhankelijke berekening te maken,
+ met weglating van alle randvoorwaarden die alleen in de natte periode een rol spelen.
+\end_layout
+
+\begin_layout Standard
+Bronders et al.
+ geven een op het oog stationaire formule voor het berekenen van de permanente verlaging door de bouwput,
+ en bepalen de reikwijdte op basis van de vereenvoudigde tijdsafhakelijke oplossing volgens Theis 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+.
+ Dit lijkt op het hinken op twee gedachten,
+ maar hun kan geheel worden opgevat als tijdsafhankelijk.
+ Dit wordt nu uitgelegd.
+ De vereenvoudigde verlagingsformule volgens Theis luidt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\frac{Q}{4\pi kD}\ln\left(\frac{2.25kDt}{r^{2}S}\right)
+\]
+
+\end_inset
+
+waaruit de invloedsgrens volgt door verlaging 
+\begin_inset Formula $s=0$
+\end_inset
+
+ te stellen.
+ Dat impliceert dat het argument van de logaritme gelijk is aan 
+\begin_inset Formula $\frac{2.25kDt}{r^{2}S}=1$
+\end_inset
+
+.
+ Direct volgt hieruit de bekende formule voor de dynamische grootte van de invloedsstraal 
+\begin_inset Formula $R$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R=\sqrt{\frac{2.25kDt}{S}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De dynamische verlagingsformule kan nu als volgt worden geschreven
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\frac{Q}{2\pi kD}\ln\left(\frac{R}{r}\right)
+\]
+
+\end_inset
+
+met 
+\begin_inset Formula $R=\sqrt{\frac{2.25kDt}{S}}$
+\end_inset
+
+,
+ de invloedsstraal.
+ De resulterende formule is dus gelijk aan die voor stationaire verlaging volgens Dupuit,
+ wanneer voor 
+\begin_inset Formula $R$
+\end_inset
+
+ de (tijdsafhankelijke) invloedsstraal wordt ingevuld.
+ De formule die Bronders et al.
+ voorstellen is de volgende
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H^{2}-h^{2}=\frac{Q}{\pi k}\ln\left(\frac{R}{r}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Deze is gelijk aan de voorgaande wanneer de verlaging 
+\begin_inset Formula $s$
+\end_inset
+
+ klein is ten opzichte van de pakketdikte 
+\begin_inset Formula $H$
+\end_inset
+
+,
+ immers
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+H^{2}-h^{2}=(H+h)(H-s)\approx2Ds
+\]
+
+\end_inset
+
+Dit ingevuld levert de eerder gegeven formule voor de verlaging bij constante pakketdikte.
+\end_layout
+
+\begin_layout Standard
+Zoals eerder betoogd,
+ heeft het in de praktijk nauwelijks zin om rekening te houden met de vermindering van de pakketdikte als gevolg van de verlaging;
+ in nagenoeg alle situaties kan evengoed met een vaste pakketdikte worden gerekend.
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tijdsafhankelijke-verlaging-bouwput"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ toont de verlaging door een (bouw)put voor verschillende tijden na de start van de bemaling op lineaire en logaritmische tijdschaal.
+ Zowel de verlaging volgens de vereenvoudigde formule van Theis als volgens de exacte formule van Theis worden getoond.
+ De vereenvoudigde formule van Theis geeft op logaritmische tijdschaal lineaire verlagingslijnen die in de tijd naar evenwijdig naar rechts opschuiven,
+ waarbij het snijpunt met de lijn voor verlaging nul de radius invloedsstraal weergeeft.
+ Op deze punten is de verlaging volgens de exacte formule van Theis niet nul,
+ maar wel bijna en daarmee verwaarloosbaar in de praktijk ten gunste van een eenvoudige formule om de invloedsstraal te berekenen.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/put_verl_tijdsafh.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Tijdsafhankelijke-verlaging-bouwput"
+
+\end_inset
+
+Tijdsafhankelijke verlaging door een (bouw)put op lineaire en op logaritmische tijdschaal.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met andere woorden,
+ zonder het expliciet zo te noemen,
+ berekenen Bronders et al.
+ de verlaging door de bouwput tijdsafhankelijk voor een constante onttrekking.
+ Bij een bouwput is echter niet zozeer de onttrekking constant,
+ maar de verlaging op de rand van de bouwput.
+ De tijdsafhankelijke onttrekking die bij deze vaste verlaging hoort kan met de bovenstaande eenvoudige formule met voldoende nauwkeurigheid analytisch worden berekend.
+ De verlaging op andere afstanden dan de radius van de bouwput kan vervolgens met dit tijdsafhankelijke debiet worden berekend met behulp van convolutie,
+ wat op zichzelf een eenvoudige procedure is.
+ Hiermee is dan bekend waar de 5 cm contour komt te liggen na een gekozen duur van de bemaling.
+\end_layout
+
+\begin_layout Standard
+Convolutie is niets anders dan een voortschrijdend gemiddelde berekenen waarbij de onttrekking in het verleden gewogen wordt met de blokrespons,
+ zijnde het gevolg van een eenheidsonttrekking gedurende een tijdstap,
+ met de duur van bijvoorbeeld een dag.
+ Zie verderop.
+\end_layout
+
+\begin_layout Standard
+De onttrekking door een bouwput met constante verlaging op zijn rand kan worden geschat door het debiet te nemen dat volgens Theis nodig is om met een gewone put die op 
+\begin_inset Formula $t=0$
+\end_inset
+
+ start op elk moment de gewenste verlenging te bereiken op de straal van de bouwput.
+ Dit is niet exact maar het scheelt niet veel.
+ Berekening van dit debiet is eenvoudig.
+ Reken met een vast debiet van 1 m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d de verlaging op de bouwputrand uit als functie van de tijd.
+ Neem vervolgens de verhouding tussen de daar gewenste en berekende verlaging (met 1 m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d) als het debiet.
+ Reken vervolgens met dit tijdsafhankelijke debiet met convolutie de verlaging op willekeurige afstanden uit als functie van de tijd.
+ De precieze afleiding en werkwijze zijn beschreven in de betreffende sectie van dit rapport.
+ Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tijdsafhankelijke-verlaging-bouwput"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het zo berekende verloop van het onttrekkingsdebiet van een bouwput die de gewenste verlaging van 5 m op 
+\begin_inset Formula $r=25$
+\end_inset
+
+ m in 14 dagen wil halen en daarna constant wil houden.
+ De onderste grafieken geven de verlaging als functie van de tijd voor verschillende afstanden.
+ Te zien is dat de verlaging op 
+\begin_inset Formula $r=25$
+\end_inset
+
+ m,
+ de zogezegde bouwputrand,
+ iets groter is dan de beoogde 5 m,
+ maar verder constant in de tijd.
+ De exacte berekening is analytisch complex en niet nodig voor de praktijk.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/bouwput_onttr_tijdsafh.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlagingen-en-debiet-bouwput"
+
+\end_inset
+
+Verlagingen (onder) en in de tijd dalend onttrekkingsdebiet (boven) van een bouwput nodig om de verlaging op 
+\begin_inset Formula $r=25$
+\end_inset
+
+ m in de tijd constant te houden op 5
+\begin_inset space ~
+\end_inset
+
+m.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Lijnbron,
+ peilbeheer door middel van een 
+\begin_inset Quotes pld
+\end_inset
+
+gracht
+\begin_inset Quotes prd
+\end_inset
+
+ of sleuf
+\end_layout
+
+\begin_layout Standard
+In Vlaanderen is een gracht een waterloop,
+ een beek of een sloot,
+ bedoeld voor de af- en aanvoer of het tijdelijk ophouden van oppervlaktewater.
+ Dit is anders dan in Nederland,
+ denk aan de Amsterdamse Grachten.
+ Vlaamse grachten zijn kleinere watergangen dieper dan 0.5 m en en hoogsten 3 m breed.
+ De Vlaamse definitie sluit nauw aan bij de voorgaande sectie die handelde over lijnbronnen en sleufbemaling.
+ Bij drainage denken we doorgaans aan meerdere drains of sloten in een langs een terrein,
+ die gezamenlijk het grondwaterpeil binnen het terrein beheersen.
+\end_layout
+
+\begin_layout Standard
+De door Bronders et al.
+ beschreven berekening van de verlaging door een lijnvormige onttrekking gaat ervan uit dat deze wordt opgewekt door een plotselinge verlaging van het peil in een gracht of sleuf (figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-van-de-bij-plotselinge-peilveradering"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+.
+ Het omgekeerde,
+ een verhoging,
+ werkt hetzelfde maar dan andersom,
+ waarbij dan eerder rekening moet worden gehouden met een significante intredeweerstand,
+ die bij onttrekking niet aan de orde is.
+ Deze aanpak is adequaat,
+ omdat,
+ zowel bij peilregeling als bij sleufbemaling,
+ het doel steeds is om een bepaald peil in de watergang de sleuf te bereiken,
+ terwijl het tijdsafhankelijke onttrekkingsdebiet daarvan het gevolg is,
+ net zoals dat ook bij bouwputten het geval is.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/sleuf_verl_tijdsafhankelijk.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-van-de-bij-plotselinge-peilveradering"
+
+\end_inset
+
+Verlaging van de grondwaterstand bij plotselinge verlaging van het peil in de sleuf op 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De analytische formule de verlaging van het grondwater beschrijft na een plotselinge verandering van het peil in een gracht of sleuf,
+ is als volgt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h\left(x,t\right)=h_{0}\mathtt{erfc}\left(u\right),\,\,\,\mathtt{waar}\,\,\,u=\sqrt{\frac{x^{2}S}{4kDt}}
+\]
+
+\end_inset
+
+waarin 
+\begin_inset Formula $\mathtt{erfc}\left(\right)$
+\end_inset
+
+ de complementaire errorfunctie is.
+ Met deze formule kan voor elk tijdstip worden berekend waar de 5 cm verlagingslijn zich bevindt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=\sqrt{\frac{4kDt}{S}}\mathtt{\mathtt{erfc^{-1}}}\left(\frac{h_{5cm}}{h_{0}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $\mathtt{erfc^{-1}}()$
+\end_inset
+
+ de inverse is van de 
+\begin_inset Formula $\mathtt{erfc()}$
+\end_inset
+
+ functie,
+ die gemakkelijk te berekenen is.
+\end_layout
+
+\begin_layout Standard
+Net als met de invloedsstraal het geval was,
+ breidt de invloedsafstand zich uit volgens de wortel van de tijd en is hij zowel evenredig met het doorlaatvermogen 
+\begin_inset Formula $kD$
+\end_inset
+
+ als omgekeerd evenredig met de bergingscoëfficiënt 
+\begin_inset Formula $S$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Deze aanpak houdt geen rekening met de feitelijke,
+ eindige lengte van de sleuf.
+ Nabij de uiteinden neemt,
+ bij gelijke verlaging,
+ de onttrekking per m sleuflengte toe.
+ De verlagingslijnen zijn daar niet langer evenwijdig aan de sleuf,
+ maar buigen naar elkaar toe en sluiten voor het uiteinde op elkaar aan,
+ daarbij min of meer langgerekte ellipsen om de sleuf vormend.
+ Wat de analyse betreft hoeft hier daar niet per se rekening mee te worden gehouden.
+ Men kan eenvoudig uitgaan van de verlagingslijnen evenwijdig aan de sleuf en die rondom de uiteinden met halve cirkels met elkaar verbinden.
+ Deze procedure is eenvoudig en is in feite een lichte overschatting van de verlaging,
+ en is daarmee acceptabel voor de Voortoets.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/sleufverlagingcontouren.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Verlagingscontouren-sleuf"
+
+\end_inset
+
+Een dimensionale verlagingscontouren sleuf,
+ aan de uiteinden verbonden met cirkels.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Men kan de lijnbron ook berekenen als een lange reeks putjes,
+ aangesloten op een zuigsysteem,
+ zoals in de praktijk gebruikelijk is voor sleufbemalingen zoals voor de aanleg van een riolering.
+ Dit biedt rekentechnisch echter geen enkel voordeel,
+ omdat dan het onbekende tijdsafhankelijke debiet van de putjes moet worden opgegeven,
+ dat nodig is om de gewenste verlaging in de sleuf te bewerkstelligen en te handhaven.
+ De aanpak via de oneindig lange lijnbronnen ligt in het kader van de Voortoets eerder voor de hand.
+\end_layout
+
+\begin_layout Standard
+De door Bronders et al.
+ gevolgde aanpak is een tijdsafhankelijke grondwaterverlaging door de lijnonttrekking 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+.
+ Dit is gebaseerd op de in de regel beperkte duur van een bemaling.
+ Maar peilbeheer kan zowel tijdelijk als permanent zijn.
+ Bovendien,
+ meer grachten of watergangen op beperkte afstand van de lijnbemaling zorgen in natte perioden eerder voor een meer permanente verlaging.
+ Er moet dus een keuze gemaakt worden ten aanzien van welke aanpak,
+ tijdsafhankelijk of stationair,
+ het meest geschikt is,
+ waarbij voor het droge seizoen de tijdsafhankelijke het meest zinvol is.
+ Het niet meerekenen van sloten in de zomer is verantwoord door het feit dat sloten veel gemakkelijker draineren dan infiltreren bij een sliblaag op de bodem,
+ waardoor zij in de winter het peil goed kunnen beheersen maar in de zomer niet.
+\end_layout
+
+\begin_layout Subsection
+Lijnbron:
+ Drainage d.m.v.
+ een stelsel parallelle drains of een permanente gracht of stelsel van grachten
+\end_layout
+
+\begin_layout Standard
+Met drainage wordt bedoeld dat het grondwaterniveau over een bepaald oppervlak,
+ zoals een akker of een voetbalveld,
+ permanent wordt verlaagd of op een bepaald niveau wordt gehouden.
+\end_layout
+
+\begin_layout Standard
+De Voortoets is echter alleen geïnteresseerd in hoe ver de invloed van de drainage buiten het gedraineerde terrein reikt.
+ Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Bronders-et-al-fig4"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ uit Bronders et al.
+ geeft een doorsnede met links een gracht en rechts een gebied waarin over een afstand 
+\begin_inset Formula $b$
+\end_inset
+
+ de grondwaterstand is verlaagd als gevolg van het peil in de gracht 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/Bronders_fig4.png
+	lyxscale 50
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Bronders-et-al-fig4"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+,
+ p31
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Verder naar rechts over een afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ en reikend tot aan de ingetekende waterscheiding toont de figuur het deel van hetzelfde gebied waarin de grondwaterstand niet wordt beïnvloed door de gracht.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+ geven wel een formule voor de afstand 
+\begin_inset Formula $b$
+\end_inset
+
+ wordt berekend,
+ maar zonder afleiding:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+B=\sqrt{L^{2}+\frac{kD\Delta h+k\Delta h^{2}}{N}}-L
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Omdat de herkomst van deze formule onduidelijk is,
+ volgt nu een afleiding,
+ waarbij de 
+\begin_inset Formula $x$
+\end_inset
+
+-coördinaat loopt vanaf de gracht naar rechts en wordt verondersteld dat de afvoer 
+\begin_inset Formula $Q\left(x\right)$
+\end_inset
+
+ voor 
+\begin_inset Formula $x=B$
+\end_inset
+
+ gelijk aan nul is,
+ want rechts daarvan is er geen verlaging of grondwatergradiënt aangegeven in de figuur.
+ Onder deze uitgangspunten is de afvoer als functie van 
+\begin_inset Formula $x$
+\end_inset
+
+ bij afwezigheid van kwel gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q\left(x\right)=-N\left(B-x\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dus geldt voor de afvoer bij de gracht 
+\begin_inset Formula $Q\left(x=0\right)=-NB$
+\end_inset
+
+;
+ het volledige neerslagoverschot over 
+\begin_inset Formula $0<x<B$
+\end_inset
+
+ stroomt naar de gracht.
+ Voorts geldt voor de afvoer op het punt 
+\begin_inset Formula $x=b$
+\end_inset
+
+,
+ dat 
+\begin_inset Formula $Q\left(x=B\right)=0$
+\end_inset
+
+.
+ Uitgaande van freatisch grondwater met variërende laagdikte geldt dan voor de grondwaterstand de volgende gewone differentiaalvergelijking
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+-kh\frac{dh}{dx}=-N\left(B-x\right)
+\]
+
+\end_inset
+
+Na integratie krijgen we een uitdrukking voor het verloop van de grondwaterstand 
+\begin_inset Formula $h$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h^{2}=\frac{2N}{k}\left(Bx-\frac{x^{2}}{2}\right)+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De integratieconstante 
+\begin_inset Formula $C$
+\end_inset
+
+ volgt uit het feit dat bij 
+\begin_inset Formula $x=0$
+\end_inset
+
+ de gegeven waterstand 
+\begin_inset Formula $h=h_{0}$
+\end_inset
+
+ bij de gracht geldt.
+ Hieruit volgt 
+\begin_inset Formula $C=h_{0}^{2}$
+\end_inset
+
+ en dus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h_{x}^{2}=h_{0}^{2}+\frac{2N}{k}\left(Bx-\frac{x^{2}}{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor 
+\begin_inset Formula $x=b$
+\end_inset
+
+ volgt dan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h_{b}^{2}=h_{0}^{2}+\frac{NB^{2}}{k}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De verlaging 
+\begin_inset Formula $\Delta h$
+\end_inset
+
+ volgt dan uit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+h_{b}^{2}-h_{0}^{2} & =\frac{NB^{2}}{k}\\
+\left(h_{b}-h_{0}\right)\left(h_{b}+h_{0}\right) & \approx\Delta h2D=\frac{NB^{2}}{k}
+\end{align*}
+
+\end_inset
+
+zodat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta h\approx\frac{NB^{2}}{2kD}\rightarrow B\approx\sqrt{\frac{2kD\Delta h}{N}}
+\]
+
+\end_inset
+
+Het teken 
+\begin_inset Formula $\approx$
+\end_inset
+
+ komt omdat 
+\begin_inset Formula $h_{b}^{2}-h_{0}^{2}\approx2\Delta hD$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Het is niet duidelijk waar de term 
+\begin_inset Formula $k\Delta h^{2}$
+\end_inset
+
+ onder de wortel van de formule uit Bronders et al.
+ vandaan komt.
+ Dat geldt evenzeer voor de 
+\begin_inset Formula $L$
+\end_inset
+
+ in de formule.
+ Aangezien over de afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ in de figuur geen grondwaterstroming plaats vindt,
+ speelt dat deel van het gebied dus geen rol in de afleiding,
+ en dus evenmin in figuur 4.
+ 
+\end_layout
+
+\begin_layout Standard
+De formule impliceert dat 
+\begin_inset Formula $b$
+\end_inset
+
+ naar oneindig loopt wanneer 
+\begin_inset Formula $N$
+\end_inset
+
+ naar nul gaat.
+ Dit komt omdat de verlaging afhankelijk is gemaakt van het neerslagoverschot.
+ Deze afhankelijkheid is er echter alleen wanneer de drainage as gevolg van de verlaging van het peil in de gracht over het traject 
+\begin_inset Formula $0<x<B$
+\end_inset
+
+ vermindert.
+ Dit zal zo zijn,
+ wanneer dit gebied nat is en voorzien van veel drainagemiddelen,
+ zodanig dat al die middelen op de schaal van 
+\begin_inset Formula $B$
+\end_inset
+
+ tot een vlakdekkende drainageweerstand kunnen worden geschematiseerd,
+ net zoals dat in het schema van Blom het geval is.
+ Dit is niet aan de orde in de schematisatie volgens de genoemde figuur 4.
+ In het schema van Blom wordt dan de verlaging nooit nul op afstand.
+ Ook in figuur 4 zal de verlaging niet nul zijn op 
+\begin_inset Formula $x=B$
+\end_inset
+
+,
+ want zonder terugkoppeling reikt de verlaging tot de eerstvolgende gracht,
+ die rechts moet liggen van de in figuur 4 aangegeven waterscheiding.
+ Dus,
+ bij een permanente verlaging reikt deze tot aan de eerstvolgende randvoorwaarde (volgende waterloop),
+ en bij een tijdelijke verlaging is deze tijdsafhankelijk.
+ In het algemeen zal de verlaging niets te maken hebben met het neerslagoverschot,
+ omdat beide niet naar elkaar terugkoppelen,
+ tenzij het oppervlaktewater binnen het beschouwde gebied kan worden geschematiseerd tot een uniforme drainageweerstand.
+\end_layout
+
+\begin_layout Standard
+Met deze drainageweerstand kan de situatie vanaf de gracht worden geformuleerd als een gebied waarin de sloten droogvallen zodra de verlaging groter is dan het product van neerslagoverschot en drainageweerstand en als semi-gespannen daarbuiten,
+ waar de sloten nog steeds een deel van het neerslagoverschot afvoeren.
+ In dit schema komt de vermindering van de drainage (vermindering van de afvoer van de sloten) ten goed aan de voeding van het grondwater.
+ Bij verlaging groter dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ is deze 
+\begin_inset Quotes pld
+\end_inset
+
+extra voeding
+\begin_inset Quotes prd
+\end_inset
+
+ gelijk aan het gehele neerslagoverschot en bij geringere verlaging is deze 
+\begin_inset Quotes pld
+\end_inset
+
+extra voeding
+\begin_inset Quotes prd
+\end_inset
+
+ een deel ervan,
+ evenredig met de lokale verlaging,
+ net als dat bij sem-spanningswater het geval is.
+ De formules zijn in het betreffende deel van dit rapport afgeleid.
+ Een voorbeeld is gegeven in figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Schema-Blom-bij-drainage"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Bij deze benadering is er geen vaste rand 
+\begin_inset Formula $B$
+\end_inset
+
+ en is het grondwaterverloop continu en consistent met de slootafvoer en het neerslagoverschot.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/sleuf_pamanent.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Schema-Blom-bij-drainage"
+
+\end_inset
+
+Schema Blom bij permanente verlaging op 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+ Voeding is gelijk aan het 
+\begin_inset Formula $N$
+\end_inset
+
+ waar de verlaging groter is dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ en evenredig met de verlaging waar de verlaging kleiner is.
+ De gebiedsovergang is aangegeven samen met de streepjeslijn die een verlaging 
+\begin_inset Formula $Nc$
+\end_inset
+
+ aangeeft.
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Lijnbronnen als puttenreeksen met uniforme verlaging
+\end_layout
+
+\begin_layout Standard
+Wanneer de lijnbron is opgebouwd als een reeks individuele onttrekkingen op rij met bekend debiet,
+ dan is de berekening dezelfde als die welke wordt toegepast bij meerdere puntbronnen,
+ namelijk superpositie.
+ Bij een standaard-bemaling van sleuven,
+ zoals voor rioolaanleg,
+ worden ook individuele bronnen toegepast,
+ zij het op geringe onderlinge afstand,
+ die per groep zijn aangesloten op een vacuümpomp.
+ De onttrekking per bron is dan onbekend.
+ Bij eenzelfde verlaging per bron neemt het debiet van de bronnen naar de uiteinden van de lijnbron of bemalingssleuf toe,
+ zodat het echte debiet per bron niet nauwkeurig bekend is.
+ Dit debiet per bron kan wel worden berekend middels optimalisatie met als doel dat de verlaging tussen elk paar naast elkaar gelegen bronnen gelijk is aan de beoogde uniforme verlaging.
+\end_layout
+
+\begin_layout Subsection
+Stationair
+\end_layout
+
+\begin_layout Standard
+Hierna wordt een voorbeeld uitgewekt voor stationaire verlaging bij semi-spanningswater,
+ zodat de verlaging 
+\begin_inset Formula $s_{j}$
+\end_inset
+
+ op punt 
+\begin_inset Formula $j$
+\end_inset
+
+ door all bronnen tezamen wordt gegegeven door
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s_{j}=\sum_{i=1}^{n}\left[\frac{Q_{i}}{2\pi kD}\sum_{j=1}^{m}K_{0}\left(\frac{r_{ji}}{\lambda}\right)\right],\,\,\,\lambda=\sqrt{kDc}
+\]
+
+\end_inset
+
+waarin 
+\begin_inset Formula $Q_{i}$
+\end_inset
+
+ de onttrekking door bron 
+\begin_inset Formula $i$
+\end_inset
+
+ voorstelt en 
+\begin_inset Formula $r_{ji}$
+\end_inset
+
+ de afstand van bron 
+\begin_inset Formula $i$
+\end_inset
+
+ tot punt 
+\begin_inset Formula $j$
+\end_inset
+
+.
+ De bodemgegevens staan in de kop van figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Lijnbron_geoptimaliseerd"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Serie-lijnbronnen"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft een serie van 50 bronnen op onderling gelijke afsand opgesteld langs een vijftal rechte lijnen die tezamen de lijnbron vormen.
+ Het doel is om de onttrekkingen van deze bronnen zodanig in te stellen dat de verlaging tussen elk paar naast elkaar gelegen paar bronnen gelijk is aan de beoogde 2.5 m.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/lijnbronnen.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Serie-lijnbronnen"
+
+\end_inset
+
+Serie lijnbronnen waarvan de onttrekking moet worden geoptimaliseerd om de doelverlaging van 2.5 m te realiseren.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wanneer alle bronnen dezelfde onttrekking hebben is de verlaging in de richting van het zwaartepunt van het geheel van bronnen het grootst.
+ Dit laat figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Lijnbron_geoptimaliseerd"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+zien,
+ die de onttrekking van de bronnen weergeeft met op de horizontale as hun positie gemeten langs de uit rechte stukken samengestelde lijnbron,
+ die een gezamenlijke lengte heeft van 400 m.
+ De bovenste figuur geeft de verlaging.
+ De sterk variërende grafiek is de verlaging wanneer elke bron hetzelfde debiet heeft.
+ De verlaging wordt dan groter in de richting van het zwaartepunt van de onttrekking.
+ De nauwlijks variërende grafiek in het bovenste plaatje geeft de verlaging zoals berekend met de geoptimaliseerde brondebieten.
+ De geoptimaliseerde brondebieten variëren aanzienlijk om de verlaging zo uniform mogelijk te kunnen maken dit is te zien aan de sterk variërende grafiek in het onderste plaatje van de figuur.
+ Met name aan de uiteinden neemt de onttrekking per bron sterk toe,
+ tot circa vijfmaal de onttrekking van de bronnen meer in het midden.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/lijnbronnen_optizmied.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Lijnbron_geoptimaliseerd"
+
+\end_inset
+
+Boven:
+ Verlaging wanneer alle bronnen hetzelfde debiet onttrekken,
+ en de verlaging wanneer het debiet via optimalisatie over de bronnen is verdeeld.
+ Onder:
+ Het gemiddelde debiet waarbij de sterk variënde verlaging hoort en het variërende geoptimaliseerde debiet waarbij de praktisch constante verlaging hoort.
+ De horizontale as is gemeten langs de lijnbron.
+ De totale lengte is 400 m.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De optimalisatie werkt als volgt.
+ Op basis van 4 steunpunten per lijnstuk wordt een cubic-spline-interpolatie opgezet.
+ Hiermee kan voor elke bron het debiet worden berekend door intepolatie tussen de steunpunten.
+ Met deze geïnterpoleerde debietverdeling over de bronnen wordt de onttrekking op de steunpunten geoptimaliseerd,
+ zodanig dat de verlaging op alle tussenpunten zo dicht mogelijk bij de doelverlaging ligt.
+ Dit is het geoptimaliseerde verdeling die is weergegeven in het onderste plaatje van figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Lijnbron_geoptimaliseerd"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Met deze nieuwe brondebieten kan vervolgens de verlaging worden berekend op alle tussenpunten,
+ waarmee de kwaliteit van de optimalisatie kan worden geverifieerd.
+ Het resultaat staat in het bovenste plaatje van figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Lijnbron_geoptimaliseerd"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De sterk variërende grafiek in het bovenste plaatje is berekend door de verlaging langs de lijnbron te berekenen wanneer de bronnen allemaal hetzelfde gemiddelde debiet hebben.
+ Dat gemiddelde debiet is in ook het onderste plaatje weergegeven.
+\end_layout
+
+\begin_layout Standard
+Met de nu bekende debieten van de afzonderlijke bronnen kan een hoogtelijnenkaart worden gemaakt.
+ Daarvoor wordt de verlaging als gevolg van alle bronnen berekend op de knooppunten punten van een regelmatig raster,
+ en worden tenslotte de isolijnen van de verlaging berekend.
+ Het resultaat is te zien in figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlagingscontouren-lijnbron"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De verlagingscontouren zijn daarin om de 5 cm getekend.
+ Het is goed te zien dat de verlaging langs de lijnbron voldoet aan de eis van 2.5 m.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/lijnbronnen_contours.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlagingscontouren-lijnbron"
+
+\end_inset
+
+Verlagingscontouren door de onttrekking door de reeks bronnen bij debiet dat is geoptimaliseerd om zo uniform mogelijk een verlaging van 2.5 m te realiseren tussen elk paar naast elkaar gelegen bronnen.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Niet-stationair
+\end_layout
+
+\begin_layout Standard
+De verdeling van het brondebiet over de lijnbron kan zowel stationair als niet-stationair worden berekend.
+ Daar zit echter wel een 
+\begin_inset Quotes pld
+\end_inset
+
+maar
+\begin_inset Quotes prd
+\end_inset
+
+ aan vast.
+ Bij een permanent beoogde uniforme verlaging langs de lijnbron verandert de verdeling van het debiet over de bronnen naarmate de tijd verstrijkt.
+ Bij een vacuümbemaling stelt zich deze verdeling vanzelf in,
+ en ook in een numeriek grondwatermodel kan de gewenste verlaging worden opgelegd langs de lijnbron waarna het model de verdeling van het debiet over de bronnen automatisch becijfert,
+ maar een analytische berekening vergt wat meer.
+ Op dezelfde manier als hiervoor is gedaan,
+ kan voor elk moment worden berekend wat de verdeling van het debiet over de bronnen vanaf 
+\begin_inset Formula $t=0$
+\end_inset
+
+ zou moeten zijn om de bemoogde vaste verlaging op dat moment te realiseren.
+ Maar dat berekent wel,
+ dat de verdeling over de bronnen op elk ander moment daarvan afwijkt.
+ Om de verlaging over de gehele tijdsperiode waarin de grondwaterstanden nog veranderen op een vaste waarde te houden,
+ moet de verdeling over de bronnen vanaf 
+\begin_inset Formula $t=0$
+\end_inset
+
+ dus meeveranderen.
+ Hiervoor bestaat geen analytische oplossing,
+ maar mogelijk gaat het wel via een Laplace-transformatie gevolgd door numerieke terugtransformatie vanuit het Laplace-domein.
+ De reden dat een Laplace-transformatie wel zal werken is omdat de Laplace-transformatie de tijd elimineert,
+ waarna we het boven opgeloste probleem terug hebben,
+ zij het in het Laplace-domein.
+ Hoewel dit dus wel mogelijk is,
+ en het TTIM programma van Mark Bakker dit ook zo doet,
+ gaat dit veel te ver voor de eenvoudig bedoelde Voortoets.
+\end_layout
+
+\begin_layout Section
+Speciale oppervlaktebron:
+ ont- of bebossing
+\end_layout
+
+\begin_layout Standard
+Aanleg of rooien van een bos verandert het neerslagoverschot.
+ Het verschil tussen de hoeveelheid water die en bos of een landbouwgewas verdampt is altijd slechts een deel van het neerslagoverschot.
+ Een goede schatting hiervoor is ca.
+ 100 mm/j 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bro13"
+literal "false"
+
+\end_inset
+
+.
+ In vergelijking tot een even groot verhard oppervlak is dit rond de helft daarvan ,
+ ervan uitgaande dat de verharding het gehele neerslagoverschot afvoert.
+ Met de conclusie van hetgeen bij verhardingen is gezegd,
+ impliceert het dag ont- of bebossing met en oppervlak tot 2 ha als verwaarloosbaar mag worden beschouwd.
+\end_layout
+
+\begin_layout Section
+Speciale oppervlaktebron:
+ aanbrengen van verhardingen
+\end_layout
+
+\begin_layout Standard
+De neerslag die op de verharding valt,
+ wordt doorgaans via riolen opgevangen en afgevoerd en komt dan in mindering op de voeding van het grondwater.
+ Dit kan als een onttrekking worden opgevat waarvan het effect als zodanig kan worden berekend zoals dat voor puntbronnen en lijnbronnen gebeurt.
+\end_layout
+
+\begin_layout Standard
+Een verharding van hoogstens 1 ha geeft bij 200 mm neerslagoverschot een 2000 m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/j,
+ ruim 5.5 m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d,
+ en wordt als verwaarloosbaar beschouwd.
+\end_layout
+
+\begin_layout Section
+Relatie oppervlaktewater en grondwater
+\end_layout
+
+\begin_layout Standard
+Na toepassing van een rekenregel moet worden nagegaan of er een mogelijk effect op de relatie tussen oppervlaktewater en grondwater aanwezig kan zijn.
+ Als het gaat om bijvoorbeeld vennen is dit hoofdzakelijk een GIS-operatie waarbij het als bovengens van het effect het peil van het ven wordt verlaagd gelijk aan de verlaging van de grondwaterstand.
+ Los hiervan heeft het onttrekking van grondwater altijd tot gevolg dat er oppervlaktewater minder gaat afvoeren en soms droog kan vallen of dat eerder in het jaar zal doen.
+ Vooral kleine waterlopen zijn kwetsbaar,
+ met name in hun bovenlopen.
+ In de regel zal een precieze duiding hiervan een nadere analyse vereisen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Afleidingen en illustratie van de verschillende analytische formules
+\end_layout
+
+\begin_layout Section
+Intro,
+ verantwoording
+\end_layout
+
+\begin_layout Standard
+Het is omwille van toekomstige verantwoording goed om de gebruikte formules af te leiden.
+ Om ze in perspectief te zetten en te vergelijken is het bovendien goed om ze te illustreren.
+ Een aantal illustraties is hiervoor reeds in de tekst opgenomen.
+\end_layout
+
+\begin_layout Standard
+Voor een zinvolle analyse van een fysische ingreep in het grondwatersysteem,
+ zoals een nieuwe puntonttrekking,
+ bemaling of verandering van de loop of het niveau van oppervlaktewater,
+ is een beeld nodig van de opbouw van de ondergrond en van de drainage in het gebied (de randvoorwaarden).
+ In de situaties die in de Voortoets een rol spelen zijn de gegevens van de ondergrond beperkt tot doorlatendheid 
+\begin_inset Formula $k$
+\end_inset
+
+,
+ effectieve dikte van het freatische pakket 
+\begin_inset Formula $D$
+\end_inset
+
+ (eventueel het doorlaatvermogen 
+\begin_inset Formula $kD$
+\end_inset
+
+ en,
+ voor zover sprake is van tijdsafhankelijke stroming,
+ de freatische bergingscoëfficiënt 
+\begin_inset Formula $S$
+\end_inset
+
+ (vaak aangeduid met 
+\begin_inset Formula $S_{y}$
+\end_inset
+
+,
+ wat staat voor 
+\begin_inset Quotes pld
+\end_inset
+
+specific yield
+\begin_inset Quotes prd
+\end_inset
+
+).
+ Deze eigenschappen worden in de berekeningen constant verondersteld binnen het beschouwde gebied.
+ Een uitzondering is de effectieve dikte van het freatisch pakket,
+ die in verschillende formules ook kan afnemen door de verlaging.
+ Als randvoorwaarden gelden in de formules gefixeerde stijghoogten (verlaging nul) op een gegeven afstand van de onttrekking,
+ de bouwput of de sleuf.
+ We voegen hieraan toe dat een freatisch pakket in de praktijk vaak zal overgaan in een quasi-halfgespannen pakket,
+ namelijk in die gevallen waarin de onttrekking leidt tot vermindering van afvoer in een netwerk van drainages en sloten dat gebiedsdekkend kan worden geschematiseerd tot een drainageweerstand.
+ In zulke situaties komt de reductie van de afvoer ten goede aan de voeding van het grondwater en is er een terugkoppeling tussen onttrekking en grondwatervoeding.
+ Daar zit echter een maximum aan,
+ gegeven door de verlaging waarbij de afvoer naar het lokale slotenstelsel net nul wordt.
+\end_layout
+
+\begin_layout Standard
+Bij bouwputten en sleufbemalingen of peilregeling met watergangen is het niet de onttrekking die wordt geregeld,
+ maar het gewenste peil.
+ De onttrekking volgt hieruit,
+ en die vermindert gedurende de duur van de bemaling.
+ Bouwputten en sleufbemalingen worden tijdsafhankelijk berekend omdat de ligging van de randen vaak onduidelijk is,
+ met name in de zomer,
+ en omdat de duur van bemalingen beperkt is.
+ Ook verlagingen door brononttrekkingen verdienen vaak een tijdsafhankelijke berekening om de ruimtelijke uitbreiding van de verlaging te vatten die in de zomer optreedt naarmate er in een gebied meer sloten droogvallen.
+\end_layout
+
+\begin_layout Standard
+Deze drie vormen van informatie zijn gebonden aan beschikbare kaarten zoals die van de habitatgebieden,
+ het oppervlaktewater en de bodemlagen.
+ De laatste twee zijn aanwezig in de kaarten waarop het grondwatermodel van Vlaanderen is gebaseerd.
+ Deze kaarten bevatten ook de benodigde informatie over de waarden van de bodemconstanten,
+ zoals laagdikten,
+ doorlaatvermogen,
+ weerstand tussen lagen en bergingscoëfficiënten.
+ Mogelijk kunnen op basis van de beschikbare laagverbreidingskaarten ook complexere situaties worden gesignaleerd,
+ zoals breuken en andere scherpere overgangen tussen gebieden,
+ die niet met eenvoudige formules kunnen worden geanalyseerd,
+ of waarvoor een aangepaste berekening kan worden voorgesteld of voorgeschreven.
+ Het uit kaarten halen van de randvoorwaarden voor een berekening is vermoedelijk het meest complex of daar valt in de praktijk het meest op af te dingen.
+ Uiteraard kunnen randvoorwaarden worden voorgeschreven,
+ zoals een invloedsradius of duur van de onttrekking waarmee moet worden gerekend,
+ zoals dat nu reeds in de Voortoets het geval is.
+\end_layout
+
+\begin_layout Standard
+Voor de benodigde onderliggende gegevens moet er in de Voortoets toegreep zijn tot het Vlaamse grondwatermodel,
+ of althans de kaarten waar dit op gebaseerd is,
+ zodat deze kaarten als een ruimtelijke database kunnen worden beschouwd en worden bevraagd op bodemconstanten die voor een gegeven locatie moeten worden gebruikt.
+\end_layout
+
+\begin_layout Standard
+Door op een dergelijke manier de voor elke vraag benodigde informatie op te halen,
+ kan de onderliggende machinerie van de Voortoets steeds gemakkelijk worden aangepast en verbeterd naar nieuwe inzichten.
+\end_layout
+
+\begin_layout Standard
+Het resultaat van de Voortoets zal op deze wijze ook steeds in lijn zijn met de eventueel naderhand uit te voeren bredere analyse.
+ Daar komt zonodig een ruimtelijk grondwatermodel aan te pas,
+ dat immers op dezelfde gegevens is gebaseerd.
+ Een kernpunt zou dus moeten zijn dat de gegevens die gebruikt worden in de Voortoets dezelfde zijn als die in het ruimtelijke model van Vlaanderen worden toegepast,
+ waarbij de voortoetsberekeningen zich zullen baseren op de ondergrondgegevens ter plaatse van de ingreep,
+ die in de formules als uniform worden beschouwd,
+ terwijl een ruimtelijk grondwatermode bij nadere analyse rekening houdt de ruimtelijke variatie van de ondergrondgegevens.
+ 
+\end_layout
+
+\begin_layout Standard
+De info-vraag van de Voortoets zal altijd zeer beperkt zijn,
+ zodat de ICT-belasting navenant laag blijft en de informatie dus real-time over het internet (via een URL) moet kunnen worden opgevraagd en worden opgezocht op de ruimtelijke kaarten.
+\end_layout
+
+\begin_layout Section
+Formule van Verruijt versus die van Dupuit en de formule van Blom
+\end_layout
+
+\begin_layout Subsection
+Het idee achter de formules
+\end_layout
+
+\begin_layout Standard
+Verruijt beschouwt stationaire grondwaterstroming in een freatisch watervoerend pakket met een permanente 
+\begin_inset Formula $Q$
+\end_inset
+
+ in het centrum van een cirkelvormig gebied met vaste stijghoogte op radius 
+\begin_inset Formula $R$
+\end_inset
+
+,
+ dat gevoed wordt met een constant en uniform neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+.
+ Het stroombeeld is hiermee bepaald.
+\end_layout
+
+\begin_layout Standard
+De situatie is dezelfde als volgens Dupuit,
+ maar nu met neerslag waar Dupuit geen rekening mee hield.
+\end_layout
+
+\begin_layout Subsubsection
+Variabele pakketdikte 
+\begin_inset Formula $h$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De formule van Verruijt voor axiale stroming naar een put gaat er ook van uit dat het onttrokken water afkomstig is uit het neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+ [m/d] en mogelijk tevens uit instroming over de gebiedsrand.
+ De stroming is bij Verruijt volledig bepaald door de onttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+ [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d],
+ het neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+ en de radius 
+\begin_inset Formula $R$
+\end_inset
+
+ van het beschouwde cirkelvormige gebied met bron in het centrum.
+ Bij een onttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+ is de stroming in de richting van de put over een cirkel met radius 
+\begin_inset Formula $r$
+\end_inset
+
+ gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+Q_{r} & =Q-\pi r^{2}N\\
+2\pi rkh\frac{dh}{dr} & =Q-\pi r^{2}N
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De variabele effectieve pakketdikte 
+\begin_inset Formula $h$
+\end_inset
+
+ kan onder het 
+\begin_inset Formula $d$
+\end_inset
+
+-teken worden geplaatst
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\pi rk\frac{dh^{2}}{dr}=Q-\pi r^{2}N
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit geeft de op te lossen gewone differentiaalvergelijking
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dh^{2}}{dr}=\frac{Q_{0}}{\pi kr}-\frac{rN}{k}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Integratie levert
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h^{2}=\frac{Q_{0}}{\pi k}\ln r-\frac{N}{2k}r^{2}+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De integratieconstante invullen voor 
+\begin_inset Formula $r=R$
+\end_inset
+
+ geeft
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h_{R}^{2}=\frac{Q}{\pi k}\ln R-\frac{N}{2k}R^{2}+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Beide vergelijkingen van elkaar aftrekken elimineert deze integratieconstante
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h^{2}-h_{R}^{2}=-\frac{Q}{\pi k}\ln\frac{R}{r}+\frac{N}{2k}\left(R^{2}-r^{2}\right)
+\]
+
+\end_inset
+
+waarmee de formule van Verruijt is verkregen.
+\end_layout
+
+\begin_layout Standard
+Deze formule impliceert dat het intrekgebied van de bron met radius 
+\begin_inset Formula $R_{i}$
+\end_inset
+
+ zich bij voldoend grote gebiedsradius 
+\begin_inset Formula $R$
+\end_inset
+
+ geheel binnen het gebied ligt,
+ zodat dan 
+\begin_inset Formula $R_{i}<R$
+\end_inset
+
+.
+ De radius 
+\begin_inset Formula $R_{i}$
+\end_inset
+
+ van de intrekzone volgt uit de waterbalans
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q=\pi R_{i}^{2}N\,\,\,\rightarrow\,\,\,R_{i}=\sqrt{\frac{Q}{\pi N}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De afgeleide is voor deze 
+\begin_inset Formula $r$
+\end_inset
+
+ moet op deze radius gelijk aan nul zijn.
+ Differentiëren van de vergelijking met 
+\begin_inset Formula $h^{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+naar 
+\begin_inset Formula $r$
+\end_inset
+
+ geeft
+\begin_inset Formula 
+\[
+2h\frac{dh}{dr}=-\frac{Q}{\pi k}\frac{r}{R}\left(\frac{-R}{r^{2}}\right)-\frac{2rN}{2k}
+\]
+
+\end_inset
+
+ofwel
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dh}{dr}=+\frac{Q}{2\pi kh}\frac{1}{r}-\frac{rN}{2kh}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De radius van het intrekgebied,
+ 
+\begin_inset Formula $R_{i}$
+\end_inset
+
+,
+ dus met afgeleide van 
+\begin_inset Formula $h$
+\end_inset
+
+ gelijk aan 0,
+ is dus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R_{i}=\sqrt{\frac{Q}{\pi N}}
+\]
+
+\end_inset
+
+zoals ook direct volgde uit de waterbalans.
+\end_layout
+
+\begin_layout Subsubsection
+Constante pakketdikte 
+\begin_inset Formula $D$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor een constante pakketdikte 
+\begin_inset Formula $D$
+\end_inset
+
+,
+ met 
+\begin_inset Formula $h^{2}-h_{R}^{2}=(h-h_{R})\,2D$
+\end_inset
+
+ en 
+\begin_inset Formula $h-h_{R}=-s$
+\end_inset
+
+,
+ wordt de verlaging 
+\begin_inset Formula $s$
+\end_inset
+
+ als volgt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\frac{Q_{0}}{2\pi kD}\ln\frac{R}{r}-\frac{N}{4kD}\left(R^{2}-r^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ook hier geldt dat het intrekgebied volgt uit de waterbalans
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q=\pi R_{i}^{2}N\,\,\,\rightarrow\,\,\,R_{i}=\sqrt{\frac{Q}{\pi N}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De afgeleide 
+\begin_inset Formula $ds/dr$
+\end_inset
+
+ voor 
+\begin_inset Formula $r=R_{i}$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{ds}{dr}|_{R_{i}}=-\frac{Q}{2\pi kD}\frac{1}{R_{i}}+\frac{NR_{i}}{2kD}
+\]
+
+\end_inset
+
+zodat de radius van het intrekgebied,
+ waar de afgeleide van 
+\begin_inset Formula $s$
+\end_inset
+
+ naar 
+\begin_inset Formula $r$
+\end_inset
+
+ gelijk aan nul is,
+ wordt nu
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R_{i}=\sqrt{\frac{Q}{\pi N}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit volgde natuurlijk al direct uit de waterbalans.
+ Dit is ook de reden dat de ligging van de waterscheiding voor variabele en constante pakketdikte dezelfde is.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/verruijt_h_dd_vgl.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Grondwaterstandsverloop-volgens-verruijt"
+
+\end_inset
+
+Verloop van de grondwaterstand volgens Verruijt berekend met variabele en met constante pakketdikte.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Grondwaterstandsverloop-volgens-verruijt"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het verloop van de grondwaterstand volgens Verruijt,
+ zowel berekend met constante als variabele pakketdikte.
+ Het verschil is voor de praktijk verwaarloosbaar.
+ De markers voor de waterscheiding laten zien dat die voor beide formules dezelfde is.
+ Bij een voldoend groot debiet zoals in dit voorbeeld het geval,
+ ontstaat er een intrekgebied binnen de cirkelvormige gebiedsrand.
+ Het grondwater binnen dit gebied stroomt naar de bron,
+ het grondwater erbuiten stroomt naar de gebiedsrand.
+ De kegel binnen het intrekgebied beneden de waterscheiding heeft niets te maken met de verlaging.
+ Voor de verlaging moet men de berekende situatie aftrekken van die met neerslag maar zonder onttrekking.
+ 
+\end_layout
+
+\begin_layout Subsection
+BLom axiaal-symmetrisch
+\end_layout
+
+\begin_layout Standard
+De situatie die Verruijt voor ogen had is dezelfde als die van Blom,
+ met uitzondering van wat er gebeurt buiten een nader te bepalen radius 
+\begin_inset Formula $R$
+\end_inset
+
+.
+ Bij Verruijt is radius 
+\begin_inset Formula $R$
+\end_inset
+
+ een vaste rand met verlaging nul,
+ waarbinnen de situatie kan worden opgevat als een gebied zonder drainerende sloten.
+ Daarbinnen wordt het neerslagoverschot in de richting van de bron afgevoerd en mogelijk deels naar de de gebiedsrand,
+ wanneer het totale neerslagoverschot zijnde 
+\begin_inset Formula $\pi R^{2}N$
+\end_inset
+
+ groter is dan de onttrekking van de put,
+ 
+\begin_inset Formula $Q$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Bij Blom markeert de radius 
+\begin_inset Formula $R$
+\end_inset
+
+ ook het gebied zonder sloten of sloten zonder afvoer,
+ maar vormt deze radius 
+\begin_inset Formula $R$
+\end_inset
+
+ de grens tussen het binnengebied met drooggevallen sloten en het buitegenbied,
+ waar de sloten nog wel een deel van het neerslagoverschot afvoeren.
+ De voeding van het grondwater in het buitengebied is gelijk aan de reductie van de afvoer die door de verlaging optreedt,
+ en is dus evenredig met de verlaging.
+ Wanneer we de watergangen in dit buitengebied regionaal kunnen schematiseren tot een drainageweerstand,
+ is de situatie gelijk aan die bij De Glee,
+ dat wil zeggen bij onttrekking aan een semi-gespannen pakket afgedekt door een laag met gegeven weerstand.
+\end_layout
+
+\begin_layout Standard
+Bij afwezigheid van kwel ligt de grens tussen het binnengebied volgens Verruijt en het buitengebied volgens De Glee daar waar de verlaging gelijk is aan het 
+\begin_inset Formula $Nc$
+\end_inset
+
+ het project van het neerslagoverschot en de drainageweerstand.
+ Dit is gelijk aan de gemiddelde grondwaterstand boven de slootpeilen voorafgaand aan de onttrekking.
+ In een gebied met kwel zou de kwel bij het neerslagoverschot moeten worden opgeteld.
+ Op de grens tussen binnen- en buitengebied zijn zowel de stijghoogte als de afvoer via het watervoerende pakket continu.
+ Dit schema van binnengebied volgens Verruijt en buitengebied volgens De Glee is het schema van Blom en is van toepassing bij onttrekking aan een put in een (nat) gebied met veel sloten,
+ waarin alle sloten bij elkaar kunnen worden geschematiseerd tot een uniforme drainageweerstand.
+\end_layout
+
+\begin_layout Subsubsection
+Verlaging voor 
+\begin_inset Formula $r\le R$
+\end_inset
+
+,
+ de grens tussen binnen- en buitengebied
+\end_layout
+
+\begin_layout Standard
+De verlaging voor 
+\begin_inset Formula $r\le R$
+\end_inset
+
+ is dezelfde als die bij Verruijt met dien verstande dat de verlaging op 
+\begin_inset Formula $r=R$
+\end_inset
+
+ niet nul is maar 
+\begin_inset Formula $s_{R}=Nc$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Subsubsection
+Verlaging voor 
+\begin_inset Formula $r\ge R$
+\end_inset
+
+ (De Glee (1930),
+ zie 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Ver82"
+literal "false"
+
+\end_inset
+
+,
+ p21)
+\end_layout
+
+\begin_layout Standard
+Bij Blom vallen de sloten droog binnen een straal gelijk aan 
+\begin_inset Formula $R$
+\end_inset
+
+.
+ De stroom 
+\begin_inset Formula $Q_{R}$
+\end_inset
+
+ op 
+\begin_inset Formula $r=R$
+\end_inset
+
+ volgt uit de waterbalans en is gelijk aan 
+\begin_inset Formula $Q_{r}=Q_{0}-\pi R^{2}N$
+\end_inset
+
+.
+ Het gebied voor 
+\begin_inset Formula $r>R$
+\end_inset
+
+ fungeert als een semi-gespannen aquifer,
+ die gevoed wordt uit verminderde drainage door de sloten.
+ Deze voeding is overal gelijk aan de verlaging 
+\begin_inset Formula $s$
+\end_inset
+
+ gedeeld door de drainageweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+.
+ Van toepassing op het buitengebied is de wiskundige oplossing voor permanente onttrekking aan een semi-gespannen pakket volgens De Glee (1930);
+ zij bestaat alleen voor constante pakketdikte:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s_{r>R}=\frac{Q_{R}}{2\pi kD}\frac{K_{0}\left(\frac{r}{\lambda}\right)}{\frac{R}{\lambda}K_{1}\left(\frac{R}{\lambda}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor 
+\begin_inset Formula $r=R$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s\left(r=R\right)=\frac{Q_{R}}{2\pi kD}\frac{K_{0}\left(\frac{R}{\lambda}\right)}{\frac{R}{\lambda}K_{1}\left(\frac{R}{\lambda}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Koppeling van buiten- en binnengebied
+\end_layout
+
+\begin_layout Standard
+De verlaging op 
+\begin_inset Formula $r=R$
+\end_inset
+
+ is ook gelijk aan 
+\begin_inset Formula $s_{R}=Nc$
+\end_inset
+
+ omdat daar de verminderde drainage juist de resterende drainage nul maakt.
+ Hiermee hebben we een vergelijking waarmee de radius kan worden berekend waarbinnen de sloten droog vallen
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+Nc & =\frac{Q_{R}}{2\pi kD}\cdot\frac{K_{0}\left(\frac{R}{\lambda}\right)}{\frac{R}{\lambda}K_{1}\left(\frac{R}{\lambda}\right)}\\
+ & =\frac{Q_{0}-\pi R^{2}N}{2\pi kD}\cdot\frac{K_{0}\left(\frac{R}{\lambda}\right)}{\frac{R}{\lambda}K_{1}\left(\frac{R}{\lambda}\right)}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We kunnen 
+\begin_inset Formula $R$
+\end_inset
+
+ alleen iteratief berekenen,
+ bijvoorbeeld met de Newton-methode.
+ Deze methode maakt van bovenstaande expressie een functie van 
+\begin_inset Formula $y(R)$
+\end_inset
+
+ waarvan 
+\begin_inset Formula $R$
+\end_inset
+
+ het nulpunt is dat moet worden gevonden.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y(R)=-Nc+\frac{Q_{0}-\pi R^{2}N}{2\pi kD}\cdot\frac{K_{0}\left(\frac{R}{\lambda}\right)}{\frac{R}{\lambda}K_{1}\left(\frac{R}{\lambda}\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De Newton-methode vindt het nulpunt iteratief als volgt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R_{n+1}=R_{N}-\frac{y(R)}{y\prime(R)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $y\prime(R)$
+\end_inset
+
+ de afgeleide is van 
+\begin_inset Formula $y(R)$
+\end_inset
+
+ naar 
+\begin_inset Formula $R$
+\end_inset
+
+ en 
+\begin_inset Formula $n$
+\end_inset
+
+ de betreffende iteratie.
+\end_layout
+
+\begin_layout Standard
+Deze Newton-methode is eenvoudig,
+ maar vergt wel de afgeleide van 
+\begin_inset Formula $y(R)$
+\end_inset
+
+.
+ Deze kan zowel numeriek met de functie 
+\begin_inset Formula $y(R)$
+\end_inset
+
+ worden berekend als analytisch.
+ Voor dit laatste moeten we 
+\begin_inset Formula $y(R)$
+\end_inset
+
+ differentiëren naar 
+\begin_inset Formula $R$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Voor de afgeleide van 
+\begin_inset Formula $y$
+\end_inset
+
+ naar 
+\begin_inset Formula $R$
+\end_inset
+
+ hebben we de afgeleide van de factor met de besselfuncties nodig.
+\end_layout
+
+\begin_layout Standard
+Gebruik makend van 
+\begin_inset Formula $\frac{dK_{0}\left(z\right)}{dz}=-K_{1}\left(z\right)$
+\end_inset
+
+ en van 
+\begin_inset Formula $\frac{d(zK_{1}\left(z\right))}{dz}=-zK_{0}\left(z\right)$
+\end_inset
+
+ volgt na enige uitwerking
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{d}{dr}\left(\frac{K_{0}\left(\frac{R}{\lambda}\right)}{\frac{R}{\lambda}K_{1}\left(\frac{R}{\lambda}\right)}\right)=\frac{1}{R}\left(\frac{K_{0}^{2}\left(\frac{R}{\lambda}\right)}{K_{1}^{2}\left(\frac{R}{\lambda}\right)}-1\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Uiteindelijk,
+ na invoegen in de gehele uitdrukking voor 
+\begin_inset Formula $dy(R)/dr$
+\end_inset
+
+,
+ het volgende resultaat verkregen
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dy(R)}{dr}=-\frac{\lambda N}{kD}\cdot\frac{K_{0}\left(\frac{R}{\lambda}\right)}{K_{1}\left(\frac{R}{\lambda}\right)}-\left(\frac{Q_{0}/R}{2\pi kD}-\frac{NR}{2kD}\right)\cdot\left(1-\frac{K_{0}^{2}\left(\frac{R}{\lambda}\right)}{K_{1}^{2}\left(\frac{R}{\lambda}\right)}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De functies 
+\begin_inset Formula $y(R)$
+\end_inset
+
+ en 
+\begin_inset Formula $dy(R)/dR=y'(R)$
+\end_inset
+
+ zijn eenvoudig te implementeren en te gebruiken in de Newton methode om 
+\begin_inset Formula $R$
+\end_inset
+
+ te bepalen.
+ De afleiding van 
+\begin_inset Formula $y\prime\left(R\right)$
+\end_inset
+
+ kan worden gecontroleerd door deze ook numeriek uit te rekenen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y\prime\approx\frac{y\left(R+\delta r\right)-y\left(R-\delta r\right)}{2\delta r}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Na implementatie van de Newton methode is verlaging volgens het schema van Blom op dezelfde wijze te berekenen als de verlaging van Dupuit,
+ Verruijt of De Glee.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/NewtonProces.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Newton-iteraties"
+
+\end_inset
+
+Newton-iteraties ter bepaling van de gebiedsovergang,
+ daar waar de verlaging gelijk is aan 
+\begin_inset Formula $Nc$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Newton-iteraties"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat zien hoe de Newton-iteraties verlopen.
+ Steeds wordt met de raaklijn een volgend punt bepaalt totdat het snijpunt van 
+\begin_inset Formula $y\left(R\right)+Nc$
+\end_inset
+
+ met de lijn 
+\begin_inset Formula $Nc$
+\end_inset
+
+ is gevonden.
+ Dit proces verloopt snel.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/blom_verl_permanent.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Voorbeeld-resultaat-berekening-vlgs-Blom"
+
+\end_inset
+
+Voorbeeld resultaat berekening verlaging volgens Blom.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Voorbeeld-resultaat-berekening-vlgs-Blom"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het resultaat van de berekening volgens Blom.
+ De overgang tussen het binnengebied volgens Verruijt en het buitengebied volgens De Glee is met markers aangegeven en ligt daar waar de verlaging gelijk is aan 
+\begin_inset Formula $Nc$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+De drainageweerstand (lekweerstand)
+\end_layout
+
+\begin_layout Standard
+De drainageweerstand is een concept,
+ dat de weerstand van het oppervlaktewatersysteem in een intensief gedraineerd gebied als een polder,
+ met al zijn sloten,
+ watergangen en drainages samenvat tot een enkele afvoerweerstand.
+ Dit is toepasbaar op de regionale of subregionale schaal,
+ waar individuele sloten niet meer herkenbaar zijn op het patroon van het grondwater.
+ Dat is bijvoorbeeld het geval in polders met sloten op onderlinge afstanden in de orde van 100 m.
+ Ook voor andere natte,
+ intensief gedraineerde gebieden,
+ met inbegrip van natte natuurgebieden,
+ is dit concept toepasbaar.
+\end_layout
+
+\begin_layout Standard
+De drainageweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d] kan analytisch worden afgeleid en berekend,
+ zoals hierna wordt gedaan.
+ Zij kan ook in het veld worden bepaald als de gemiddelde grondwaterstand 
+\begin_inset Formula $\Delta h$
+\end_inset
+
+ [m]boven de drainagebasis (de waterstand in de sloten) gedeeld door het neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+ [m/d],
+ overeenkomend met de relatie 
+\begin_inset Formula $\Delta h=Nc$
+\end_inset
+
+.
+ Bram Bot maakt in zijn Grondwaterzakboekje onderscheid tussen drainageweerstand en lekweerstand,
+ waarbij de drainageweerstand is gebaseerd op de hoogste grondwaterstand en de lekweerstand op de gemiddelde grondwaterstand 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Bot16"
+literal "false"
+
+\end_inset
+
+.
+ Hier gebruiken we de gemiddelde grondwaterstand.
+\end_layout
+
+\begin_layout Standard
+De drainageweerstand is het gevolg van weerstand die het water ondervindt van het punt van infiltratie van het neerslagoverschot op de freatisch vlak tot in de drainerende sloten.
+ We gaan hier ervan uit dat kwel mag worden verwaarloosd.
+ De weerstand die het geïnfiltreerde neerslagwater ondervindt is nu opgebouwd uit die door de verticale stroming vanaf de watertafel,
+ die door de horizontale stroming en die door de contractie van stroomlijnen die optreedt bij het naderen van de sloot,
+ waarvan de natte omtrek meestal veel kleiner is dan die pakketdikte.
+ De bodemweerstand van de sloot kan worden verwaarloosd bij uittredend grondwater,
+ wat hier centraal staat.
+\end_layout
+
+\begin_layout Subsection
+Afleiding van de drainageweerstand in een verticaal anisotroop pakket:
+ 
+\begin_inset Formula $k_{x}\ne k_{z}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor een watervoerend pakket met dikte 
+\begin_inset Formula $D$
+\end_inset
+
+ tussen volledig penetrerende sloten op onderlinge afstand 
+\begin_inset Formula $L=2b$
+\end_inset
+
+ is,
+ met de gebruikelijke verwaarlozing van verticale stroming het verloop van de grondwaterstand geheel onafhankelijk van 
+\begin_inset Formula $z$
+\end_inset
+
+ en volgt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\phi-\phi_{b}=\frac{N}{2k_{x}D}\left(b^{2}-x^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De gemiddelde grondwaterstand boven de sloten veroorzaakt door de horizontale stroming is dan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\overline{s_{h}} & =\frac{1}{3}\frac{Nb^{2}}{k_{x}D}=\frac{1}{12}\frac{NL^{2}}{k_{x}D}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De contractie van de stroomlijnen naar de sloot,
+ die veel ondieper is dan de dikte van het watervoerende pakket,
+ geeft een extra verhoging van de grondwaterstand gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta s=\frac{NL}{\pi k}\ln\left(\frac{D}{\Omega}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+waarin 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ de lengte van de contactzone (in de doorsnede) is tussen de sloot en het watervoerende pakket.
+\end_layout
+
+\begin_layout Standard
+In de contractie zone is er wel sprake van verticale stroming zodat hier de anisotropie in moet worden meegenomen.
+ Dit wordt verderop gedaan.
+\end_layout
+
+\begin_layout Standard
+Door de weerstand die de neergaande verticale stroming ondervindt tussen de watertafel bij 
+\begin_inset Formula $z=H$
+\end_inset
+
+ en de pakketbasis op 
+\begin_inset Formula $z=0$
+\end_inset
+
+ is de stijghoogte van de watertafel hoger dan die aan de basis van het freatische pakket.
+ Deze term zullen we bij de drainageweerstand optellen.
+ De verticale stroming in het freatische pakket verloopt lineair van 
+\begin_inset Formula $q_{v}=N$
+\end_inset
+
+ aan de watertafel waar 
+\begin_inset Formula $z=H$
+\end_inset
+
+ en 0 aan de basis van het pakket waar 
+\begin_inset Formula $z=0$
+\end_inset
+
+.
+ Aldus geldt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+q_{v}=-k_{z}\frac{\partial\phi}{\partial z}=-N\frac{z}{H}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $k_{z}$
+\end_inset
+
+ gebruikt omdat deze stroming geheel onafhankelijk is van de horizontale doorlatendheid.
+\end_layout
+
+\begin_layout Standard
+Na integratie volgt 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi=\frac{N}{2k_{z}H}z^{2}+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De integratieconstante 
+\begin_inset Formula $C$
+\end_inset
+
+ volgt uit 
+\begin_inset Formula $\phi=\phi_{z=H}$
+\end_inset
+
+ voor 
+\begin_inset Formula $z=H$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi_{z=H}=\frac{NH}{2k_{z}}+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De laatste vergelijking afgetrokken van de voorlaatste geeft het stijghoogteverloop langs elke verticaal in het freatische pakket buiten de zone met de contractie van stroomlijnen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi_{H}-\phi=\frac{N}{2k_{z}H}\left(H^{2}-z^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het stijghoogteverschil tussen top en basis is 
+\begin_inset Formula $\Delta s_{v}=\phi_{z=H}-\phi_{z=0}$
+\end_inset
+
+ .
+ Deze verkrijgen we door 
+\begin_inset Formula $z=0$
+\end_inset
+
+ in te vullen
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta s_{v}=\phi_{H}-\phi_{0}=\frac{NH}{2k_{z}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor de hoogte van het freatisch vlak mogen we de waarde 
+\begin_inset Formula $\Delta s_{v}$
+\end_inset
+
+ optellen bij de gemiddelde grondwaterstand boven de sloten.
+ Dit mag niet voor de grondwaterstijghoogte die wordt gemeten in een waarnemingsfilter op een aantal meters beneden het freatisch vlak.
+ Hier doen we het wel,
+ omdat vooral de hoogte van het freatisch vlak van belang is voor de beoordeling in de Voortoets.
+ Hiermee hebben we de volgende uitdrukking voor de drainageweerstand
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi k}\ln\left(\frac{D}{\Omega}\right)+\frac{H}{2k_{z}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Resteert nog om voor de middelste term de anisotropie in rekening te brengen,
+ dat wil zeggen,
+ de verhouding tussen de horizontale en de verticale doorlatendheid.
+\end_layout
+
+\begin_layout Subsection
+Verwerking van verticale anisotropie in de drainageweerstand
+\end_layout
+
+\begin_layout Standard
+De partiële differentiaal vergelijking die de grondwater in het verticale vlak beschrijft is als volgt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k_{x}\frac{\partial^{2}\phi}{\partial x^{2}}+k_{z}\frac{\partial^{2}\phi}{\partial z^{2}}=S_{s}\frac{\partial\phi}{\partial t}-q=R
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin staan berging en andere opgelegde stromen aan de rechterzijde van het isgelijkteken.
+ Het rechter lid wordt verder gemakshalve samengevat in de term 
+\begin_inset Formula $R$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Vermenigvuldig de termen links met 
+\begin_inset Formula $\frac{k}{k}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{k_{x}}{k}k\frac{\partial^{2}\phi}{\partial x^{2}}+\frac{k_{z}}{k}k\frac{\partial^{2}\phi}{\partial z^{2}}=R
+\]
+
+\end_inset
+
+waarna we de 
+\begin_inset Formula $x$
+\end_inset
+
+- en de 
+\begin_inset Formula $y$
+\end_inset
+
+-coördinaat kunnen verschalen en de volgende differentiaalvergelijking wordt verkregen
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k\frac{\partial^{2}\phi}{\partial\left(\sqrt{\frac{k}{k_{x}}}x\right)^{2}}+k\frac{\partial^{2}\phi}{\partial\left(\sqrt{\frac{k}{k_{z}}}z\right)^{2}}=R
+\]
+
+\end_inset
+
+Deze is te schrijven met coördinaten 
+\begin_inset Formula $\overline{x}$
+\end_inset
+
+ en 
+\begin_inset Formula $\overline{z}$
+\end_inset
+
+,
+ waardoor de vergelijking van een anisotroop pakket overgaat in die van een een isotroop watervoerende pakket met 
+\begin_inset Formula $k$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k\frac{\partial^{2}\phi}{\partial\overline{x}^{2}}+k\frac{\partial^{2}\phi}{\partial\overline{y}^{2}}=R
+\]
+
+\end_inset
+
+Voor de nieuwe coördinaten geldt 
+\begin_inset Formula $\overline{x}=x\sqrt{\frac{k}{k_{x}}}$
+\end_inset
+
+ en 
+\begin_inset Formula $\overline{\ensuremath{z}}=\sqrt{\frac{k}{k_{z}}}$
+\end_inset
+
+.,
+ De keuze van doorlatendheid 
+\begin_inset Formula $k$
+\end_inset
+
+ is geheel vrij.
+ De verschaling maakt bovendien niets uit voor het rechterlid,
+ dus de voeding,
+ de berging en de onttrekking blijven gelijk.
+ Dit geldt voor alle debieten.
+\end_layout
+
+\begin_layout Standard
+Het is gebruikelijk 
+\begin_inset Formula $k=\sqrt{k_{x}k_{z}}$
+\end_inset
+
+ te kiezen,
+ de verschaling die het dichtst bij de oorspronkelijke doorsnede blijft.
+ Dit betekent dat wanneer we in ons oorspronkelijke pakket 
+\begin_inset Formula $x$
+\end_inset
+
+ naar 
+\begin_inset Formula $\overline{x}$
+\end_inset
+
+ en 
+\begin_inset Formula $z$
+\end_inset
+
+ naar 
+\begin_inset Formula $\overline{z}$
+\end_inset
+
+ verschalen,
+ we dezelfde stroming en afvoer krijgen,
+ maar dan wel met stijghoogte- en stroomlijnen in een isotroop watervoerend pakket,
+ waarin zij loodrecht op elkaar staan.
+ We kunnen nu de tweede term verschalen,
+ waarin 
+\begin_inset Formula $L$
+\end_inset
+
+ niet wordt meegenomen omdat die afkomstig was van 
+\begin_inset Formula $NL$
+\end_inset
+
+ zijnde de totale afvoer van de sloot.
+ Deze blijft ongewijzigd aangezien anders het debiet verandert.
+ Wanneer we accepteren dat de slootbreedte in de praktijk veel groter is dan de slootdiepte,
+ geldt zodat 
+\begin_inset Formula $\Omega\approx b_{\mathtt{sloot}}$
+\end_inset
+
+,
+ een horizontale lijn,
+ die dus verschaalt wordt met de factor 
+\begin_inset Formula $\sqrt{\frac{k}{k_{x}}}$
+\end_inset
+
+,
+ terwijl de verticale pakketdikte 
+\begin_inset Formula $D$
+\end_inset
+
+ verschaalt wordt met de factor 
+\begin_inset Formula $\sqrt{\frac{k}{k_{z}}}$
+\end_inset
+
+.
+ De tweede term in de uitdrukking van de drainageweerstand wordt dan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D_{a}\sqrt{\frac{k}{k_{z}}}}{\Omega\sqrt{\frac{k}{k_{x}}}}\right)=\frac{1}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\Omega}\sqrt{\frac{k_{x}}{k_{z}}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De uiteindelijke drainageweerstand wordt hiermee
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c_{a}=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\Omega}\sqrt{\frac{k_{x}}{k_{z}}}\right)+\frac{D}{2k_{z}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Gevoeligheidsanalyse-van-de-drainageweerstand"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is de weergave van een gevoeligheid van de drainageweerstand voor de factoren die hem bepalen.
+ De dikke rode punt is het resultaat van de uitgangswaarden zoals die in de legenda zijn genoemd:
+ De afstand tussen de sloten 
+\begin_inset Formula $L=100$
+\end_inset
+
+ m,
+ verticale anisotropie 
+\begin_inset Formula $a=k_{x}/k_{z}=1$
+\end_inset
+
+,
+ pakketdikte 
+\begin_inset Formula $D=20$
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+m en de de lengte van het contactvlak tussen sloot en watervoerend pakket in de doorsnede 
+\begin_inset Formula $\Omega=1.5$
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+m.
+ De lijnen geven aan wat er met de drainageweerstand gebeurt wanneer steeds een van de factoren verandert met een factor die op de horizontale as is weergegeven.
+ Omdat de verticale anisotropie in de praktijk altijd groter is dan 1,
+ loopt de oranje lijn alleen naar rechts.
+ Verder is bij het veranderen van de pakketdikte het doorlaatvermogen,
+ 
+\begin_inset Formula $kD$
+\end_inset
+
+,
+ constant gehouden,
+ waardoor de horizontale doorlatendheid,
+ 
+\begin_inset Formula $k_{x}$
+\end_inset
+
+ ,
+ afneemt.
+ Hierbij is de verticale doorlatendheid steeds gelijk gehouden aan de horizontale,
+ 
+\begin_inset Formula $k_{z}=k_{x}$
+\end_inset
+
+.
+ De keuze van de uitgangswaarden is wat arbitrair,
+ maar zij zijn redelijk in overeenstemming met wat men in de praktijk aantreft.
+ De figuur laat een uitgangswaarde voor de drainageweerstand zien van ca.
+ 13 d,
+ en laat voorts zien dat de drainageweerstand gemakkelijk tussen enkele dagen en enkele honderden dagen kan variëren.
+ Met name de afstand tussen de sloten en de pakketdikte zijn van belang.
+ Hoe groter de pakketdikte,
+ des te meer werkt de contractie van stroomlijnen nabij de sloten door in de totale weerstand.
+ De weerstand door de verticale stroming tussen het freatisch vlak en de basis van het pakket is in de uitgangssituatie 
+\begin_inset Formula $D/\left(2k_{z}\right)=20/10=2$
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+d,
+ maar bij een verticale anistropie van 
+\begin_inset Formula $a=10$
+\end_inset
+
+ is dit al 20
+\begin_inset space ~
+\end_inset
+
+d,
+ en bij een vijfmaal grotere pakketdikte van 100
+\begin_inset space ~
+\end_inset
+
+m en een vijfmaal kleinere verticale doorlatendheid van 2
+\begin_inset space ~
+\end_inset
+
+m/d heeft deze term een waarde van 50
+\begin_inset space ~
+\end_inset
+
+d,
+ en dat is beslist niet te verwaarlozen.
+ Voor de uitgangswaarden zijn de totale drainage weerstand en de afzonderlijke termen als volgt Voor de uitgangswaarden zijn de waarden van de afzonderlijke termen als volgt 
+\begin_inset Formula $c_{dr}=13.4\,d$
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{hor}=4.2\,d$
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{rad}=8.2\,d$
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{ver}=1.0\,d$
+\end_inset
+
+.
+ De radiale weerstand is het grootst en neemt sterk toe bij verticale anisotropie,
+ terwijl de horizontale weerstand daarbij constant blijft.
+ Door de dominantie van de radiale weerstand is de grondwaterstand in de praktijk tamelijk vlak tussen de sloten,
+ om sterk te dalen in de buurt daarvan.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/drainageweerstand.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Gevoeligheidsanalyse-van-de-drainageweerstand"
+
+\end_inset
+
+Gevoeligheidsanalyse van de drainageweerstand.
+ Zie tekst voor uitleg.
+ Voor de uitgangswaarden zijn de waarden van de afzonderlijke termen als volgt 
+\begin_inset Formula $c_{dr}=13.4\,d$
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{hor}=4.2\,d$
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{rad}=8.2\,d$
+\end_inset
+
+,
+ 
+\begin_inset Formula $c_{ver}=1.0\,d$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Verlaging door puntonttrekking tijdsafhankelijk
+\end_layout
+
+\begin_layout Standard
+Zowel bij irrigatie als bij permanente onttrekkingen in de zomer zal de verlaging tijdsafhankelijk zijn,
+ omdat sloten dan deels of geheel ophouden met het afvoeren van neerslaoverschot.
+ Van belang is daarbij over welke periode de afvoer van de sloten stagneert.
+ Deze periode zal per sloot verschillen.
+ We bovendien een beginsituatie nodig.
+ Daarvoor zouden we kunnen uitgaan van die aan het begin van de zomer,
+ gebaseerd op het schema van Blom.
+ Blom beschouwt alleen permanente stroming,
+ waarbij de ruimtelijke overgang van het binnengebied zonder slootafvoer en het buitengebied met slootafvoer ligt op de cirkel met een verlaging gelijk aan het product van neerslagoverschot en drainageweerstand 
+\begin_inset Formula $Nc$
+\end_inset
+
+.
+ Het is duidelijk dat door het droogvallen sloten de radius die het gebied omsluit zonder sloten gedurende de zomer groeit en daarmee ook de verlaging.
+ Met de stijgende grondwaterstanden in de natte herfst trekken de sloten weer bij en stelt zich opnieuw de min of meer permanente wintersituatie is.
+\end_layout
+
+\begin_layout Standard
+Het is niet mogelijk om de stationaire en de tijdsafhankeijke verlaging bij elkaar op te tellen,
+ omdat de onderlinge differentiaalvergelijkingen verschillen.
+ Wat wel kan is de permanente verlaging vergelijken met de tijdsafhankelijke verlaging gedurende de zomer en dan de grootste van de twee als maatstaf te nemen.
+ Deze tijdsafhankelijke verlaging kan met Theis worden berekend om de vereenvoudigde formule van Theis:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s\approx\frac{Q}{4\pi kD}\ln\left(\frac{2.25kDt}{r^{2}S}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Uitgewerkt wordt dit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s\approx\frac{Q}{2\pi kD}\ln\left(\frac{R}{r}\right),\,\,\,\mathtt{met\,\mathtt{invloedsstraal}}\,\,\,R=\sqrt{\frac{2.25kDt}{S}}\,\,\,\mathtt{en\,\,\,}r\le R
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit lijkt op de stationaire verlaging volgens Dupuit,
+ maar is in feite niet-stationair omdat de invloedsstraal 
+\begin_inset Formula $R$
+\end_inset
+
+ van 
+\begin_inset Formula $t$
+\end_inset
+
+ afhangt.
+\end_layout
+
+\begin_layout Standard
+Voor toepassing in de praktijk moet een beslissing worden genomen over de periode 
+\begin_inset Formula $t$
+\end_inset
+
+ waarover de verlaging zich ontwikkelt.
+ Dit zal een deel van het zomerhalfjaar tot het hele zomerhalfjaar zijn.
+ Vergelijking tussen de grootte van een permanente verlaging volgens Dupuit en de tijdsafhankelijke verlaging volgens Theis,
+ kan dus gemakkelijk door vergelijking van de invloedsstraal.
+ Deze is bij permanente verlaging gelijk aan de gebiedsradius en bij tijdsafhankelijke verlaging gelijk aan de dynamische invloedsstraal.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/put_verl_tijdsafh.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Niet-stationaire-verlaging"
+
+\end_inset
+
+Niet stationaire verlaging en zijn reikwijdte of invloedsstraal op lineaire en logaritmische tijdschaal.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De verlagingen in figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Niet-stationaire-verlaging"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ zijn zowel uitgezet tegen de tijd op lineaire als op logaritmische schaal.
+ De verlagingslijnen in de grafiek met de logaritmische tijdas verschuiven in de tijd evenwijdig naar rechts.
+ Het punt waar de verlagingslijn de lijn met verlaging nul snijdt is de invloedsstraal.
+ Bij gebruik van de exacte formule van Theis,
+ corresponderende lijnen zijn aangegeven met halve lijndikte in dezelfde kleur,
+ is de verlaging op de invloedsstraal wel groter dan nul,
+ maar voldoende klein om de invloedsstraal als invloedsgrens te gebruiken in de beoordeling van de verlaging.
+\end_layout
+
+\begin_layout Standard
+Bij een gegeven gebiedsstraal 
+\begin_inset Formula $R$
+\end_inset
+
+ volgt de tijd waarin de tijdsafhankelijke verlaging groter wordt dan de permanente verlaging uit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+t=\frac{R^{2}S}{2.25kD}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor de waarden uit het voorbeeld 
+\begin_inset Formula $kD=600\,$
+\end_inset
+
+m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d,
+ 
+\begin_inset Formula $S=0.2$
+\end_inset
+
+ en bijvoorbeeld 
+\begin_inset Formula $R=500\,$
+\end_inset
+
+m volgt 
+\begin_inset Formula $t=37\,$
+\end_inset
+
+d.
+ Dus al binnen een maand.
+ Dit betekent in de praktijk dat de tijdsafhankelijke verlaging in een zomer een aanzienlijke radius kan bereiken.
+ 
+\end_layout
+
+\begin_layout Section
+Lineaire elementen,
+ sleufbemaling of peilregulatie met sloten en grachten
+\end_layout
+
+\begin_layout Standard
+Bij sleufbemaling of peilbeheersing met sloten of grachten (ook drainage) is niet het debiet maar de verlaging het doel,
+ net zoals dat bij bouwputten het geval is.
+ De verlaging 
+\begin_inset Formula $s\left(u\right)$
+\end_inset
+
+ of 
+\begin_inset Formula $s\left(x,t\right)$
+\end_inset
+
+ die optreedt naast een oneindig lange sleuf wanneer in de sleuf plotseling een verlaging 
+\begin_inset Formula $s_{0}$
+\end_inset
+
+ wordt opgelegd,
+ wordt gegeven door
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=s_{0}\mathtt{erfc}\left(u\right),\,\,\,\mathtt{met}\,\,\,u=\sqrt{\frac{x^{2}S}{4kDt}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+met 
+\begin_inset Formula $\mathtt{erfc}()$
+\end_inset
+
+ de complementaire Error functie:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathtt{erfc}\left(u\right)=\frac{2}{\sqrt{\pi}}\intop_{u}^{\infty}e^{-y^{2}}dy
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met stroming in het pakket gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+Q\left(x,t\right) & =-kD\frac{\partial s}{\partial x}\\
+ & =-kDs_{0}\frac{2}{\sqrt{\pi}}\left(-\right)e^{-u^{2}}\sqrt{\frac{S}{4kDt}}
+\end{align*}
+
+\end_inset
+
+zodat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q\left(x,t\right)=s_{0}\sqrt{\frac{kDS}{\pi t}}e^{-u^{2}}
+\]
+
+\end_inset
+
+en het onttrekkingsdebiet gelijk is aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q\left(x,t\right)=s_{0}\sqrt{\frac{kDS}{\pi t}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De onttrekking van de sleufbemaling neemt dus af volgens de inverse wortel van de tijd.
+ Maar de verlaging blijft toenemen op elke afstand,
+ met als eindwaarde op opgelegde verlaging 
+\begin_inset Formula $s_{0}$
+\end_inset
+
+ voor elke 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Uiteraard gaat dit draineren op grote afstand van de sleuf uiterst langzaam.
+ Bovendien zullen op grotere afstanden en over de seizoenen heen watergangen aanwezig zijn die het verder uitzakken van het grondwater zullen verhinderen.
+\end_layout
+
+\begin_layout Standard
+Net als voor de analyse van bouwputten is een tijdsafhankelijke berekening zinvol mits de duur wordt beperkt tot hoogstens het zomerhalfjaar.
+\end_layout
+
+\begin_layout Standard
+Natuurlijk heeft de bemaling van een sleuf ook enige aanlooptijd nodig voordat de gewenste verlaging wordt bereikt,
+ maar die periode is altijd kort ten opzichte van de duur van de bemaling en het effect daarvan is verwaarloosbaar voor de verlaging enige tijd na het begin van de bemaling of van de peilverandering.
+\end_layout
+
+\begin_layout Standard
+Een sleufbemaling in een gebied met veel drainagemiddelen zal in een natte periode tot een quasi-permanente verlaging leiden,
+ waar binnen een zekere afstand tot de sleuf de sloten droogvallen en daarbuiten nog enige afvoer van neerslagoverschot over is.
+ Deze situatie kan op dezelfde wijze worden berekend als in het schema van Blom voor radiale stroming.
+ Ook hier wordt gebruik gemaakt van de drainageweerstand en zal de verlaging zich op grotere afstanden gedragen als in een semi-gespannen pakket.
+ De grens tussen het gebied met droge sloten en met nog afvoerende sloten ligt daar waar de verlaging gelijk is aan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ met 
+\begin_inset Formula $N$
+\end_inset
+
+ het neerslagoverschot (eventueel te vermeerderen met permanente kwel) en 
+\begin_inset Formula $c$
+\end_inset
+
+ de drainageweerstand.
+\end_layout
+
+\begin_layout Standard
+De horizontale stroming met afvoer 
+\begin_inset Formula $Q$
+\end_inset
+
+ in [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d] in plaats van [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d],
+ is als volgt,
+ met 
+\begin_inset Formula $Q_{0}$
+\end_inset
+
+ de (eenzijdige) onttrekking,
+ de toestroming ter plaats van de sleuf
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q_{x}=kD\frac{ds}{dx}=-Q_{0}+Nx
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Na integratie vinden we de verandering van de grondwaterstand,
+ die nog afhangt van een integratieconstante 
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=-\frac{Q_{0}}{kD}x+\frac{N}{2kD}x^{2}+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $s=Nc$
+\end_inset
+
+ voor 
+\begin_inset Formula $x=L$
+\end_inset
+
+ gaat de vergelijking over in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Nc=-\frac{Q_{0}}{kD}L+\frac{N}{2kD}L^{2}+C
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Vergelijking 2 aftrekken van vergelijking 1 elimineert de integratieconstante met als resultaat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s_{x<L}-Nc=\frac{Q_{0}}{kD}\left(L-x\right)-\frac{N}{2kD}\left(L^{2}-x^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor afstanden groter dan 
+\begin_inset Formula $L$
+\end_inset
+
+ is de verlaging minder dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ en gedraagt het grondwater zich als semi-gespannen met een drainageweerstand.
+ Deze stroming voldoet aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s_{x\ge L}=Nc\,e^{-\frac{x-L}{\lambda}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Op de overgang 
+\begin_inset Formula $x=L$
+\end_inset
+
+ moet de stroming continu zijn zodat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+-Q_{0}+NL=-kD\frac{Nc}{\lambda}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hieruit volgt de gezochte afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ waar het binnengebied overgaat in het buitengebied en de verlaging gelijk is aan 
+\begin_inset Formula $Nc$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+L=\frac{Q_{0}}{N}-\lambda
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hiermee is het grondwaterverloop volledig bepaald.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/sleuf_pamanent.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Pernamente-verlaging-1D-blom"
+
+\end_inset
+
+Permanente verlaging door onttrekking (of peilregeling) op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ zoals bij een sleufbemaling,
+ bij gebruik van de drainageweerstand.
+ In het binnengebied,
+ waar de verlaging groter is dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ zijn de sloten droog en daarbuiten voeren zij nog een deel van het neerslagoverschot af.
+ De gebiedsovergang is aangegeven met markers.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Pernamente-verlaging-1D-blom"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ illustreert de beschreven situatie voor verschillend grote onttrekkingen.
+ Waar de verlaging groter is dan 
+\begin_inset Formula $Nc$
+\end_inset
+
+ zijn de sloten droog.
+ Daarbuiten voeren is hun afvoer van het neerslagoverschot gereduceerd in overeenstemming met de verlaging.
+\end_layout
+
+\begin_layout Subsection
+Beperkte lengte van de sleuf
+\end_layout
+
+\begin_layout Standard
+In de praktijk is de lengte van de bemalen sleuf beperkt tot het traject waarover werkzaamheden zoals de aanleg van een riool aan de gang zijn.
+ De locatie van de sleuf zal met de werkzaamheden mee verschuiven.
+ In elk geval is de lengte beperkt en zullen de verlagingslijnen naar de uiteinden van de sleuf niet meer evenwijdig aan de sleuf zijn,
+ maar om de uiteinden heen buigen om aan de sluiten om de corresponderende verlagingslijnen aan de andere zijde van de sleuf.
+ Het nauwkeurig berekenen kan door de sleuf te berekenen met een lange serie bronnetjes op korte onderlinge afstand,
+ maar ook dat is minder eenvoudig omdat de onttrekking van de bronnen tegen de uiteinden van de sleuf moet toenemen om daar de gewenste verlaging te bereiken.
+ Het berekenen van het debiet van de bronnen dat langs de sleuf niet hetzelfde is maakt dit nodeloos complex.
+ Het is gemakkelijker en volstrekt acceptabel om de verlagingslijnen parallel aan de sleuf te houden en aan de uiteinden met halve cirkels met elkaar te verbinden (figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "Verlagingscontouren-sleuf"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ pagina 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "Verlagingscontouren-sleuf"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section
+Bouwput tijdsafhankelijk,
+ maar met vaste verlaging op de bouwputrand
+\end_layout
+
+\begin_layout Standard
+In de tijdsafhankelijke situatie kan de verlaging die door een bemalen bouwput wordt veroorzaakt worden geanalyseerd op basis van de formule van Theis,
+ die ervan uitgaat dat er geen randvoorwaarden zijn die het grondwater vasthouden en geen afdekkende of onderliggende laag waaruit lek wordt opgewekt door de verlaging.
+ Al het onttrokken water komt in deze situatie uit de (freatisch) berging en er is geen stationaire eindsituatie mogelijk.
+ In de praktijk van de lage landen is dat natuurlijk niet het geval,
+ uiteindelijk zullen watergangen de verlaging beperken,
+ met name in de natte jaargetijden,
+ waarin de grondwaterstanden oplopen,
+ slootbodems bereiken en watergangen het overschot afvoeren.
+ Maar voor de droge jaargetijden is de tijdsafhankelijk benadering zinvol en zelfs essentieel om de beïnvloeding van het grondwater door een bemaling te analyseren.
+\end_layout
+
+\begin_layout Standard
+De bemaling van een bouwput zal allereerst het grondwaterniveau binnen de bouwput moeten verlagen tot het gewenste niveau,
+ dat vervolgens moet worden vastgehouden.
+ Om het verlagingsniveau vast te houden,
+ moet de onttrekking vanaf het behalen van het gewenste niveau geleidelijk afnemen omdat de verlaging bij constant debiet voortdurend blijft oplopen.
+ Dit tijdsafhankelijke verloop van de onttrekking heeft ook zijn weerslag op de verlaging verder van de bouwput,
+ maar nauwelijks op de grootte van de invloedsstraal,
+ omdat die onafhankelijk van het onttrekkingsdebiet is.
+\end_layout
+
+\begin_layout Standard
+Een exacte berekening van de afname van de onttrekking van de bouwput om de verlaging op zijn rand constant te houden blijkt ingewikkeld;
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Brug99"
+literal "false"
+
+\end_inset
+
+ geeft een analytische oplossing hiervoor,
+ maar die blijkt numeriek bijzonder lastig en vergt ofwel integratie van uitdrukkingen met besselfuncties over meer dan 60 logcycli,
+ dan wel numerieke terugtransformatie van de Laplace getransformeerde uitdrukking.
+ 
+\end_layout
+
+\begin_layout Standard
+In plaats hiervan is een voor de praktijk uitstekende benadering mogelijk,
+ namelijk door voor het tijdsafhankelijke debiet op elk moment de waarde te nemen die nodig is om vanaf het begin van de bemaling op datzelfde moment de gewenste verlaging te halen.
+ Dit debiet is de verhouding tussen de gewenste verlaging op de bouwputrand en verlaging die daar tijdsafhankelijk met Theis wordt berekend voor een vast onttrekkingsdebiet van 
+\begin_inset Formula $Q=1$
+\end_inset
+
+ m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s_{t,b,Q=1}=\frac{Q=1}{4\pi kD}W\left(u\right)\rightarrow Q_{t}\approx\frac{s_{b}}{s_{t,b,Q=1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het debiet over de aanlooptijd 
+\begin_inset Formula $t_{b}$
+\end_inset
+
+ zetten we constant gelijk aan 
+\begin_inset Formula $Q_{t_{b}}$
+\end_inset
+
+,
+ zodat aan het eind van de aanlooptijd de gewenste verlaging is bereikt.
+ Het met deze formule verkregen tijdsafhankelijke debiet is iets te groot,
+ maar het verschil met de echte waarde is in de praktijk te verwaarlozen.
+\end_layout
+
+\begin_layout Standard
+Met het verkregen tijdsafankelijke is vervolgens invoer voor de berekening van de tijdsafhankelijke verlaging voor gekozen afstand en de gehele tijdsperiode.
+ Deze verlaging wordt berekend door gebruik te maken van de blokrespons van de Theis formule.
+ De blokrespons is het resultaat van een eenheidsonttrekking 
+\begin_inset Formula $Q=1\,$
+\end_inset
+
+m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d gedurende een tijdstap (1 dag).
+ De blokrespons 
+\begin_inset Formula $B_{R}$
+\end_inset
+
+ wordt verkregen door de staprespons vanaf 
+\begin_inset Formula $t=1$
+\end_inset
+
+ te verminderen met die vanaf 
+\begin_inset Formula $t=0$
+\end_inset
+
+.
+ De staprespons is de formule van Theis voor 
+\begin_inset Formula $Q=1$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+B_{R}=\frac{1}{4\pi kD}\left\{ W\left(u_{t\ge0}\right)-W\left(u_{t-\Delta t\ge0}\right)\right\} 
+\]
+
+\end_inset
+
+waarin 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ de tijdstap in de tijdreeks is (meestal 1 dag).
+ De verlaging van de grondwaterstand op een willekeurige plek en tijd wordt nu verkregen door convolutie.
+ Dat wil niets anders zeggen dan berekend middels een voortschrijdend gemiddelde over de onttrekking in het verleden,
+ gewogen met de in de tijd omgekeerde blokrespons.
+ Python heeft hiervoor een standaard functie `lfilter` in de wetenschappelijke module `scipy.signal`.
+ De aanroep
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\mathtt{lfilter}\left(B_{R},1,Q_{t}\right)
+\]
+
+\end_inset
+
+is alles wat nodig is om de tijdsafhankelijke verlaging daadwerkelijk uit te rekenen voor en gekozen afstand (
+\begin_inset Formula $u=\frac{r^{2}S}{4kDt}$
+\end_inset
+
+) en de volledige tijdreeks.
+ Door voor de afstand de radius van de bouwput te kiezen,
+ kan worden gecontroleerd in hoe nauwkeurig en constant de verlaging op de bouwput rand op de gewenste waarde wordt gehouden bij deze tijdsafhankelijke onttrekking.
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Bouwput-met-afnemend-debiet"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het resultaat van deze berekening met boven het na de aanloopperiode van 14 dagen afnemende onttrekkingsdebiet en beneden de tijdsafhankelijke verlaging op de bouwputrand 
+\begin_inset Formula $r=25\,$
+\end_inset
+
+m en een aantal andere afstanden.
+ De verlaging op de bouwputrand is door de vereenvoudigde berekeningswijze iets groter dan het doel van 5
+\begin_inset space ~
+\end_inset
+
+m,
+ maar het scheelt weinig en de verlaging op de bouwputrand wordt in de tijd goed constant gehouden.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/bouwput_onttr_tijdsafh.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Bouwput-met-afnemend-debiet"
+
+\end_inset
+
+Bouwput met afnemend debiet om de verlaging op de bouwputrand (
+\begin_inset Formula $r=20\,$
+\end_inset
+
+m) constant te houden op 5
+\begin_inset space ~
+\end_inset
+
+m.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het is van belang op te merken dat de verlaging in deze op Theis gebaseerde berekeningswijze blijft toenemen.
+ Het is dus van belang de duur te beperken tot de actuele bemalingsduur of tot de duur van de zomer wanneer de sloten worden verondersteld geen contact meer met het grondwater te hebben.
+\end_layout
+
+\begin_layout Section
+Bruggeman's oplossing 370_01:
+ Bron in semi-gespannen laag met sprong in de eigenschappen
+\end_layout
+
+\begin_layout Standard
+Bruggeman geeft een analytische oplossing (Nr.
+ 370_01) van belang kan zijn voor het berekenen van de verlaging wanneer we te maken hebben met een overgangsgebied,
+ zoals waar een hoog gebied zonder drainage overgaat in een laag en nat gebied met veel drainage 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Brug99"
+literal "false"
+
+\end_inset
+
+.
+ De oplossing van Bruggeman is voor de verlaging door een bron in een semi-gespannen watervoerend pakket waarvan het doorlaatvermogen en de weerstand van de afdekkende laag op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ verspringen.
+ Het genoemde voorbeeld kunnen we hiermee uitrekenen door voor het hoge gebied een grote weerstand te kiezen en voor het aangrenzende lage gebied de drainageweerstand,
+ terwijl het doorlaatvermogen in beide gebieden hetzelfde is.
+\end_layout
+
+\begin_layout Standard
+De oplossing zelf lijkt complex,
+ maar is goed te implementeren en dan gewoon als elke putformule te hanteren.
+\end_layout
+
+\begin_layout Standard
+Voor 
+\begin_inset Formula $x<0$
+\end_inset
+
+ is de stijghoogte gelijk aan 
+\begin_inset Formula $\phi_{1}\left(x,y\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi_{1}\left(x,y\right)=\frac{Q}{\pi}\intop_{0}^{\infty}A\left(\zeta\right)\exp\left(x\sqrt{\zeta^{2}+\frac{1}{\lambda_{1}^{2}}}\right)\cos\left(y\zeta\right)d\zeta
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+en voor 
+\begin_inset Formula $x\ge0$
+\end_inset
+
+ is de stijghoogte gelijk aan 
+\begin_inset Formula $\phi_{2}\left(x,y\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi_{2}\left(x,y\right)=\frac{Q}{2\pi k_{2}D_{2}}\left[K_{0}\left\{ \frac{\sqrt{\left(x-x_{w}\right)^{2}+y^{2}}}{\lambda_{2}}\right\} -K_{0}\left\{ \frac{\sqrt{\left(x+x_{w}\right)^{2}+y^{2}}}{\lambda_{2}}\right\} \right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De functie 
+\begin_inset Formula $A\left(\zeta\right)$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A\left(\zeta\right)=\frac{\exp\left(-x_{w}\sqrt{\zeta^{2}+\frac{1}{\lambda_{2}^{2}}}\right)}{k_{1}D_{1}\sqrt{\zeta^{2}+\frac{1}{\lambda_{1}^{2}}}+k_{2}D_{2}\sqrt{\zeta^{2}+\frac{1}{\lambda_{2}^{2}}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+met
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\lambda_{1}=\sqrt{k_{1}D_{1}c_{1}}\,\,\,\mathtt{en}\,\,\,\lambda_{2}=\sqrt{k_{2}D_{2}c_{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+en 
+\begin_inset Formula $x_{w}\ge0$
+\end_inset
+
+ is de 
+\begin_inset Formula $x$
+\end_inset
+
+-coördinaat van de bron.
+\end_layout
+
+\begin_layout Standard
+Berekenen van de verlaging voor 
+\begin_inset Formula $x<0$
+\end_inset
+
+ kan eenvoudig door de gebiedsparameters te verwisselen en 
+\begin_inset Formula $x$
+\end_inset
+
+ door 
+\begin_inset Formula $-x$
+\end_inset
+
+ in de berekening te vervangen.
+ In de implementatie gebeurt dit automatisch wanneer de put-coördinaat negatief is.
+\end_layout
+
+\begin_layout Standard
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Brug370_01"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ illustreert de toepassing van oplossing 370_01 van Bruggeman voor een sprong in de weerstand boven de semi-gespannen aquifer 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "Brug99"
+literal "false"
+
+\end_inset
+
+.
+ In de figuur is de weerstand rechts van de gebiedsgrens (
+\begin_inset Formula $x>0$
+\end_inset
+
+) veel kleiner (
+\begin_inset Formula $c=50\,$
+\end_inset
+
+d) dan links (
+\begin_inset Formula $c=5000\,$
+\end_inset
+
+d) terwijl het doorlaatvermogen aan beide zijden hetzelfde is.
+ Het verschil in weerstand komt tot uiting in een veel steilere helling in de verlaging wanneer de put zich rechts van de gebiedsgrens bevindt (blauwe lijn) dan wanneer deze er links van staat (oranje lijn).
+ Wanneer behalve het doorlaatvermogen ook de weerstand aan beide zijden van de gebiedsgrens hetzelfde is,
+ moet de oplossing van Bruggeman gelijk zijn aan die volgens De Glee.
+ De groen lijn en de lijn van rode puntjes laten zien dat dit inderdaad het geval is.
+ De berekening voor de put die links van de gebiedsgrens staat is gedaan door de gebiedseigenschappen te verwisselen en het teken van de 
+\begin_inset Formula $x$
+\end_inset
+
+-coördinaten om te draaien.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/brug370_01_test.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Brug370_01"
+
+\end_inset
+
+Toepassing oplossing 370_01 uit 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Brug99"
+literal "false"
+
+\end_inset
+
+.
+ Toelichting zie tekst.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{References}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Blom (1973)"
+key "Blom73"
+literal "false"
+
+\end_inset
+
+Blom,
+ J.
+ (1973).
+ Verlagingen van het freatisch vlak bij grondwateronttrekking in een gebied met vrije afwatering.
+ RID mededeling 74-7.
+ Rijkswaterstaat Instituut Drinkwatervoorziening,
+ Den Haag.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Bot (2016)"
+key "Bot16"
+literal "false"
+
+\end_inset
+
+Bot,
+ B (2016) Grondwaterzakboekje.
+ Gzw 2016.
+ ISBN-EAN 978-90-817869-1-1.
+ 456pp.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Bruggeman (1999)"
+key "Brug99"
+literal "false"
+
+\end_inset
+
+Bruggeman GA (1999) Analytical solutions of geohydrological problems.
+ Nr.
+ 46 in the series Developments in Water Science.
+ Elsevier and RIVM.
+ ISBN 0-444-81829-4.
+ 959pp.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Bronders et al. (2013)"
+key "Bro13"
+literal "false"
+
+\end_inset
+
+Bronders J,
+ Patyn J,
+ Van Keer I,
+ Desmet N,
+ Vos J,
+ Peelaerts Q,
+ Decorte L,
+ Gobin A.
+ (2013) Voortoets,
+ Module 3 - Inhoudelijke uitwerking van module 3 in de online toepassing van de voortoets:
+ het bepalen van de reikwijdte van effecten voor de indirecte effectgroepen - Thema grondwater.
+ Studie uitgevoerd in opdracht van ANB,
+ 2013/RMA/R/120.
+ VITO NV,
+ Mol,
+ B.
+ 84pp.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "De Glee (1930)"
+key "Glee30"
+literal "false"
+
+\end_inset
+
+De Glee,
+ C.
+ (1930).
+ De invloed van grondwateronttrekkingen op de grondwaterstand.
+ Proefschrift,
+ Universiteit van Amsterdam.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Natuur en Bos (2021)"
+key "NB21"
+literal "false"
+
+\end_inset
+
+Natuur en Bos (2021) Leidraad Grondwatermodellering.
+ https://pww.natuurenbos.be/sites/default/files/2021-09/bijlage_leidraad_grondwatermodellering_0_0.pdf.
+ Beschrijft de formule van Verruijt.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Verruijt (1982)"
+key "Ver82"
+literal "false"
+
+\end_inset
+
+Verruijt A (1982) Groundwater Flow.
+ 2nd Edition.
+ ISBN 0-333-32958-7.
+ 144pp.
+ 
+\end_layout
+
+\end_body
+\end_document
