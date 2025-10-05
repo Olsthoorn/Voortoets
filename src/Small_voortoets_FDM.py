@@ -35,17 +35,14 @@
 
 
 # %%
-import os
-import sys
+# --- standard library
 import numpy as np
-import matplotlib.pyplot as plt
-import etc                    # My module under tools/etc
-from fdm import Grid, fdm3t   # My fdm module under tools/fdm
+from fdm.src.fdm3t import Fdm3t, fdm3t  # My fdm module under tools/fdm
 
-dirs = etc.Dirs(os.getcwd())  # My module dirs sets project directories
-
-if "" not in sys.path:
-    sys.path.insert(0, "")
+# import matplotlib.pyplot as plt
+# --- Local / project
+from fdm.src.mfgrid import Grid
+from fdm.src.fdm3t import Fdm3t, fdm3t
 
 # %%
 
@@ -278,3 +275,9 @@ class vt_model():
         return None
 
 # %%
+
+database = {1: {'xy': (123000, 395000), layers=[[0, None, None],
+                                                [-10., 10, 0.2],
+                                                [-25,   5, 0.0003]]
+                }
+layers = 

@@ -1,0 +1,12 @@
+Last login: Fri Sep 26 17:43:50 on console
+~ $cd ~/GRWMODELS/python/tools/Stromingen 
+Stromingen $cd Kinematic_wave 
+Kinematic_wave $code .
+Kinematic_wave $cd data
+data $cat > .gitignore
+*.pkl
+*.csv
+
+
+
+
