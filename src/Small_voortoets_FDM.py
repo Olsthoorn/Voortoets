@@ -43,50 +43,68 @@ from fdm.src.fdm3t import Fdm3t, fdm3t  # My fdm module under tools/fdm
 # --- Local / project
 from fdm.src.mfgrid import Grid
 from fdm.src.fdm3t import Fdm3t, fdm3t
+from fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
+
+dtypeQ   = np.dtype([('I', np.int32), ('q', float)])
+dtypeH   = np.dtype([('I', np.int32), ('h', float)])
+dtypeGHB = np.dtype([('I', np.int32), ('h', float), ('C', float)])
+
+from src.select_surf_wat_15x15km import get_water_length_per_cell
+
 
 # %%
+
+def get_grid(ctr, wc=5, w=15000., N=100, z=np.array([0, -30.])):
+    """Return grid object containing the rectangular model grid.
+    
+    Parameters
+    ----------
+    ctr: tuple x,y in crs: 30310
+        Center of the grid in crs 30370 (Belgium)
+    wc: float
+        minimum cell width
+    w: float
+       with of model (xMax - xMin) = (yMax - yMin)
+    N: int
+        nx, ny of model grid
+    z: np.ndarray
+        elevation of water table aquifer
+    """
+    x0, y0 = ctr
+
+    # --- increasing coordinates from center
+    xi = np.logspace(np.log10(wc / 2), np.log10(w / 2), int(N % 2))
+    
+    # --- real world coordinates of vertical grid lines
+    x = x0 + np.hstack((-xi[::-1], xi))
+    
+    # --- real world coordinaters of horizontal grid lines
+    y = y0 + np.hstack((xi[::-1], -xi))
+    
+    # --- create grid object
+    gr = Grid(x, y, z, axial=False)
+    return gr
+
 
 class vt_model():
     """Voortoets model, simple version, 1 layer FDM."""
 
-    def __init__(self, xy_ctr, R=7500, dx=5, nmax=200):
+    def __init__(self, ctr, wc=5, w=15000, z=np.array([0, -30.]), N=100):
         """
         Parameters
         ----------
-        xy_ctr: (float, float)
-            coordinates of model center (center of center cell)
-        R: float
-            model radius (i.e. half width and half height)
-        dx: float        
-            minimum values of dx and of dy at self.xy_ctr.
-        a: float   1 < a < 2)
-            desired multiplier for dx and dy
-        nmax: int
-            maximum number of cells in either x and y directions
+        ctr: (float, float)
+            coordinates of model center (center crs=30370 (Belgium)
+        wc: float
+            minimum cell width and height
+        w: float
+            model width and height (xmax - xmin = ymax - ymin)
+        z: np.ndarray
+            layer elevations
+        N: int
+            nx and ny (cells)
         """
-        
-        if not iter(xy_ctr) or not len(xy_ctr) == 2:
-            return TypeError("xy_ctr must be an interable of length 2")                             
-        
-        self.xy_ctr = xy_ctr
-        self.xGr, self.yGr = self.get_grid_coordinates(R, dx, nmax)
-        
-        
-    def get_grid_coordinates(self, R, dx=5, a=1.1, nmax=200):
-        """Return generated grid line coordinates around self.xy_ctr.
-        """
-        for n in range(nmax // 2):
-            _x = np.logspace(np.log10(dx/2), np.log10(R), n)
-            a = _x[1] / _x[0]
-            if a <= 1.1:
-                break
-        _x = np.hstack((-_x[::-1], _x))
-        
-        xc, yc = self.xy_ctr
-        xGr = xc + _x
-        yGr = yc + _x[::-1]
-
-        return xGr, yGr
+        self.gr = get_grid(ctr=ctr, wc=wc, w=w, N=N, z=z)
     
     def get_layer_buildup(self, database):
         """Return layer definition at xy_ctr obtained from database.
@@ -123,7 +141,7 @@ class vt_model():
         lying within radius R
         """
         # --- Must await an example database before this can be implemented
-        return surfwater(self.xy_ctr, self.R)
+        # return surfwater(self.xy_ctr, self.R)
     
     def get_filter_elevation(self, screen_top=None, screen_bot=None):
         """Return elevation of top and bottom of well screen.
@@ -154,19 +172,19 @@ class vt_model():
     def make_model(self):
         """Return the model without its boundary conditions."""
         # --- Generate the model grid
-        gr = Grid(self.xGr, self.yGr, self.zGr, min_dz= 5, axial=False)
-        self.k (gr.const(self.kh), gr.const(self.kh), gr.const(self.kv))
-        S  = gr.const(Ss=self.Ss)
+        self.k (self.gr.const(self.kh),
+                self.gr.const(self.kh),
+                self.gr.const(self.kv))
+        S  = self.gr.const(Ss=self.Ss)
         S[0] = self.Sy / gr.DZ[0]
-        self.S = S
-        self.gr = gr
+        self.S = S        
         return None
     
     def boundary_conditions(self):
         self.IDOMAIN = self.gr.const(1, dtype=int)
         self.IH = self.gr.const(0.)
 
-    def wells(self, xyQ):
+    def get_fq(self, xyQ):
         """Return well boundary conditions.
         
         Parameters
@@ -182,25 +200,16 @@ class vt_model():
             The index of the DataFrame would be the well identifyer.
             Other layouts are possible, but this one is really simple.
         """  
-        # --- Convert to model input      
-        self.WEL = self.xyQ2wel(xyQ)
+        # --- Convert to model input
+        x, y, Q = xyQ   
+        I = gr.Iglob_from_xyz(x, y, gr.zm[0])
+        fq = np.zeros(len(I), dtype=dtypeQ)
+        fq['I'] = I
+        fq['q'] = Q
+        self.fq = {0: fq}
         
-    def make_riv(self, xyChb):
-        """Return RIV.
         
-        The surface water data are used so generate
-        (iz, iy, ix, C, h, hriv)  values per stress period.
-        In this model, the h-values are all zoer
-        and remain constant throughout the model run.
-        
-        The length of the surface water segments per cell
-        crossed are obtained by intersecting the surface
-        water line segments with the grid.        
-        """
-        # --- Convert surface water to model input.        
-        self.RIV = self.convert_surface_water_to_RIV()
-       
-    def make_ghb(self, xyCh):
+    def get_ghb(self, w=5, c=5):
         """Return RIV.
         
         GHB are best used here to get the flow across the
@@ -212,11 +221,17 @@ class vt_model():
         An advantage of using GHB for the boundary is that it can emulate
         the flow across radius R in the Hantush well function.       
         """
-        # --- Convert surface water to model input.        
-        self.GHB = self.convert_surface_water_to_GHB()
+        # --- Convert surface water to model input.
+        grid = get_water_length_per_cell(gr, show=False)
+        GHB = np.zeros(gr.nod, dtype=self.dtypeGHB)
+        GHB['I'] = gr.NOD.flatten()
+        GHB['C'] = grid['water_length_m'] * w / c
+        GHB['h'] = 0.
+        GHB = GHB[GHB['C'] > 0]
+        self.GHB = {0: GHB}
 
        
-    def make_chd(self, xyH):
+    def get_chd(self, xyH):
         """Return CHD.
         
         Return a CHD object with fields
@@ -226,8 +241,14 @@ class vt_model():
         drawdown or surface water changes.
         self.chd = set_chd()
 
-        """ 
-        self.chd = self.convert_chd_area_to_CHD()
+        """
+        x, y, h = xyH
+        I = gr.Iglob_from_xyz(x, y, gr.zm[0])
+        fh = np.zeros(len(I), dtype=dtypeH)
+        fh['I'] = I
+        fh['h'] = h
+        self.fq = {0: fh}
+        
         
     def run_mdl(self, t=None):        
         out = fdm3t(gr=self.gr, k=(self.kx, self.ky, self.kz), t=t,
@@ -275,9 +296,3 @@ class vt_model():
         return None
 
 # %%
-
-database = {1: {'xy': (123000, 395000), layers=[[0, None, None],
-                                                [-10., 10, 0.2],
-                                                [-25,   5, 0.0003]]
-                }
-layers = 
