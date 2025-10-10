@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../../GRWMODELS/python/tools/fdm"
+		}
+	],
+	"settings": {}
+}

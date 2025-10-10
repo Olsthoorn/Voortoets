@@ -17,8 +17,17 @@ from shapely.geometry import box, Point # noqa: I001
 from fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
 from fdm.src.mfgrid import Grid
 
+# --- The data for the surface water vector file (OSM Belgium)
+GIS_folder = os.path.join(Path(__file__).resolve().parent.parent, 'data', 'QGIS')
+assert os.path.isdir(GIS_folder), f'Cant open GIS folder <{GIS_folder}>'
+
+osm_file = os.path.join(GIS_folder, "gis_osm_waterways_free_1.shp")
+output_file = os.path.join(GIS_folder, "waterlopen_15x15km.shp")
+assert os.path.isfile(osm_file), f"Can't file file <{osm_file}>"
+
+
 # %%
-def clip_water_15km(gr, osm_file, output_file=None, target_crs="EPSG:31370"):
+def clip_water_15km(gr, target_crs="EPSG:31370"):
     """
     Clip water features within a 15x15 km tile centered around a point.
     
@@ -38,24 +47,6 @@ def clip_water_15km(gr, osm_file, output_file=None, target_crs="EPSG:31370"):
     clipped : GeoDataFrame
         Water features inside the 15x15 km tile
     """
-    
-    # x, y = point
-
-    # --- 1. Compute center of the middle 1x1 km cell ---
-    # x_center = gr.x.mean()
-    # y_center = gr.y.mean()
-
-    # --- 2. Compute the 15x15 km tile boundaries ---
-    # x0 = x_center - (tile_size / 2)
-    # y0 = y_center - (tile_size / 2)
-    # x1 = x0 + tile_size
-    # y1 = y0 + tile_size
-
-    # Snap to whole km lines
-    # x0 = math.floor(x0 / cell_size) * cell_size
-    # y0 = math.floor(y0 / cell_size) * cell_size
-    # x1 = math.ceil(x1 / cell_size) * cell_size
-    # y1 = math.ceil(y1 / cell_size) * cell_size
 
     tile = box(gr.x[0], gr.y[-1], gr.x[-1], gr.y[0])
     tile_gdf = gpd.GeoDataFrame(geometry=[tile], crs=target_crs)
@@ -138,17 +129,9 @@ def water_length_per_cell(gr, clipped, tile_gdf):
 # %%
 def get_water_length_per_cell(gr, show=True):
     """Return Grid object and GHB object specifying surface water within tile of 15x15 km around point in Belgium"""
-    
-    # --- The data for the surface water vector file (OSM Belgium)
-    GIS_folder = os.path.join(Path(__file__).resolve().parent.parent, 'data', 'QGIS')
-    assert os.path.isdir(GIS_folder), f'Cant open GIS folder <{GIS_folder}>'
-
-    osm_file = os.path.join(GIS_folder, "gis_osm_waterways_free_1.shp")
-    output_file = os.path.join(GIS_folder, "waterlopen_15x15km.shp")
-    assert os.path.isfile(osm_file), f"Can't file file <{osm_file}>"
-    
+        
     # --- clip at outer boundary of model grid
-    clipped, tile_gdf = clip_water_15km(gr, osm_file, output_file=output_file, target_crs="EPSG:31370")
+    clipped, tile_gdf = clip_water_15km(gr, target_crs="EPSG:31370")
     
     # --- get water length per cell
     grid = water_length_per_cell(gr, clipped, tile_gdf)
@@ -187,16 +170,7 @@ if __name__ == '__main__':
     
     gr = Grid(x, y, z, axial=False)
    
-    # --- Get surface water vector file (OSM Belgium)
-    # GIS_folder = os.path.join(Path(__file__).resolve().parent.parent, 'data', 'QGIS')
-    # assert os.path.isdir(GIS_folder), f'Cant open GIS folder <{GIS_folder}>'
-    #
-    # osm_file = os.path.join(GIS_folder, "gis_osm_waterways_free_1.shp")
-    # output_file = os.path.join(GIS_folder, "waterlopen_15x15km.shp")
-    #
-    # assert os.path.isfile(osm_file), f"Can't file file <{osm_file}>"
-    # 
-    # clipped, tile_gdf = clip_water_15km(gr, osm_file, output_file=None, target_crs="EPSG:31370")
+    # clipped, tile_gdf = clip_water_15km(gr, target_crs="EPSG:31370")
     # grid = water_length_per_cell(gr, clipped, tile_gdf)
     
     # --- Alternative (short)
