@@ -36,6 +36,7 @@
 
 # %%
 # --- standard library
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import etc
@@ -241,7 +242,6 @@ class Vt_model():
         self.GHB = {0: ghb}
         return None
 
-        
     def run_mdl(self, t=np.logspace(-3, np.log10(180))):
         self.CHD = None       
         self.out = fdm3t(gr=self.gr, t=t, k=(self.kx, self.ky, self.kz),
@@ -262,7 +262,7 @@ class Vt_model():
             the levels to show on the contour plot [m, drawdown]        
         """
         if levels is None:
-            levels=-np.array([0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0])
+            levels=np.array([0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0])
         levels.sort()
             
         
@@ -270,40 +270,69 @@ class Vt_model():
             t = self.out['t'][-1]
         
         it = np.where(self.out['t'] <= t)[0][-1]
+        
+        # --- The extractions
+        last_key = list(self.WEL.keys())[-1]
+        Iwel = self.WEL[last_key]['I']
+        Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
+        #print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
+
         if ax is None:
-            title = f"Verlaging [m] at t={self.out['t'][it]:.0f} d after start extraction."
+            title = f"Verlaging [m] at t={self.out['t'][it]:.0f} d after start extraction, Q={Qwells:.0f} m/d."
             ax = etc.newfig(title, 'x [m]', 'y [m]')
         
+        # --- plot the surface water background (used in the model)
         self.clipped.plot(ax=ax, color='blue', linewidth=1)
         
+        # --- contour the drawdown after the last time step
         phi = self.out['Phi'][it][0]
         gr = self.gr
         Cs = ax.contour(gr.xm, gr.ym, phi, colors='k', levels=levels)
         ax.clabel(Cs, inline=1, fontsize=10, fmt='%1.2f')
         
+        ax.figure.savefig(os.path.join(os.getcwd(), 'images', 'dd_example_1.png'))
+        
         # --- water budget: all in the out dictionary
-        # self.out.Q
+        print()
+        print(f"Overall water budget during time step {it}, {self.out['t'][it-1]:.2f} <= t <= {self.out['t'][it]} d")
+        print(f"Overall Q[{it}] ={self.out['Q'][it-1].sum():.2f} m3/d")        
+        print()
+        
+        print(f"Individual budget items during time step {it}")
         
         # --- The extractions
-        print("Qwel = {self.out['Q'].sum():.0f} m3/d")
+        last_key = list(self.WEL.keys())[-1]
+        Iwel = self.WEL[last_key]['I']
+        Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
+        print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
         
         # --- Infiltration from surface water
         # self.out['Qriv']
         
         # --- Flow over the model boundary
-        print(f"Totale Qghb = {self.out['Qghb'].sum():.0f} m3/d")
+        Qghb = self.out['Qghb'][it-1].sum()
+        print(f"Qghb[  t={self.out['t'][it]:.2f}] = {Qghb:8.2f} m3/d")
         
         # --- Storage
-        print(f"Qstorage = {self.out['Qs'].sum():.0f} m3/d")
+        Qsto = self.out['Qs'][it-1].sum()
+        print(f"Qsto[  t={self.out['t'][it]:.2f}] = {Qsto:8.2f} m3/d")
+        
+        # --- total water budget over time step
+        Qtot = Qwells + Qghb + Qsto
+        print()
+        print(f"Overall water budet during time step {it}:")
+        print(f"Qtot[{it}] = Qwwells[{it}] + Qghb[{it}] + Qsto[{it}]")
+        print(f"{Qtot:8.2f} =    {Qwells:8.2f} + {Qghb:8.2f} + {Qsto:8.2f} m3/d")
+        print()
         
         return None
 
 # %%
 ctr = (193919, 194774)
 
-vtmdl = Vt_model(ctr, wc=5, w=15000, z=np.array([0, -30.]), N=100, Q=-2400.)
-
+vtmdl = Vt_model(ctr, wc=5, w=15000, z=np.array([0, -30.]), N=100, Q=2400.)
 vtmdl.run_mdl(t=np.logspace(-3, np.log10(180)))
 vtmdl.evaluate(t=None, ax=None, levels=None)
+
 plt.show()
 print('Done!')
