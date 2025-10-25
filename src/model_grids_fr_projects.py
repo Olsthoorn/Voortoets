@@ -23,21 +23,6 @@ from flopy.mf6.utils import MfGrdFile
 from glob import glob
 import etc
 
-
-# %%
-
-# List of coordinate pairs
-coords = [(10, 20), (11, 21), (12, 20.5)]
-
-# Create MultiPoint geometry
-mp = MultiPoint(coords)
-
-# Create a GeoDataFrame with one geometry
-gdf = gpd.GeoDataFrame(geometry=[mp])
-
-print(gdf)
-gdf.plot(color='red')
-
 # %%
 
 def alpha_shape(points, alpha):
@@ -113,19 +98,43 @@ def load_model_grids_from_zipfolder(projects_folder):
         #hull = contour_from_points(grd.verts, res=500)
 
 
-        reg_grd = gpd.GeoDataFrame()
+        reg_grd = gpd.GeoDataFrame(geometry = [hull])
         reg_grd['project'] = os.path.basename(pr_name)
         reg_grd['model_type'] = 'regional'        
-        reg_grd = gpd.GeoDataFrame(geometry = [hull])
         reg_grd.crs="EPSG:31370"
-
+        
         grds.append(reg_grd)
 
     if not grds:
         print("No valid projects found.")
         return None
 
-    return gpd.pd.concat(grds, ignore_index=True)    
+    grd_gpd = gpd.pd.concat(grds, ignore_index=True)
+    # --- reorder columns
+    
+    grd_gpd['xC'] = np.round(grd_gpd.geometry.centroid.x)
+    grd_gpd['yC'] = np.round(grd_gpd.geometry.centroid.y)
+
+    # Centroids models W, N and E approximately
+    mdl_centroids = {
+         'W': {'x':  91500., 'y': 183800.},
+         'N': {'x': 181200., 'y': 206100.},
+         'E': {'x': 193300., 'y': 168800.}
+        }
+
+    mask_W = np.isclose(grd_gpd['xC'], mdl_centroids['W']['x'], atol=300.)
+    mask_N = np.isclose(grd_gpd['yC'], mdl_centroids['N']['y'], atol=300.)
+    mask_E = np.isclose(grd_gpd['xC'], mdl_centroids['E']['x'], atol=300.)
+    
+    # --- which regional model (W, E or N) we have
+    grd_gpd['model'] = 'any'
+    grd_gpd.loc[mask_N, 'model'] = 'N'
+    grd_gpd.loc[mask_E, 'model'] = 'E'
+    grd_gpd.loc[mask_W, 'model'] = 'W'
+    
+    cols = [c for c in grd_gpd.columns if c != 'geometry'] + ['geometry']
+    
+    return grd_gpd[cols] 
 
 
 # %%
@@ -138,8 +147,15 @@ except Exception as e:
 
 gdf_regional_model_hull = load_model_grids_from_zipfolder(projects_folder)
 
+reg_models_center = gdf_regional_model_hull.geometry
+
 ax = etc.newfig("Convec hull of all regional models", "xB", "yB")
 gdf_regional_model_hull.plot(ax=ax, fc='none', ec='b', linewidth=0.25)
+
+gdf_regional_model_centroid = gdf_regional_model_hull.copy()
+gdf_regional_model_centroid.geometry = gdf_regional_model_hull.geometry.centroid
+
+gdf_regional_model_centroid.plot(ax=ax, color='r')
 
 print('Done')
     
