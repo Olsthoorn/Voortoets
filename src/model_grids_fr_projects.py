@@ -21,6 +21,7 @@ from shapely.ops import unary_union, polygonize
 from scipy.spatial import Delaunay
 from flopy.mf6.utils import MfGrdFile
 from glob import glob
+from pathlib import Path
 import etc
 
 # %%
@@ -136,6 +137,36 @@ def load_model_grids_from_zipfolder(projects_folder):
     
     return grd_gpd[cols] 
 
+# %%
+def get_grid(gr_file, crs="EPSG:31370", ax=None):
+    """Return geodataframe of gr_file (.grb file).
+    
+    Parameters
+    ----------
+    gr_file: Path of str pointing at mf6 .grb file.
+        binadary Modflow grid
+    crs: crs code
+        crs
+    ax: Axes object | None
+        if not None, plot convex hull and centroid
+    """
+    gr = MfGrdFile(gr_file)    
+    hull = MultiPoint(gr.verts).convex_hull
+    xC, yC = hull.centroid.xy
+    reg_grd = gpd.GeoDataFrame(geometry = [hull], crs=crs)
+    reg_grd['model'] = os.path.basename(gr_file)
+    reg_grd['xC'] = np.round(xC)
+    reg_grd['yC'] = np.round(yC)
+    
+    if ax:
+        reg_grd.plot(ax=ax, linewidth=1, ec='b', fc='none')
+        ctr = gpd.GeoDataFrame(geometry=[hull.centroid], crs=crs)
+        ctr.plot(ax=ax, color='r')
+    
+    cols = [c for c in reg_grd.columns if not c=='geometry'] + ['geometry']
+    
+    return reg_grd[cols]
+
 
 # %%
 try:
@@ -157,7 +188,6 @@ gdf_regional_model_centroid.geometry = gdf_regional_model_hull.geometry.centroid
 
 gdf_regional_model_centroid.plot(ax=ax, color='r')
 
-print('Done')
     
 # %% [markdown]
 # # Conclusion
@@ -175,3 +205,35 @@ print('Done')
 # reg_grds = load_model_grids_from_zipfolder(zip_folder)
 
 # %%
+regional_grids_folder = Path(os.path.join(projects_folder, '../regional_grids')).resolve()
+os.path.isdir(regional_grids_folder)
+
+ax = etc.newfig("Regional grid extend and grid centroids", "xB", "yB")
+
+clrs = etc.color_cycler()
+grds = []
+for gr_file in glob(str(regional_grids_folder) + '/*.grb'):
+    clr = next(clrs)
+    
+    reg_grd = get_grid(gr_file, crs="EPSG:31370", ax=ax)
+    
+    gr = MfGrdFile(gr_file)
+    ax.plot(*gr.verts.T, '.', color=clr, lw=0.1, alpha=0.05, label=os.path.basename(gr_file))
+    
+        
+    xC, yC = float(reg_grd.centroid.x[0]), float(reg_grd.centroid.y[0])
+    ax.text(xC, yC,
+            reg_grd['model'][0].replace('.disv.grb', '').replace('region', 'grid'),
+            ha='center', va='bottom')
+    
+    grds.append(reg_grd)
+
+ax.legend()
+    
+grds = gpd.pd.concat(grds, ignore_index=True)
+
+
+
+# %% -- get the layers at an arbitrary location
+
+# %% --- get the conductivities and storativities at an arbitrary location
