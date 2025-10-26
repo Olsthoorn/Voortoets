@@ -105,7 +105,7 @@ def get_simulation_types(projects_gdf):
     # --- Return without first flattening
     # return list(set(pname_simtype))
     return pname_simtype
-
+       
 
 # %%
 try:
