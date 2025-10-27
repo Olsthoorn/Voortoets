@@ -28,11 +28,8 @@
 # %% 
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 import geopandas as gpd
-from shapely.geometry import MultiPoint, Polygon
-from shapely.ops import unary_union, polygonize
-from scipy.spatial import Delaunay
+from shapely.geometry import MultiPoint
 from flopy.mf6.utils import MfGrdFile
 from glob import glob
 from pathlib import Path
