@@ -43,10 +43,11 @@ import etc
 
 # --- Local / project
 from fdm.src.mfgrid import Grid
-from fdm.src.fdm3t import Fdm3t, fdm3t
+from fdm.src.fdm3t import fdm3t
 from fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
-
-from select_surf_wat_15x15km import get_water_length_per_cell, clip_water_15km, water_length_per_cell
+from src.vtl_layering import get_layering
+from select_surf_wat_15x15km import clip_water_15km, water_length_per_cell
+from shapely.geometry import Point
 
 
 # %%
@@ -83,6 +84,48 @@ def get_grid(ctr, wc=5, w=15000., N=100, z=np.array([0, -30.])):
     gr = Grid(x, y, z, axial=False)
     return gr
 
+def grid_fr_wells(wells, L=15000., N=50):
+    """Return grid from wells as specified in userinput.json."""
+    
+    coords = []
+    for well in wells:
+        coords.append((well['geometry'].x, well['geometry'].y))
+    coords = np.array(coords)
+    xC, yC = np.array(coords).mean(axis=0)
+    
+    # --- select coordinates such that wells fall inside model cells
+    rm = np.logspace(np.log10(10), np.log10(L / 2), N)
+    rm = np.hstack((0., -rm[::-1], rm))
+    rm = np.unique(np.hstack((0, rm, coords[:, 0])))
+    x = np.unique(np.hstack((xC - L/2, xC + 0.5 * (rm[:-1] + rm[1:]), xC + L/2)))
+    y = np.unique(np.hstack((yC - L/2, yC + 0.5 * (rm[:-1] + rm[1:]), yC + L/2)))[::-1]
+    
+    layering = get_layering(Point(xC, yC), center=True)
+    
+    gr = Grid(x, y, layering['z'], axial=False)
+    gr.layering = layering
+    return gr
+
+def grid_fr_polygons(pgons, L=15000., N=50):
+    """Return grid from wells as specified in userinput.json.
+    """
+    coords = []
+    for pgon in pgons:
+        coords.append(pgon['geometry'].xy)
+    coords = np.array(coords)       
+    xC, yC = coords.mean(axis=0)
+    
+    r = np.logspace(np.log10(5), np.log10(L / 2), N)
+    r = np.hstack((-r[::-1], r))
+    x = np.unique(np.hstack((xC + r,       coords[:, 0])))
+    y = np.unique(np.hstack((yC + r[::-1], coords[:, 1])))[::-1]
+    
+    layering = get_layering(Point(xC, yC), center=True)
+    
+    gr = Grid(x, y, layering['z'], axial=False)
+    gr.layering = layering
+    return gr
+
 
 class Vt_model():
     """Voortoets model, simple version, 1 layer FDM."""
@@ -102,14 +145,14 @@ class Vt_model():
         N: int
             nx and ny (cells)
         """
-        self.gr = get_grid(ctr=ctr, wc=wc, w=w, N=N, z=z)
+        self.layering = get_layering(ctr, center=True)        
+        self.gr = get_grid(ctr=ctr, wc=wc, w=w, N=N, z=self.layering['z'])
         self.set_screen(top=None, bot=None)
         self.set_IDOMAIN()
         self.set_model_params()        
-        self.set_initial_conditions()
+        self.set_ih()
         self.set_wel(Q)
         self.set_ghb()
-
         
     def set_screen(self, top=None, bot=None):
         """Set elevation of well screen.
@@ -149,32 +192,32 @@ class Vt_model():
         self.gr = Grid(gr.x, gr.y, np.array(z)[::-1], axial=False)
         return None
     
-    def set_model_params(self):
+    def set_model_params(self, pnt):
         """Set model parameters (not the boundary conditions).
         
         These parameters should come from a database that yield them
         when given the coordinates of a point in Belgium in crs 31370
         
-        """
-        kx, ky, kz, Ss, Sy = 10., 10., 2., 0.0001, 0.2
-        
+        """        
         gr = self.gr
+        layering = self.gr.layering
         
         # --- Generate the model parameters (for the time being)
-        self.kx =gr.const(kx)
-        self.ky = gr.const(ky)
-        self.kz = gr.const(kz)
-        self.Ss = gr.const(Ss)
-        self.Ss[0] = gr.const(Sy / gr.dz[0])        
+        self.kx = gr.const(layering['k'])
+        self.ky = gr.const(layering['k'])
+        self.kz = gr.const(layering['k33'])
+        self.Ss = gr.const(layering['ss'])
+        self.Ss[0] = layering['sy'][0]/ gr.dz[0]
         return None
     
     def set_IDOMAIN(self):
         self.IDOMAIN = self.gr.const(1, dtype=int)
         
-    def set_initial_conditions(self):
+    def set_ih(self):
+        """Set initial head (all zero)"""
         self.HI = self.gr.const(0.)
 
-    def set_wel(self, Q):
+    def set_wel(self, wells):
         """Set wells (FQ).
         
         Parameters
@@ -190,6 +233,22 @@ class Vt_model():
         xyz = np.array([[gr.x.mean(), gr.y.mean(), zm]])
         Idx = gr.Iglob_from_xyz(xyz)
         self.WEL = {}
+        
+        fq = np.zeros(len(wells), dtype=dtypeQ)
+        
+        for i, well in enumerate(wells):
+            xyz = np.array(well['geometry'].x, well['geometry'].y, gr.zm[0])
+            idx = gr.Iglob_from_xyz(xyz)
+            for flow_rate in well.flow_rates:
+                t, Q = flow_rate
+                self.WEL[t]
+            fq['I'] = idx
+            fq['q'] = 0.
+        # hier moet nog de tijd overheen
+            
+            
+            
+            
         for i, Q_ in enumerate(Q):
             fq = np.zeros(len(Idx), dtype=dtypeQ)            
             fq['I'] = Idx

@@ -6,6 +6,7 @@
 # Standard library
 import os
 from pathlib import Path
+import numpy as np
 
 # Third-party
 import geopandas as gpd
@@ -48,9 +49,10 @@ def get_water_gdf(target_crs="EPSG:31370", show=True):
         
     return water_gdf
 
+
 def get_point_gdf(gr, target_crs="EPSG:31370", show=True):
     """
-    Return point_gdf, where point is centter of grid.
+    Return point_gdf, where point is center of grid.
     
     Parameters
     ----------
@@ -136,24 +138,86 @@ def clip_water_15km(gr, target_crs="EPSG:31370"):
     return clipped_gdf, tile_gdf
 
 
-def water_length_per_cell(gr, clipped_gdf, tile_gdf):
+def cells_with_points(gr, points):
     """
-    Compute total waterway length per grid cell inside a tile.
+    Get cell Id of points.
     
     Parameters
     ----------
     gr: Grid object
         grid object holding the grid coordinates
-    clipped_gdf : GeoDataFrame
+    points_gdf : GeoDataFrame
+        GeoDataFrame with geometry Points.
+    
+    Returns
+    -------
+    grid : GeoDataFrame
+        Cell Id in which the points lie.
+    """
+    # --- 1. Grid coordinates are in the grid object ---
+    coords = []
+    for point in points:
+        coords.append([[point['geometry'].x, point['geometry'].y]])
+    coords = np.vstack(coords)
+    
+    xw, yw = coords.T
+    
+    zw = []
+    for point in points:
+        if 'depth_aquifer' == 'A0800':
+            zw.append(gr.zm[0])
+        else:
+            zw.append(gr.zm[0])
+    zw = np.array(zw)
+    
+    I = gr.Iglob_from_xyz(np.vstack((xw, yw, zw)).T)
+
+    return I
+
+
+def cells_in_pgons(gr, pgons):
+    """
+    Get cell Ids of points in union of polygons.
+    
+    Parameters
+    ----------
+    gr: Grid object
+        grid object holding the grid coordinates
+    points_gdf : GeoDataFrame
+        GeoDataFrame with geometry Points.
+    
+    Returns
+    -------
+    grid : GeoDataFrame
+        Cell Id in which the points lie.
+    """
+    # --- 1. Grid coordinates are in the grid object ---
+    mask = np.zeros((gr.ny, gr.nx), dtype=bool)
+    
+    for pgon in pgons:
+        mask = np.logical_or(mask, gr.inpoly(pgon))
+    
+    Id = gr.NOD[0][mask].flatten
+    return Id
+
+
+def line_length_per_cell(gr, polylines_gdf):
+    """
+    Compute total length of poly_lines per grid cell.
+    
+    Parameters
+    ----------
+    gr: Grid object
+        grid object holding the grid coordinates
+    polylines_gdf : GeoDataFrame
         Clipped waterlines (LineString or MultiLineString), same CRS as tile_gdf.
-    tile_gdf : GeoDataFrame
-        Single-tile GeoDataFrame defining the 15x15 km area (EPSG:31370).
     
     Returns
     -------
     grid : GeoDataFrame
         Grid cells with total water length per cell (column 'water_length_m').
-    """
+    """    
+    for pline in plines:
 
     # --- 1. Grid coordinates are in the grid object ---
     x = gr.x
@@ -168,7 +232,7 @@ def water_length_per_cell(gr, clipped_gdf, tile_gdf):
     grid_cells['I'] = np.asarray(gr.NOD[0].flatten(), dtype=int)
 
     # --- 2. Overlay waterlines with grid cells ---
-    intersections = gpd.overlay(clipped_gdf, grid_cells, how="intersection")
+    intersections = gpd.overlay(polylines_gdf, grid_cells, how="intersection")
 
     # --- 3. Compute length (in meters) of each intersection ---
     intersections["length_m"] = intersections.geometry.length

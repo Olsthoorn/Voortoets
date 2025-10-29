@@ -69,6 +69,7 @@ def select_reg_model(ctr, center=True):
         print("Selected record:")
         print(selected)
 
+
 def get_layering(pnt, center=True):
     """Return layering of subsurface at Point ctr.
     
