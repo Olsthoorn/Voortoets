@@ -16,19 +16,20 @@
 import os
 import numpy as np
 import geopandas as gpd
-from shapely.geometry import MultiPoint, Point
+from shapely import Point
 from flopy.mf6.utils import MfGrdFile
-from glob import glob
-from pathlib import Path
-import etc
 
-# %%
+# %% --- regional model grids and folder
+
+# --- regional model grids
 grb_files = {'N': 'region_north.disv.grb',
              'W': 'region_west.disv.grb',
              'E': 'region_east.disv.grb'
             }
 
+crs = "EPSG:31370"
 
+# --- regional model grids folder
 try:
     reg_folder = os.path.join(os.getcwd(), '../data', 'regional_grids') 
     assert os.path.isdir(reg_folder), f"No folder <{reg_folder}>"
@@ -38,9 +39,14 @@ except Exception:
 
 # %%
 
-def select_reg_model(ctr, center=True):
+def select_reg_model(point, center=True):
+    """Return regional model grid based on given point"""
     
-    inside_mask = gdf2.contains(ctr)
+    # --- has crs 'EPSG:31370'
+    gdf2 = gpd.read_file(os.path.join(reg_folder, 'regional_models.gpkg'))
+    
+    # --- point in convec hull of model grids
+    inside_mask = gdf2.contains(point)
     inside = gdf2[inside_mask]
 
     if inside.empty:
@@ -55,15 +61,16 @@ def select_reg_model(ctr, center=True):
             inside = inside.copy()
             # --- Option A: closest centroid ---
             if center:                
-                inside["centroid_dist"] = inside.centroid.distance(ctr)
+                inside["centroid_dist"] = inside.centroid.distance(point)
                 selected = inside.loc[inside["centroid_dist"].idxmin()]
             else:
                 # --- Option B: farthest from polygon boundary ---
                 # Compute distance to the polygon's exterior boundary
-                inside["boundary_dist"] = inside.boundary.distance(ctr)
+                inside["boundary_dist"] = inside.boundary.distance(point)
                 selected = inside.loc[inside["boundary_dist"].idxmax()]
 
-        # --- Return selected
+        # --- Return selected pd.core.series.Series
+        selected.crs = str(gdf2.crs)
         return selected
 
         print("Selected record:")
@@ -118,21 +125,21 @@ def get_layering(pnt, center=True):
         'k'   : s2arr(reg_mdl['k'])[mask],
         'k33' : s2arr(reg_mdl['k33'])[mask],
         'ss'  : s2arr(reg_mdl['ss'])[mask],
-        'sy'  : s2arr(reg_mdl['sy'])[mask]
+        'sy'  : s2arr(reg_mdl['sy'])[mask],
+        'crs' : reg_mdl.crs,
     }
     return layering
     
 
 # %%
-gdf2 = gpd.read_file(os.path.join(reg_folder, 'regional_models.gpkg'))
+if __name__ == '__main__':
+    gdf2 = gpd.read_file(os.path.join(reg_folder, 'regional_models.gpkg'))
 
-pnt = Point(150000, 200000)
+    pnt = Point(150000, 200000)
 
-selected = select_reg_model(pnt, center=True)
-selected = select_reg_model(pnt, center=False)
+    selected = select_reg_model(pnt, center=True)
+    selected = select_reg_model(pnt, center=False)
 
-layering = get_layering(pnt)
-
-
+    layering = get_layering(pnt)
 
 # %%

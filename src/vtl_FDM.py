@@ -39,98 +39,25 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import geopandas as gpd
 import etc
 
+import sys
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 # --- Local / project
-from fdm.src.mfgrid import Grid
+from src import vtl_surf_water as surf_wat
 from fdm.src.fdm3t import fdm3t
 from fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
-from src.vtl_layering import get_layering
-from select_surf_wat_15x15km import clip_water_15km, water_length_per_cell
-from shapely.geometry import Point
-
+import src.vtl_interventions as iv
 
 # %%
-
-def get_grid(ctr, wc=5, w=15000., N=100, z=np.array([0, -30.])):
-    """Return grid object containing the rectangular model grid.
-    
-    Parameters
-    ----------
-    ctr: tuple x,y in crs: 30310
-        Center of the grid in crs 30370 (Belgium)
-    wc: float
-        minimum cell width
-    w: float
-       with of model (xMax - xMin) = (yMax - yMin)
-    N: int
-        nx, ny of model grid
-    z: np.ndarray
-        elevation of water table aquifer
-    """
-    x0, y0 = ctr
-
-    # --- increasing coordinates from center
-    xi = np.logspace(np.log10(wc / 2), np.log10(w / 2), int(N // 2))
-    xi = np.hstack((-xi[::-1], xi))
-    
-    # --- real world coordinates of vertical grid lines
-    x = x0 + xi
-    
-    # --- real world coordinaters of horizontal grid lines
-    y = y0 - xi
-    
-    # --- create grid object
-    gr = Grid(x, y, z, axial=False)
-    return gr
-
-def grid_fr_wells(wells, L=15000., N=50):
-    """Return grid from wells as specified in userinput.json."""
-    
-    coords = []
-    for well in wells:
-        coords.append((well['geometry'].x, well['geometry'].y))
-    coords = np.array(coords)
-    xC, yC = np.array(coords).mean(axis=0)
-    
-    # --- select coordinates such that wells fall inside model cells
-    rm = np.logspace(np.log10(10), np.log10(L / 2), N)
-    rm = np.hstack((0., -rm[::-1], rm))
-    rm = np.unique(np.hstack((0, rm, coords[:, 0])))
-    x = np.unique(np.hstack((xC - L/2, xC + 0.5 * (rm[:-1] + rm[1:]), xC + L/2)))
-    y = np.unique(np.hstack((yC - L/2, yC + 0.5 * (rm[:-1] + rm[1:]), yC + L/2)))[::-1]
-    
-    layering = get_layering(Point(xC, yC), center=True)
-    
-    gr = Grid(x, y, layering['z'], axial=False)
-    gr.layering = layering
-    return gr
-
-def grid_fr_polygons(pgons, L=15000., N=50):
-    """Return grid from wells as specified in userinput.json.
-    """
-    coords = []
-    for pgon in pgons:
-        coords.append(pgon['geometry'].xy)
-    coords = np.array(coords)       
-    xC, yC = coords.mean(axis=0)
-    
-    r = np.logspace(np.log10(5), np.log10(L / 2), N)
-    r = np.hstack((-r[::-1], r))
-    x = np.unique(np.hstack((xC + r,       coords[:, 0])))
-    y = np.unique(np.hstack((yC + r[::-1], coords[:, 1])))[::-1]
-    
-    layering = get_layering(Point(xC, yC), center=True)
-    
-    gr = Grid(x, y, layering['z'], axial=False)
-    gr.layering = layering
-    return gr
-
-
 class Vt_model():
     """Voortoets model, simple version, 1 layer FDM."""
 
-    def __init__(self, ctr, wc=5, w=15000, z=np.array([0, -30.]), N=100, Q=None):
+    def __init__(self, case, wc=5, L=15000, t_end=365., tsmult=1.25):
         """
         Parameters
         ----------
@@ -145,54 +72,120 @@ class Vt_model():
         N: int
             nx and ny (cells)
         """
-        self.layering = get_layering(ctr, center=True)        
-        self.gr = get_grid(ctr=ctr, wc=wc, w=w, N=N, z=self.layering['z'])
-        self.set_screen(top=None, bot=None)
-        self.set_IDOMAIN()
-        self.set_model_params()        
-        self.set_ih()
-        self.set_wel(Q)
-        self.set_ghb()
+        self.case = case
         
-    def set_screen(self, top=None, bot=None):
-        """Set elevation of well screen.
+        # --- model grid from case['interventions']
+        gr = iv.grid_from_interventions(case['interventions'], L=L,
+                        tsmult=tsmult, show=False)
+        self.gr = gr
         
-        Parameters
-        ----------
-        top: float | None
-            top of well screen [m relative to groound sruface i.e. [<=0]
-            Default = None --> ground surface.
-        bot: float | None 
-            bot of well screen [m relative to ground surface [<0]]
-            Default = None -->  base of phreatic aquifer.
-        """
-        # --- make sure screen_top is above screen_bot
-        gr = self.gr
-        top = gr.z[ 0] if top is None else top
-        bot = gr.z[-1] if bot is None else bot
-        if top < bot:
-            top, bot = bot, top            
-        if top > gr.z[0]:
-            raise ValueError(f"Screen top must be <= {gr.z[0]} or None")
-        if bot < gr.z[-1]:
-            raise ValueError(f"Screen bot must be >= {gr.z[-1]} or None")
-                    
-        # --- if relevant, add screen_top and or screen_bot to layer elevations
-        z = list(gr.z)
+        self.HI = gr.const(0.)
+        self.idomain = gr.const(1, dtype=int)
         
-        if top < gr.z[0] - 5:
-            z = sorted(z.append(top))
-        if bot > gr.z[1] + 5:
-            z = sorted(z.append(bot))
+        self.set_model_params()
+        
+        # ---- Boundary conditions from interventions
+        interventions = case['interventions']
+        if 'dewatering_polygon' in interventions:
+            dw_pgons = interventions['dewatering_polygon']
+            self.CHD = iv.chd_fr_dewatering_polygons(gr, dw_pgons)
             
-        self.scr_top = top
-        self.scr_bot = bot
+        if 'hardening_polygon' in interventions:
+            h_pgons = interventions['hardening_polygon']
+            self.WEL = iv.wel_fr_hardening_polygons(gr, h_pgons)
+            
+        if 'extraction_general_point' in interventions:
+            wells = interventions['extraction_general_point']
+            self.WEL = iv.wel_fr_extraction_general_points(gr, wells)
+            
+        if 'extraction_irrigation_point' in interventions:
+            wells = interventions['extraction_irrigation_point']
+            self.WEL = iv.wel_fr_extraction_irrigation_points(gr, wells)
+            
+        if 'recharge_point' in interventions:
+            rch_wells = interventions['recharge_point']
+            self.WEL = iv.wel_fr_recharge_points(gr, rch_wells)
+            
+        if 'dewatering_line' in interventions:
+            dw_lines = interventions['dewatering_line']
+            self.CHD = iv.chd_fr_dwatering_lines(gr, dw_lines)
+            
+        # --- simulation time from interventions
+        self.times = self.set_sim_times(tsmult=tsmult, t_end=t_end)
         
-        # --- finally regenerate the grid object using the new z
-        self.gr = Grid(gr.x, gr.y, np.array(z)[::-1], axial=False)
-        return None
+        # --- surface water from national Open Street Map
+        self.GHB = self.set_surface_water_ghb(w=5, c=5)
+        
+        # --- convert time field to time_step
+        self.convert_time_field_to_time_index()
+        
+        # --- put all model run parameters in a kwarg dict
+        self.set_model_run_kwargs()
+        
     
-    def set_model_params(self, pnt):
+    def set_sim_times(self, tsmult=1.25, t_end=365.):
+        """Return simulation time based on boundary times."""
+        
+        dt = np.ones(40) * 0.1
+        for i in range(1, len(dt)):
+            dt[i] = tsmult * dt[i-1]
+        tr = np.hstack((0, np.cumsum(dt)))
+
+        t_tuple = []
+        if hasattr(self, 'WEL'):
+            t_tuple.append(np.array(list(self.WEL.keys()), dtype=float))            
+        if hasattr(self, 'CHD'):
+            t_tuple.append(np.array(list(self.CHD.keys()), dtype=float))            
+        if hasattr(self, 'GHB'):
+            t_tuple.append(np.array(list(self.GHB.keys()), dtype=float))            
+        t = np.unique(np.hstack(t_tuple))
+        t = t[t <= t_end]
+        
+        times = [t[0]]
+        for t1, t2 in zip(t[:-1], t[1:]):
+            tt = t1 + tr
+            times.append(tt[np.logical_and(tt >= t1, tt <= t2)])
+        times = np.unique(np.hstack((*times, t_end)))
+        self.times = times
+        return times
+
+
+    def convert_time_field_to_time_index(self):
+        """Convert WEL, CHD and GHB to the form required by fdm3t"""
+        
+        times = self.times
+        # --- fixed Q or wells
+        if hasattr(self, 'WEL'):
+            WEL = {}
+            for t in self.WEL.keys():
+                it = int(np.where(times == t)[0][0])
+                WEL[it] = np.zeros(len(self.WEL[t]), dtype=dtypeQ)
+                WEL[it]['I'] = self.WEL[t]['I']
+                WEL[it]['q'] = self.WEL[t]['Q']
+            self.WEL = WEL
+                        
+        # --- fixed heads
+        if hasattr(self, 'CHD'):
+            CHD = {}
+            for t in self.CHD.keys():
+                it = int(np.where(times == t)[0][0])
+                CHD[it] = np.zeros(len(self.CHD[t]), dtype=dtypeH)
+                CHD[it]['I'] = self.CHD[t]['I']
+                CHD[it]['h'] = self.CHD[t]['h']                    
+            self.CHD = CHD
+            
+        # --- general head boundaries
+        if hasattr(self, 'GHB'):
+            GHB = {}
+            for t in self.GHB.keys():
+                it = int(np.where(times == t)[0][0])
+                GHB[it] = np.zeros(len(self.GHB[t]), dtype=dtypeGHB)
+                GHB[it]['I'] = self.GHB[t]['I']
+                GHB[it]['h'] = self.GHB[t]['h']
+                GHB[it]['C'] = self.GHB[t]['C']                                  
+            self.GHB = GHB
+        
+    def set_model_params(self):
         """Set model parameters (not the boundary conditions).
         
         These parameters should come from a database that yield them
@@ -208,76 +201,24 @@ class Vt_model():
         self.kz = gr.const(layering['k33'])
         self.Ss = gr.const(layering['ss'])
         self.Ss[0] = layering['sy'][0]/ gr.dz[0]
-        return None
-    
-    def set_IDOMAIN(self):
-        self.IDOMAIN = self.gr.const(1, dtype=int)
         
-    def set_ih(self):
-        """Set initial head (all zero)"""
-        self.HI = self.gr.const(0.)
+    
+    def set_model_run_kwargs(self):
+        self.kwargs = {'gr': self.gr,                       
+                  't': self.times,
+                  'k': (self.kx, self.ky, self.kz),
+                  'c': None,
+                  'ss': self.Ss,
+                  'fh':  self.CHD,
+                  'ghb': self.GHB,
+                  'fq' : self.WEL,
+                  'hi' : self.HI,
+                  'idomain': self.idomain,
+        }
+        
 
-    def set_wel(self, wells):
-        """Set wells (FQ).
-        
-        Parameters
-        ----------
-        Q: iterative
-            Up to 6 monthly Q values. The extraction will be at xy_ctr
-            extraction is negative, infiltration is postive
-                       
-        """
-        gr = self.gr
-        Q = np.atleast_1d(Q)        
-        zm = 0.5 * (self.scr_top + self.scr_bot)
-        xyz = np.array([[gr.x.mean(), gr.y.mean(), zm]])
-        Idx = gr.Iglob_from_xyz(xyz)
-        self.WEL = {}
-        
-        fq = np.zeros(len(wells), dtype=dtypeQ)
-        
-        for i, well in enumerate(wells):
-            xyz = np.array(well['geometry'].x, well['geometry'].y, gr.zm[0])
-            idx = gr.Iglob_from_xyz(xyz)
-            for flow_rate in well.flow_rates:
-                t, Q = flow_rate
-                self.WEL[t]
-            fq['I'] = idx
-            fq['q'] = 0.
-        # hier moet nog de tijd overheen
-            
-            
-            
-            
-        for i, Q_ in enumerate(Q):
-            fq = np.zeros(len(Idx), dtype=dtypeQ)            
-            fq['I'] = Idx
-            fq['q'] = Q_
-            self.WEL[i] = fq
-        return None
-               
-    def set_chd(self, h):
-        """Set CHD (fixed heads).
-        
-        Parameters
-        ----------
-        h : iterable of monthly heads
-        """
-        gr = self.gr
-        self.CHD = {}
-        h = np.atleast_1d(h)
-        zm = 0.5 * (self.screen_top + self.screen_bot)
-        xyz = np.array([[gr.x.mean(), gr.y.mean(), zm]])
-        Idx = gr.Iglob_from_xyz(xyz)
-        for i, h_ in enumerate(h):
-            fh = np.zeros(len(Idx), dtype=dtypeH)            
-            fh['I'] = Idx
-            fh['h'] = h_
-            self.CHD[i] = fh
-        return None
-    
-    def set_ghb(self, w=5, c=5):
-        """Set general head boundary conditions.
+    def set_surface_water_ghb(self, w=5, c=5):
+        """Set GHB to surface water from Open Street Map.
         
         Parameters
         ----------
@@ -289,27 +230,28 @@ class Vt_model():
         gr = self.gr
         
         # --- get surface water length per model cell.
-        self.clipped, tile_gdf = clip_water_15km(gr, target_crs="EPSG:31370")
-        L = water_length_per_cell(gr, self.clipped, tile_gdf)['water_length_m']
+        self.clipped= surf_wat.clip_water_to_gr(gr)
+        
+        L = surf_wat.line_length_per_gr_cell(gr, self.clipped)['water_length_m']
                         
-        ghb = np.zeros(gr.nod, dtype=dtypeGHB)
-        ghb['I'] = gr.NOD.flatten()
+        ghb = np.zeros(gr.nx * gr.ny, dtype=dtypeGHB)
+        ghb['I'] = gr.NOD[0].flatten()
         ghb['C'] = L * w / c
         ghb['h'] = 0.
         
         ghb = ghb[ghb['C'] > 0]
-        self.GHB = {0: ghb}
-        return None
+        t = 0.        
+        return {t: ghb}
 
-    def run_mdl(self, t=np.logspace(-3, np.log10(180))):
-        self.CHD = None       
-        self.out = fdm3t(gr=self.gr, t=t, k=(self.kx, self.ky, self.kz),
-                    c=None, ss=self.Ss, fh=self.CHD, ghb=self.GHB,
-                    fq=self.WEL, hi=self.HI, idomain=self.IDOMAIN)
-        return None
-        
+
+    def run_mdl(self):
+        """Run the fdm3t code returning results in dict out and self.out."""      
+        self.out = fdm3t(**self.kwargs)
+        return self.out
+
+
     def evaluate(self, t=None, ax=None, levels=None):
-        """Plot and return the model results for the user.
+        """Plot at t and return the model results for the user.
         
         Parameters
         ----------
@@ -324,7 +266,7 @@ class Vt_model():
             levels=np.array([0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0])
         levels.sort()
             
-        
+    
         if t is None:
             t = self.out['t'][-1]
         
@@ -337,7 +279,7 @@ class Vt_model():
         #print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
 
         if ax is None:
-            title = f"Verlaging [m] at t={self.out['t'][it]:.0f} d after start extraction, Q={Qwells:.0f} m/d."
+            title = f"{self.case['simulation_name']}: Verlaging [m] at t={self.out['t'][it]:.0f} d after start extraction, Q={Qwells:.0f} m/d."
             ax = etc.newfig(title, 'x [m]', 'y [m]')
         
         # --- plot the surface water background (used in the model)
@@ -348,6 +290,13 @@ class Vt_model():
         gr = self.gr
         Cs = ax.contour(gr.xm, gr.ym, phi, colors='k', levels=levels)
         ax.clabel(Cs, inline=1, fontsize=10, fmt='%1.2f')
+        
+        # --- plot the intervention contours and locations
+        interventions = self.case['interventions']
+        for k in interventions:
+            for geob in interventions[k]:
+                gpd.GeoSeries([geob['geometry']]).plot(
+                    ax=ax, edgecolor='r', facecolor='none', linewidth=1)
         
         ax.figure.savefig(os.path.join(os.getcwd(), 'images', 'dd_example_1.png'))
         
@@ -386,12 +335,33 @@ class Vt_model():
         
         return None
 
-# %%
-ctr = (193919, 194774)
+def zoom(zoom_factor):
+    ax = plt.gca()
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    dx, dy = 0.5 * (xmax - xmin), 0.5 * (ymax - ymin)
+    xc, yc = 0.5 * (xmin + xmax), 0.5 * (ymin + ymax)
 
-vtmdl = Vt_model(ctr, wc=5, w=15000, z=np.array([0, -30.]), N=100, Q=2400.)
-vtmdl.run_mdl(t=np.logspace(-3, np.log10(180)))
-vtmdl.evaluate(t=None, ax=None, levels=None)
+    ax.set_xlim(xc - dx / zoom_factor, xc + dx / zoom_factor)
+    ax.set_ylim(yc - dy / zoom_factor, yc + dy / zoom_factor)
+    return(ax)
+    
+# %%
+project_folder = os.path.join(os.getcwd(), 'data/6194_GWS_testen/')
+if not os.path.isdir(project_folder):
+    project_folder = os.path.join(os.getcwd(), '../data/6194_GWS_testen/')
+    assert os.path.isdir(project_folder), f"No folder <{project_folder}>"
+
+
+cases = iv.cases_fr_json(project_folder)
+
+case = cases[4]
+
+vtmdl = Vt_model(case, wc=5, L=15000, t_end=365., tsmult=1.25)
+
+vtmdl.run_mdl()
+vtmdl.evaluate(t=183, ax=None, levels=None)
+zoom(3.)
 
 plt.show()
 print('Done!')

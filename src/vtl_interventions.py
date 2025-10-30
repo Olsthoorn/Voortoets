@@ -3,10 +3,9 @@ import os
 import json
 import re
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 import geopandas as gpd
 import shapely
+import src.vtl_regional as reg
 from shapely.geometry import shape
 from shapely.geometry import shape as shapely_shape
 from glob import glob
@@ -15,11 +14,14 @@ from zipfile import ZipFile
 import etc
 from flopy.mf6.utils import MfGrdFile
 from fdm.src.mfgrid import Grid
-from src.vtl_layering import get_layering
 
 # %%
 def project_to_gdf(project_json):
-    """Convert one project JSON dict to a GeoDataFrame."""
+    """Convert one project JSON dict to a GeoDataFrame.
+    
+    Is now obsolete. Use userinput_fr_json instead to get all in dict.
+    
+    """
     def to_records(features, layer_type):
         recs = []
         for f in features:
@@ -72,7 +74,7 @@ def userinput_fr_json(zip_folder):
     # return gdfs
     
 
-def intervention_cases_fr_json(project_folder):
+def cases_fr_json(project_folder):
     """Load all groundwater intervention cases into a dict keyed by simulation_name."""
     
     # --- userinput.json files
@@ -108,7 +110,6 @@ def intervention_cases_fr_json(project_folder):
 
     return cases
 
-        
 
 def s_to_pName_sType(s="projectNm-id-simType"):
     """Return project name and simulation type s.
@@ -127,28 +128,6 @@ def s_to_pName_sType(s="projectNm-id-simType"):
     # print("Before second hyphen:", pName)
     # print("After second hyphen:", sType)
     return (pName, sType)
-
-
-def get_simulation_types(projects_gdf):
-    """Return simulation types.
-    
-    Parameters
-    ----------
-    projects.gdf: geopandas DataFrame
-        gdf extracted from userinput.json of all projects simulated by AGT
-    
-    Returns
-    -------
-    Unique names of simulation types obtained from
-    gdf['simulation_name']
-    """
-    pname_simtype = []
-    for s in interventions_gdf['simulation_name']:
-        pName_sType = s_to_pName_sType(s=s)
-        pname_simtype.append(pName_sType)
-    # --- Return without first flattening
-    # return list(set(pname_simtype))
-    return pname_simtype
 
 
 def grid_from_interventions(interventions, L=15000., tsmult=1.25, show=False):
@@ -191,7 +170,8 @@ def grid_from_interventions(interventions, L=15000., tsmult=1.25, show=False):
         if isinstance(interv['geometry'], shapely.Point):
             coords.append(np.array([[interv['geometry'].x, interv['geometry'].y]]))
         else:
-            coords.append(np.array(interv['geometry'].coords.xy).T)
+            x, y = interv['geometry'].exterior.coords.xy
+            coords.append(np.vstack((x, y)).T)
     coords = np.vstack(coords)
     
     # --- get  x and y coordinates
@@ -216,11 +196,12 @@ def grid_from_interventions(interventions, L=15000., tsmult=1.25, show=False):
     xGr = x[np.logical_and(x >= -L/2, x <= L/2)] + xc
     yGr = (y[np.logical_and(y >= -L/2, y <= L/2)] + yc)[::-1]
     
-    layering = get_layering(shapely.Point(xc, yc))
+    layering = reg.get_layering(shapely.Point(xc, yc))
     zGr = layering['z']
     
     gr = Grid(xGr, yGr, zGr, axial=False)
     gr.layering = layering
+    gr.crs = layering['crs']
     
     # --- show the grid
     if show:
@@ -229,23 +210,149 @@ def grid_from_interventions(interventions, L=15000., tsmult=1.25, show=False):
         ax.hlines(yGr, xGr.min(), xGr.max())
     
     return gr # With layering
-    
-    
-
         
-
+def chd_fr_dewatering_polygons(gr, pgons):
+    dtypeCHD = np.dtype([('t', float), ('I', int), ('h', float)])
     
+    CHD_list = []
+    for pgon in pgons:
+        mask = gr.inpoly(np.array(pgon['geometry'].exterior.coords.xy).T)
+        Id = gr.NOD[0][mask]
+        
+        for lowering in pgon['lowering']:
+            t, s = lowering
+            chd = np.zeros(len(Id), dtype=dtypeCHD)
+            chd['t'] = t
+            chd['I'] = Id            
+            chd['h'] = s
+            CHD_list.append(chd)
+    CHD_list = np.vstack(CHD_list)
     
-    # --- generate a grid GeoDataFrame from the cells
+    CHD = {}
+    for t in np.unique(CHD_list['t']):
+        mask = CHD_list['t'] == t
+        CHD[t] = CHD_list[mask]
+    return CHD
 
-    # --- Intersect the lines with the grid
-
-    # --- Get the grid id s and length within the cells
+def wel_fr_hardening_polygons(gr, pgons):
+    dtypeHPC = np.dtype([('t', float), ('I', int), ('perc', float)])
     
-    # --- Compute the conductances
-
-    # --- Complete the riv or separage GHB
+    HPC_list = []
+    for pgon in pgons:
+        mask = gr.inpoly(np.array(pgon['geometry'].coords.xy))
+        Id = gr.NOD[0][mask]
+        
+        for percentage in pgon['percentage']:
+            t, perc = percentage
+            hpc = np.zeros(len(Id), dtype=dtypeHPC)
+            hpc['t'] = t
+            hpc['I'] = Id            
+            hpc['perc'] = perc
+            HPC_list.append(hpc)
+    HPC_list = np.vstack(HPC_list)
     
+    HPC = {}
+    for t in np.unique(HPC_list['t']):
+        mask = HPC_list['t'] == t
+        HPC[t] = HPC_list[mask]
+    return HPC
+
+def wel_fr_recharge_points(gr, rch_points):
+    return wel_fr_well_points(gr, rch_points)
+
+def wel_fr_extraction_general_points(gr, well_points):
+    return wel_fr_well_points(gr, well_points)
+
+def wel_fr_extraction_irrigation_points(gr, well_points):
+    return wel_fr_well_points(gr, well_points)
+    
+def wel_fr_well_points(gr, well_points):
+    dtypeWEL = np.dtype([('t', float), ('I', int), ('Q', float)])
+    
+    WEL_list = []
+    for well in well_points:
+        xw, yw = well['geometry'].x, well['geometry'].y
+        
+        # --- get zw (generally it's the first aquifer center)
+        if 'aquifer_depth' in well:
+            if well['auifer_depth'] == 'A0800':
+                zw = gr.zm[0]
+            else:
+                zw = gr.zm[0]
+        elif 'filter_depth' in well:
+            top = well['filter_depth']['top']
+            # bot = well['filter_depth']['bot']
+            zw = gr.zm[gr.zm < -top][0]
+        else:
+            zw =gr.zm[0]
+            
+        Id = gr.Iglob_from_xyz(np.array([[xw, yw, zw]]))
+        
+        for flow_rate in well['flow_rates']:
+            t, Q = flow_rate
+            wel = np.zeros(1, dtype=dtypeWEL)
+            wel['t'] = t
+            wel['I'] = Id
+            wel['Q'] = Q
+            WEL_list.append(wel)
+    
+    WEL_list = np.vstack(WEL_list)
+        
+    WEL = {}
+    for t in np.unique(WEL_list['t']):
+        mask = WEL_list['t'] == t
+        WEL[t] = WEL_list[mask]
+    return WEL
+      
+def chd_fr_dwatering_lines(gr, dewatering_lines):
+    dtypeCHD = np.dtype([('t', float), ('I', int), ('h', float)])
+    ds = 1.0
+    
+    CHD_list = []
+    for dewatering_line in dewatering_lines:
+        xw, yw = np.array(dewatering_line['geometry'].coords.xy).T
+        
+        # --- generate intermediate points at mutual distance of 1 m
+        # --- s along linestring
+        s = np.hstack((0, np.sqrt(np.diff(xw) ** 2 + np.diff(yw) ** 2)))
+        
+        # --- intemediate points
+        ss = np.arange(0, s + 0.1, ds)
+        x = np.interp(ss, s, xw)
+        y = np.interp(ss, s, yw)
+        
+        # --- always use first aquifer mid as z
+        z = np.ones_like(x) * gr.zm[0]
+        
+        # --- cell Id's of all intermediate points
+        Iall = gr.Iglob_from_xyz
+
+        # --- unique cell numbers
+        Id = np.unique(Iall)
+        
+        # --- determine number of subpoints in each cell (rather total length in each cell)
+        L = []
+        for id in Id:
+            # --- total length in cell id
+            L.append(ds * np.sum(Iall == id))
+        L = np.array(L)
+        
+        # --- add the lowerings        
+        for lowering in dewatering_line['lowering']:
+            t, s = lowering
+            chd = np.zeros(len(Id), dtype=dtypeCHD)
+            chd['t'] = t
+            chd['I'] = Id
+            chd['h'] = s
+            CHD_list.append(chd)
+            
+        CHD_list = np.vstack(CHD_list)
+        CHD = {}
+        for t in np.uniuqe(CHD_list['t']):
+            mask = CHD_list['t'] == t
+            CHD['t'] = CHD_list[mask]
+        return CHD
+         
 
 # %%
 try:
@@ -257,216 +364,93 @@ except Exception as e:
     
 # %%
 # --- Example usage:
+
+# --- is now obsolete
 interventions_gdf = userinput_fr_json(zipfolder)
 print(interventions_gdf.head())
+
 print(f"Loaded {len(interventions_gdf)} features from {interventions_gdf['simulation_name'].nunique()} projects")
 
 # %%
-# intervections_dict = get_interventions_dict(interventions_gdf)
-
-cases = intervention_cases_fr_json(project_folder=zipfolder)
+# %% [markdown]
+# # Overview of all cases with their interventions
+# All cases are read in from their userinput.json files (<case folder>/input/usrinput.json)
+# They are listed below together with their intervention types and number of interventions objects
+# like dewatering_polygons and wells (recharge_points, extraction_irrigation_points etc.)
 
 # %%
-intervs = []
-for id in range(len(cases)):
-    intervs += cases[id]['interventions'].keys()
-intervs = [str(s) for s in np.unique(intervs)]
-intervs
+# --- get user input for all cases from the project folder. The userinput is a json file
+# --- which determines case and its interventions.
 
-def get_interventions(case):
-    """Return the intervections for case with given caseId"""
+cases = cases_fr_json(project_folder=zipfolder)
+
+# --- Show for each case which interventions is has:
+print('\n# --- interventions ---\n')
+
+for id in range(len(cases)):
+    case = cases[id]
+    
+    s1 = f"case {id} {case['simulation_name']:35}: "
 
     interventions = case['interventions']
-    for key in interventions:
-        if key == 'dewatering_line': # lowering, LINESTRING
-            dewat_lines = interventions[key]
-            dwl_dict = {}
-            for dwl in dewat_lines:
-                for lowering in dwl.lowering:
-                    t, s = lowering
-                    
-                    if not t in dwl_dict:
-                        dwl_dict[t] = {}
-                        dwl_dict[t]['geometry'] = []
-                        dwl_dict[t]['s'] = []
-                        
-                    dwl_dict[t]['coords'].append(dwl['geometry'])
-                    well_dict[t]['s'].append(s)
-            return dwl_dict                    
+    s2 = []
+    for k in interventions.keys():
+        s2.append(f"{k}: N={len(interventions[k])}")
+    print(s1 + ', '.join(s2))
 
-        elif key == 'dewatering_polygon': # lowering, POLYGON
-            pgons = interventions[key]
-            pgons_dict = {}
-            for p in pgons:
-                for lowering in p['lowerings']:
-                    t, s = lowering
-                    
-                    if not t in pgons_dict:
-                        pgons_dict[t] = {}
-                        pgons_dict[t]['coords'] = p['geometry']
-                        pgons_dict[t]['s'] = s
-                        
-                    dwl_dict[t]['coords'].append(w['geometry'].x, w['geometry'].y)
-                    well_dict[t]['Q'].append(Q)
-                    well_dict[t]['depth_aquifer'] = w['depth_aquifer']
 
-                        
-            return pgons_dict
-        elif key == 'extraction_general_point': # flow_rates, depth_aquifer, POINT
-            wells = interventions[key]  
-            well_dict = {}
-            for w in wells:
-                for flow_rate in w['flow_rates']:
-                    t, Q = flow_rate
-                    
-                    if not t in well_dict:
-                        well_dict[t] = {}
-                        well_dict[t]['coords'] = []
-                        well_dict[t]['Q'] = []
-                        
-                    well_dict[t]['coords'].append(w['geometry'].x, w['geometry'].y)
-                    well_dict[t]['Q'].append(Q)
-                    well_dict[t]['depth_aquifer'] = w['depth_aquifer']
-            return(well_dict)          
-        elif key == 'extraction_irrigation_point': # flow_rates, depth_filter, POINT
-            wells = interventions[key]
-            well_dict = {}
-            for w in wells:
-                for flow_rate in w['flow_rates']:
-                    t, Q = flow_rate
-                    
-                    if not t in well_dict:
-                        well_dict[t] = {}
-                        well_dict[t]['coords'] = []
-                        well_dict[t]['Q'] = []
-                        
-                    well_dict[t]['coords'].append(w['geometry'].x, w['geometry'].y)
-                    well_dict[t]['Q'].append(Q)
-                    well_dict[t]['depth_aquifer'] = w['depth_aquifer']
-            return(well_dict)
-        elif key == 'hardening_polygon': # percentage, POLYGON
-            pgons = interventions[key]
-            pgons_dict = {}
-            for p in pgons:
-                for tp in pgons['percentage']:
-                    t, perc = tp
+print("\n# --- Reception points ---\n")
 
-                    if not t in pgons_dict:
-                        pgons_dict[t] = {}
-                        pgons_dict[t]['percentage'] = []
-                        
-                    pgons_dict[t]['geometry'] = p['geometry']
-                    pgons_dict[t]['per'].append(perc)
-                    pgons_dict[t]['name'] = p['name']
-            return pgons_dict
-        elif key == 'recharge_point': # flow_rates, depth_aquifer, POINT
-            rech_wells = interventions[key]
-            well_dict = {}
-            for w in rech_wells:
-                for flow_rate in w.flow_rates:
-                    t, Q = flow_rate
+proj_coords = []
 
-                    if not t in well_dict:
-                        well_dict[t] = {}
-                        well_dict[t]['coords'] = []
-                        well_dict[t]['Q'] = []
-
-                    well_dict[t]['coords'].append(w['geometry'].x, w['geometry'].y)
-                    well_dict[t]['Q'].append(Q)
-            return(well_dict)
-        else:
-            raise ValueError(f"Can't get here, key ={key}")
-                        
-intervs = []
 for id in range(len(cases)):
-    interv += list(cases[id]['interventions'].keys())
-intervs
-# %% 
-        
-# %%
-# --- add columns project name and the simulation type to the gdf
-pname_simtype = get_simulation_types(interventions_gdf)
-interventions_gdf['p_name'] = [p[0] for p in pname_simtype]
-interventions_gdf['s_type'] = [p[1] for p in pname_simtype]
-interventions_gdf = interventions_gdf.drop(['id', 'simulation_name'], axis=1)
-print("Added columns 'p_name' and 's_type'")
-print("Done")
-
-# --- show which projects or layer_types have flow rates defined
-mask = interventions_gdf["flow_rates"].isna()
-np.unique(interventions_gdf.loc[~mask, ['layer_type']])
-
-# --- show which projects or layer_types have lowering rates defined
-mask = interventions_gdf["lowering"].isna()
-np.unique(interventions_gdf.loc[~mask, ['layer_type']])
-
-# --- show which s_types there are
-s_types = np.unique(interventions_gdf["s_type"])
-
-
-# --- show which projects or layer_types have neither "flow_rates" nor "lowering" defined
-mask = np.logical_and(interventions_gdf["flow_rates"].isna(), interventions_gdf["lowering"].isna())
-np.unique(interventions_gdf.loc[~mask, ['layer_type']])
-
-# --- show which projects or layer_types have neither "flow_rates" nor "lowering" defined
-mask = interventions_gdf["s_type"] == "filterbemaling"
-fbm = interventions_gdf.loc[~mask, ['p_name', 's_type', 'layer_type']]
-print(fbm)
-
-
-# %%
-gdfs = {}
-s_types = np.unique(interventions_gdf["s_type"])
-for s_type in s_types:
-    mask = interventions_gdf['s_type'] == s_type
-    gdfs[s_type] = interventions_gdf.loc[mask].dropna(axis=1, how='all')
+    case = cases[id]
     
-for s_type in s_types:
-    print(s_type)
-    print(gdfs[s_type][['p_name', 'name']])
-    print()
+    s1 = f"case {id} {case['simulation_name']:35}: "
+    
+    rps = case['receptors']['receptor_point']
+    s2 = []
+    for rp in rps:
+        x, y =  [rp['geometry'].x, rp['geometry'].y]
+        proj_coords.append([x, y])        
+        s2.append(f"{rp['name']:20}, x={x:6.0f}, y={y:6.0f}")
 
-# %%
-"""
-Hieronder staan de simulation_types met de kenmerkende eigenschappen die voor de modellering van belang zijn.
+    print(s1 + ', '.join(s2))
+    
+proj_coords = np.array(proj_coords)
+ax = etc.newfig("Project_locations", "xB", "yB")
 
-s_types:
---------
-0. bronbemaling                dewatering_polygon="POLYGON (...)", lowering=[[0, 3.95]]
-1. filterbemaling              dewatering_polygon="POLYGON (...)", lowering=[[0, 3.95], [183, 0], [365, 0]]
-2. lijnbemaling-filters        dewatering_line=LINESTRING (...), lowering=[[0, 1.37], [14,0], [84, 0]]
-    heeft meerdere dewatering_lines met eigen "naam" zoals "moot1", "moot2"
-3. open-bemaling               layer_type="dewatering_polygon", lowering=[[0, 1], [183, 0]]
-4. permanente-bemaling         layer_type="dewatering_polygon", lowering=[[0, 1]]
-5. permanente-winning          layer_type="extraction_general_point" flow_rates=[[0, 500000]], putten hebben een aparte "name" zoasl "put1", "put2", ...
-6. retourbemaling-bronnen (bronbemaling + retourputten) dewatering_polygon with lowering maar ook recharge_points with flow_rates en met elke put een "name" zoals "IP1", "IP2", ... Is maar een project: lc 216
-7. seizoenale-winning          layer_type="extraction_irrigation_point", flow_rates=[[0, 20000]], depth_filter{'top': 7, 'bottom': 17} of depth_aquifer"A0800"
-8. seizoenale-winning-20k      layer_type="extraction_irrigation_point", flow_rates=[[0, 20000]], depth_aquifer="A0170"
-9. verharding                  layer_type="hardening_polygon",  percentage=[[0, 100]], p_name="bm4"
-"""
+for id in range(len(proj_coords)):
+    angle = id * 3.
+    ax.plot(*proj_coords[id], 'ro')
+    x, y = proj_coords[id]
+    dx, dy = np.cos(5000), np.sin(5000)
+    ax.text(x + dx, y + dy, cases[id]['simulation_name'], rotation=angle, ha='left', va='bottom')
 
-# %%
+# There are in fact only 5 really different case locations
 
-s_type = s_types[9]
-
-gdf = gdfs[s_type]
-
-l_types = gdf['layer_type']
+ax.plot(*proj_coords.T, 'or', label='project_locations')
+ax.legend()
 
 
-p_names = np.unique(gdf["p_name"])
-for p_name in p_names:
-    ax = etc.newfig(f"{p_name} {s_type}", f"x [m], {gdf.crs}", f"y [m] {gdf.crs}")
-    mask = gdf["p_name"] == p_name
-    p_gdf = gdf.loc[mask]
-    clrs = etc.color_cycler()
-    for l_type in l_types:
-        clr = next(clrs)
-        mask = p_gdf['layer_type'] == l_type
-        p_gdf.loc[mask].plot(ax=ax, ec=clr, fc='none', linewidth=1)    
-    ax.set_aspect(1.0)
+# %% [markdown]
+# # intervention object data
+# Each case has interventions defined by first the type of intervention objects, which
+# is followed by a list of actual intervention objects with individual properties.
+# As such, a building pit has "dewatering_polygon" as the type of its intervention objects.
+# (there is no case having more than one "dewatering_objects", but new case might have them).
+# Cases with lijnbemaling have "dewatering_line" as their intervention object type, which is
+# then followed by as list of actual "dewatering_line" objects. Each such object may have
+# its own lowering schedule in time and lowewring defined by its parameter "lowering" which is
+# a list of [time, lowering] pairs.
+# Likewise for wells (permanente winning, irrigatie, retourbemaling)
+# Cases specifying retourbemaling have two intervention types:
+#    1) dewatering_polygon (followed by a list of (1) dewatering polyogons)
+#    2) recharge_point (followed by a list of n recharge points) with flow_rates.
+# Projects defining hardening of a surface have "hardening_polygon" as their object type
+# followed by a list of (1) such objects, each of which has its geometry and its percentage of hardening over time (list of [time, perc] pairs).
 
-
+        
 # %% --- get grid info from the grb file
 
 # --- the csv file of the vertices was extracted from the .disv file on the same directory
