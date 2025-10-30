@@ -207,11 +207,11 @@ class Vt_model():
         self.kwargs = {'gr': self.gr,                       
                   't': self.times,
                   'k': (self.kx, self.ky, self.kz),
-                  'c': None,
+                  'c': self.c if hasattr(self, 'c') else None,
                   'ss': self.Ss,
-                  'fh':  self.CHD,
-                  'ghb': self.GHB,
-                  'fq' : self.WEL,
+                  'fh':  self.CHD if hasattr(self, 'CHD') else None,
+                  'ghb': self.GHB if hasattr(self, 'GHB') else None,
+                  'fq' : self.WEL if hasattr(self, 'WEL') else None,
                   'hi' : self.HI,
                   'idomain': self.idomain,
         }
@@ -273,13 +273,14 @@ class Vt_model():
         it = np.where(self.out['t'] <= t)[0][-1]
         
         # --- The extractions
-        last_key = list(self.WEL.keys())[-1]
-        Iwel = self.WEL[last_key]['I']
-        Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
+        if hasattr(self, 'WEL'):
+            last_key = list(self.WEL.keys())[-1]
+            Iwel = self.WEL[last_key]['I']
+            Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
         #print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
 
         if ax is None:
-            title = f"{self.case['simulation_name']}: Verlaging [m] at t={self.out['t'][it]:.0f} d after start extraction, Q={Qwells:.0f} m/d."
+            title = f"{self.case['simulation_name']}: Verlaging [m] at t={self.out['t'][it]:.0f} d after start ingreep" #, Q={Qwells:.0f} m/d."
             ax = etc.newfig(title, 'x [m]', 'y [m]')
         
         # --- plot the surface water background (used in the model)
@@ -309,10 +310,11 @@ class Vt_model():
         print(f"Individual budget items during time step {it}")
         
         # --- The extractions
-        last_key = list(self.WEL.keys())[-1]
-        Iwel = self.WEL[last_key]['I']
-        Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
-        print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
+        if hasattr(self, 'WEL'):
+            last_key = list(self.WEL.keys())[-1]
+            Iwel = self.WEL[last_key]['I']
+            Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
+            print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
         
         # --- Infiltration from surface water
         # self.out['Qriv']
@@ -356,12 +358,13 @@ if not os.path.isdir(project_folder):
 cases = iv.cases_fr_json(project_folder)
 
 case = cases[4]
+case = cases[0]
 
 vtmdl = Vt_model(case, wc=5, L=15000, t_end=365., tsmult=1.25)
 
 vtmdl.run_mdl()
 vtmdl.evaluate(t=183, ax=None, levels=None)
-zoom(3.)
+zoom(1.)
 
 plt.show()
 print('Done!')
