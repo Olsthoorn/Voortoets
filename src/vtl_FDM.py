@@ -42,6 +42,8 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 import etc
 
+from scipy.interpolate import RegularGridInterpolator
+
 import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if project_root not in sys.path:
@@ -52,6 +54,52 @@ from src import vtl_surf_water as surf_wat
 from fdm.src.fdm3t import fdm3t
 from fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
 import src.vtl_interventions as iv
+
+# %%
+def zoom(zoom_factor):
+    """Zoom in on curent axes by zoom_factor."""
+    ax = plt.gca()
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    dx, dy = 0.5 * (xmax - xmin), 0.5 * (ymax - ymin)
+    xc, yc = 0.5 * (xmin + xmax), 0.5 * (ymin + ymax)
+
+    ax.set_xlim(xc - dx / zoom_factor, xc + dx / zoom_factor)
+    ax.set_ylim(yc - dy / zoom_factor, yc + dy / zoom_factor)
+    return(ax)
+
+
+def bilinear_interpolate_stack(gr, h, xp, yp):
+    """
+    Bilinear interpolation for a stack of 2D arrays h(t, y, x)
+    at a single point (xp, yp).
+    """    
+    # find indices of cell lower-left corner
+    ix = np.searchsorted(gr.xm, xp) - 1
+    iy = np.searchsorted(gr.ym, yp) - 1
+    
+    # clip to valid range
+    ix = np.clip(ix, 0, gr.nx - 2)
+    iy = np.clip(iy, 0, gr.ny - 2)
+    
+    # fractional position inside the cell
+    x1, x2 = gr.xm[ix], gr.xm[ix+1]
+    y1, y2 = gr.ym[iy], gr.ym[iy+1]
+    tx = (xp - x1) / (x2 - x1)
+    ty = (yp - y1) / (y2 - y1)
+    
+    # corner values (broadcasts over time dimension)
+    f11 = h[:, iy, ix]
+    f21 = h[:, iy, ix+1]
+    f12 = h[:, iy+1, ix]
+    f22 = h[:, iy+1, ix+1]
+    
+    # bilinear interpolation
+    return ((1-tx) * (1-ty) * f11 +
+                tx * (1-ty) * f21 +
+                (1-tx) * ty * f12 +
+                    tx * ty * f22)
+
 
 # %%
 class Vt_model():
@@ -88,33 +136,40 @@ class Vt_model():
         interventions = case['interventions']
         if 'dewatering_polygon' in interventions:
             dw_pgons = interventions['dewatering_polygon']
-            self.CHD = iv.chd_fr_dewatering_polygons(gr, dw_pgons)
+            self.CHD = iv.chd_fr_dewatering_polygons(gr, dw_pgons, t_end=t_end)
             
+        # --- The items yielding self.WEL should be mutually exclusive
+        # TODO enforce this
         if 'hardening_polygon' in interventions:
+            # Interpreted as extracting a percentage of the net recharge.
             h_pgons = interventions['hardening_polygon']
-            self.WEL = iv.wel_fr_hardening_polygons(gr, h_pgons)
+            self.WEL = iv.wel_fr_hardening_polygons(
+                gr, h_pgons, recharge=0.001, t_end=t_end)
             
         if 'extraction_general_point' in interventions:
             wells = interventions['extraction_general_point']
-            self.WEL = iv.wel_fr_extraction_general_points(gr, wells)
+            self.WEL = iv.wel_fr_extraction_general_points(gr, wells, t_end=t_end)
             
         if 'extraction_irrigation_point' in interventions:
             wells = interventions['extraction_irrigation_point']
-            self.WEL = iv.wel_fr_extraction_irrigation_points(gr, wells)
+            self.WEL = iv.wel_fr_extraction_irrigation_points(gr, wells, t_end=t_end)
             
         if 'recharge_point' in interventions:
             rch_wells = interventions['recharge_point']
-            self.WEL = iv.wel_fr_recharge_points(gr, rch_wells)
+            self.WEL = iv.wel_fr_recharge_points(gr, rch_wells, t_end=t_end)
             
         if 'dewatering_line' in interventions:
             dw_lines = interventions['dewatering_line']
-            self.CHD = iv.chd_fr_dwatering_lines(gr, dw_lines)
+            self.CHD = iv.chd_fr_dwatering_lines(gr, dw_lines, t_end=t_end)
             
         # --- simulation time from interventions
         self.times = self.set_sim_times(tsmult=tsmult, t_end=t_end)
         
         # --- surface water from national Open Street Map
         self.GHB = self.set_surface_water_ghb(w=5, c=5)
+        # TODO Temporarily        
+        self.GHB = {0.: np.zeros(1, dtype=dtypeGHB)}
+        
         
         # --- convert time field to time_step
         self.convert_time_field_to_time_index()
@@ -138,7 +193,7 @@ class Vt_model():
             t_tuple.append(np.array(list(self.CHD.keys()), dtype=float))            
         if hasattr(self, 'GHB'):
             t_tuple.append(np.array(list(self.GHB.keys()), dtype=float))            
-        t = np.unique(np.hstack(t_tuple))
+        t = np.unique(np.hstack((0., *t_tuple, t_end)))
         t = t[t <= t_end]
         
         times = [t[0]]
@@ -262,35 +317,43 @@ class Vt_model():
         levels: iterable
             the levels to show on the contour plot [m, drawdown]        
         """
+        images_dir = os.path.join(os.getcwd(), 'images/vtl_fdm')
+        if not os.path.isdir(images_dir):
+            images_dir = os.path.join(os.getcwd(), '../images/vtl_fdm')
+        
         if levels is None:
             levels=np.array([0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0])
-        levels.sort()
-            
+            levels = np.unique(np.hstack((-levels, levels)))
+        
+        case_name = self.case['simulation_name']
+        inv_list = list(self.case['interventions'].keys())
+        invs = f" interventions: [{', '.join(inv_list)}]"
     
         if t is None:
             t = self.out['t'][-1]
         
         it = np.where(self.out['t'] <= t)[0][-1]
         
-        # --- The extractions
-        if hasattr(self, 'WEL'):
-            last_key = list(self.WEL.keys())[-1]
-            Iwel = self.WEL[last_key]['I']
-            Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
-        #print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
-
         if ax is None:
-            title = f"{self.case['simulation_name']}: Verlaging [m] at t={self.out['t'][it]:.0f} d after start ingreep" #, Q={Qwells:.0f} m/d."
-            ax = etc.newfig(title, 'x [m]', 'y [m]')
+            title = (f"{case_name} " + invs + ', ' +
+                     f"DDN [m] at t={self.out['t'][it]:.0f}" + "\n"
+                     f"Qfq = {self.out['Qfq'][it].sum():.3g}, " +
+                     f"Qfh = {self.out['Qfh'][it].sum():.3g}, " +
+                     f"Qghb= {self.out['Qghb'][it].sum():.3g}, " +
+                     f"Qs= {self.out['Qs'][it].sum():.3g} m3/d")
+            ax = etc.newfig(title, "xB [m]", "yB [m]", figsize=(10, 10))
         
         # --- plot the surface water background (used in the model)
         self.clipped.plot(ax=ax, color='blue', linewidth=1)
+        
+        ax.set_xlim(self.gr.x.mean() - 1500. , self.gr.x.mean() + 1500.)
+        ax.set_ylim(self.gr.y.mean() - 1500. , self.gr.y.mean() + 1500.)
         
         # --- contour the drawdown after the last time step
         phi = self.out['Phi'][it][0]
         gr = self.gr
         Cs = ax.contour(gr.xm, gr.ym, phi, colors='k', levels=levels)
-        ax.clabel(Cs, inline=1, fontsize=10, fmt='%1.2f')
+        ax.clabel(Cs, inline=True, levels=Cs.levels, fontsize=10, fmt='%.2f')
         
         # --- plot the intervention contours and locations
         interventions = self.case['interventions']
@@ -299,54 +362,73 @@ class Vt_model():
                 gpd.GeoSeries([geob['geometry']]).plot(
                     ax=ax, edgecolor='r', facecolor='none', linewidth=1)
         
-        ax.figure.savefig(os.path.join(os.getcwd(), 'images', 'dd_example_1.png'))
+        # ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d.png"))
         
-        # --- water budget: all in the out dictionary
+        # --- zoom in and save again
+        # zoom(10)
+        
+        ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d_Z10.png"))
+                
+        # --- water budget: all in the out dictionary        
+        o = self.out
+        txt = []
+        txt.append("Model water budget\n------------------")
+        txt.append(f"{'it':>3}{'t1':>7}{'t2':>7}" +
+              f"{'Qfh':>8} {'Qfq':>8} {'Qs':>8} {'Qghb':>8} {'Q':>8}")
+        for it in range(1, len(o['t']) - 1):
+            t1, t2 = o['t'][it - 1], o['t'][it]
+            txt.append(f"{it:3} {t1:6.1f} {t2:6.1f} " +
+                  f"{o['Qfh'][it].sum():8.0f} " +
+                  f"{o['Qfq'][it].sum():8.0f} " +
+                  f"{o['Qs'][ it].sum():8.0f} " +
+                  f"{o['Qghb'][ it].sum():8.0f} " +
+                  f"{o['Q'][  it].sum():8.0f}"
+                  )
+        fname = os.path.join(images_dir, f"{case_name}_Qt.txt")
+        with open(fname, 'w') as f:
+            f.write('\n'.join(txt) + '\n')
+        
+        for s in txt:
+            print(s)
         print()
-        print(f"Overall water budget during time step {it}, {self.out['t'][it-1]:.2f} <= t <= {self.out['t'][it]} d")
-        print(f"Overall Q[{it}] ={self.out['Q'][it-1].sum():.2f} m3/d")        
-        print()
         
-        print(f"Individual budget items during time step {it}")
+        # --- Plot the water budget components
+        title = f"case {case_name}: Budget components Qfh, Qfq, Qghb, Qs [all m3/d]"
+        ax = etc.newfig(title, 't [d]', 'Q [m3/d]', figsize=(10, 6))
+        ax.plot(o['t'][1:],
+                o['Qfh'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qfh')
+        ax.plot(o['t'][1:],
+                o['Qfq'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qfq')
+        ax.plot(o['t'][1:],
+                o['Qghb'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qghb')
+        ax.plot(o['t'][1:],
+                o['Qs'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qs')
         
-        # --- The extractions
-        if hasattr(self, 'WEL'):
-            last_key = list(self.WEL.keys())[-1]
-            Iwel = self.WEL[last_key]['I']
-            Qwells = self.out['Q'][it-1].ravel()[Iwel].sum()
-            print(f"Qwells[t={self.out['t'][it]:.2f}] = {Qwells:8.2f} m3/d")
+        ax.legend(loc='best')
         
-        # --- Infiltration from surface water
-        # self.out['Qriv']
+        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_Qt.png"))
         
-        # --- Flow over the model boundary
-        Qghb = self.out['Qghb'][it-1].sum()
-        print(f"Qghb[  t={self.out['t'][it]:.2f}] = {Qghb:8.2f} m3/d")
+        # --- Plot h(t) at the reception point
+        name = self.case['receptors']['receptor_point'][0]['name']
+        recp = self.case['receptors']['receptor_point'][0]['geometry']
         
-        # --- Storage
-        Qsto = self.out['Qs'][it-1].sum()
-        print(f"Qsto[  t={self.out['t'][it]:.2f}] = {Qsto:8.2f} m3/d")
+        title = f"Case {case_name}: Verandering grwst in reception points"
+        ax = etc.newfig(title, 't [d]', 'Verandering grwst [m]', figsize=(10, 6))
+
+        for ilay in range(gr.nlay):
+            phi_lay = o['Phi'][:, ilay, : ,:]
+            h_recp = bilinear_interpolate_stack(gr, phi_lay, recp.x, recp.y)
+            ax.plot(o['t'], h_recp, 
+                    label=f"{name} laag {ilay} z=[{gr.z[ilay]:.1f} - {gr.z[ilay + 1]:.1f}] at xy = ({recp.x:.0f}, {recp.y:.0f})")
+        ax.legend(loc='best')
         
-        # --- total water budget over time step
-        Qtot = Qwells + Qghb + Qsto
-        print()
-        print(f"Overall water budet during time step {it}:")
-        print(f"Qtot[{it}] = Qwwells[{it}] + Qghb[{it}] + Qsto[{it}]")
-        print(f"{Qtot:8.2f} =    {Qwells:8.2f} + {Qghb:8.2f} + {Qsto:8.2f} m3/d")
-        print()
+        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_ht.png"))
         
         return None
-
-def zoom(zoom_factor):
-    ax = plt.gca()
-    xmin, xmax = ax.get_xlim()
-    ymin, ymax = ax.get_ylim()
-    dx, dy = 0.5 * (xmax - xmin), 0.5 * (ymax - ymin)
-    xc, yc = 0.5 * (xmin + xmax), 0.5 * (ymin + ymax)
-
-    ax.set_xlim(xc - dx / zoom_factor, xc + dx / zoom_factor)
-    ax.set_ylim(yc - dy / zoom_factor, yc + dy / zoom_factor)
-    return(ax)
     
 # %%
 project_folder = os.path.join(os.getcwd(), 'data/6194_GWS_testen/')
@@ -357,14 +439,25 @@ if not os.path.isdir(project_folder):
 
 cases = iv.cases_fr_json(project_folder)
 
-case = cases[4]
 case = cases[0]
+case = cases[1]
+# case = cases[2]
+# case = cases[3]
+# case = cases[4]
+# case = cases[5]
+# case = cases[6] # retourputten
+# case = cases[7] # retourputten
+# case = cases[8]
+# case = cases[9]
+# case = cases[10]
+
 
 vtmdl = Vt_model(case, wc=5, L=15000, t_end=365., tsmult=1.25)
 
 vtmdl.run_mdl()
 vtmdl.evaluate(t=183, ax=None, levels=None)
-zoom(1.)
 
 plt.show()
 print('Done!')
+
+# %%

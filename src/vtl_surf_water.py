@@ -25,7 +25,7 @@ assert os.path.isfile(osm_file), f"Can't file file <{osm_file}>"
 
 
 # %%
-def get_national_surf_water_gdf(crs="EPSG:31370", show=True):
+def get_national_surf_water_gdf(crs="EPSG:31370", show=False):
     """Return GeoDataFrame with the surface water lines of Belgium from OSM."""
         
     # --- 3. Load OSM (Open Street Map) water layer ---
@@ -50,7 +50,7 @@ def get_national_surf_water_gdf(crs="EPSG:31370", show=True):
     return water_gdf
 
 
-def get_point_gdf(gr, show=True):
+def get_point_gdf(gr, show=False):
     """
     Return point_gdf, where point is center of grid.
     
@@ -67,7 +67,7 @@ def get_point_gdf(gr, show=True):
     return pt_gdf
 
 
-def get_tile_gdf(gr, show=True):
+def get_tile_gdf(gr, show=False):
     """
     Return tile_gdf, bounded by gr extent.
     
@@ -223,71 +223,6 @@ def get_water_length_per_cell(gr, show=True):
         ax.figure.savefig(os.path.join(os.getcwd(), 'images', 'surf_wat_in_cells.png'))
         
     return grid_gdf # Just use column ["water_length"]
-
-
-def cells_with_points(gr, points):
-    """
-    Get cell Id of points.
-    
-    Parameters
-    ----------
-    gr: Grid object
-        grid object holding the grid coordinates
-    points_gdf : GeoDataFrame
-        GeoDataFrame with geometry Points.
-    
-    Returns
-    -------
-    grid : GeoDataFrame
-        Cell Id in which the points lie.
-    """
-    # --- 1. Grid coordinates are in the grid object ---
-    coords = []
-    for point in points:
-        coords.append([[point['geometry'].x, point['geometry'].y]])
-    coords = np.vstack(coords)
-    
-    xw, yw = coords.T
-    
-    zw = []
-    for point in points:
-        if 'depth_aquifer' == 'A0800':
-            zw.append(gr.zm[0])
-        else:
-            zw.append(gr.zm[0])
-    zw = np.array(zw)
-    
-    I = gr.Iglob_from_xyz(np.vstack((xw, yw, zw)).T)
-
-    return I
-
-
-def cells_in_pgons(gr, pgons):
-    """
-    Get cell Ids of points in union of polygons.
-    
-    Parameters
-    ----------
-    gr: Grid object
-        grid object holding the grid coordinates
-    points_gdf : GeoDataFrame
-        GeoDataFrame with geometry Points.
-    
-    Returns
-    -------
-    grid : GeoDataFrame
-        Cell Id in which the points lie.
-    """
-    # --- 1. Grid coordinates are in the grid object ---
-    mask = np.zeros((gr.ny, gr.nx), dtype=bool)
-    
-    for pgon in pgons:
-        mask = np.logical_or(mask, gr.inpoly(pgon))
-    
-    Id = gr.NOD[0][mask].flatten
-    return Id
-
-
 
 
 # %%
