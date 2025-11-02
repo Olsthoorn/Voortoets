@@ -186,7 +186,7 @@ def get_water_length_per_cell(gr, show=True):
     """Return Grid object and GHB object specifying surface water within tile of 15x15 km around point in Belgium"""
         
     # --- clip at outer boundary of model grid
-    clipped_gdf = clip_water_to_gr(gr, crs=gr.crs)
+    clipped_gdf = clip_water_to_gr(gr)
     
     # --- get water length per cell
     grid_gdf = line_length_per_gr_cell(gr, clipped_gdf)
@@ -225,9 +225,16 @@ def get_water_length_per_cell(gr, show=True):
 
 # %%
 if __name__ == '__main__':
+    pass
+    
+    # %%
+    # --- crs of Belgium ---
     crs = "EPSG:31370"
+    
+    # --- arbitrary location
     x0, y0 = (193919, 194774) # crs 31370
     
+    # --- properties to generate a model grid
     wc, w, N = 5, 15000, 100
     z = np.array([0, -30])
     xi = np.logspace(np.log10(wc / 2), np.log10(w / 2), int(N // 2))
@@ -235,6 +242,7 @@ if __name__ == '__main__':
     x = x0 + np.hstack((-xi[::-1], xi))
     y = y0 + np.hstack((xi[::-1], -xi))
     
+    # --- Generate a rectangular Modflow like grid
     gr = Grid(x, y, z, axial=False)
     gr.crs = crs
    
@@ -242,7 +250,7 @@ if __name__ == '__main__':
     # grid is geodataframe with total water course length per cell
     grid = get_water_length_per_cell(gr, show=True)
     
-    
+    # --- Three GeoDataFrames are used to clip the surface water
     water_gdf = get_national_surf_water_gdf(crs=gr.crs, show=True)    
     point_gdf = get_point_gdf(gr, show=True)
     tile_gdf  = get_tile_gdf(gr, show=True)

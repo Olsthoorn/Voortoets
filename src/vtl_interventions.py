@@ -1,18 +1,16 @@
 # %%
 import os
 import sys
+from pathlib import Path
 
-cwd = str(os.getcwd())
-if cwd.endswith('src'):
-    cwd = os.path.join(os.getcwd(), '..')
-    sys.path.insert(0, cwd)
+sys.path.insert(0, str(Path(os.getcwd()).parent))
 
 import json
 import re
 import numpy as np
 import geopandas as gpd
 import shapely
-import vtl_regional as reg
+
 from shapely.geometry import shape
 from shapely.geometry import shape as shapely_shape
 from glob import glob
@@ -21,7 +19,7 @@ from zipfile import ZipFile
 import etc
 from flopy.mf6.utils import MfGrdFile
 from fdm.src.mfgrid import Grid
-from vtl_regional import get_layering
+from src import vtl_regional as reg
 
 # %%
 try:
@@ -424,7 +422,7 @@ def get_geological_layers_per_model():
     cases = cases_fr_json(prj_folder=prj_folder)
     for id, case in cases.items():
         rcep = case['receptors']['receptor_point'][0]['geometry']
-        layering = get_layering(rcep, center=True)
+        layering = reg.get_layering(rcep, center=True)
         sim_name = case['simulation_name']
         case_dir = ('Rapport ' + sim_name[:2].upper() + sim_name[2:]).replace('-','_')
         case_dir = os.path.join(prj_folder, case_dir, 'sourcedata')
@@ -434,8 +432,6 @@ def get_geological_layers_per_model():
         print(f"{layering['model']} original {layering['nlay_orig']} layers: [{', '.join(layering['layers'])}]")
         
         
-# get_geological_layers_per_model()
-
 
 # %%
 if __name__ == '__main__':
