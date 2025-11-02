@@ -76,7 +76,7 @@ def bilinear_interpolate_stack(gr, h, xp, yp):
     """    
     # find indices of cell lower-left corner
     ix = np.searchsorted(gr.xm, xp) - 1
-    iy = np.searchsorted(gr.ym, yp) - 1
+    iy = np.searchsorted(gr.ym[::-1], yp) - 1
     
     # clip to valid range
     ix = np.clip(ix, 0, gr.nx - 2)
@@ -168,7 +168,7 @@ class Vt_model():
         # --- surface water from national Open Street Map
         self.GHB = self.set_surface_water_ghb(w=5, c=5)
         # TODO Temporarily        
-        self.GHB = {0.: np.zeros(1, dtype=dtypeGHB)}
+        # self.GHB = {0.: np.zeros(1, dtype=dtypeGHB)}
         
         
         # --- convert time field to time_step
@@ -298,6 +298,43 @@ class Vt_model():
         t = 0.        
         return {t: ghb}
 
+    def plot_grd(self, ax=None, options=['GHB'], ilay=0):
+        """Plot marker in cells with given boundary option."""
+        gr = self.gr
+
+        ax.vlines(gr.x, ymin=gr.y[-1], ymax=gr.y[0], linewidth=0.25)
+        ax.hlines(gr.y, xmin=gr.x[0], xmax=gr.x[-1], linewidth=0.25)
+        
+        assert set(options).difference({None, 'GHB', 'CHD', 'WEL'})== set(),\
+                    "Option must be one of [None, 'GHB', 'CHD', 'WEL']"
+
+        clrs = etc.color_cycler()
+        markersize=1
+        ncpl = gr.nx * gr.ny
+        for option in options:
+            
+            if not option:
+                break
+            
+            if not hasattr(self, option):
+                print(f"Option {option} can't be plotted, it's not present.")
+                continue
+            
+            clr, markersize = next(clrs), markersize + 2
+                       
+            B = eval("self." + option)
+            b = []
+            for k in B:
+                b.append(B[k])
+            b = np.vstack(b)
+            if option == 'GHB':
+                b = b[b['C'] > 0]
+            Id = np.unique(b['I'])
+            Id = Id[np.logical_and(Id >= ncpl * ilay, Id < ncpl * (ilay + 1))]
+            ax.plot(gr.XM.ravel()[Id], gr.YM.ravel()[Id], 'ro',
+                    mfc='none', mec=clr, ms=markersize, label=f"{option} cells")
+        return None
+
 
     def run_mdl(self):
         """Run the fdm3t code returning results in dict out and self.out."""      
@@ -329,47 +366,31 @@ class Vt_model():
         inv_list = list(self.case['interventions'].keys())
         invs = f" interventions: [{', '.join(inv_list)}]"
     
-        if t is None:
-            t = self.out['t'][-1]
+        # --- prepare text to show dewatering property of case
+        self.dwat_prop = ""
         
-        it = np.where(self.out['t'] <= t)[0][-1]
-        
-        if ax is None:
-            title = (f"{case_name} " + invs + ', ' +
-                     f"DDN [m] at t={self.out['t'][it]:.0f}" + "\n"
-                     f"Qfq = {self.out['Qfq'][it].sum():.3g}, " +
-                     f"Qfh = {self.out['Qfh'][it].sum():.3g}, " +
-                     f"Qghb= {self.out['Qghb'][it].sum():.3g}, " +
-                     f"Qs= {self.out['Qs'][it].sum():.3g} m3/d")
-            ax = etc.newfig(title, "xB [m]", "yB [m]", figsize=(10, 10))
-        
-        # --- plot the surface water background (used in the model)
-        self.clipped.plot(ax=ax, color='blue', linewidth=1)
-        
-        ax.set_xlim(self.gr.x.mean() - 1500. , self.gr.x.mean() + 1500.)
-        ax.set_ylim(self.gr.y.mean() - 1500. , self.gr.y.mean() + 1500.)
-        
-        # --- contour the drawdown after the last time step
-        phi = self.out['Phi'][it][0]
-        gr = self.gr
-        Cs = ax.contour(gr.xm, gr.ym, phi, colors='k', levels=levels)
-        ax.clabel(Cs, inline=True, levels=Cs.levels, fontsize=10, fmt='%.2f')
-        
-        # --- plot the intervention contours and locations
-        interventions = self.case['interventions']
-        for k in interventions:
-            for geob in interventions[k]:
-                gpd.GeoSeries([geob['geometry']]).plot(
-                    ax=ax, edgecolor='r', facecolor='none', linewidth=1)
-        
-        # ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d.png"))
-        
-        # --- zoom in and save again
-        # zoom(10)
-        
-        ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d_Z10.png"))
+        if 'hardening_polygon' in inv_list:
+            self.hard_area = 0.
+            for pgon in case["interventions"]["hardening_polygon"]:
+                self.hard_area += pgon['geometry'].area
+            Q_hard = self.out['Qfq'][0, 0].sum()
+            self.dwat_prop = \
+                f"hardening_area: {self.hard_area:.0f} m2 --> Q={Q_hard:.0f} m2/d"
+            
+        if 'dewatering_polygon' in inv_list:
+            self.dwat_area = 0.
+            for pgon in case["interventions"]["dewatering_polygon"]:
+                self.dwat_area += pgon['geometry'].area
+            self.dwat_prop = f"dewatering_area: {self.dwat_area:.0f} m2"
                 
-        # --- water budget: all in the out dictionary        
+        if "dewatering_line" in inv_list:
+            self.dwat_len = 0.
+            for dwline in case["interventions"]["dewatering_line"]:
+                self.dwat_len += dwline['geometry'].length
+            self.dwat_prop =  f"dewatering_length: {self.dwat_len:.0f} m"
+        
+        
+        # --- water budget: all in the out dictionary (aved as .txt)        
         o = self.out
         txt = []
         txt.append("Model water budget\n------------------")
@@ -392,9 +413,73 @@ class Vt_model():
             print(s)
         print()
         
+        
+        # --- plots ----
+        # --- Determine ylim for plots with flows
+        # ---(to prevent spikes from artificial sudden lowering changes
+        # --- that are theoretically infinite at t=0)
+        # --- Get the flux from storage after 1 days
+        qlim = self.out['Qs'].sum(axis=-1).sum(axis=-1).sum(axis=-1)[
+                            self.out['t'][1:] >= 1][0]
+        # --- round nicely
+        qlim = np.ceil(abs(qlim) / 50) * 50
+        qlim = (-qlim,  qlim)
+        
+        if t is None:
+            t = self.out['t'][-1]
+            
+        if "dewatering_line" in inv_list:
+            tplot = list(self.CHD.keys())[-1]
+            it = np.where(self.out['t'] <= tplot)[0][-1]
+        else:        
+            it = np.where(self.out['t'] <= t)[0][-1]
+        
+        if ax is None:
+            title = (f"{case_name} " + invs + ', ' +
+                     f"DDN [m] at t={self.out['t'][it]:.0f}" + "\n"
+                     f"Qfq = {self.out['Qfq'][it].sum():.3g}, " +
+                     f"Qfh = {self.out['Qfh'][it].sum():.3g}, " +
+                     f"Qghb= {self.out['Qghb'][it].sum():.3g}, " +
+                     f"Qs= {self.out['Qs'][it].sum():.3g} m3/d")
+            ax = etc.newfig(title, "xB [m]", "yB [m]", figsize=(10, 10))
+        
+        # --- plot the surface water background (used in the model)
+        if hasattr(self, 'clipped'):
+            self.clipped.plot(ax=ax, color='blue', linewidth=1)
+        
+        ax.set_xlim(self.gr.x.mean() - 1500. , self.gr.x.mean() + 1500.)
+        ax.set_ylim(self.gr.y.mean() - 1500. , self.gr.y.mean() + 1500.)
+        
+        # --- contour the drawdown after the last time step
+        phi = self.out['Phi'][it][0]
+        gr = self.gr
+        Cs = ax.contour(gr.xm, gr.ym, phi, colors='k', levels=levels)
+        ax.clabel(Cs, inline=True, levels=Cs.levels, fontsize=10, fmt='%.2f')
+        
+        # --- dewatering prop
+        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
+        
+        # --- plot the intervention contours and locations
+        interventions = self.case['interventions']
+        for k in interventions:
+            for geob in interventions[k]:
+                gpd.GeoSeries([geob['geometry']]).plot(
+                    ax=ax, edgecolor='r', facecolor='none', linewidth=1)
+        
+        # ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d.png"))
+        
+        # --- zoom in and save again
+        # zoom(10)
+        
+        # Check plot grid and CHD points
+        self.plot_grd(ax=ax, options=['GHB', 'CHD', 'WEL'], ilay=0)
+        
+        ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d_Z10.png"))
+                
+
         # --- Plot the water budget components
         title = f"case {case_name}: Budget components Qfh, Qfq, Qghb, Qs [all m3/d]"
-        ax = etc.newfig(title, 't [d]', 'Q [m3/d]', figsize=(10, 6))
+        ax = etc.newfig(title, 't [d]', 'Q [m3/d]', figsize=(10, 6), ylim=qlim)
         ax.plot(o['t'][1:],
                 o['Qfh'].sum(axis=-1).sum(axis=-1).sum(axis=1),
                 label='Qfh')
@@ -410,21 +495,26 @@ class Vt_model():
         
         ax.legend(loc='best')
         
+        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
+        
         ax.figure.savefig(os.path.join(images_dir, f"{case_name}_Qt.png"))
+        
         
         # --- Plot h(t) at the reception point
         name = self.case['receptors']['receptor_point'][0]['name']
         recp = self.case['receptors']['receptor_point'][0]['geometry']
         
-        title = f"Case {case_name}: Verandering grwst in reception points"
+        title = f"Case {case_name}: Verandering grwst in reception point"
         ax = etc.newfig(title, 't [d]', 'Verandering grwst [m]', figsize=(10, 6))
 
         for ilay in range(gr.nlay):
             phi_lay = o['Phi'][:, ilay, : ,:]
             h_recp = bilinear_interpolate_stack(gr, phi_lay, recp.x, recp.y)
             ax.plot(o['t'], h_recp, 
-                    label=f"{name} laag {ilay} z=[{gr.z[ilay]:.1f} - {gr.z[ilay + 1]:.1f}] at xy = ({recp.x:.0f}, {recp.y:.0f})")
+                    label=f"laag {ilay} z=[{gr.z[ilay]:.1f} - {gr.z[ilay + 1]:.1f}] at xy = ({recp.x:.0f}, {recp.y:.0f})")
         ax.legend(loc='best')
+        
+        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
         
         ax.figure.savefig(os.path.join(images_dir, f"{case_name}_ht.png"))
         
@@ -439,19 +529,70 @@ if not os.path.isdir(project_folder):
 
 cases = iv.cases_fr_json(project_folder)
 
-case = cases[0]
-case = cases[1]
-# case = cases[2]
-# case = cases[3]
-# case = cases[4]
-# case = cases[5]
-# case = cases[6] # retourputten
-# case = cases[7] # retourputten
-# case = cases[8]
-# case = cases[9]
-# case = cases[10]
+case_types = set()
+unique_case_types = {}
+for id in range(len(cases)):
+    case_name = cases[id]['simulation_name']
+    pname, case_type = iv.sim_name_to_pName_sim_type(case_name)
+    cases[id]['pname'] = pname
+    cases[id]['type'] = case_type
+    if case_type in case_types:
+        continue
+    else:
+        unique_case_types[id] = {'cname': case_name, 'pname':pname, 'ctype':case_type}
+        # print(id, case_name, pname, case_type)
+        case_types.add(case_type)  
 
+for id, item in unique_case_types.items():
+    print(id, item)
+    
 
+## case = cases[0] # filterbemaling
+## case = cases[1] # filterbemaling
+## case = cases[2] # filterbemaling
+## case = cases[3] # verharding
+## case = cases[4] # verharding
+## case = cases[5] # bronbemaing
+## case = cases[6] # retourbemaling
+## case = cases[7] # seizoenale-winning
+## case = cases[8] # verharding
+## case = cases[9] # open bemaling
+## case = cases[10] # lijnbemaling-filters
+## case = cases[11] # open-bemaling
+## case = cases[12] # permanente-bemaling
+## case = cases[13] # permanente-bemaling
+## case = cases[14] # seizoenale-winning
+## case = cases[15] # verharding
+## case = cases[16] # filterbemaling
+## case = cases[17] # retourbemaling-bronnen
+## case = cases[18] # filterbemaling
+## case = cases[19] # verharding
+## case = cases[20] # seizoenale-winning
+## case = cases[21] # bronbemaling
+## case = cases[22] # Seizoenale-winning
+## case = cases[23] # permanent-bemaling
+## case = cases[24] # retourbemaling-bronnen
+## case = cases[25] # pernamente-winning <--
+## case = cases[26] # opn-bemaling
+## case = cases[27] # verharding
+## case = cases[28] # permanente-bemaling
+## case = cases[29] # bronbemaling
+## case = cases[30] # lijnbemaling-filters (duur het langst)
+## case = cases[31] # lijnbemaling-filters
+## case = cases[32] # pernamente-winning
+## case = cases[33] # open-bemaling
+## case = cases[34] # permanente-bemaling
+## case = cases[35] # pernamente-bemaling
+## case = cases[36] # bronbemaling
+## case = cases[37] # retourbemaling-bronnen
+## case = cases[38] # filterbemaling
+## case = cases[39] # lijnbemaling-filters
+## case = cases[40] # permanente-winning
+## case = cases[41] # lijnbemaling-filters
+## case = cases[42] # open-bemaling
+## case = cases[43] # seizoenale-winning
+## case = cases[44] # bronbemaling
+ 
 vtmdl = Vt_model(case, wc=5, L=15000, t_end=365., tsmult=1.25)
 
 vtmdl.run_mdl()

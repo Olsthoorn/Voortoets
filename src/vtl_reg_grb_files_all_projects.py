@@ -21,13 +21,6 @@
 
 # %% 
 import os
-import numpy as np
-import geopandas as gpd
-from shapely.geometry import MultiPoint
-from pathlib import Path
-from zipfile import ZipFile
-import tempfile
-from flopy.mf6.utils import MfGrdFile
 from flopy.mf6 import MFSimulation
 from glob import glob
 
@@ -41,7 +34,7 @@ def run_sim_to_generate_regional_model_grid_file(project_name):
         name of the project main directory
     """
     # --- get the projects' retional model's folder
-    model_folder = os.path.join(zip_folder, project_name, "regional")
+    model_folder = os.path.join(prj_folder, project_name, "regional")
     assert os.path.isdir(model_folder)
 
     # --- get the .disv file
@@ -79,18 +72,18 @@ def run_sim_to_generate_regional_model_grid_file(project_name):
     return None
 
 
-# %%
+# %% Takes a long time to do, has been run should not be run again.
 
-# -- get the zip_folder
+# -- get the prj_folder
 try:
-    zip_folder = os.path.join(os.getcwd(), '../data', '6194_GWS_testen')
-    assert os.path.isdir(zip_folder), f"Path not found <{zip_folder}>"
+    prj_folder = os.path.join(os.getcwd(), '../data', '6194_GWS_testen')
+    assert os.path.isdir(prj_folder), f"Path not found <{prj_folder}>"
 except Exception as e:
-    zip_folder = os.path.join(os.getcwd(), 'data', '6194_GWS_testen')
-    assert os.path.isdir(zip_folder), f"Path not found <{zip_folder}>"
+    prj_folder = os.path.join(os.getcwd(), 'data', '6194_GWS_testen')
+    assert os.path.isdir(prj_folder), f"Path not found <{prj_folder}>"
 
 # --- all the zip files. One per project
-pr_names = glob(zip_folder + '/*.zip')
+pr_names = glob(prj_folder + '/*.zip')
 
 # --- remove .zip to get the project directory names
 # --- each of which is an expanded zip file

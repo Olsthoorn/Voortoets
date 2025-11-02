@@ -18,6 +18,7 @@ import numpy as np
 import geopandas as gpd
 from shapely import Point
 from flopy.mf6.utils import MfGrdFile
+from glob import glob
 
 # %% --- regional model grids and folder
 
@@ -36,6 +37,15 @@ try:
 except Exception:
     reg_folder = os.path.join(os.getcwd(), 'data', 'regional_grids')
     assert os.path.isdir(reg_folder), f"No folder <{reg_folder}>"
+
+try:
+    prj_folder = os.path.join(os.getcwd(), '../data', '6194_GWS_testen') 
+    assert os.path.isdir(prj_folder), f"No folder <{prj_folder}>"
+except Exception:
+    prj_folder = os.path.join(os.getcwd(), 'data', '6194_GWS_testen')
+    assert os.path.isdir(prj_folder), f"No folder <{prj_folder}>"
+
+
 
 # %%
 
@@ -93,6 +103,12 @@ def get_layering(pnt, center=True):
         """Convert string to float array."""
         return np.fromstring(s.strip('[]'), sep=' ')
     
+    # --- all geological layers ---
+    geo_layers =np.array([
+                'A0100', 'A0210', 'A0220', 'A0230', 'A0240', 'A0250',
+                'A0300', 'A0400', 'A0500', 'A0600', 'A0700', 'A0800',
+                'A0900', 'A1000', 'A1100'])
+    
     # --- select regional model containing pnt
     reg_mdl = select_reg_model(pnt, center=center)
     
@@ -118,18 +134,19 @@ def get_layering(pnt, center=True):
     
     # --- layering for active layers only
     layering = {
-        'model': reg_mdl['model'],        
+        'model': reg_mdl['model'],               
         'x': xP,
         'y': yP,
         'z': np.hstack((z[0], z[1:][mask])),    # layer elev at pnt
+        'layers': geo_layers[:len(mask)][mask],
         'k'   : s2arr(reg_mdl['k'])[mask],
         'k33' : s2arr(reg_mdl['k33'])[mask],
         'ss'  : s2arr(reg_mdl['ss'])[mask],
         'sy'  : s2arr(reg_mdl['sy'])[mask],
         'crs' : reg_mdl.crs,
+        'nlay_orig': len(botm),
     }
     return layering
-    
 
 # %%
 if __name__ == '__main__':
@@ -141,5 +158,14 @@ if __name__ == '__main__':
     selected = select_reg_model(pnt, center=False)
 
     layering = get_layering(pnt)
+
+# %%
+
+shps = []
+for folder in glob(prj_folder + '/*'):
+    shps = glob(folder + '/sourcedata/*.shp')
+    layers = np.unique([os.path.basename(f)[:5] for f in shps])
+    print(os.path.basename(folder) + '[' + ', '.join(layers) + ']')
+
 
 # %%

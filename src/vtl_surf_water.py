@@ -133,7 +133,6 @@ def clip_water_to_gr(gr):
 
     return clipped_gdf
 
-# %%
 
 def line_length_per_gr_cell(gr, polylines_gdf):
     """
@@ -157,9 +156,9 @@ def line_length_per_gr_cell(gr, polylines_gdf):
     y = gr.y
     
     # --- 1. Cell polygons as a comprehension
-    polygons = [box(xL, yB, xR, yT)
-                    for xL, xR in zip(x[:-1], x[1:])
-                        for yB, yT in zip(y[1:], y[:-1])]
+    polygons = [box(xL, yB, xR, yT)                    
+                    for yB, yT in zip(y[1:], y[:-1])
+                        for xL, xR in zip(x[:-1], x[1:])]
     
     
     grid_cells_gdf = gpd.GeoDataFrame(geometry=polygons, crs=polylines_gdf.crs)    
@@ -183,7 +182,6 @@ def line_length_per_gr_cell(gr, polylines_gdf):
     return grid_cells_gdf # water length for all cells
 
 
-# %%
 def get_water_length_per_cell(gr, show=True):
     """Return Grid object and GHB object specifying surface water within tile of 15x15 km around point in Belgium"""
         

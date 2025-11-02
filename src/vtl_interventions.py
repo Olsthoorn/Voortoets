@@ -1,11 +1,18 @@
 # %%
 import os
+import sys
+
+cwd = str(os.getcwd())
+if cwd.endswith('src'):
+    cwd = os.path.join(os.getcwd(), '..')
+    sys.path.insert(0, cwd)
+
 import json
 import re
 import numpy as np
 import geopandas as gpd
 import shapely
-import src.vtl_regional as reg
+import vtl_regional as reg
 from shapely.geometry import shape
 from shapely.geometry import shape as shapely_shape
 from glob import glob
@@ -14,6 +21,15 @@ from zipfile import ZipFile
 import etc
 from flopy.mf6.utils import MfGrdFile
 from fdm.src.mfgrid import Grid
+from vtl_regional import get_layering
+
+# %%
+try:
+    prj_folder = os.path.join(os.getcwd(), '../data', '6194_GWS_testen')
+    assert os.path.isdir(prj_folder), f"Path not found <{prj_folder}>"
+except Exception as e:
+    prj_folder = os.path.join(os.getcwd(), 'data', '6194_GWS_testen')
+    assert os.path.isdir(prj_folder), f"Path not found <{prj_folder}>"
 
 # %%
 def project_to_gdf(project_json):
@@ -74,13 +90,13 @@ def userinput_fr_json(zip_folder):
     # return gdfs
     
 
-def cases_fr_json(project_folder):
+def cases_fr_json(prj_folder):
     """Load all groundwater intervention cases into a dict keyed by simulation_name."""
     
     # --- userinput.json files
     jsons = [f + '/input/userinput.json'
              for f in [folder for folder in
-                        glob(project_folder + '/Rap*')
+                        glob(prj_folder + '/Rap*')
                         if not folder.endswith('.zip')]
              ]
     cases = {}
@@ -111,7 +127,7 @@ def cases_fr_json(project_folder):
     return cases
 
 
-def s_to_pName_sType(s="projectNm-id-simType"):
+def sim_name_to_pName_sim_type(s="projectNm-id-simType"):
     """Return project name and simulation type s.
     
     Parameters
@@ -216,7 +232,8 @@ def grid_from_interventions(interventions, L=15000., tsmult=1.25, show=False):
         ax.hlines(yGr, xGr.min(), xGr.max())
     
     return gr # With layering
-        
+
+
 def chd_fr_dewatering_polygons(gr, pgons, t_end=365):
     """Convert dewatering polygon into a CHD object."""
     dtypeCHD = np.dtype([('t', float), ('I', int), ('h', float)])
@@ -227,6 +244,8 @@ def chd_fr_dewatering_polygons(gr, pgons, t_end=365):
         Id = gr.NOD[0][mask]
         
         lowerings = pgon['lowering']
+        if lowerings[-1][0] < t_end / 2:
+            lowerings.append([np.ceil(t_end / 2), 0])
         if lowerings[-1][0] < t_end:
             lowerings.append([t_end, 0])
         
@@ -244,6 +263,7 @@ def chd_fr_dewatering_polygons(gr, pgons, t_end=365):
         mask = CHD_list['t'] == t
         CHD[t] = CHD_list[mask]
     return CHD
+
 
 def wel_fr_hardening_polygons(gr, pgons, recharge=0.001, t_end=365):
     """Convert hardening polygons into a WEL object to be handled by FDM.
@@ -278,6 +298,7 @@ def wel_fr_hardening_polygons(gr, pgons, recharge=0.001, t_end=365):
         WEL[t] = HPC_list[mask]
     return WEL
 
+
 def wel_fr_recharge_points(gr, rch_points, t_end=365):
     WEL = wel_fr_well_points(gr, rch_points, t_end=t_end)
     # --- flow rates are injection not extraction
@@ -285,11 +306,14 @@ def wel_fr_recharge_points(gr, rch_points, t_end=365):
         WEL[k]['Q'] = -WEL[k]['Q']
     return WEL
 
+
 def wel_fr_extraction_general_points(gr, well_points, t_end=365):
     return wel_fr_well_points(gr, well_points, t_end=t_end)
 
+
 def wel_fr_extraction_irrigation_points(gr, well_points, t_end=365):
     return wel_fr_well_points(gr, well_points, t_end=t_end)
+
     
 def wel_fr_well_points(gr, well_points, t_end=365):
     """Convert well_points into a WEL object to be handled by FDM."""
@@ -300,21 +324,31 @@ def wel_fr_well_points(gr, well_points, t_end=365):
         xw, yw = well['geometry'].x, well['geometry'].y
         
         # --- get zw (generally it's the first aquifer center)
-        if 'aquifer_depth' in well:
-            if well['auifer_depth'] == 'A0800':
-                zw = gr.zm[0]
-            else:
-                zw = gr.zm[0]
-        elif 'filter_depth' in well:
-            top = well['filter_depth']['top']
-            # bot = well['filter_depth']['bot']
-            zw = gr.zm[gr.zm < -top][0]
+        z = gr.layering['z']
+        zm = 0.5 * (z[:-1] + z[1:])        
+        aquif = [k for k in well if 'aquifer' in k]
+        depth = [k for k in well if 'depth'   in k]     
+        if aquif and aquif[0] in well:
+            laynm = well[aquif[0]]
+            if laynm.startswith('A'):
+                laynm = laynm[:-1] + '0' # corrects error in the user input
+                try:
+                    ilay = np.where(laynm == gr.layering['layers'])[0][0]
+                except Exception:
+                    ilay = np.argmax(-np.diff(z))
+                zw = zm[ilay]
+        elif depth and depth[0] in well:
+            top = z[0] -well[depth[0]]['top']
+            bot = z[0] -well[depth[0]]['bottom']
+            zw = 0.5 * (top + bot)
         else:
-            zw =gr.zm[0]
+            zw =zm[0]
             
         Id = gr.Iglob_from_xyz(np.array([[xw, yw, zw]]))
         
         flow_rates = well['flow_rates']
+        if flow_rates[-1][0] < t_end / 2:
+            flow_rates.append([np.ceil(t_end / 2), 0])
         if flow_rates[-1][0] < t_end:
             flow_rates.append([t_end, 0])
     
@@ -323,7 +357,7 @@ def wel_fr_well_points(gr, well_points, t_end=365):
             wel = np.zeros(1, dtype=dtypeWEL)
             wel['t'] = t
             wel['I'] = Id
-            wel['Q'] = -Q
+            wel['Q'] = -Q / 365. # m3/a to m3/d
             WEL_list.append(wel)
     
     WEL_list = np.vstack(WEL_list)
@@ -333,7 +367,8 @@ def wel_fr_well_points(gr, well_points, t_end=365):
         mask = WEL_list['t'] == t
         WEL[t] = WEL_list[mask]
     return WEL
-      
+
+
 def chd_fr_dwatering_lines(gr, dewatering_lines, t_end=365):
     """Convert dewatering lines into a CHD object to be handled by FDM."""
     dtypeCHD = np.dtype([('t', float), ('I', int), ('h', float)])
@@ -360,6 +395,8 @@ def chd_fr_dwatering_lines(gr, dewatering_lines, t_end=365):
         
         # --- add the lowerings
         lowerings = dewatering_line['lowering']
+        if lowerings[-1][0] < t_end / 2:
+            lowerings.append([np.ceil(t_end / 2), 0])
         if lowerings[-1][0] < t_end:
             lowerings.append([t_end, 0])
              
@@ -378,23 +415,37 @@ def chd_fr_dwatering_lines(gr, dewatering_lines, t_end=365):
             CHD[t] = CHD_list[mask]
         return CHD
 
+
+def get_geological_layers_per_model():
+    """Study which geological layers are in each project's model"""
+    # reg_folder = os.path.join(prj_folder, '../regional_grids')
+    # gdf2 = gpd.read_file(os.path.join(reg_folder, 'regional_models.gpkg'))
+    
+    cases = cases_fr_json(prj_folder=prj_folder)
+    for id, case in cases.items():
+        rcep = case['receptors']['receptor_point'][0]['geometry']
+        layering = get_layering(rcep, center=True)
+        sim_name = case['simulation_name']
+        case_dir = ('Rapport ' + sim_name[:2].upper() + sim_name[2:]).replace('-','_')
+        case_dir = os.path.join(prj_folder, case_dir, 'sourcedata')
+        # print(os.path.isdir(case_dir), case_dir)
+        laynms = np.unique([os.path.basename(f)[:5] for f in glob(case_dir + '/*.shp')])
+        laynms = [str(n) for n in laynms if n.startswith('A')]
+        print(f"{layering['model']} original {layering['nlay_orig']} layers: [{', '.join(layering['layers'])}]")
+        
+        
+# get_geological_layers_per_model()
+
+
 # %%
 if __name__ == '__main__':
     pass
-
-    # %%
-    try:
-        zipfolder = os.path.join(os.getcwd(), '../data', '6194_GWS_testen')
-        assert os.path.isdir(zipfolder), f"Path not found <{zipfolder}>"
-    except Exception as e:
-        zipfolder = os.path.join(os.getcwd(), 'data', '6194_GWS_testen')
-        assert os.path.isdir(zipfolder), f"Path not found <{zipfolder}>"
         
     # %%
     # --- Example usage:
 
     # --- is now obsolete
-    interventions_gdf = userinput_fr_json(zipfolder)
+    interventions_gdf = userinput_fr_json(prj_folder)
     print(interventions_gdf.head())
 
     print(f"Loaded {len(interventions_gdf)} features from {interventions_gdf['simulation_name'].nunique()} projects")
@@ -410,7 +461,7 @@ if __name__ == '__main__':
     # --- get user input for all cases from the project folder. The userinput is a json file
     # --- which determines case and its interventions.
 
-    cases = cases_fr_json(project_folder=zipfolder)
+    cases = cases_fr_json(prj_folder=prj_folder)
 
     # --- Show for each case which interventions is has:
     print('\n# --- interventions ---\n')
@@ -482,7 +533,7 @@ if __name__ == '__main__':
     # %% --- get grid info from the grb file
 
     # --- the csv file of the vertices was extracted from the .disv file on the same directory
-    grb_file = os.path.join(zipfolder, 'Rapport LC_212_filterbemaling', 'model', 'no_permits.disv.grb')
+    grb_file = os.path.join(prj_folder, 'Rapport LC_212_filterbemaling', 'model', 'no_permits.disv.grb')
     assert os.path.isfile(grb_file), f"Can't open file <{grb_file}>"
 
     # --- read the grid
@@ -512,6 +563,3 @@ if __name__ == '__main__':
     z = np.hstack((grb.top[i], botm[:, i]))
 
     # %%
-    # Get the conductivities
-    # Get the storage coefficients
-    # Get the stress periods
