@@ -1,0 +1,1686 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\usepackage{epstopdf} % to include .eps graphics files with pdfLaTeX
+\usepackage{flafter}   % Don't place floats before their definition
+%\usepackage{topcapt}  % Define \topcation for placing captions above tables (not in gwTeX)
+
+\usepackage{xurl}      % better URL setting, uses old url package
+
+\usepackage{xcolor}
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\usepackage[]{hyperref} % Generates all cross references
+\hypersetup{            % Setting options for hyperref package
+	breaklinks=true,    % break line with long hyperlinks
+	colorlinks=true,    % coloured links
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=darkblue,
+	citecolor=blue,
+	backref=page
+} 
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{alltt}
+
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% \lstdefinestyle{mystyle}{
+%   language=Python,
+%   numbers=left
+% }
+
+% Put lstset here, after lstdefinestyle
+% \lstset{style=mystyle}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language dutch
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command biber
+\index_command default
+\float_placement h
+\float_alignment center
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\listings_params "language=Python,extendedchars=false,frameround=fttt,numbers=left,% line numbers use none,numberstyle={\tiny},stepnumber=2,% line numbers only every so many,numbersep=9pt,% how far line numbers from text?,showspaces=false,showstringspaces=false,showtabs=false,tab={\rightarrowfill},basicstyle={\small},keywordstyle={\color{blue}},commentstyle={\color{green}},stringstyle={\ttfamily \color{magenta}},identifierstyle={\color{black}}"
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Klein FDM model tussen analytische oplossing en Grondwatersimulator,
+ dat voor elke plek in Vlaanderen interventies voor de Voortoets kan simuleren
+\end_layout
+
+\begin_layout Author
+T.N.Olsthoorn
+\end_layout
+
+\begin_layout Date
+Nov.
+ 8,
+ 2025
+\end_layout
+
+\begin_layout Section
+Intro
+\end_layout
+
+\begin_layout Standard
+De Voortoets is een digitaal instrument van de Vlaamse Overheid,
+ Agentschap Natuur en Bos,
+ om aanvragen voor een vergunning betreffende een ingreep in het grondwatersysteem te bespoedigen.
+ Doel is een snelle screening via een website om te bepalen of een voorgenomen ingreep gevolgen kan hebben voor beschermende gebieden en op grond daarvan al dan niet een dieper gaand onderzoek behoeft naar effecten.
+ De huidige Voortoets beperkt zich tot het analytisch berekenen van de veranderingen van d grondwaterstand die het gevolg is van de ingreep.
+ Dit geldt ook voor het hier voorgestelde kleine Eindige Differentie Model,
+ dat de voorlopige naam 
+\series bold
+Vtfdm
+\series default
+ draagt (Voortoets Finite Difference Model).
+\end_layout
+
+\begin_layout Standard
+Na het invullen op de bewuste website van essentiële concrete kenmerken van de voorgenomen ingreep,
+ waaronder type,
+ locatie,
+ omvang en diepte,
+ opgelegde verlaging,
+ onttrekking,
+ wordt een tijdsafhankelijke berekening uitgevoerd van de te verwachten verlaging van de grondwaterstanden in de ruime omgeving van de ingreep.
+ Deze verlaging vervolgens getoetst aan de ligging van beschermde gebieden,
+ waarna een beoordeling volgt of er een nadere studie nodig is vooraleer de aanvraag in behandeling wordt genomen.
+\end_layout
+
+\begin_layout Standard
+Om de Voortoets eenvoudig te houden,
+ maken de berekeningen binnen de Voortoets gebruik van relatief eenvoudige wiskundige formules,
+ die in het algemeen slechts toepasbaar zijn voor gestileerde situaties.
+ Zulke beperkingen vloeien voort uit de vereenvoudigingen waaraan de omgeving moet worden onderworpen om de formule ze toepasbaar te maken.
+ Dit hoeft overigens geen beperking te zijn aangezien een expliciete eis bij de ontwikkeling van de Voortoets was dat zij eenvoudig toepasbaar is.
+ 
+\end_layout
+
+\begin_layout Standard
+Een alternatief is gebruik te maken van de 
+\begin_inset Quotes pld
+\end_inset
+
+Grondwatersimulator
+\begin_inset Quotes prd
+\end_inset
+
+ die voor geheel Vlaanderen is ontwikkeld.
+ Deze houdt rekening met de geologie en het oppervlaktewater zoals dat daadwerkelijk in Vlaanderen voorkomt.
+ Een nadeel van de Grondwatersimulator voor de Voortoets is zijn grotere complexiteit,
+ die hem zeer geschikt maakt voor nader onderzoek maar minder voor snelle screening op een website.
+\end_layout
+
+\begin_layout Standard
+Verbeteringen van de bestaande Voortoets,
+ zodanig dat de berekeningen eenvoudig blijven maar toch beter rekening houden met lokale omstandigheden,
+ zouden meer geavanceerde wiskundige formules kunnen vereisen of een keuze binnen de Voortoets van welke wiskundige formule(s) toepasbaar zijn in de specifieke situatie van een willekeurige aanvrage.
+ De mogelijkheden langs deze weg zijn beperkt en maken de Voortoets bovendien erg complex,
+ zonder uiteindelijk voldoende algemeen te kunnen worden.
+ Een hier voorgesteld alternatief zou wel aan de eisen van eenvoud,
+ snelheid en voldoende algemene toepasbaarheid kunnen voldoen.
+ Dit alternatief bestaat uit het binnen enkele seconden automatisch genereren van een eenvoudig eindig differentiemodel van beperkte omvang rondom de voorgenomen ingreep.
+ Het voordeel is dat zo'n model in tegenstelling tot analytische formules wel goed rekening kan houden met complexe stelsel van oppervlaktewater dat men rond een ingreep aantreft.
+ De hierna uitgewerkte aanpak baseert zich op de gegevens uit de Grondwatersimulator,
+ zodat het daarmee feitelijk consistent is,
+ maar desondanks eenvoudig blijft.
+ Doel is zo'n model automatisch voor elke willekeurige plek in Vlaanderen binnen een beperkt aantal seconden te genereren,
+ door te rekenen en de uitkomsten te presenteren.
+\end_layout
+
+\begin_layout Section
+Motivatie en stapsgewijze opzet
+\end_layout
+
+\begin_layout Standard
+Motivatie is de eis tot eenvoud.
+ Bovendien is al in de onderbouwing van de huidige Voortoets gesteld dat de berekeningen beperkt zullen worden tot het freatisch pakket.
+ Door hieraan het oppervlaktewater als bovenrandvoorwaarde toe te voegen krijgen we een complete vereenvoudigde benadering van het grondwatersysteem,
+ dat goed in een eenvoudig numeriek tijdsafhankelijk model kan worden gevat.
+ Aangezien het bij de Voortoets gaat om de effecten van de voorgenomen ingreep op het grondwater kan worden volstaan met het berekenen van de verlagingen (veranderingen) van de grondwaterstanden in de ruime omgeving van de ingreep.
+ Door de berekening tot verlagingen (veranderingen) te beperken is het niet nodig om de complexe omgevingsdetails in dit model op te nemen.
+ Situaties met droogvallend oppervlaktewater ten gevolge van de ingreep zijn dan ook niet inbegrepen,
+ hoewel in principe wel mogelijk.
+\end_layout
+
+\begin_layout Standard
+De aanpak is als volgt:
+\end_layout
+
+\begin_layout Itemize
+Aanvrager vult op de website de voor zijn ingreep verlangde gegevens in die de interventie eenduidig definiëren.
+ De website genereert een interventie bestand in 
+\series bold
+.json
+\series default
+ formaat zoals door AGT is toegepast in zijn proefberekeningen waarin 45 verschillende interventies zijn uitgewerkt.
+ Hiermee kan het model eenduidig worden opgezet en doorgerekend.
+\end_layout
+
+\begin_layout Itemize
+Het lokale model wordt gegenereerd waarbij de lokale laagopbouw en laageigenschappen worden ontleend aan de gegevens van de Grondwatersimulator voor deze locatie.
+ Het krijgt een standaard omvang,
+ bijvoorbeeld 15x15 km.
+ De gelaagdheid is uniform in overeenstemming met die van de Grondwatersimulatie op deze locatie.
+ De laageigenschappen zijn ook uniform,
+ net zoals ze dat trouwens ook in de Grondwatersimulator zijn.
+ Hoewel de Voortoets zich wil beperken tot het freatisch pakket kan voor dit model even gemakkelijk de volledige gelaagdheid worden meegenomen.
+\end_layout
+
+\begin_layout Itemize
+Het oppervlaktewater binnen het lokale model wordt geknipt uit een bestand voor heel Vlaanderen en wordt gebruikt in de cellen van het model die door dit oppervlaktewater worden doorsneden.
+ De 
+\begin_inset Quotes pld
+\end_inset
+
+conductantie
+\begin_inset Quotes prd
+\end_inset
+
+ (Eng.
+ conductance) wordt berekend uit de lengte aan oppervlaktewater binnen elke modelcel maal een standaard breedte van 5 m en gedeeld door een standaard weerstand van 5 d.
+ Dit zijn keuzen die ongetwijfeld tot discussie zullen leiden.
+ Voorlopig wordt voor het oppervlaktewater de publiek beschikbare Open Street Map gebruikt van heel België.
+\end_layout
+
+\begin_layout Itemize
+De berekening wordt tijdsafhankelijk doorgerekend.
+ In principe voor een jaar,
+ daarbij de opgegeven variaties van de onttrekking of verlaging volgend.
+ Seizoenale onttrekkingen en bouwputbemalingen duren in de regel korter dan een jaar.
+\end_layout
+
+\begin_layout Itemize
+De resultaten worden samengevat en gepresenteerd.
+ Dit gaat in de vorm van een aantal grafieken.
+ Een grafiek geeft de verlagingscontouren voor een geschikt moment.
+ De tweede grafiek geeft het het verloop van de verandering van de grondwaterstand en stijghoogtes ter plekke van het receptorpunt,
+ meestal het centrum van de ingreep.
+ De derde grafiek geeft het verloop van de debieten.
+ Afzonderlijk zijn dit het debiet van punten met een opgelegde verlaging,
+ het debiet van punten met een gegeven onttrekking of infiltratie,
+ het debiet dat onttrokken wordt aan het oppervlaktewater en het debiet dat door de berekende grondwaterstandsveranderingen vrijkomt uit berging.
+ Ook wordt een tekst gegenereerd waarin de interventie is vastgelegd en het verloop van deze debieten wordt getabelleerd.
+\end_layout
+
+\begin_layout Standard
+De verlaging zal in de regel niet de (dichte,
+ gesloten) rand van het model bereiken.
+ Dit kan worden gecontroleerd aan het verlagingenbeeld.
+ Mocht de verlaging wel de rand van het model bereiken dan kan de berekende verlaging als worst-case worden beschouwd,
+ of men concludeert dat nader onderzoek nodig is,
+ of men kiest een ruimer model worden gekozen.
+ Maar een modelomvang van 15x15 km blijkt in het merendeel van de gevallen ruim genoeg.
+\end_layout
+
+\begin_layout Section
+Implementatie
+\end_layout
+
+\begin_layout Subsection
+Relatie met de Grondwatersimulator
+\end_layout
+
+\begin_layout Standard
+Het eindige differentiemodel wordt gebaseerd op de gegevens van de Grondwatersimulator.
+ Deze heeft drie regionale modellen die 'W',
+ 'N' en 'E' (west,
+ noord en oost) zijn genoemd.
+ Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Knooppunten-van-de-grids"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat de knooppunten van deze drie modellen zien.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/regional_grids.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Knooppunten-van-de-grids"
+
+\end_inset
+
+Knooppunten van de drie regionale grids van de Grondwatersimulator met omhullende.
+ Coördinaten zijn van de nationale Belgische projectie EPSG:31370.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De door Modflow gegenereerde binaire grid-bestanden (.grb bestanden) zijn beschikbaar.
+ Deze kunnen door 
+\series bold
+Flopy
+\series default
+ worden ingelezen,
+ waarna hun gegevens kunnen worden opgevraagd.
+ Dit betreft in essentie de coördinaten van de knooppunten (Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Knooppunten-van-de-grids"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+),
+ van de celmiddens als ook de laagopbouw bij elke cel.
+\end_layout
+
+\begin_layout Standard
+Elk van de regionale modellen van de Grondwatersimulator heeft een vaste laagopbouw.
+ Een model heeft 13,
+ het tweede 14 het het derde 15 lagen.
+ De laagopbouw is binnen een model overal hetzelfde,
+ dus alle lagen komen overal binnen het model voor.
+ Alleen waar zij in de werkelijkheid afwezig zijn,
+ is de betreffende laagdikte gelijk aan nul.
+ Dit is een zeer consequente en gemakkelijk te interpreteren opzet.
+\end_layout
+
+\begin_layout Standard
+De 15 voorkomende geologische lagen hebben de volgende namen:
+\end_layout
+
+\begin_layout Standard
+['A0100',
+ 'A0210',
+ 'A0220',
+ 'A0230',
+ 'A0240',
+ 'A0250',
+ 'A0300',
+ 'A0400',
+ 'A0500',
+ 'A0600',
+ 'A0700',
+ 'A0800',
+ 'A0900',
+ 'A1000',
+ 'A1100']
+\end_layout
+
+\begin_layout Standard
+Deze lagen komen in de regionale modellen altijd in deze volgorde voor,
+ beginnend met 'A0100'.
+ Als een regionaal model minder dan 15 lagen heeft,
+ dan ontbreken de laatste van de rij.
+\end_layout
+
+\begin_layout Standard
+Voor het genereren van een lokaal model is een hulpbestand gemaakt met daarin belangrijke eigenschappen van de drie regionale modellen.
+ Van elk model is de zogenoemde 
+\begin_inset Quotes pld
+\end_inset
+
+convex hull
+\begin_inset Quotes prd
+\end_inset
+
+ (kortste omtrek rond het modelnetwerk).
+ Voorts is daarin het zwaartepunt van alle knooppunten opgenomen (Afb.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Convex-hulls-en-centroids"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/regional_convex_hull.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Convex-hulls-en-centroids"
+
+\end_inset
+
+Kortste omtrek om de drie regionale modelnetwerken en centrale punten van deze omhulsels
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Omdat de laagopbouw in elk model consistent is,
+ en de bodemeigenschappen binnen de Grondwatersimulator constant zijn over het hele model,
+ zijn deze direct toegevoegd aan de modelinformatie in het hulpbestand.
+ Dit betreft de parameters '
+\series bold
+k
+\series default
+',
+ '
+\series bold
+k33
+\series default
+',
+ '
+\series bold
+ss
+\series default
+' en '
+\series bold
+sy
+\series default
+',
+ die zijn getrokken uit de 
+\series bold
+.npf
+\series default
+ en 
+\series bold
+.sto
+\series default
+ bestanden van de drie regionale modellen.
+ Voor 15 lagen gaat het slechts om hoogstens 60 getallen per model.
+\end_layout
+
+\begin_layout Subsection
+Gegevens voor het lokale model
+\end_layout
+
+\begin_layout Standard
+Via dit hulpbestand kunnen nu gemakkelijk voor elk willekeurige locatie in Vlaanderen de bodemopbouw en de laageigenschappen worden verkregen.
+ Dit werkt als volgt.
+ Gegeven de coördinaten van het centrum van de voorgenomen interventie,
+ kan op basis van de opgeslagen modelomtrek direct worden opgevraagd in welk regionaal model de locatie ligt.
+ Wanneer de locatie in twee deels overlappende regionale modellen ligt,
+ wordt het model gekozen waarvan de locatie het dichtst bij het centrum van het model ligt.
+ Een alternatief is om het model te kiezen waarin de locatie het verst van de omtrek ligt.
+ Hiermee is het regionale model bekend waar de locatie in ligt.
+ Dan worden de coördinaten van de celcentra opgevraagd uit het betreffende binaire gridbestand,
+ en wordt gekeken welke cel zich het dichtst bij de locatie bevindt.
+ Van deze cel wordt de laagopbouw opgevraagd en gebruikt voor het te genereren eindige differentiemodel.
+ De lokale laagopbouw volgt dus uit de lagen in het regionale model waarvan de dikte niet nul is.
+ Van deze lagen worden ook de laageigenschappen opgevraagd.
+ Hiermee is de zijn het centrum,
+ de laagopbouw en de laageigenschappen van het te genereren lokale eindige differentiemodel bekend.
+\end_layout
+
+\begin_layout Subsection
+Netwerk voor het lokale model
+\end_layout
+
+\begin_layout Standard
+Hierna wordt het netwerk in het horizontale vlak gegenereerd voor het lokale model.
+ De meeste ingrepen hebben een zogenoemd interventiepolygon,
+ zoals de omtrek van een bouwput,
+ een verhard oppervlak.
+ Er wordt een rechthoekig netwerk met cellen van 10x10 m gemaakt waar de interventiepolygon geheel in past.
+ Daarbuiten neemt de celwijdte vanaf 10 m toe met een factor 1.25 per kolom of rij cellen.
+ Ieds dergelijks gebeurt wanneer een interventie een of meer putten of retourputten omvat.
+ De gezamenlijke putten vormen dan het interventiepolygon.
+\end_layout
+
+\begin_layout Standard
+Met deze gegevens kan het hele lokale modelnetwerk worden gegenereerd.
+\end_layout
+
+\begin_layout Standard
+Het model is rondom gesloten en moet dus groot genoeg zijn.
+ Gekozen is voor 15x15 km.
+\end_layout
+
+\begin_layout Subsection
+De randvoorwaarden
+\end_layout
+
+\begin_layout Standard
+De randvoorwaarden van het model worden gevormd door enerzijds de interventie zoals een onttrekking of een bemaling,
+ en anderzijds het oppervlaktewater.
+ 
+\end_layout
+
+\begin_layout Standard
+De door te rekenen interventie moet worden omgezet naar randvoorwaarden voor het model.
+ Voor putten en retourputten is dat steeds een gegeven onttrekking of infiltratie in de cel waarin zich de put bevindt.
+ Voor bemalingen is dat een opgelegde verlaging binnen de cellen die deel uitmaken van de bouwput.
+ Voor een te verharden oppervlak is dat een onttrekking gelijk aan het neerslagoverschot in de cellen die tot het verharde oppervlak behoren.
+ Een verharding zonder retourwater impliceert immers dat een deel van het neerslagoverschot aan het grondwatersysteem wordt onttrokken.
+\end_layout
+
+\begin_layout Standard
+Elke interventie gaat gepaard met een tijdpad.
+ Steeds wordt per interventieobject zoals een bronbemaling of een put de verlaging of onttrekking opgeven vanaf een bepaald moment.
+ Een verlaging,
+ bijv.
+ gespecificeerd als [[0,
+ 1.5],
+ [183,
+ 0]] betekent dat deze start met 1.5 m op 
+\begin_inset Formula $t=0$
+\end_inset
+
+,
+ en weer terug gaat naar 0 op 
+\begin_inset Formula $t=183$
+\end_inset
+
+ d.
+ Een dergelijk schema kan onbeperkt worden uitgebreid.
+ Voor putten wordt een plaats van de verlaging het debiet opgegeven en voor verharde oppervlakken het percentage,
+ maar steeds op dezelfde manier.
+\end_layout
+
+\begin_layout Subsection
+Het oppervlaktewater
+\end_layout
+
+\begin_layout Standard
+Het oppervlaktewater is een belangrijke randvoorwaarde die speciale aandacht verdient.
+ Het oppervlaktewater bepaalt hoever de verlagingscontouren uiteindelijk zullen reiken.
+ Op korte termijn is dat vooral de berging.
+ Het oppervlaktewater,
+ de waterlopen,
+ worden als vast beschouw;
+ zij hebben vast peil en vallen ook niet droog tijdens de simulatie.
+ Voor het oppervlaktewater worden de waterlopen van de Open Street Map gebruikt (Afb.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Oppervlaktwater-België-1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+ Dit vectorbestand is zo goed als compleet en accuraat,
+ behalve voor wateroppervlakken.
+ Het bevat echter geen gegevens over de eigenschappen van de waterlopen.
+ Voor de breedte en bodemweerstand zijn derhalve voorlopig standaardwaarden worden gekozen,
+ namelijk 5 m en 5 d.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ow_Belgie_tile_point.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Oppervlaktwater-België-1"
+
+\end_inset
+
+Oppervlaktewater in België (coördinatensysteem ESPG:31370) met locatie van voorbeeld-ingreep (
+\begin_inset Formula $x=193919$
+\end_inset
+
+,
+ 
+\begin_inset Formula $y=194774$
+\end_inset
+
+),
+ en modelgebied van 15x15 km rondom
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het oppervlaktewater binnen het lokale model wordt uit dit nationale vectorbestand geknipt (zie fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:15x15-km-vlak-met-punt-ow"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/tile_plot.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:15x15-km-vlak-met-punt-ow"
+
+\end_inset
+
+Omvang van een lokaal model,
+ 15x15 km rondom het centrum van de ingreep locatie (
+\begin_inset Formula $x=193919$
+\end_inset
+
+,
+ 
+\begin_inset Formula $y=194774$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In een volgende stap wordt het oppervlaktewater binnen het lokale model gesneden met het voor dit lokale model gegenereerde netwerk van cellen dat uit kolommen en rijen bestaat.
+ Dit levert de lengte aan waterlopen binnen elke modelcel op (Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:30x30-km-vlak-met-punt-ow-1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+ Deze lengte 
+\begin_inset Formula $L$
+\end_inset
+
+ met de gekozen breedte 
+\begin_inset Formula $b$
+\end_inset
+
+ en bodemweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ van de waterlopen levert de zogenoemde conductantie (
+\begin_inset Formula $C=Lb/c$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d]) die de factor die de interactie bepaalt tussen modelcel en het oppervlaktewater als zogenoemde (Dit is de General Head Boundary (GHB) van Modflow.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/surf_wat_in_cells.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:30x30-km-vlak-met-punt-ow-1"
+
+\end_inset
+
+15x15 km vlak met zichtbaar modelnetwerk,
+ oppervlaktewater en totale lengte aan oppervlaktewater per modelcel in kleur.
+ De locatie van de ingreep is in het centrum (
+\begin_inset Formula $x=193919$
+\end_inset
+
+,
+ 
+\begin_inset Formula $y=194774$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Beginvoorwaarde
+\end_layout
+
+\begin_layout Standard
+Het lokale model rekent alleen de verlagingen/verhogingen uit ten gevolge van de interventie.
+ Om deze reden wordt de stijghoogte van al het oppervlaktewater op nul gezet en geldt dit ook voor de stijghoogte aan het begin van de simulatie.
+ Absolute grondwaterstanden kunnen alleen worden berekend wanneer ook de waterstanden van het het oppervlaktewater bekend zijn en de beginstijghoogte in het gehele model.
+\end_layout
+
+\begin_layout Subsection
+Berekening
+\end_layout
+
+\begin_layout Standard
+Vervolgens wordt het model tijdsafhankelijk doorgerekend.
+ Dit gaat in een aantal tijdstappen die met een vaste factor,
+ meestal 1.25 groeien tot een volgend moment waarop een verlaging of onttrekking verandert.
+ Vanaf dat moment wordt verder gerekend waarbij weer begonnen wordt met een kleine tijdstap die weer groeit met dezelfde factor.
+ Enzovoort.
+ De tijdstappen zijn dus niet constant,
+ en steeds vanaf een wijziging van een van de randvoorwaarden wordt de berekening voortgezet beginnend met een kleine tijdstap.
+\end_layout
+
+\begin_layout Subsection
+Modelcode
+\end_layout
+
+\begin_layout Standard
+De berekeningen worden uitgevoerd met een in Python geschreven Eindig Differentie Model,
+ 
+\series bold
+fdm3t
+\series default
+,
+ dat beschikbaar is via
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/Olsthoorn/tools/tree/master/fdm/src
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het model rekent tijdsafhankelijk,
+ praktisch zoals Modflow 5,
+ gebaseerd op een netwerk dat bestaat uit rijen,
+ kolommen en lagen,
+ eveneens zoals bij Modflow 5.
+ Het accepteert de specificatie onttrekkingen,
+ vaste stijghoogten en zogenoemde general head boundaries en gaat er ook vanuit dat het doorlaatvermogen van de lagen constant is.
+ Dit houdt het model lineair en snel.
+ Er ook een versie die tevens RIV en DRN randvoorwaarden kent als in Modflow en wel variabele laagdikten aan kan,
+ maar dat is hier niet nodig.
+ Uiteraard kan later besloten te worden voor de berekening direct Modflow te gebruiken.
+\end_layout
+
+\begin_layout Standard
+Na de berekeningen zijn de resultaten beschikbaar in een zogenoemde dictionary.
+ Deze bevat de tijd,
+ het netwerk,
+ de stijghoogten en de verschillende soorten debieten.
+\end_layout
+
+\begin_layout Subsection
+Resultaten
+\end_layout
+
+\begin_layout Standard
+De resultaten kunnen op verschillende manieren worden gespresenteerd.
+ Momenteel is dat
+\end_layout
+
+\begin_layout Enumerate
+Verloop grafische van de stijghoogte in alle lagen voor het 
+\begin_inset Quotes pld
+\end_inset
+
+receptor punt
+\begin_inset Quotes prd
+\end_inset
+
+,
+ het centrum van de interventie.
+\end_layout
+
+\begin_layout Enumerate
+Het grafische verloop van de verschillende debietsoorten voor het hele model:
+ Totaal onttrokken (of geïnfilteerd),
+ totale uitwisseling via punten met vaste stijghoogte (zoals van de bouwput),
+ totale uitwisseling met het oppervlaktewater,
+ en totale uitwisseling met de berging.
+\end_layout
+
+\begin_layout Enumerate
+Een tekst bestand met de debieten per tijdstap.
+\end_layout
+
+\begin_layout Enumerate
+Een platte grond van het model met daarop de interventie (putten,
+ bouwput,
+ bouwsleuven e.d.),
+ het oppervlaktewater (sloten,
+ beken,
+ kanalen,
+ rivieren) en de berekende verlaging op het moment dat de verlaging weer naar nul gaat of de onttrekking staakt danwel na 365 dagen.
+\end_layout
+
+\begin_layout Enumerate
+Een specificatie van de interventie.
+\end_layout
+
+\begin_layout Section
+Voorbeeld
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-voorbeeld-1,"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft een voorbeeld van een ingreep met verlaging binnen een bemalingscontour (
+\begin_inset Quotes pld
+\end_inset
+
+dewatering-polygon
+\begin_inset Quotes prd
+\end_inset
+
+_ omringd door retourputten.
+ De verlagingen zijn getekend voor de tijd waarop de onttrekking aan het oppervlaktewater maximaal is,
+ dat wil zeggen,
+ het moment waarop de verlagingen maximaal zijn.
+ Dit moment valt hier op 
+\begin_inset Formula $t=200$
+\end_inset
+
+ d,
+ Het model netwerk in ingetekend om een beeld te hebben van hoe fijn of grof dit is.
+ Verder zijn de interventies weergegeven,
+ te weten de omtrek van het ontwateringsvlak (de bouwput) en de retourputten.
+ Putten zijn alleen zichtbaar wanneer ze zich in het bovenste watervoerende pakket bevinden;
+ dat is hier het geval,
+ maar bij een aantal permanente winningen niet.
+ Dit kan altijd worden aangepast.
+ De figuur laat duidelijk zien hoe groot de invloed van het oppervlaktewater is.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/bm-216-retourbemaling-bronnen_t183d_Z10.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-voorbeeld-1,"
+
+\end_inset
+
+Berekende verlaging [m] voor een verlaging binnen de omtrek van een bouwput omringd door retourputten.
+ Het moment van maximale verlaging is hier 200 d.
+ De blauwe lijnen zijn waterlopen.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-vs-tijd"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het verloop van de verlaging in het receptorpunt voor alle modellagen.
+ De blauwe lijn is de verlaging in laag 0.
+ Dit is duidelijk de opgelegde verlaging inde bouwput.
+ De oranje lijn is de verlaging in de laag daaronder.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/bm-216-retourbemaling-bronnen_ht.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-vs-tijd"
+
+\end_inset
+
+Verlaging in het receptorpunt (centrum van de bouwput)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verloop-debieten"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ toont het verloop van de debieten.
+ Dit zijn achtereenvolgens:
+\end_layout
+
+\begin_layout Description
+Qfh (fh=fixed head,
+ CHD in Modflow).
+ Dit is het totale debiet [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d] via cellen met opgelegde verlaging.
+ Hier is dit de onttrekking door de gehele bouwput.
+\end_layout
+
+\begin_layout Description
+Qfq (fq = fixed Q,
+ WEL in Modflow).
+ Hier is dit het totale debiet [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d] van de retourputten.
+\end_layout
+
+\begin_layout Description
+Qghb (ghb = general head boundary,
+ GHB in Modflow).
+ Hier het totale debiet [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d] vanuit het oppervlaktewater naar het grondwater.
+\end_layout
+
+\begin_layout Description
+Qsto (sto = storage,
+ STO in Modflow).
+ Het totale debiet [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d] vanuit de berging.
+\end_layout
+
+\begin_layout Standard
+De som van deze debieten is altijd nul.
+\end_layout
+
+\begin_layout Standard
+De 
+\series bold
+Qfq
+\series default
+ (putten) is gering,
+ maar is zoals gespecificeerd.
+ De 
+\series bold
+Qghb
+\series default
+ loopt geleidelijk op omdat bij toenemende verlaging de voeding vanuit het oppervlaktewater ook geleidelijk toeneemt.
+ Het maximum ligt in dit geval bij 
+\begin_inset Formula $t=200$
+\end_inset
+
+ d;
+ dit is het moment waarvoor de contourlijnen zijn weergegeven in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-voorbeeld-1,"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Het debiet van de cellen met opgelegde verlaging,
+ 
+\series bold
+Qfh
+\series default
+,
+ vertoont een piek op 
+\begin_inset Formula $t=0$
+\end_inset
+
+ wanneer de verlaging plotseling wordt opgelegd en opnieuw op 
+\begin_inset Formula $t=183$
+\end_inset
+
+ wanneer de verlaging even plotseling weer naar nul wordt gebracht.
+ De uitkomst is correct omdat in theorie een plotselinge verlaging op het moment zelve een oneindig groot debiet teweeg brengt.
+ In de werkelijkheid wordt een dergelijke verlaging pas na een paar dagen bereikt via het bemalen met bronnen.
+ In dat geval neemt de 
+\series bold
+Qfq
+\series default
+ geleidelijk toe maar is de 
+\series bold
+Qfq
+\series default
+ constant en gelijk aan het debiet van de bemaling (minus retourputten).
+ In theorie komt al het water ogenblikkelijk na een plotselinge verlaging uit de berging.
+ Vandaar dat ook 
+\series bold
+Qsto
+\series default
+ pieken vertoont op de momenten waarop de verlaging plotseling verandert.
+ Deze pieken zijn even groot maar tegengesteld aan die van 
+\series bold
+Qfh
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/bm-216-retourbemaling-bronnen_Qt.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verloop-debieten"
+
+\end_inset
+
+Verloop van de debieten
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De tabel hierna geeft de debieten voor elke tijdstap.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Model water budget
+\end_layout
+
+\begin_layout Plain Layout
+
+------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+ it     t1     t2     Qfh      Qfq       Qs     Qghb        Q
+\end_layout
+
+\begin_layout Plain Layout
+
+  0    0.0    0.1    -4998       12     4985       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  1    0.1    0.2     -939       12      927       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  2    0.2    0.4     -764       12      751       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  3    0.4    0.6     -656       12      644       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  4    0.6    0.8     -582       12      570       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  5    0.8    1.1     -527       12      515       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  6    1.1    1.5     -484       12      472       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  7    1.5    2.0     -449       12      437       -0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  8    2.0    2.6     -420       12      407        0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+  9    2.6    3.3     -395       12      383        0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 10    3.3    4.3     -374       12      362        0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 11    4.3    5.4     -356       12      344        0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 12    5.4    6.9     -340       12      328        0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 13    6.9    8.7     -327       12      314        0        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 14    8.7   11.0     -315       12      302        1        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 15   11.0   13.8     -304       12      290        2        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 16   13.8   17.4     -295       12      280        3        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 17   17.4   21.8     -287       12      270        5        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 18   21.8   27.4     -281       12      260        8        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 19   27.4   34.3     -275       12      250       13        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 20   34.3   43.0     -269       12      238       19        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 21   43.0   53.8     -265       12      225       28        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 22   53.8   67.4     -261       12      210       39        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 23   67.4   84.3     -258       12      192       53        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 24   84.3  105.5     -255       12      173       70        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 25  105.5  131.9     -252       12      151       88        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 26  131.9  165.0     -250       12      129      109        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 27  165.0  183.0     -249       12      114      122        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 28  183.0  183.1     4749        0    -4875      125        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 29  183.1  183.2      691        0     -816      125        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 30  183.2  183.4      516        0     -641      126       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 31  183.4  183.6      408        0     -534      126        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 32  183.6  183.8      334        0     -460      126        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 33  183.8  184.1      279        0     -405      126        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 34  184.1  184.5      236        0     -362      126        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 35  184.5  185.0      201        0     -327      126        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 36  185.0  185.6      172        0     -298      127       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 37  185.6  186.3      147        0     -274      127        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 38  186.3  187.3      126        0     -254      127       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 39  187.3  188.4      108        0     -236      128        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 40  188.4  189.9       92        0     -221      129        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 41  189.9  191.7       79        0     -208      129       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 42  191.7  194.0       67        0     -197      130       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 43  194.0  196.8       57        0     -187      130       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 44  196.8  200.4       48        0     -178      131       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 45  200.4  204.8       40        0     -171      131        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 46  204.8  210.4       33        0     -163      130        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 47  210.4  217.3       28        0     -156      128        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 48  217.3  226.0       23        0     -148      125       -0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 49  226.0  236.8       18        0     -139      121        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 50  236.8  250.4       15        0     -129      114        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 51  250.4  267.3       12        0     -118      106        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 52  267.3  288.5        9        0     -105       95        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 53  288.5  314.9        7        0      -90       83        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 54  314.9  348.0        5        0      -75       70        0
+\end_layout
+
+\begin_layout Plain Layout
+
+ 55  348.0  365.0        4        0      -66       62        0
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Op dezelfde wijze zijn alle 45 voorbeeld interventies doorgerekend en gepresenteerd.
+\end_layout
+
+\begin_layout Section
+Conclusie
+\end_layout
+
+\begin_layout Standard
+We kunnen met een eenvoudig Eindig Differentie Model de verlaging/grondwaterverandering door een willekeurig ingreep op een willekeurige plek binnen Vlaanderen uitrekenen op basis van de laagopbouw en de laageigenschappen die de Grondwatersimulator voor die locatie bevat.
+ In die zin is de berekening consistent met de Grondwatersimulator.
+ Het lokale model houdt echter geen rekening met het verloop van de laagdikte,
+ de opbouw ter plaatse van de ingreep wordt in het gehele lokale model aangehouden.
+ Het lokale model houdt geen rekening met verschillen tussen de breedte en bodemweerstand van waterlopen.
+ Evenmin kunnen waterlopen binnen het lokale model droogvallen.
+ Voorts is het doorlaatvermogen constant en verandert dus ook niet bij een verlaging in het freatische pakket.
+ Tenslotte is geen rekening gehouden met eventuele gedeeltelijke penetratie van putten.
+ De filterlengte van putten is in het lokale model gelijk aan de dikte van de laag waaruit zij onttrekken.
+\end_layout
+
+\begin_layout Standard
+De hier voorgestelde aanpak biedt en opzichte van de Grondwatersimulator het voordeel van eenvoud en snelheid,
+ maar mist de nuance van het oppervlaktewater,
+ ruimtelijk variabele pakketdikte en dynamische pakketdikte.
+ Ten opzichte van analytische berekeningen biedt het lokale model het voordeel rekening te kunnen houden met het voorkomen van oppervlaktewater waardoor het een duidelijk betere representatie van de werkelijke verlaging geeft dan met analytische oplossingen mogelijk is.
+\end_layout
+
+\begin_layout Standard
+Het lokale model rekent alle voorbeeldsituaties met de daarin gespecificeerde uiteenlopende interventietypen zonder meer door.
+ De tijd voor het genereren en doorrekenen van het model ligt in de orde van 18 seconden.
+ De meeste tijd kost het selecteren van het oppervlaktewater uit het vectorbestand voor heel België voor het lokale model.
+ Afhankelijk van de hoeveelheid oppervlaktewater en het verloop in de tijd van de sterkte van de ingreep zit er wat variatie in de totale duur,
+ maar 18 seconden is een goede richtlijn op de Macbook Pro,
+ met kloksnelheid 2.3 Ghz op een 8 core Intel processor met 16MB SSD.
+ Wellicht dat Modflow wat sneller rekent,
+ maar veel winst valt er niet te halen door de tijd die het snijden van het waterlopenbestand vergt.
+\end_layout
+
+\end_body
+\end_document

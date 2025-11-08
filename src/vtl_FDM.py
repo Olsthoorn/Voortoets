@@ -364,7 +364,7 @@ class Vt_model():
         
         case_name = self.case['simulation_name']
         inv_list = list(self.case['interventions'].keys())
-        invs = f" interventions: [{', '.join(inv_list)}]"
+        invs = f"[{', '.join(inv_list)}]"
     
         # --- prepare text to show dewatering property of case
         self.dwat_prop = ""
@@ -393,11 +393,13 @@ class Vt_model():
         # --- water budget: all in the out dictionary (aved as .txt)        
         o = self.out
         txt = []
+        # TODO add the intervention itself
+        # TODO add the layering
         txt.append("Model water budget\n------------------")
         txt.append(f"{'it':>3}{'t1':>7}{'t2':>7}" +
               f"{'Qfh':>8} {'Qfq':>8} {'Qs':>8} {'Qghb':>8} {'Q':>8}")
-        for it in range(1, len(o['t']) - 1):
-            t1, t2 = o['t'][it - 1], o['t'][it]
+        for it in range(0, len(o['t']) - 1):
+            t1, t2 = o['t'][it], o['t'][it + 1]
             txt.append(f"{it:3} {t1:6.1f} {t2:6.1f} " +
                   f"{o['Qfh'][it].sum():8.0f} " +
                   f"{o['Qfq'][it].sum():8.0f} " +
@@ -425,15 +427,68 @@ class Vt_model():
         qlim = np.ceil(abs(qlim) / 50) * 50
         qlim = (-qlim,  qlim)
         
-        if t is None:
-            t = self.out['t'][-1]
-            
-        if "dewatering_line" in inv_list:
-            tplot = list(self.CHD.keys())[-1]
-            it = np.where(self.out['t'] <= tplot)[0][-1]
-        else:        
-            it = np.where(self.out['t'] <= t)[0][-1]
+        # --- Plot the water budget components
+        title = f"case {case_name}: Budget components Qfh, Qfq, Qghb, Qs [all m3/d]"
+        ax = etc.newfig(title, 't [d]', 'Q [m3/d]', figsize=(10, 6), ylim=qlim)
+        ax.plot(o['t'][1:],
+                o['Qfh'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qfh')
+        ax.plot(o['t'][1:],
+                o['Qfq'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qfq')
+        ax.plot(o['t'][1:],
+                o['Qghb'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qghb')
+        ax.plot(o['t'][1:],
+                o['Qs'].sum(axis=-1).sum(axis=-1).sum(axis=1),
+                label='Qs')
         
+        ax.legend(loc='best')
+        
+        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
+        
+        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_Qt.png"))
+        
+        
+        # --- Plot h(t) at the reception point        
+        name = self.case['receptors']['receptor_point'][0]['name']
+        recp = self.case['receptors']['receptor_point'][0]['geometry']
+        
+        title = f"Case {case_name}: Verandering grwst in reception point"
+        ax = etc.newfig(title, 't [d]', 'Verandering grwst [m]', figsize=(10, 6))
+
+        gr = o['gr']
+        for ilay in range(gr.nlay):
+            phi_lay = o['Phi'][:, ilay, : ,:]
+            h_recp = bilinear_interpolate_stack(gr, phi_lay, recp.x, recp.y)
+            ax.plot(o['t'], h_recp, 
+                    label=f"laag {ilay} z=[{gr.z[ilay]:.1f} - {gr.z[ilay + 1]:.1f}] at xy = ({recp.x:.0f}, {recp.y:.0f})")
+        ax.legend(loc='best')
+
+        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
+        
+        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_ht.png"))
+        
+    
+        # --- plot contours of groundwater head change
+        title = f"{case_name} " + invs
+        ax = etc.newfig(title, 'xB [m]', 'yB [m]', figsize=(10, 9.5))
+        ax.set_aspect(1)
+
+        # --- Determine the time it at which the drawdown in the lowest aquifer is a maxium
+            
+        # if "dewatering_line" in inv_list:
+            # tplot = list(self.CHD.keys())[-1]
+            # it = np.where(self.out['t'] <= tplot)[0][-1]
+        # else:
+            # it = np.where(self.out['t'] <= t)[0][-1]
+            # --- moment with the largest drawdown            
+            # # it = np.argmax(np.abs(h_recp)) -1
+            
+        # --- better way to determine it
+        Qghb = self.out['Qghb'].sum(axis=-1).sum(axis=-1).sum(axis=-1)
+        it = np.argmax(np.abs(Qghb)) + 1
+                            
         if ax is None:
             title = (f"{case_name} " + invs + ', ' +
                      f"DDN [m] at t={self.out['t'][it]:.0f}" + "\n"
@@ -442,6 +497,9 @@ class Vt_model():
                      f"Qghb= {self.out['Qghb'][it].sum():.3g}, " +
                      f"Qs= {self.out['Qs'][it].sum():.3g} m3/d")
             ax = etc.newfig(title, "xB [m]", "yB [m]", figsize=(10, 10))
+        else:
+            ax.set_title(f"{title} " + f", t={o['t'][it]:.0f} d")
+
         
         # --- plot the surface water background (used in the model)
         if hasattr(self, 'clipped'):
@@ -466,57 +524,15 @@ class Vt_model():
                 gpd.GeoSeries([geob['geometry']]).plot(
                     ax=ax, edgecolor='r', facecolor='none', linewidth=1)
         
-        # ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d.png"))
-        
+        # ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d.png"))        
         # --- zoom in and save again
         # zoom(10)
         
         # Check plot grid and CHD points
-        self.plot_grd(ax=ax, options=['GHB', 'CHD', 'WEL'], ilay=0)
+        # self.plot_grd(ax=ax, options=['GHB', 'CHD', 'WEL'], ilay=0)
+        self.plot_grd(ax=ax, options=[], ilay=0)
         
-        ax.figure.savefig(os.path.join(images_dir, f"case_name_t{t:.0f}d_Z10.png"))
-                
-
-        # --- Plot the water budget components
-        title = f"case {case_name}: Budget components Qfh, Qfq, Qghb, Qs [all m3/d]"
-        ax = etc.newfig(title, 't [d]', 'Q [m3/d]', figsize=(10, 6), ylim=qlim)
-        ax.plot(o['t'][1:],
-                o['Qfh'].sum(axis=-1).sum(axis=-1).sum(axis=1),
-                label='Qfh')
-        ax.plot(o['t'][1:],
-                o['Qfq'].sum(axis=-1).sum(axis=-1).sum(axis=1),
-                label='Qfq')
-        ax.plot(o['t'][1:],
-                o['Qghb'].sum(axis=-1).sum(axis=-1).sum(axis=1),
-                label='Qghb')
-        ax.plot(o['t'][1:],
-                o['Qs'].sum(axis=-1).sum(axis=-1).sum(axis=1),
-                label='Qs')
-        
-        ax.legend(loc='best')
-        
-        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
-        
-        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_Qt.png"))
-        
-        
-        # --- Plot h(t) at the reception point
-        name = self.case['receptors']['receptor_point'][0]['name']
-        recp = self.case['receptors']['receptor_point'][0]['geometry']
-        
-        title = f"Case {case_name}: Verandering grwst in reception point"
-        ax = etc.newfig(title, 't [d]', 'Verandering grwst [m]', figsize=(10, 6))
-
-        for ilay in range(gr.nlay):
-            phi_lay = o['Phi'][:, ilay, : ,:]
-            h_recp = bilinear_interpolate_stack(gr, phi_lay, recp.x, recp.y)
-            ax.plot(o['t'], h_recp, 
-                    label=f"laag {ilay} z=[{gr.z[ilay]:.1f} - {gr.z[ilay + 1]:.1f}] at xy = ({recp.x:.0f}, {recp.y:.0f})")
-        ax.legend(loc='best')
-        
-        ax.text(0.98, 0.02, self.dwat_prop, transform=ax.transAxes, ha='right', va='bottom')
-        
-        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_ht.png"))
+        ax.figure.savefig(os.path.join(images_dir, f"{case_name}_t{t:.0f}d_Z10.png"))
         
         return None
     
@@ -593,10 +609,13 @@ for id, item in unique_case_types.items():
 ## case = cases[43] # seizoenale-winning
 ## case = cases[44] # bronbemaling
  
-vtmdl = Vt_model(case, wc=5, L=15000, t_end=365., tsmult=1.25)
-
-vtmdl.run_mdl()
-vtmdl.evaluate(t=183, ax=None, levels=None)
+for ic, case in cases.items():
+    case = cases[ic]
+    if not case['simulation_name'].startswith('bm-216'):
+        pass # continue
+    vtmdl = Vt_model(case, wc=5, L=15000, t_end=365., tsmult=1.25)
+    vtmdl.run_mdl()
+    vtmdl.evaluate(t=183, ax=None, levels=None)
 
 plt.show()
 print('Done!')
