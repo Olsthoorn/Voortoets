@@ -6,12 +6,14 @@
 
 import os
 from pathlib import Path
+from itertools import cycle
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 from fdm.src import fdm3
 from fdm.src.mfgrid import Grid
+
 
 # %%
 cwd = os.getcwd()
@@ -219,6 +221,7 @@ def stroming_numeriek(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=None):
     ax.plot(gr.xm[0], gr.zm[0], 'ro', ms=20, mec='b', mfc='blue', zorder=100)
     
     out = fdm3.fdm3(gr, K=k, c=None, FQ=FQ, HI=HI, IBOUND=IBOUND, GHB=None)
+    out['gr'] = gr
     if case not in [1, 2]:
         dQ = Q / 20
         print(f"phiMn={out['Phi'].min():.4g}, phiMax={out['Phi'].max():.4g}")
@@ -245,6 +248,7 @@ def stroming_numeriek(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=None):
     # ax.grid()
     ax.legend()
     print("Done")
+    return out
 
 
 
@@ -253,16 +257,36 @@ if __name__ == '__main__':
     
     b, D, N, k = 20, 10, 0.001, 1
     
-    if True:
+    if False:
         stroming_analytisch(b=b, D=D, dxy=0.1, N=N, k=k, case=None, ax=None)
         
-    if False:    
+    if True: 
+        fig2, ax2 = plt.subplots(figsize=(8, 6))
+        fig2.suptitle("Narekenen Ernst (1962, fig 7)\n"
+                      f"b={b} m, D={D} m, k={k} m/d, N={N} m/d, ND/(2k)={N * D/(2 * k):.3f} m, D/(2k)={D/(2*k)} [d]")
+        ax2.set_title("Stijghoogte aan freatisch vlak in de verschillende deelstroomfiguren")
+        ax2.set(xlabel='x[m]', ylabel=r'$\phi - \phi_0$ [m]')
+        ax2.grid(True)
+           
         fig, axs = plt.subplots(3,2, sharex=True, sharey=True, figsize=(12, 10))
         fig.suptitle("Ernst (1962) Fig 7, numeriek. (Phi=blauw, Psi=Rood)\n"
-                     f"b={b} m, D={D} m, N={N} m/d, k={1} m/d")
+                     f"b={b} m, D={D} m, N={N} m/d, k={1} m/d, ND/(2k)={N * D/(2 * k):.3f} m, D/(2k)={D/(2*k)} [d]")
+        
+        clrs = cycle('brgkmc')
         for ic, ax in enumerate(axs.flatten()):
-            stroming_numeriek(b=b, D=D, dxy=0.1, N=N, k=k, case=ic, ax=ax)
+            out = stroming_numeriek(b=b, D=D, dxy=0.1, N=N, k=k, case=ic, ax=ax)
             fig.savefig(os.path.join(images, "ErnstFig7_numeriek.png"))
+
+            if ic > 0:
+                clr = next(clrs)
+                if ic + 1 == 3:
+                    ax2.plot(out['gr'].xm[::5], out['Phi'][0, 0, ::5], '.-', color=clr, label=f"freatisch deelfiguur {ic + 1}")
+                    ax2.plot(out['gr'].xm[::5], out['Phi'][-1, 0, ::5], '.--', color=clr, label=f"basis, deelfiguur {ic + 1}")
+                else:
+                    ax2.plot(out['gr'].xm, out['Phi'][0, 0, :], ls='solid', color=clr, label=f"freatisch deelfiguur {ic + 1}")
+                    ax2.plot(out['gr'].xm, out['Phi'][-1, 0, :], ls='dashed', color=clr, label=f"basis, deelfiguur {ic + 1}")
+    ax2.legend(loc='center')
+    fig2.savefig(os.path.join(images, "ErnstNumeriekPhimaaiveld.png"))
 
     plt.show()
     print("done")
