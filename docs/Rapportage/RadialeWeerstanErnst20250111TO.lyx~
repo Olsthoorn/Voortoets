@@ -287,17 +287,17 @@ Voor het beter waarderen van de figuren
 \end_inset
 
  en 7c zou men de sloot moeten terug brengen tot een enkel punt met een gegeven peil.
- De stroming in de twee doorsneden 7b en 7c doorsneden worden dan geheel door de stromingsrandvoorwaarden bepaald,
+ De stroming in de twee doorsneden 7b en 7c doorsneden worden dan geheel door stromingsrandvoorwaarden bepaald,
  onafhankelijk van enige stijghoogte.
  In figuur 7b en 7c is er slechts één punt met gegeven stijghoogte,
  de tot punt gereduceerde leiding in de linkerbovenhoek.
  Onder deze omstandigheden,
- met de uniforme onttrekking gelijk aan N/D over het oppervlak van de doorsnede van fig,
+ met de uniforme onttrekking gelijk aan N/D over het oppervlak van de doorsnede van fig.
  7b krijgen we zuiver verticale stroming waarvan het bijbehorende freatisch vlak een rechter lijn is met stijghoogte gelijk aan het slootpeil in de linkerbovenhoek.
 \end_layout
 
 \begin_layout Standard
-Er is slechts een puntIn zo'n situatie is de stijghoogte volledig vrij.
+Er is slechts een punt in zo'n situatie is de stijghoogte volledig vrij.
  In dit geval met een punt met stijghoogte 
 \end_layout
 
@@ -305,7 +305,7 @@ Er is slechts een puntIn zo'n situatie is de stijghoogte volledig vrij.
 Het zal direct duidelijk zijn geen van de deelstromen op zichzelf compatibel is met de positie van het freatisch vlak;
  dat vlak klopt alleen voor de gezamenlijke stroming.
  De linker rand is in de uitgangspositie gesloten,
- maar bij de deelstromen van fig 7c en 7d duidelijk niet.
+ maar bij de deelstromen van figuren 7c en 7d duidelijk niet.
  De bijna uniforme naar links gerichte flux in figuur 7c moet in fig.
  7d exact worden gecompenseerd met een tegengestelde flux door de stroming die het gevolg is van de contractie van stroomlijnen in fig.
  7d.
@@ -488,15 +488,7 @@ De sloot wordt in dit model vertegenwoordigde door een cel (0.1x0.1 m) in de lin
  Dat wordt natuurlijk ander in figuur 5,
  waar de uitstroom over linkerrand wordt opgevangen en via de sloot (de cel met vaste stijghoogte) afgevoerd.
  Hetzelfde geldt in de 1e en laatste figuur 1 met de samengestelde stroming.
- Daarin wordt het neerslaroveschot dat infiltreert via de bovenrand afgevoerd via de 
-\begin_inset Quotes pld
-\end_inset
-
-slootcel
-\begin_inset Quotes prd
-\end_inset
-
- in de linker bovenhoek.
+ Daarin wordt het neerslagoverschot dat infiltreert via de bovenrand afgevoerd via de rekencel die de sloot in de linker bovenhoek vertegenwoordigt.
 \end_layout
 
 \begin_layout Standard
@@ -1553,7 +1545,7 @@ Op de stippellijn in deze figuur is de potentiaal gelijk aan het peil van het op
 \begin_inset Quotes prd
 \end_inset
 
- We hebben gezien dat de stippellijn exact horizontaal is en de hoogte heeft van het peil in de leiding wanneer de leidingdoorsnede tot een punt is teruggebracht.
+ We hebben gezien dat de stippellijn exact horizontaal is en de hoogte heeft van het peil in de leiding wanneer de doorsnede van de sloot tot een punt is teruggebracht.
  Ervan uitgaande dat het freatisch vlak als bovengrens van het stroomdomein in alle deelfiguren in fig.
  7 van Ernst hetzelfde is,
  volgt dat 
@@ -1781,7 +1773,7 @@ De stroming door contractie van stroomlijnen kan worden afgeleid van die waarbij
 
  en een flux gelijk aan nul op de verticale stroomlijn onder de onttrekking.
  Wij willen dat de de stroming door de contractie van stromingen niet nul is maar juist precies die van de voorgaande oplossing (fig.
- 7b + 7c) neutraliseerd en op grotere afstand gelijk aan nul wordt.
+ 7b + 7c) neutraliseert en op grotere afstand gelijk aan nul wordt.
  Dit kunnen we doen door een negatieve uniforme stroming met stroomdichtheid 
 \begin_inset Formula $q_{x}=-\frac{Q}{D}=\frac{Nb}{D}$
 \end_inset
@@ -2204,7 +2196,7 @@ Aldus wordt de referentie waarde
 \end_layout
 
 \begin_layout Standard
-Defineeer de referentiepotentiaal
+Definieer de referentiepotentiaal
 \end_layout
 
 \begin_layout Standard
@@ -2336,7 +2328,7 @@ Zoals verwacht:
 \end_layout
 
 \begin_layout Standard
-De uiteindelijek vorm na weglaten van irrelevante constanten geeft
+De uiteindelijke vorm na weglaten van irrelevante constanten geeft
 \end_layout
 
 \begin_layout Standard

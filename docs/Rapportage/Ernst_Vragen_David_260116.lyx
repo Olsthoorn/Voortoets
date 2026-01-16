@@ -1,0 +1,970 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\usepackage{epstopdf} % to include .eps graphics files with pdfLaTeX
+\usepackage{flafter}   % Don't place floats before their definition
+%\usepackage{topcapt}  % Define \topcation for placing captions above tables (not in gwTeX)
+
+\usepackage{xurl}      % better URL setting, uses old url package
+
+\usepackage{xcolor}
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\usepackage[]{hyperref} % Generates all cross references
+\hypersetup{            % Setting options for hyperref package
+	breaklinks=true,    % break line with long hyperlinks
+	colorlinks=true,    % coloured links
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=darkblue,
+	citecolor=blue,
+	backref=page
+} 
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{alltt}
+
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% \lstdefinestyle{mystyle}{
+%   language=Python,
+%   numbers=left
+% }
+
+% Put lstset here, after lstdefinestyle
+% \lstset{style=mystyle}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language dutch
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command biber
+\index_command default
+\float_placement h
+\float_alignment center
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\listings_params "language=Python,extendedchars=false,frameround=fttt,numbers=left,% line numbers use none,numberstyle={\tiny},stepnumber=2,% line numbers only every so many,numbersep=9pt,% how far line numbers from text?,showspaces=false,showstringspaces=false,showtabs=false,tab={\rightarrowfill},basicstyle={\small},keywordstyle={\color{blue}},commentstyle={\color{green}},stringstyle={\ttfamily \color{magenta}},identifierstyle={\color{black}}"
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Beantwoording vragen David Simpson
+\end_layout
+
+\begin_layout Author
+T.N.Olsthoorn
+\end_layout
+
+\begin_layout Date
+16 januari 2026
+\end_layout
+
+\begin_layout Section
+Waarom zijn de verticale stroomlijnen in Fig.
+ 7b van Ernst niet zuiver verticaal.
+\end_layout
+
+\begin_layout Standard
+Dat zouden ze wel moeten zijn.
+ Het stroombeeld is volledig bepaald door stroomranden.
+ Althans behalve de natte omtrek van de sloot.
+ Neem even de doorsnede als zuivere rechthoek zoals ik die heb doorgerekend.
+ Als je nu de sloot terugbrengt tot een punt en de uniforme onttrekking 
+\begin_inset Formula $N/D$
+\end_inset
+
+ over verdeeld over de hele doorsnede oplegt,
+ dan krijg je overal exact verticale stroomlijnen en op de lijn op dezelfde hoogte als de sloot stijghoogte exact gelijk aan nul.
+ Zo heb ik dat ook uitgerekend,
+ de cel links boven heeft stijghoogte nul de rest wordt berekend.
+ Het maakt dus niet uit of je alleen die cel stijghoogte nul oplegt of langs het gehele bovenvlak,
+ over over welk deel van het bovenvlak dan ook,
+ de stroomlijnen blijven exact verticaal.
+ De stroming door het bovenvlak is gelijk aan N:
+ Of je die stijghoogte nu in een punt of over een willekeurig ander punt of deel van het bovenvlak oplegt,
+ het maakt niet uit.
+ De stroming wordt bepaald door de flux N over de de bovenrand en de uniforme onttrekking N/D (de divergentie).
+\end_layout
+
+\begin_layout Standard
+Nu de vraag:
+ Ernst heeft de sloot een ruimtelijke vorm gegeven in plaats van een punt of horizontale lijn waardoor je een kleine afwijking van de verticale stroomlijnen krijgt.
+\end_layout
+
+\begin_layout Standard
+Ernst heeft ook het stroomdomein in alle figuren gelijk gehouden aan dat van de samengestelde stroming.
+ Dus het 
+\begin_inset Quotes pld
+\end_inset
+
+freatisch vlak
+\begin_inset Quotes prd
+\end_inset
+
+ in fig.
+ 7b is niet het freatisch vlak dat bij de stroming van fig.
+ 7b past maar dat van fig.
+ 7a.
+ Het 
+\begin_inset Quotes pld
+\end_inset
+
+freatische vlak
+\begin_inset Quotes prd
+\end_inset
+
+ van fig.
+ 7b moet je zien als een dichte rand met net daaronder de injectie gelijk aan het neerslagoverschot N.
+ De stijghoogte op deze rand is dus lager dan de sloot (negatief ten opzichte van atmosferisch) pas op de stippellijn is die gelijk aan nul (de sloot).
+ Je kan ook aan het plaatje van Ernst zien dat het 
+\begin_inset Quotes pld
+\end_inset
+
+freatisch vlak
+\begin_inset Quotes prd
+\end_inset
+
+ van fig.
+ 7b niet een freatisch vlak is,
+ immers de helling ervan zou dan een horizontale stromingscomponent veroorzaken.
+ Het gaat wat ver om dit allemaal te illustreren maar met mijn modelletje kan dat wel.
+\end_layout
+
+\begin_layout Section
+Formule 
+\begin_inset Formula $D^{*}/k=D/(2k)$
+\end_inset
+
+ is de maximale verticale weerstand,
+ de gemiddelde verticale weerstand zou dan volgens integratie tussen 
+\begin_inset Formula $0$
+\end_inset
+
+ en 
+\begin_inset Formula $b$
+\end_inset
+
+,
+ met deling door 
+\begin_inset Formula $b$
+\end_inset
+
+,
+ gelijk zijn aan 
+\begin_inset Formula $D/(3kv)$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Standard
+We gaan uit van figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ernst,-nagerekend"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ dit is de situatie van Ernst met dien verstande dat de hoogte van het freatisch vlak boven het slootpeil (maar niet de stijghoogte) wordt verwaarloosd omdat deze veel kleiner wordt verondersteld dan de dikte van het watervoerend pakket,
+ zoals in de praktijk praktisch steeds acceptabel is.
+ Verderop zal worden onderzocht wanneer deze dikte niet mag worden verwaarloosd.
+\end_layout
+
+\begin_layout Standard
+De doorsnede heeft een breedte 
+\begin_inset Formula $b$
+\end_inset
+
+ en de waterscheiding ligt op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ en midden onder de sloot,
+ die hier tot een enkele modelcel van 
+\begin_inset Formula $0.1\times0.1$
+\end_inset
+
+ m is teruggebracht,
+ tot als het ware een punt.
+ De oriëntatie met 
+\begin_inset Formula $x=0$
+\end_inset
+
+ op de waterscheiding links en 
+\begin_inset Formula $x=b$
+\end_inset
+
+ het midden van de leiding links is om consistent te zijn met de afgeleide analytische formules.
+ In fig.1/2 (met alleen verticale stroming),
+ fig.1/3 (met alleen horizontale stroming) en fig.1/4 (de som van fig.
+ 1/2 en 1/3) heeft de sloot (de modelcel met gegeven stijghoogte) geen enkele invloed op het stroombeeld.
+ Waar dit punt ook wordt gelegd,
+ dat blijft exact hetzelfde want via dit punt vindt in fig.1/2,
+ 1/2 en 1/4 infiltratie noch onttrekking plaats.
+ Maar zonder een punt met gegeven stijghoogte is de stijghoogte onbepaald,
+ dus voor een zinvol stijghoogtebeeld moeten we toch in tenminste een punt in de doorsnede.
+ Voor het begrip is het wellicht het eenvoudigst om dit voor deze figuren rechtsonder te kiezen zoals in figuur 1 is aangegeven met de blauwe kwart schijf.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstFig7_numeriek.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Ernst,-nagerekend"
+
+\end_inset
+
+Ernst,
+ nagerekend met doorsnede vereenvoudigd tot een rechthoek (dikte grondwaterstand ten opzichte van slootpeil klein ten opzichte van de dikte van het watervoerend pakket)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor extra inzicht voegen we fig.
+ 2 toe,
+ die voor alle onderscheiden situaties de numeriek berekende stijghoogte toont ter hoogte van het freatisch vlak en aan de basis van de doorsnede.
+ Merk op dat fig.1/1 en fig.1/6 hetzelfde zijn.
+\end_layout
+
+\begin_layout Standard
+De blauwe stippellijn in fig.2 geeft de stijghoogte aan de basis van fig.1/2.
+ Door de keuze van het punt met stijghoogte nul rechts onder is nu de stijghoogte over de hele breedte van de basis van het watervoerend pakket nul,
+ en de blauwe stippellijn dus horizontaal.
+ De zuiver verticale stroming wordt veroorzaakt door infiltratie geijk aan 
+\begin_inset Formula $N$
+\end_inset
+
+ bovenin en uniforme onttrekking 
+\begin_inset Formula $N/D$
+\end_inset
+
+ over de gehele doorsnede.
+ Hierdoor neemt de stijghoogte lineair af met de diepte en wordt nul onderaan waar de stroming ook precies nul wordt.
+ De stijghoogte bovenin fig.1/2 is exact 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+ hoger dan onderin.
+ Daarom is de getrokken blauwe lijn horizontaal en ligt op 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+.
+ Hadden we het nulpunt rechts bovenin gekozen dan was de getrokken blauwe lijn overal op hoogte nul en de gestippelde op 
+\begin_inset Formula $-ND/(2k_{v})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+De rode lijn met puntjes hoort bij fig.1/3 met uitsluitend horizontale stroming.
+ Vanwege uitsluitend horizontale stroming valt de rode gestreepte lijn met puntjes aan de basis samen met de rode getrokken lijn met puntjes aan de top.
+ De verloop voldoet op elke hoogte aan Dupuit want geen verticale stromingscomponent en daarom zijn de stroomlijnen horizontaal (niet getekend) en de stijghoogtelijnen verticaal.
+ Fig.
+ 2 wordt verkregen door op de lijn 
+\begin_inset Formula $x=b$
+\end_inset
+
+ uniform 
+\begin_inset Formula $Nb/D$
+\end_inset
+
+ te onttrekking en over de gehele sectie uniform 
+\begin_inset Formula $N/D$
+\end_inset
+
+ te infiltreren.
+\end_layout
+
+\begin_layout Standard
+De groene lijn hoort bij de situatie in fig.1/4.
+ Dit is de superpositie van fig.1/2 en fig.1/3 met zowel horizontale en verticale stroming.
+ Deze situatie wordt verkregen door bovenin uniform een neerslagoverschot gelijk aan 
+\begin_inset Formula $N$
+\end_inset
+
+ te infiltreren en op de verticaal 
+\begin_inset Formula $x=b$
+\end_inset
+
+ uniform 
+\begin_inset Formula $Nb/D$
+\end_inset
+
+ te onttrekking.
+ De uniforme onttrekking 
+\begin_inset Formula $-N/D$
+\end_inset
+
+ in de situatie van fig.1/2 valt weg tegen de uniforme infiltratie +N/D van fig.1/3 zodat alleen de infiltratie langs de bovenrand 
+\begin_inset Formula $N$
+\end_inset
+
+ en de onttrekking 
+\begin_inset Formula $Nb/D$
+\end_inset
+
+ op de verticaal 
+\begin_inset Formula $x=b$
+\end_inset
+
+ over blijven.
+ In deze situatie valt de gestreepte groene lijn aan de basis van het pakket samen met beide rode lijnen.
+ De getrokken groene lijn ligt daar exact 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+ boven.
+ Dus zonder contractie van stroomlijnen ligt de stijghoogte aan de top over het gehele profiel altijd precies 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+ boven de stijghoogte aan de basis.
+ 
+\series bold
+Om deze reden kan 
+\begin_inset Formula $D/\left(2k_{v}\right)$
+\end_inset
+
+ worden opgevat als verticale weerstand
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+De zwarte lijnen horen bij de situatie in fig.2/5 en zijn het gevolg van uitsluitend de contractie van de stroomlijnen.
+ In deze fig.1/5 en in fig.1/1 resp.
+ fig.1/6 doet de plek van het punt met gegeven stijghoogte (de sloot) er wel toe.
+ Aan de zwarte streepjeslijn aan de basis en de getrokken lijn aan de top zien we dat het effect van de contractie van de stroomlijnen is verdwenen op ca.
+ 1.5 maal de pakketdikte vanaf de sloot.
+ De stijghoogte door contractie van de stroomlijnen op grotere afstanden is gelijk aan de radiale weerstand maal de onttrekking 
+\begin_inset Formula $Q=Nb$
+\end_inset
+
+.
+ Oftewel door de contractie van de stroomlijnen is de stijghoogte op meer dan ca.
+ 1.5 maal de pakketdikte exact zoveel hoger dan het slootpeil als de zwarte lijnen aangeven.
+ De hoogte van de zwarte lijnen is uiteraard afhankelijk van de grootte van de natte omtrek van de sloot,
+ die hier heel klein is,
+ namelijk bepaald door een enkele kleine cel in de linker bovenhoek.
+ Anders,
+ en meer populair gezegd:
+ de hoogte van de zwarte lijnen op 
+\begin_inset Formula $>1.5D$
+\end_inset
+
+ van de sloot is precies de stijghoogte boven de sloot die nodig is om de totale instroom 
+\begin_inset Formula $Nb$
+\end_inset
+
+ door de omtrek van de sloot naar buiten te persen.
+ Waar de twee zwarte lijnen uit elkaar lopen heeft de stroming door de contractie van stroomlijnen een verticale component.
+ Het verschil tussen de zwarte lijnen vertegenwoordigt het verlies aan stijghoogte door alleen de verticale stromingscomponent gerekend vanaf de basis van het pakket tot aan de top.
+ Dit verlies is het grootst op 
+\begin_inset Formula $x=b$
+\end_inset
+
+,
+ want daar veroorzaakt de contractie van de stroomlijnen de grootste verticale flux.
+\end_layout
+
+\begin_layout Standard
+De paarse lijnen geven het verloop van de stijghoogte aan de basis en de top in de situatie van samengestelde stroming in fig.1/1 en fig.1/6.
+ Op meer dan 
+\begin_inset Formula $1.5D$
+\end_inset
+
+ vanaf de sloot liggen deze lijnen even hoog boven de zwarte als de groene boven de blauwe.
+ De paarse getrokken lijn voor het freatisch ligt 
+\begin_inset Formula $>1.5D$
+\end_inset
+
+ van de sloot praktisch 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+ hoger dan de paarse streepjeslijn aan de pakketbasis.
+ Asymptotisch is dit verschil exact.
+ Op kleinere afstanden verandert dit beeld door het effect van de contractie van de stroomlijnen.
+ Vlak bij de sloot is de stijghoogte aan de pakketbasis juist veel hoger dan die aan de top;
+ het water moet immers omhoog naar de sloot worden gestuwd.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstNumeriekPhimaaiveld.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Stijghoogte-freatisch-vlak"
+
+\end_inset
+
+Stijghoogte freatisch vlak en aan de basis in de deelfiguren van fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ernst,-nagerekend"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ De blauwe lijn is voor deelfiguur 2 met alleen verticale
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Hoe groot is de verticale weerstand,
+ wat zijn invloed op het freatisch vlak?
+\end_layout
+
+\begin_layout Standard
+Om deze vraag scherp te krijgen is fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-freatisch-vlak"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ hieronder nogmaals weergegeven,
+ maar dan alleen voor fig.1/4 (samengestelde stroming zonder contractie van stroomlijnen),
+ fig.1/5 (contractie van stroomlijnen) en fig.1/6 (samengestelde stroming).
+ De absolute hoogte van de blauwe lijnen (fig.1/4) is onbepaald omdat de sloot geen invloed heeft en elke willekeurige stijghoogte op een willekeurige plek in de doorsnede kan worden gebruikt zonder dat het stroombeeld of de relatieve stijghoogten veranderen.
+ Van belang is dat het verschil tussen de stijghoogte op de waterscheiding op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ 
+\begin_inset Formula $Nb^{2}/(2kD)$
+\end_inset
+
+ hoger is dan op 
+\begin_inset Formula $x=b$
+\end_inset
+
+ en dat de stijghoogte aan de basis overal 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+ lager is dan aan het bovenvlak van de doorsnede.
+\end_layout
+
+\begin_layout Standard
+De stijghoogte in fig.1/6 (samengestelde stroming) is gelijk aan die in fig.(1/5) contractie van stromingen plus Dupuit (blauwe lijnen).
+ Dit is waar zowel aan het bovenvlak als aan het ondervlak van de doorsnede.
+ Op afstand 
+\begin_inset Formula $>1.5D$
+\end_inset
+
+ van de sloot,
+ is er geen verschil tussen boven en ondervlak als gevolg van de contractie van stroomlijnen.
+ In de samengestelde stroming is de stijghoogte in het ondervlak daar dus altijd 
+\begin_inset Formula $ND/(2k_{v})$
+\end_inset
+
+ lager dan die aan het bovenvlak.
+ Wat we echter ook zien en dat is cruciaal,
+ is dat de stijghoogte in het bovenvlak exact de bijdrage van Dupuit 
+\begin_inset Formula $(N/(2kD)(b^{2}-x^{2})$
+\end_inset
+
+ hoger is dan de stijghoogteverhoging door de contractie van de stroomlijnen.
+ Met andere woorden,
+ in de weerstand,
+ gedefinieerd als stijghoogteverschil tussen freatisch vlak en sloot,
+ hoort helemaal geen verticale weerstandsterm 
+\begin_inset Formula $D^{*}/k_{v}=D/(2k_{v})$
+\end_inset
+
+,
+ deze zit namelijk al in de weerstand door de contractie van de stroomlijnen.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+En dit had ik me tot nu toe niet gerealiseerd.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../Entiteiten/Hygea/2022-AGT/Coding/images/ErnstNumeriekPhimaaiveld_456_annotatee.png
+	lyxscale 60
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Dupuit-etc"
+
+\end_inset
+
+Dupuit stroming (deelfiguur 4),
+ contractie van stroomlijnen (deelfiguur 5) en samengestelde stroming (deelfiguur 6)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+De doorsnede van Ernst (1962) met sloot en echt freatisch vlak
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft dezelfde situatie als hiervoor maar nu met een sloot met reële afmetingen en een freatisch vlak dat duidelijk hoger is dan het slootpeil.
+ De doorsnede is zoveel mogelijk in overeenstemming gebracht met de afmetingen die Ernst in zijn fig.7 toepast.
+ Ook is in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/2 met een stippellijn de stijghoogtecontour aangegeven met het slootpeil;
+ dit is dezelfde lijn die Ernst ook in zijn figuur heeft getekend,
+ maar hier berekend.
+ Het is duidelijk dat bij het vasthouden van de vorm van het domein dat hoort bij de samengestelde stroming in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/1 de stijghoogte in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/2 boven de stippellijn lager is dan het slootpeil.
+ De stippellijn is feitelijk het freatisch vlak dat hoort bij 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/2.
+ Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ komt overeen met fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ernst,-nagerekend"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ waarin de sloot tot een punt was teruggebracht en de dikte van het pakket uniform werd gehouden.
+ Die eerdere figuur is gemakkelijker te interpreteren omdat hij exact met de theorie overeen komt.
+ In fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ veroorzaakt de afmeting van de sloot een lichte afwijking van het ideale beeld van de horizontale en de verticale isohypsen van fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ernst,-nagerekend"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/2 en 3.
+ Merk op dat gezien de afmetingen een zeer kleine doorlatendheid moest worden gekozen om de grote verhoging van het freatisch vlak te krijgen die Ernst in zijn figuur tekent.
+ Omdat in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ernst,-nagerekend"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ de pakketdikte uniform is verondersteld,
+ maakt het voor die figuur niet uit wat voor doorlatendheid wordt gekozen.
+ Omwille van de consistentie is ook in die figuur dezelfde lage doorlatendheid toegepast als in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstFig7_numeriek_freat.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Doorsnede-van-Ernst-freatisch"
+
+\end_inset
+
+Doorsnede van Ernst (1962,
+ fig.7) nagerekend met sloot met eindige afmeting en freatisch vlak dat sterk afwijkt van uniforme pakketdikte,
+ inclusief streepjeslijn met stijghoogte nul in deelfiguur 2.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogteverloop-in-doorsnede-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ komt overeen met fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-freatisch-vlak"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Hierin wordt met de stippellijnen de stijghoogte aan de basis van het watervoerend pakket gegeven en met de getrokken lijnen de stijghoogte op het niveau van het freatisch vlak van de samenstelde stroming.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstNumeriekPhimaaiveld_456_freat.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Stijghoogteverloop-in-doorsnede-freatisch"
+
+\end_inset
+
+Stijghoogteverloop in doorsnede van fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-van-Ernst-freatisch"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ aan de basis van het pakket (streepjeslijnen) en op de hoogte van het freatisch vlak van de samengestelde stroming.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
