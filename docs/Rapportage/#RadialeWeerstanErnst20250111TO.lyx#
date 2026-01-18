@@ -86,11 +86,10 @@
 \use_package stackrel 1
 \use_package stmaryrd 1
 \use_package undertilde 1
-\cite_engine biblatex
-\cite_engine_type authoryear
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
-\biblatex_bibstyle authoryear
-\biblatex_citestyle authoryear
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
@@ -2622,6 +2621,56 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-aan-de-top-en-basis-reele-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het verloop van de stijghoogte in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Numerieke-doorrekening-reeele-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/4,
+ /5 en /1 (/6).
+ Deze is direct te vergelijken met fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verloop-van-phi-onder-en-boven-rechth-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ voor de gestileerde doorsnede in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Figuur-7-numeriek"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement document
 alignment document
@@ -2651,6 +2700,62 @@ name "fig:Numerieke-doorrekening-reeele-dsn"
 
 Numerieke doorrekening van de doorsnede van Ernst (1962,
  fig.7)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstNumeriekPhimaaiveld_456_freat.png
+	width 60cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Stijghoogte-aan-de-top-en-basis-reele-dsn"
+
+\end_inset
+
+Stijghoogte aan de top en basis van het watervoerende pakket van fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Numerieke-doorrekening-reeele-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ voor stroming met en zonder contractie van de stroomlijnen en de stroming door de contractie zelf.
 \end_layout
 
 \end_inset
@@ -2907,14 +3012,60 @@ nolink "false"
 \end_layout
 
 \begin_layout Section
-Verlaging door de contractie van de stroomlijnen analytisch.
+Verlaging door de contractie van de stroomlijnen analytisch
 \end_layout
 
 \begin_layout Standard
-De weerstand door contractie van stoomlijnen volgt dus geheel uit de tweede figuur in fig.
+We hebben gezien dat de stroming door contractie van de stroomlijnen analytisch is beschrijven door de onttrekking 
+\begin_inset Formula $Q=Nb$
+\end_inset
+
+ in de bovenhoek plus een tegenstroom die de horizontale flux in fig 3 exact compenseert.
+ Leggen we voor de eenvoud de onttrekking op 
+\begin_inset Formula $Z=0$
+\end_inset
+
+ zodat de stroming 
+\begin_inset Formula $Q$
+\end_inset
+
+ van rechts bij verticaal 
+\begin_inset Formula $x=0$
+\end_inset
+
+ aankomt,
+ dan is de stroming door de contractie van de stroomlijnen exact wiskundig te beschrijven als de volgende complexe functie.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(\sin\left(\frac{i\pi}{2D}z\right)\right)-\frac{Q}{D}z\ ;\qquad x\ge0,\ 0>y>-D\label{eq:omega_contratie}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is weer zo'n situatie die geheel door stroomlijnen is bepaald waardoor de stijghoogte in feite zweeft;
+ men kan altijd een constante bij de stijghoogte optellen zonder dat het stroombeeld verandert.
+ Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:Ernst-fig7-analytisch"
+reference "fig:Stroming-door-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het patroon van potentiaal- en stroomlijnen volgens vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
 plural "false"
 caps "false"
 noprefix "false"
@@ -2926,10 +3077,36 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
+Wat is de potentiaal op 
+\begin_inset Formula $z=-iD$
+\end_inset
+
+,
+ het stagnatiepunt aan de basis van het watervoerend pakket onder de sloot?
+ Vul voor z in vergelijking 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ 
+\begin_inset Formula $-iD$
+\end_inset
+
+ in:
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
-\[
-\Omega_{1}=\frac{Q}{2\pi}\ln\left(\sin\left(i\frac{\pi}{2}\left(\frac{b-z}{D}-i\right)\right)\right)-Q\left(\frac{b-Z}{D}-i\right)
-\]
+\begin{align*}
+\Omega(-iD) & =\frac{2Q}{\pi}\ln\left(\sin\left(\frac{\pi}{2}\right)\right)-iQ\\
+ & =-iQ
+\end{align*}
 
 \end_inset
 
@@ -2937,10 +3114,59 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
+Met andere woorden de potentiaal in deze functie is daar nul.
+ Let wel,
+ dat wil niet zeggen dat de werkelijke potentiaal daar nul is,
+ immers er kan een willekeurige waarde bij worden opgeteld.
+ Daar komen we verderop op terug.
+\end_layout
+
+\begin_layout Standard
+Wat is de potentiaal vlak in de buurt van de onttrekking?
+ Dus 
+\begin_inset Formula $z\rightarrow0$
+\end_inset
+
+?
+ De rechter term in vergl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ valt direct weg.
+ Verder hebben we 
+\begin_inset Formula $\sin\left(iw\right)=i\sinh\left(w\right)$
+\end_inset
+
+.
+ Met 
+\begin_inset Formula $z=re^{i\theta}$
+\end_inset
+
+ en 
+\begin_inset Formula $\sinh\left(\delta\right)\approx\delta$
+\end_inset
+
+ voor kleine 
+\begin_inset Formula $\delta$
+\end_inset
+
+ volgt
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
-\[
-\Omega_{r}=-\frac{Q}{2\pi}\ln\left(\sin\left(i\frac{\pi}{2}\left(-\frac{r}{D}e^{iQ/\pi}\right)\right)\right)+Q\frac{r}{D}e^{i\frac{Q}{\pi}}
-\]
+\begin{align*}
+\Omega(z\to0) & =\frac{2Q}{\pi}\ln\left(i\sinh\left(\frac{\pi r}{2D}e^{i\theta}\right)\right)\\
+\Omega(z\to0) & =\frac{2Q}{\pi}\left(\ln i+\ln\left(\frac{\pi r}{2D}\right)+i\theta\right)\\
+\Omega(z\to0) & =\frac{2Q}{\pi}\ln i+\frac{2Q}{\pi}\ln\left(\frac{\pi r}{2D}\right)+iQ\left(\frac{\theta}{\pi/2}\right)
+\end{align*}
 
 \end_inset
 
@@ -2948,25 +3174,37 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-De limiet voor 
-\begin_inset Formula $\Omega_{r}$
+Met 
+\begin_inset Formula $\ln i=i2/\pi$
 \end_inset
 
- vlakbij 
-\begin_inset Formula $z=b+iD$
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega(z & \to0)=iQ+\frac{2Q}{\pi}\ln\left(\frac{\pi r}{2D}\right)+iQ\frac{2\theta}{\pi}\\
+\Omega(z & \to0)=\frac{2Q}{\pi}\ln\left(\frac{\pi r}{2D}\right)+iQ\left(1+\frac{2\theta}{\pi}\right),\;\text{\text{met}\;\ensuremath{-\ensuremath{\frac{\pi}{2}\le\theta\le0}}}
+\end{align*}
+
 \end_inset
 
- en opzichte van het punt 
-\begin_inset Formula $z=b+0i$
+
+\end_layout
+
+\begin_layout Standard
+Dus de stijghoogte door de contractie van de stroomlijnen ten opzichte van die in het punt 
+\begin_inset Formula $z=-iD$
 \end_inset
 
- blijkt
+ wordt dan
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\boxed{\Omega_{r\to0}=-\frac{\left(4Q\right)}{2\pi}\left[\ln\frac{r}{D}+i\theta\right],\text{voor}\;z\to b+iD}\label{eq:limit_omega_at_extraction_point}
+\phi\left(r\rightarrow0\right)=\frac{2Q}{\pi k}\ln\left(\frac{\pi r}{2D}\right)\label{eq:phi_z0}
 \end{equation}
 
 \end_inset
@@ -2975,19 +3213,501 @@ De limiet voor
 \end_layout
 
 \begin_layout Standard
-Vergelijk de stijghoogte in de omgeving van het onttrekkingspunt met de formule en geef commentaar op de formule van Huisman.
- Voor eenzijdige toestroming
+De 
+\begin_inset Formula $k$
+\end_inset
+
+ komt erin doordat de potentiaal 
+\begin_inset Formula $\Phi=k\phi$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Merk op dat dit voor een cirkelvormige slootdoorsnede met radius 
+\begin_inset Formula $r$
+\end_inset
+
+ de natte omtrek in deze kwart sector gelijk is aan 
+\begin_inset Formula $\pi r/4$
+\end_inset
+
+.
+ In onze de standaard formules voor onttrekking aan een punt of put zijn we gewend aan de factor 
+\begin_inset Formula $Q^{*}/(4\pi k)$
+\end_inset
+
+.
+ Omdat de onttrekking nu in een kwart cirkel plaats vindt is 
+\begin_inset Formula $Q^{*}=4Q$
+\end_inset
+
+ dus 
+\begin_inset Formula $2Q/\left(\pi k\right)=(4Q)/(2\pi k)$
+\end_inset
+
+.
+ De extra verlaging door onvolkomenheid van een sloot met natte omtrek 
+\begin_inset Formula $\omega$
+\end_inset
+
+ wordt door Huisman (1972) voor tweezijdige toestroming gegeven door
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Delta\phi_{pp}}{Q}=\frac{2}{\pi}\ln\frac{D}{\omega}=\frac{2}{\pi}\ln\frac{D}{2\pi r}=\frac{2}{\pi}\left(\ln\frac{D}{r}-\ln\left(2\pi\right)\right)=\frac{2}{\pi}\ln\frac{D}{r}-\frac{2}{\pi}\ln\left(2\pi\right)=\frac{2}{\pi}\ln\frac{D}{r}-1.17
+\Delta\phi=\frac{\hat{Q}}{\pi k}\ln\frac{D}{\omega}
 \]
 
 \end_inset
 
-=
+
+\end_layout
+
+\begin_layout Standard
+waarbij in ons geval 
+\begin_inset Formula $\hat{Q}=2Q$
+\end_inset
+
+ zoals in vergelijking 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:phi_z0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+is opgenomen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/Partial_penetration_analytic.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Stroming-door-contractie"
+
+\end_inset
+
+Stroming door contractie van stroomlijnen analytisch vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/stijgh_top_basis_contractie.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Stijghoogte-contractie-top-basis"
+
+\end_inset
+
+Stijghoogte contractie van stroomlijnen (fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stroming-door-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) langs top en basis van het watervoerende pakket (op log-schaal),
+ de asymptoot voor grote 
+\begin_inset Formula $x$
+\end_inset
+
+ en de analytische benadering volgens vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:phi_z0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Benadering volgens Huisman (1972,
+ p57) corrigeert voor de asymptoot.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-contractie-top-basis"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het verloop van de stijghoogte aan de top en de basis van het pakket in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stroming-door-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De stippellijn voor de pakketbasis toont dat de stijghoogte aan de basis op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ de referentie is.
+ Tegelijkertijd laat het verloop of afstanden 
+\begin_inset Formula $x>1.5D$
+\end_inset
+
+ zien dat daar de stijghoogte niet nul is terwijl daar geen stroming aanwezig is.
+ Dit komt omdat we niet de stijghoogte op grote afstand als referentie hebben genomen,
+ wat voor een juist superpositie wel moet.
+\end_layout
+
+\begin_layout Standard
+Wat is de potentiaal op grote afstand van de onttrekking (asymptoot)?
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z\rightarrow\infty)=\frac{2Q}{\pi}\,\ln\left(i\sinh\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dus,
+ als boven met 
+\begin_inset Formula $\ln i=i\pi/2$
+\end_inset
+
+ en 
+\begin_inset Formula $\sinh w\approx\frac{1}{2}e^{w}$
+\end_inset
+
+ voor grote 
+\begin_inset Formula $e$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega\left(z\rightarrow\infty\right) & =iQ+\frac{2Q}{\pi}\ln\left(\frac{1}{2}\exp\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z\\
+ & \approx\frac{2Q}{\pi}\frac{\pi z}{2D}-\frac{2Q}{\pi}\ln2-\frac{Q}{D}z\\
+ & =-\frac{2Q}{\pi}\ln2
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(z\rightarrow\infty\right)=-\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boxed{\phi\left(z\to\infty\right)=-\frac{2Q}{\pi k}\ln2}\label{eq:dphi-aymptoot-contractie}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-contractie-top-basis"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ toont behalve de stijghoogten aan de top en de basis van de doorsnede in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stroming-door-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ ook de asymptoot volgens vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dphi-aymptoot-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ en de benadering volgens vlg.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:phi_z0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De figuur laat zien dat deze benadering maar beperkt werkt,
+ tot een slootradius van ongeveer 10% van de pakketdikte.
+\end_layout
+
+\begin_layout Standard
+Voor een juiste superpositie van de stijghoogte aanpassing door contractie van de stroomlijnen moeten we de constante van vgl.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dphi-aymptoot-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ optellen bij vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ we krijgen dus in plaats van vergelijking 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ deze vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:contractie-met-asympotoot-correctie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boxed{\Omega(z)=\frac{2Q}{\pi}\,\ln\left(\sin\left(\frac{i\pi}{2D}z\right)\right)-\frac{Q}{D}z\ +\frac{2Q}{\pi}\ln2;\qquad x\ge0,\ 0>y>-D}\label{eq:contractie-met-asympotoot-correctie}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En voor de benadering
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\phi\left(r\rightarrow0\right) & =\frac{2Q}{\pi k}\ln\left(\frac{\pi r}{2D}\right)+\frac{2Q}{\pi k}\ln2\\
+ & =\frac{2Q}{\pi k}\ln\left(\frac{\pi r}{D}\right)\\
+ & =\frac{2Q}{\pi k}\ln\left(\frac{\Omega}{D}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is exact de formule van Huisman (1972,
+ p57) voor een radiale slootdoorsnede waarvan de natte omtrek 
+\begin_inset Formula $\Omega=\pi r$
+\end_inset
+
+.
+ Deze formule werkt volgens fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-contractie-top-basis"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ goed zolang 
+\begin_inset Formula $r<0.1D$
+\end_inset
+
+.
+ Als we 
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ opvatten als de extra verlaging door de onvolkomenheid van de sloot,
+ zodat 
+\begin_inset Formula $\Delta\phi>0$
+\end_inset
+
+ dan wordt deze formule as volgt:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\boxed{\Delta\phi=\frac{2Q}{\pi k}\ln\left(\frac{D}{\Omega}\right)}\label{eq:Huisman-p57}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De benadering volgens Huisman (1972) corrigeert voor de asymptoot en is eveneens weergegeven in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-contractie-top-basis"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Bibliography
@@ -3009,275 +3729,39 @@ Ernst,
  189p.
 \end_layout
 
-\begin_layout Section
-Afleiding van de limiet
-\end_layout
-
-\begin_layout Standard
-De limiet in vergelijking 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:limit_omega_at_extraction_point"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Huisman (1972)"
+key "Huisman72"
+literal "false"
 
 \end_inset
 
- kan als volgt worden afgeleid:
+Huisman,
+ L (1972) Groundwater Recovery.
+ MacMillan,
+ SBN 333 09870 6,
+ Piman Press,
+ Bath.
+ 336.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\Omega_{1}=-\frac{Q}{2\pi}\ln!\left(\sin\left(i\frac{\pi}{2}\left(\frac{b-z}{D}-i\right)\right)\right)+Q\left(\frac{b-z}{D}-i\right)
-\]
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Verruijt (1970)"
+key "Verruijt70"
+literal "false"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Met 
-\begin_inset Formula $z=b$
-\end_inset
-
- gaat het argument van de sinus over in
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{b-z}{D}-i=-i
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-i\frac{\pi}{2}(-i)=\frac{\pi}{2}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Dus
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\sin\left(\frac{\pi}{2}\right)=1
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Hiermee valt de logaritme weg
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\ln(1)=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-De lineaire term
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-Q\left(\frac{b-b}{D}-i\right)=-Qi
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Aldus wordt de referentie waarde
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\boxed{\Omega_{1}(b)=-Qi}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Definieer de referentiepotentiaal
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\widetilde{\Omega}_{1}(z)=\Omega_{1}(z)-\Omega_{1}(b)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Hierdoor valt de arbitraire constante weg waarna slechts fysisch betekenisvolle termen over blijven
-\end_layout
-
-\begin_layout Standard
-Vul de lokale expansie nabij 
-\begin_inset Formula $z=b+iD$
-\end_inset
-
- in.
-\begin_inset Formula 
-\[
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-z=b+iD+\rho,\qquad\rho=re^{i\theta},
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-we hadden:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\Omega_{1}=-\frac{Q}{2\pi}\left[\ln\rho+\ln\left(\frac{\pi}{2D}\right)+i\frac{\pi}{2}\right]-2Qi+o(1)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Aftrekken van 
-\begin_inset Formula $-Qi$
-\end_inset
-
- geeft:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\widetilde{\Omega}_{1}=-\frac{Q}{2\pi}\ln\rho-\frac{Q}{2\pi}\ln\left(\frac{\pi}{2D}\right)-i\frac{Q}{2\pi}\theta-i\frac{Q}{4}-Qi-o(1)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Alle imaginaire constanten zijn irrelevant voor de stijghoogte,
- alleen de reële waarden doen er toe.
-\end_layout
-
-\begin_layout Standard
-Neem het reële deel en vul in
-\begin_inset Formula $\rho=re^{i\theta}$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\Re(\widetilde{\Omega}_{1})=-\frac{Q}{2\pi}\left[\ln r-\ln D+\ln\left(\frac{\pi}{2}\right)\right]
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Ordenen:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\boxed{\Phi=-\frac{Q}{2\pi}\ln\left(\frac{r}{D}\right)+\text{constante}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Zoals verwacht:
- De schaal van de singulariteit is 
-\begin_inset Formula $r$
-\end_inset
-
-,
- de natuurlijke referentie is 
-\begin_inset Formula $D$
-\end_inset
-
- en alle van de geometrie afhankelijke constanten vallen samen in een additieve constante.
-\end_layout
-
-\begin_layout Standard
-De uiteindelijke vorm na weglaten van irrelevante constanten geeft
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\boxed{\widetilde{\Omega}_{1}\;\sim\;-\frac{Q}{2\pi}\left[\ln\left(\frac{r}{D}\right)+i\theta\right],\;\;z\to b+iD}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Dit de de logaritmische singulariteit uit het leerboek.
+Verrijt,
+ A.
+ (1970) Theory of Groundwater Flow.
+ MacMillan,
+ Pitman Press Bath,
+ 190p.
 \end_layout
 
 \end_body

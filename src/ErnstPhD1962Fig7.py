@@ -90,11 +90,11 @@ def xsection_7b():
 
     plt.show()
 
-def get_Z(b, D, N=100):
+def get_Z(b, D, N=100, clip=1e-3):
     x = np.linspace(0, b, int(b/D * N + 1))
     y = np.linspace(0, D, N+ 1)
     X, Y = np.meshgrid(x, y)
-    Z = X.clip(1e-3, None) + 1j * (Y.clip(1e-3, D-1e-3))
+    Z = X.clip(clip, None) + 1j * (Y.clip(clip, D-clip))
     return Z
 
 
@@ -104,7 +104,7 @@ def stroming_analytisch(b=40, D=10, dxy=0.1, N=0.001, k=1, case=None, ax=None):
     Q = N * b
     dQ = Q / 20
 
-    Z = get_Z(b, D)
+    Z = get_Z(b, D, clip=1e-3)
     
     # Omega = N / (2 * D) * ((b**2 - Z.real**2) +  Z.imag**2  + 1j * Z.real * Z.imag)
 
@@ -491,85 +491,69 @@ def partial_penetraton(b=25, D=10, N=None, k=None, dxy=0.1):
     Q = N * b
     dQ = Q / 20
 
-    Z = get_Z(b, D); Z.imag = -Z.imag
+    # --- With the top of the aquifer at y=0 an dthe bottom at y=-D
+    Z = get_Z(b, D, clip=1e-6); Z.imag = -Z.imag
     
     # --- Extraction, extraction at point (0, iD)
-    Omega1 = Q/ (np.pi / 2) * np.log(np.sin(1j *np.pi/2 * Z/D))
+    Omega = Q/ (np.pi / 2) * np.log(np.sin(1j *np.pi/2 * Z/D)) - Q * Z/D
+        
+    fig, ax = plt.subplots(figsize=(10, 5))
     
-    # --- Uniform flow to cancel the flow at x=b due to Omega1
-    Omega2 =  -Q * Z/D
-    
-    phi = 2 * Q / (np.pi * k) * np.log(np.abs(Z/D))
-    phiHuis1 = 2 * Q / (np.pi * k) * (np.log(np.abs(Z/D)) + np.log(2 * np.pi))
-    phiHuis2 = 2 * Q / (np.pi * k) * np.log(np.abs(2 * np.pi * Z/D))
-
-    fig, ax = plt.subplots(1, figsize=(10, 8))
-    axs=[ax]
     fig.suptitle("Analytisch partial penetration"
                  "\n"
                  fr"Blauw: $\phi$, $d\phi$={dQ/k:.3f} m. Rood: $\Psi$, $d\Psi$={dQ:.5f} m2/d"
                  "\n"
                  f"b={b} m, D={D} m, N={N} m/d, k={k} m/d, Q=Nb={N * b} m2/d")
 
-    titles = [
-              "Stroming door contractie van stroomlijnen (Ernst (1962), fig.7d)",
-            ]
-        
-    for ax, title in zip(axs, titles):
-        ax.set_title(title)
-        ax.set(xlabel='x[m]', ylabel='y[m]')
-        if ax == axs[0]:
-            Omega = Omega1 + Omega2
-        
-        # --- Phi and psi levels:
-        phimin = np.floor(Omega.real.min() * 100)/100 / k
-        phimax = np.ceil(Omega.real.max() * 100)/100 / k
-        psimin = np.floor(Omega.imag.min() * 100)/100
-        psimax = np.ceil(Omega.imag.max() * 100)/100
-        
-        phiLevels = np.arange(phimin, phimax, dQ/k)
-        psiLevels = np.arange(psimin, psimax, dQ)
+    title="Stroming naar onttrekking in half oneindige doorsnede"
+    xlabel="x [m]"
+    ylabel="y [m]"
+            
+    ax.set(title=title, xlabel=xlabel, ylabel=ylabel)
 
-        Cphi = ax.contour(Z.real, Z.imag, Omega.real/k, levels=phiLevels,
-                   colors='b',
-                   linestyles='solid',
-                   linewidths=0.5)
-        # ax.clabel(Cphi, levels=phiLevels)
-        
-        Cpsi = ax.contour(Z.real, Z.imag, Omega.imag, levels=psiLevels,
-                   colors='r',
-                   linestyles='solid',
-                   linewidths=0.5)
-        # ax.clabel(Cpsi, levels=psiLevels)
-        
-        Cphi = ax.contour(Z.real, Z.imag, phi, levels=phiLevels,
-                   colors='g',
-                   linestyles='solid',
-                   linewidths=0.5)
+    # --- Phi and psi levels:
+    phimin = np.floor(Omega.real.min() * 100)/100 / k
+    phimax = np.ceil(Omega.real.max() * 100)/100 / k
+    psimin = np.floor(Omega.imag.min() * 100)/100
+    psimax = np.ceil(Omega.imag.max() * 100)/100
+    
+    phiLevels = np.arange(phimin, phimax, dQ/k)
+    psiLevels = np.arange(psimin, psimax, dQ)
 
-        ax.set_aspect(1)
-        ax.set(xlim=(0, 4), ylim=(-4, 0))
-        
-        if not ax==axs[0]:
-            ax.plot(b, D, 'ro', ms=20, mec='b', mfc='blue', zorder=100)
+    Cphi = ax.contour(Z.real, Z.imag, Omega.real/k, levels=phiLevels,
+            colors='b',
+            linestyles='solid',
+            linewidths=0.5)
+    # ax.clabel(Cphi, levels=phiLevels)
+    
+    Cpsi = ax.contour(Z.real, Z.imag, Omega.imag, levels=psiLevels,
+            colors='r',
+            linestyles='solid',
+            linewidths=0.5)
+    # ax.clabel(Cpsi, levels=psiLevels)
+    
+    ax.set_aspect(1)
+    # ax.set(xlim=(0, 4), ylim=(-4, 0))
+    
+    fig.savefig(os.path.join(images, "Partial_penetration_analytic.png"))
 
-        fig.savefig(os.path.join(images, "Partial_penetration_analytic.png"))
-        
-        fig1, ax1 = plt.subplots(figsize=(10, 8))
-        ax1.set_title("Analytic Delta phi pp")
-        ax1.set(xlabel='r', ylabel='Drawdown pp', xscale='log')
-        
-        ax1.plot(Z[0, :].real, -Omega[0, :].real/k / Q, label="horizontal")
-        ax1.plot(-Z[:, 0].imag, -Omega[:, 0].real/k / Q, label="vertical")
-        ax1.plot(Z[0].real, -phi[0] / Q, label='phi')
-        ax1.plot(Z[0].real, -phiHuis1[0] / Q, '.', label='phiHuis1')
-        ax1.plot(Z[0].real, -phiHuis2[0] / Q, '-', label='phiHuis2')
-        
-        ax1.plot()
-        ax1.grid('both')
-        ax1.legend()
-        
-
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.set_title("Stijghoogte langs de top en basis van de aquifer\n"
+                 f"b={b} m, D={D} m, N={N} m/d, k={k} m/d, Q=Nb={N * b} m2/d")
+    ax.set(xlabel='x[m]', ylabel='phi[m]', xscale='log')
+    x = Z[0].real
+    ax.plot(x, Omega[0,  :].real/k, 'b-', label="horizontal, top")
+    ax.plot(x, Omega[-1, :].real/k, 'b--', label="horizontal, base")
+    ax.plot(x, -2 * Q / np.pi * np.log(2) / k * np.ones(len(x)), 'g--', label=r'asymptoot $-(2Q/pi) \ln(2)$')
+    
+    r = x
+    ax.plot(r, 2 * Q / (np.pi * k) * np.log(np.pi * r / (2 * D)) * np.ones(len(r)), '-', label=r'Benadering $2(Q/\pi)\,\ln(\pi r/(2D))$')
+    ax.plot(r, 2 * Q / (np.pi * k) * np.log(np.pi * r / D) * np.ones(len(r)), '-', label=r'Huisman $2(Q/\pi)\,\ln(\pi r/(D))$')
+    ax.grid(True)
+    ax.set_xlim(1e-2, None)
+    ax.set_ylim(-0.15, 0.03)
+    ax.legend()
+    fig.savefig(os.path.join(images, "stijgh_top_basis_contractie.png"))
     
 
 # %% Complexe stroming in hoek
@@ -580,7 +564,7 @@ if __name__ == '__main__':
     if False:
         stroming_analytisch(b=b, D=D, dxy=0.1, N=N, k=k, case=None, ax=None)
     if True:
-        partial_penetraton(b=b, D=D, N=N, k=k, dxy=0.1)    
+        partial_penetraton(b=b, D=D, N=N, k=1, dxy=0.1)    
     if False: # --- Numeric 1
         # Simulating the styled rectangular X-section after Ernst (1962, fig 7), in which the
         # flow domain is kept rectangular with constant thickness and the ditch is reduced
