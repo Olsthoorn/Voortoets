@@ -145,8 +145,160 @@ T.N.Olsthoorn
 18 januari 2026
 \end_layout
 
+\begin_layout Abstract
+Grondwatersystemen kunnen in veel situaties worden geschematiseerd tot een stroomgebied gevoed door neerslag dat ondergronds afstroomt naar flankerend open water.
+ Dit is evident wanneer het gaat om landbouwpercelen met omringende sloten,
+ maar geldt ook voor grotere stroomgebieden tussen beken,
+ kanalen of rivieren.
+ In grote lijnen kunnen zulke stroomsystemen tot hun essentie worden teruggebracht tot een doorsnede tussen open leidingen.
+ Deze stroming is desondanks complex door verticale en horizontale stromingsomponenten en door de contractie van de stroomlijnen naar de waterlopen waarin het grondwater uitmondt.
+ Gezien het belang van een goede mathematische beschrijving van deze systemen voor de landbouwafwatering besteedde 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ernst62"
+literal "false"
+
+\end_inset
+
+ o.a.
+ hier zijn proefschrift aan.
+ Ondanks de ouderdom werpt dit proefschrift nog altijd vragen op,
+ met name over de opdeling van de samengestelde stroming in verschillende componenten die elk voor zich eenvoudiger zijn te analyseren en berekenen om vervolgens via superpositie bij elkaar te kunnen worden opgeteld,
+ wat eenvoudige formules mogelijk maakt om zulke systemen mee door te rekenen.
+\end_layout
+
+\begin_layout Abstract
+De basissituatie toont 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ernst62"
+literal "false"
+
+\end_inset
+
+ in zijn fig.7 (fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ernst-fig7"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+ Hij laat daarin zien hoe hij de stroming in een halve (want symmetrische) doorsnede ontrafelt in de verticale,
+ de horizontale en de radiale component.
+ Deze opdeling verre van triviaal,
+ en daar gaat dit artikel over.
+ We analyseren eerst de geïdealiseerde doorsnede,
+ een rechthoek waarin de sloot tot een punt is teruggebracht.
+ Dit doen we zowel numeriek als analytisch.
+ Daarna rekenen we de doorsnede door zoals Ernst die heeft getekend in zijn fig.7,
+ dat wil zeggen met een sterk opbollend freatisch vlak en echte afmetingen van de de sloot.
+ We gaan in op de verschillen.
+ We werken aan het eind de radiale weerstand analytisch uit,
+ met als uitkomst de door 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Huisman72"
+literal "false"
+
+\end_inset
+
+ ontwikkelde formule voor de extra verlaging door radiale stroming (partial penetration) van de sloot.
+ Terloops zal blijken dat de term 
+\begin_inset Formula $D^{*}/k$
+\end_inset
+
+ die 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ernst62"
+literal "false"
+
+\end_inset
+
+ opnam in zijn formule voor de totale stromingsweerstand,
+ zijn formule 33,
+ niet thuis hoort.
+ 
+\end_layout
+
+\begin_layout Abstract
+Wij beperken ons voor deze analyse,
+ net als 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ernst62"
+literal "false"
+
+\end_inset
+
+ in zijn fig.7 tot één enkel freatisch watervoerend pakket met uniforme 
+\begin_inset Formula $k$
+\end_inset
+
+,
+ eventueel verticaal anisotroop,
+ met vlakke bodem zonder onderliggende weerstandslagen.
+\end_layout
+
+\begin_layout Abstract
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Radiale weerstand volgens Ernst
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/Ernst62Fig7.png
+	lyxscale 50
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Ernst-fig7"
+
+\end_inset
+
+Fig.
+ 7 uit Ernst (1962)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -325,53 +477,6 @@ Het zal direct duidelijk zijn geen van de deelstromen op zichzelf compatibel is 
  De bijna uniforme naar links gerichte flux in figuur 7c moet in fig.
  7d exact worden gecompenseerd met een tegengestelde flux door de stroming die het gevolg is van de contractie van stroomlijnen in fig.
  7d.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement document
-alignment document
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/Ernst62Fig7.png
-	lyxscale 50
-	width 80text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Ernst-fig7"
-
-\end_inset
-
-Fig.
- 7 uit Ernst (1962)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1513,29 +1618,25 @@ En aan de top,
 \begin_layout Standard
 Dit is overal de stijghoogte aan de top ten opzichte van die aan de basis,
  behalve daar waar de verticale stroming wordt verstoord door die als gevolg van de contractie van stromingen.
-\begin_inset Box Boxed
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "default"
-backgroundcolor "none"
-status open
+\end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Ernst geeft in zijn fig.7b met een stippellijn aan op welke hoogte in deze figuur de stijghoogte gelijk aan het slootpeil is.
  Dit is dus eigenlijk het freatisch vlak bij alleen de verticale stroming in fig.7b.
  Het echte freatisch vlak,
- dat hoort bij de samengestelde stroming in fig.7a is ook in fig.7b aangegeven in is daar slechts de bovengrens van het oorspronkelijke stromingsdomain dat tussen de figuren is vastgehouden om superpositie eenduidig mogelijk te maken.
+ dat hoort bij de samengestelde stroming in fig.7a is ook in fig.7b aangegeven in is daar slechts de bovengrens van het oorspronkelijke stromingsdomein dat tussen de figuren is vastgehouden om superpositie eenduidig mogelijk te maken.
  Het freatisch vlak is het gevolg van verticale,
  horizontale en radiale stroming dus het verschil tussen het freatisch vlak een de stippellijn is het gevolg van alleen horizontale en radiale stroming.
  Ernst zegt dat 
@@ -1556,7 +1657,7 @@ wijkt de grondwaterspiegel weinig af van een horizontaal vlak,
  dan geldt bij symmetrische drainage de volgende formule voor het hoogteverschil tussen het hoogste punt van de grondwaterspiegel en het peil van het open water:
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 \frac{\Delta h}{N}=\frac{D^{*}}{k}+\frac{b^{2}}{2kD}+bw\label{eq:Ernst-vgl33}
@@ -1567,7 +1668,7 @@ wijkt de grondwaterspiegel weinig af van een horizontaal vlak,
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Vrijwel altijd geldt,
  schrijft Ernst verder,
  dat 
@@ -1595,7 +1696,7 @@ Vrijwel altijd geldt,
  horen daarin thuis:
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \Delta h=\frac{Nb^{2}}{2kD}+Nbw+Nb\frac{c}{\Omega}
@@ -1605,6 +1706,13 @@ Vrijwel altijd geldt,
 
 
 \end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
 
 \end_inset
 
@@ -2215,7 +2323,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Graphics
 	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/Ernst_fig7_analytisch.png
-	width 80text%
+	width 60text%
 
 \end_inset
 
@@ -2707,7 +2815,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Graphics
 	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstFig7_numeriek_freat.png
-	width 100text%
+	width 80text%
 
 \end_inset
 
@@ -2753,7 +2861,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Graphics
 	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ErnstNumeriekPhimaaiveld_456_freat.png
-	width 60cm
+	width 60text%
 
 \end_inset
 
