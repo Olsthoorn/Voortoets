@@ -51,7 +51,6 @@ def two_simlataneous_xsections(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1
     if w is None:
        w = 1 / (np.pi * k) * np.log(D / (np.pi * rDitch))
     
-
     # --- Weerstand tweede doorsnde compatibel met die van de sloten [d]
     c = w * L
 
@@ -60,8 +59,9 @@ def two_simlataneous_xsections(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1
     kz[0, 0, :] = 1e-20
     # --- Dan in de doorsnede met de sloten:
     kz[0, 0, od] = gr.DZ[0, 0, od] / (2 * w * gr.DX[0, 0, od])
+    kz[1, 0, od] = 1000.
     # --- Voorts in de doorsnede met de scheidende laag
-    kz[0, 1, :] = gr.DZ[0, 1, :] / (1 * c)
+    kz[0, 1, :] = gr.DZ[0, 1, :] / (2 * c)
 
     HI = gr.const(0.)
     FQ = gr.const(0.)
@@ -85,10 +85,8 @@ def two_simlataneous_xsections(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1
     kD = k*D
     Qx = out['Qx']
     s1 = np.zeros_like(gr.x[1:-1])
-    s2 = np.zeros_like(gr.x[1:-1])
     for i in range(1, len(s1)):
-        s1[i] = s1[i-1] - Qx[-1,0,i] * gr.dx[i+1] / kD
-        s2[i] = s2[i-1] - Qx[-1,1,i] * gr.dx[i+1] / kD
+        s1[i] = s1[i-1] - Qx[-1,0,i] * gr.dx[i+1] / kD        
 
     # --- Doorsnede 2 analytisch
     lam = np.sqrt(kD*c)
@@ -97,7 +95,7 @@ def two_simlataneous_xsections(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1
     # --- Show
     fig, ax = plt.subplots(figsize=(10, 8))
     title=(f"Extraction Qw={Qw} m2/d at x={gr.xm[iw]:.0f}" + f", kD={k * D} m2/d" + "\n" +
-        f"w={w:.3f} d/m, c={c:.3f} d"
+        f"w={w:.3f} d/m, c={c:.3f} d, lambda={lam:.0f}"
     )
     ax.set(title=title, xlabel="x[m]", ylabel="head[m]")
 
@@ -114,13 +112,11 @@ def two_simlataneous_xsections(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1
     ax.legend()    
     
 
-def analytic_test(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1):
+def analytic_test(L=500, D=25, k=1, w=0.3, xw=2500, Qw=None, rDitch=1):
        
     a =0.01
 
     # --- The grid
-    x = sinspace(x1=0, x2=500, th1=np.pi *a, th2=np.pi * (1-a), N=25)
-    x = concat_space(x, 10)
     x = np.linspace(0, 5000, 500)
     z = np.array([0, -2, -2-D])
 
@@ -129,19 +125,17 @@ def analytic_test(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1):
 
     # --- The well
     iw = gr.ix(xw)['idx'][0]
+    iw=0
     
     # --- Model arrays
-    kx, ky, kz = gr.const(k), gr.const(1e-20), gr.const(k)
+    kx, ky, kz = gr.const(k), gr.const(k), gr.const(k)
     
 
     # --- Weerstand tweede doorsnde compatibel met die van de sloten [d]
     c = w * L
 
-    kx[:, :, gr.xm<xw] = 1e-20
-    # --- Begin kz[0] nul te maken
-    kz[0, :, :] = gr.DZ[0, :, :] / (c)
+    kz[0, :, :] = gr.DZ[0, :, :] / (2 * c)
     
-
     HI = gr.const(0.)
     FQ = gr.const(0.)
 
@@ -150,19 +144,15 @@ def analytic_test(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1):
 
     # --- Boundary array
     IBOUND = gr.const(1, dtype=int)
-    IBOUND[0, 0, :] = -1
+    IBOUND[0] = -1
     
     # ---Simulate
     out = fdm3(gr, K=(kx, ky, kz), c=None, FQ=FQ, HI=HI, IBOUND=IBOUND, GHB=None)
 
     # --- Analytisch
-    # --- Doorsnede 1 analytisch gebaseerd op out['Qx']
-    # ----We nemen Qx en berekenen s[i+1] = s[i] - Qw/kD dx
     kD = k*D
-    # --- Doorsnede 2 analytisch
     lam = np.sqrt(kD*c)
-    s2_ = lam/kD * Qw/2 * np.exp(-np.abs(gr.xm-xw)/lam)
-    s2_ = lam/kD * Qw * np.exp(-np.abs(gr.xm-xw)/lam)
+    s2_ = lam/kD * Qw/2 * np.exp(-np.abs(gr.xm-gr.xm[iw])/lam)
 
     # --- Show
     fig, ax = plt.subplots(figsize=(10, 8))
@@ -181,7 +171,9 @@ def analytic_test(L=500, D=25, k=1, w=1, xw=2500, Qw=None, rDitch=1):
   
     
 if __name__ == '__main__':
-    L, D, k, w, xw, Qw, rDitch = 500, 25, 10, 0.2, 2500, -1, 1
+    L, D, k = 500, 25, 10
+    w, xw, Qw = 1, 2500, -1
+    rDitch = 1
     if True:
         two_simlataneous_xsections(L=L, D=D, k=k, w=w, xw=xw, Qw=Qw, rDitch=rDitch)
     if False:
