@@ -142,7 +142,7 @@ T.N.Olsthoorn
 \end_layout
 
 \begin_layout Date
-21-01-2026
+20-01-2026
 \end_layout
 
 \begin_layout Abstract
@@ -866,6 +866,40 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
+De figuur laat zien dat met name bij kleine 
+\begin_inset Formula $\lambda$
+\end_inset
+
+,
+ in concreto 
+\begin_inset Formula $\lambda<L$
+\end_inset
+
+,
+ er een aanmerkelijk verschil is tussen beide situaties.
+ Hoe kleiner de 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ hoe meer de individuele sloten het verlagingsbeeld bepalen.
+ Pas bij 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ groter dan zeg 
+\begin_inset Formula $L$
+\end_inset
+
+ ontlopen de rekenwijzen elkaar nauwelijks meer.
+\end_layout
+
+\begin_layout Standard
+In dit ééndimensionale voorbeeld is het stijghoogteverloop tussen de individuele sloten lineair,
+ wat goed in de figuren tot uiting komt.
+ De verlaging nabij de onttrekking is dan ook een stuk kleiner dan in de berekening met een uniforme drainageweerstand.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement H
 alignment document
@@ -935,40 +969,6 @@ Verlaging in eendimensionale doorsnede.
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-De figuur laat zien dat met name bij kleine 
-\begin_inset Formula $\lambda$
-\end_inset
-
-,
- in concreto 
-\begin_inset Formula $\lambda<L$
-\end_inset
-
-,
- er een aanmerkelijk verschil is tussen beide situaties.
- Hoe kleiner de 
-\begin_inset Formula $\lambda$
-\end_inset
-
- hoe meer de individuele sloten het verlagingsbeeld bepalen.
- Pas bij 
-\begin_inset Formula $\lambda$
-\end_inset
-
- groter dan zeg 
-\begin_inset Formula $L$
-\end_inset
-
- ontlopen de rekenwijzen elkaar nauwelijks meer.
-\end_layout
-
-\begin_layout Standard
-In dit ééndimensionale voorbeeld is het stijghoogteverloop tussen de individuele sloten lineair,
- wat goed in de figuren tot uiting komt.
- De verlaging nabij de onttrekking is dan ook een stuk kleiner dan in de berekening met een uniforme drainageweerstand.
 \end_layout
 
 \begin_layout Standard
@@ -1138,7 +1138,7 @@ m.
 \end_inset
 
  lijn,
- waarin de cellen op inactief zijn gezet en daarom niet meedoen.
+ waarin de cellen op inactief zijn gezet en daarom niet meedoenmaakt door IBOUND voor deze zone op 0 te zetten.
 \end_layout
 
 \begin_layout Standard
@@ -1150,7 +1150,7 @@ Het model heeft twee lagen waarvan de bovenste 2 m dik is en de onderste 25 m.
 \end_layout
 
 \begin_layout Standard
-Op deze wijze ingericht zijn de hier beschreven twee modellen de 3D-evenknie van de doorsnedemodellen die hierboven zijn uitgewerkt,
+Op deze wijze ingericht zijn de hier beschreven twee modellen de 3D-evenknie van de doorsnedemodellen die hierboven zijn uitgwerkt,
  behalve de de put:
  De onttrekking 
 \begin_inset Formula $Q_{w}$
@@ -1413,7 +1413,7 @@ De sloten lopen loodrecht op de hier getekende doorsnede en liggen 500 m uit elk
 
 \begin_layout Standard
 \begin_inset Float figure
-placement H
+placement document
 alignment document
 wide false
 sideways false
