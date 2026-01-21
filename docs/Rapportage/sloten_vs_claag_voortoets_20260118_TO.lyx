@@ -142,7 +142,7 @@ T.N.Olsthoorn
 \end_layout
 
 \begin_layout Date
-21-01-2026
+22-01-2026
 \end_layout
 
 \begin_layout Abstract
@@ -402,6 +402,223 @@ k=\sqrt{k_{x}k_{z}}
 
 \begin_layout Standard
 De breuk onder de logaritme moet hierbij niet worden verschaald omdat het in feite de verhouding betreft van twee radiï en niet van de verticale dikte en een circulaire sloot.
+\end_layout
+
+\begin_layout Section
+Bepaling van de slootweerstand uit veldgegevens
+\end_layout
+
+\begin_layout Standard
+Hoe zou de weerstand van waterlopen in een (voor nu homogeen verondersteld) gebied kunnen worden bepaald uit de gemeten grondwaterstanden 
+\begin_inset Formula $h$
+\end_inset
+
+.
+ Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Denkbeeldig-oppervlaktestelsel"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft een denkbeeldig gebied weer met waterlopen (beken).
+ Tussen de beken is de waterscheiding aangegeven met een streep-stippellijn,
+ die in de praktijk door een GIS zal zijn gegenereerd.
+ De kortste lijn tussen tussen elk paar waterlopen vormt een nagenoeg vlakke doorsnede waarin het verloop van de (in de tijd gemiddelde) grondwaterstand kan worden weergegeven met
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h=h_{0}+Lw+\frac{N}{2kD}\left(b^{2}-x^{2}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $h_{0}$
+\end_inset
+
+ het beekpeil,
+ 
+\begin_inset Formula $Lw=2bw$
+\end_inset
+
+ de stijghoogte boven het beekpeil,
+ die wordt veroorzaakt door de radiale weerstand en de tweede term die de bijdrage vormt door de horizontale stroming via het watervoerende pakket.
+ Verder is een aantal waternemingsputten weergegeven.
+ De halve breedte 
+\begin_inset Formula $b$
+\end_inset
+
+ en de afstand 
+\begin_inset Formula $x$
+\end_inset
+
+ van waterscheiding tot waarnemingsput is ook indicatief op enkele plaatsen aangegeven.
+ Met bovenstaande formule kunnen we voor elke waarnemingsput de term 
+\begin_inset Formula $Lw$
+\end_inset
+
+ berekenen en over een aantal waarnemingsputten middelen voor een bepaald gebied.
+ Het kan zeer de moeite waard zijn om een dergelijke exercitie voor een gebied uit te voeren.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/waerlopen.png
+	lyxscale 50
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Denkbeeldig-oppervlaktestelsel"
+
+\end_inset
+
+Denkbeeldig oppervlaktestelsel waterscheiding (streepjeslijn) met waarnemingsputten 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Zoals hieronder wordt afgeleid kan de weerstand van de waterlopen vervangen worden door een equivalente vlakdekkende weerstandslaag met weerstand 
+\begin_inset Formula $c=wL$
+\end_inset
+
+.
+ We kunnen vervolgens de spreidingslengte berekenen via 
+\begin_inset Formula $\lambda=\sqrt{kDc}=\sqrt{kDwL}$
+\end_inset
+
+.
+ De benodigde factor 
+\begin_inset Formula $Lw$
+\end_inset
+
+ volgt dus direct uit de veldgegevens.
+ Verderop zal blijken dat de situatie met afzonderlijke open waterlopen nauwelijks afwijkt van het resultaat waarin de waterlopen zijn vervangen door een toplaag met weerstand 
+\begin_inset Formula $c=Lw$
+\end_inset
+
+ mits 
+\begin_inset Formula $\lambda>L$
+\end_inset
+
+.
+ Voor veilige toepassing kunnen we 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ dus altijd minimaal gelijk aan 
+\begin_inset Formula $L$
+\end_inset
+
+ aanhouden in de toe te passen formules voor semi-spanningswater,
+ nl.
+ die van De Glee en Hantush.
+ De Glee is de stationaire versie van Hantush,
+ dus na voldoende lange tijd leveren beide formules hetzelfde resultaat.
+\end_layout
+
+\begin_layout Standard
+Het voordeel van het (verantwoord) gebruik van de formules voor semi-spanningssituaties in omstandigheden waarin discrete open waterlopen voorhanden zijn,
+ is dat de bijdragen van andere onttrekkingen zonder meer gesuperponeerd (opgeteld) mogen worden.
+ In het geval dat andere reeds vergunde onttrekkingen van wat voor soort dan ook in de wijdere omgeving van de geplande ingreep reeds aanwezig zijn,
+ kunnen die in de berekeningen worden meegenomen om zo het cumulatieve effect te bepalen van wat reeds is vergund.
+\end_layout
+
+\begin_layout Standard
+Een tweede voordeel van het gebruik van de formule van Hantush is dat de duur van een onttrekking direct in de formule kan worden meegenomen,
+ hoe lang of kort die ook moge zijn;
+ ook wanneer een vergunning verlengd wordt,
+ kan de totale duur vanaf de het verlenen van de oorspronkelijke vergunning worden ingevuld.
+ Uiteraard zal de uitkomst dan in de regel gelijk zijn aan de stationaire einduitkomst,
+ maar dat doet niets af aan het principe.
+\end_layout
+
+\begin_layout Standard
+De Glee:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi\left(r\right)=\frac{Q}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hantush
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi\left(r,t\right)=\frac{Q}{4\pi kD}\text{W}\left(u,\frac{r}{\lambda}\right),\;r=\frac{r^{2}S}{4kDt}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $S$
+\end_inset
+
+ de bergingscoëfficiënt en 
+\begin_inset Formula $\text{W\left(u,\rho\right)}$
+\end_inset
+
+ De besselfunctie 
+\begin_inset Formula $K_{0}$
+\end_inset
+
+ in De Glee's formule is een standaardfunctie;
+ de putformule van Hantush's kan gemakkelijk worden berekend.
 \end_layout
 
 \begin_layout Section
