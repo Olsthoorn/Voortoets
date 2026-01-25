@@ -246,8 +246,6 @@ def two_simlataneous_3Dmdoels(L=500, D=25, k=1, ws=[0.25, 0.5, 1, 2], xw=2500, Q
     print(fr"lam/L = {np.sqrt(kD * np.array(ws) / L)}")
 
 
-  
-    
 if __name__ == '__main__':
     L, D, k = 500, 25, 10
     w, xw, Qw = 0.2, 0, -1

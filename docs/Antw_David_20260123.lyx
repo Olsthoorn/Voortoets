@@ -1,0 +1,1483 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\usepackage{epstopdf} % to include .eps graphics files with pdfLaTeX
+\usepackage{flafter}   % Don't place floats before their definition
+%\usepackage{topcapt}  % Define \topcation for placing captions above tables (not in gwTeX)
+
+\usepackage{xurl}      % better URL setting, uses old url package
+
+\usepackage{xcolor}
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\usepackage[]{hyperref} % Generates all cross references
+\hypersetup{            % Setting options for hyperref package
+	breaklinks=true,    % break line with long hyperlinks
+	colorlinks=true,    % coloured links
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=darkblue,
+	citecolor=blue,
+	backref=page
+} 
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{alltt}
+
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% \lstdefinestyle{mystyle}{
+%   language=Python,
+%   numbers=left
+% }
+
+% Put lstset here, after lstdefinestyle
+% \lstset{style=mystyle}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language dutch
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command biber
+\index_command default
+\float_placement h
+\float_alignment center
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\listings_params "language=Python,extendedchars=false,frameround=fttt,numbers=left,% line numbers use none,numberstyle={\tiny},stepnumber=2,% line numbers only every so many,numbersep=9pt,% how far line numbers from text?,showspaces=false,showstringspaces=false,showtabs=false,tab={\rightarrowfill},basicstyle={\small},keywordstyle={\color{blue}},commentstyle={\color{green}},stringstyle={\ttfamily \color{magenta}},identifierstyle={\color{black}}"
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Antwoord op vragen en opmerkingen van David Simpson op het stuk
+\begin_inset Newline newline
+\end_inset
+
+Gebruik van formules voor semi-spanningswater voor het berekenen van de invloed van onttrekkingen in een freatisch pakket
+\end_layout
+
+\begin_layout Author
+T.N.Olsthoorn
+\end_layout
+
+\begin_layout Date
+24-01-2026
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO (Theo Olsthoorn):
+\end_layout
+
+\begin_layout Standard
+De drainageweerstand is niet wat we nodig hebben voor de berekening van de verlaging en de vervanging van de slootweerstand door die van een equivalente vlakdekkende weerstandslaag.
+ De drainageweerstand maakt het echter wel mogelijk om de slootweerstand te bepalen.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS (David Simpson):
+\end_layout
+
+\begin_layout Standard
+Dit snap ik niet goed.
+ Mijn redenering is als volgt:
+ stel je hebt een vlakdekkende onttrekking,
+ dus niet in een put maar in een groot vlak.
+ Dan heb je het spiegelbeeld van de grondwatervoeding door neerslag.
+ Als de gemiddelde of maximale opbolling door grondwatervoeding tussen watervoerende sloten gegeven wordt door de drainageweerstand (horizontale + radiale + slootbodem),
+ dan zou dit toch gelijkaardig moeten zijn voor een vlakdekkende onttrekking,
+ niet?
+ Aangezien de lekweerstand plaatsonafhankelijk is,
+ zou dit voor een puntonttrekking even goed moeten gelden?
+ Of sla ik de bal hier volledig mis?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Ik zat ook met die vraag en dacht tot het moment dat ik het wilde opschrijven net zo.
+ Maar misschien moet ik een ander perspectief kiezen,
+ dan valt alles op zijn plaats.
+ Drainageweerstand is gebiedsgemiddelde grondwaterstand gedeeld door het neerslagoverschot.
+ Zonder slootweerstand (volkomen sloten zonder slootbodemweerstand) is dit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\phi}-\phi_{s}=\frac{NL^{2}}{12kD}=Nc
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $c$
+\end_inset
+
+ een de equivalente weerstand van een vervangende semi-permeabele laag,
+ de weerstand dus die bij 
+\begin_inset Formula $\overline{\phi}-\phi_{s}$
+\end_inset
+
+ stijghoogteverval precies het neerslagoverschot doorlaat.
+ Met slootweerstand (radiale weerstand plus eventueel slootbodemweerstand) komt die erbij en wordt de drainageweerstand gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\phi}-\phi_{s}=Nc_{dr}=NLw+Nc=N\left(Lw+c\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c_{dr}=Lw+c
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We hiermee hebben de opbolling volledig geëlimineerd,
+ eenvoudig door de drainageweerstand te definiëren op basis van de gemiddelde grondwaterstand.
+ Dit is ook precies wat je in een regionaal model moet doen wanneer je de stijghoogte in de toplaag niet apart wilt meenemen en toch de uitwisseling tussen sloten en toplaag goed wilt hebben zonder de stroming in de toplaag,
+ voor zover veroorzaakt door het neerslagoverschot) apart te berekenen.
+ In je regeionale model vervang je de weerstand van de afzonderlijke sloten èn die door de horizontale stroming in de toplaag naar de sloten door een vlakdekkende semi-permanente laag op de toplaag,
+ en geeft je deze semi-permeabele laag weerstand 
+\begin_inset Formula $Lw+c$
+\end_inset
+
+.
+ De stijghoogte in de oplaag in het model door het neerslagoverschot,
+ ten opzichte van het slootpeil,
+ is dan exact gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\overline{\phi}-\phi_{s}=Nc_{dr}=N\left(Lw+c\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hiermee heb je de sloten uit de toplaag geëlimineerd,
+ maar de gemiddelde stijghoogte in de toplaag (bij uitsluitend neerslagoverschot) behouden.
+ Je kan verder van alles in de toplaag doen,
+ zoals onttrekken of infiltreren.
+ De stijghoogte in de toplaag wordt dan goed berekend ten opzichte van de gemiddelde grondwaterstand door alleen neerslagoverschot.
+ Dus nee,
+ de drainageweerstand 
+\begin_inset Formula $c_{dr}=Lw+c$
+\end_inset
+
+ is niet hetzelfde als de weerstand van de vervangende equivalente semi-permeabele laag met weerstand 
+\begin_inset Formula $c=L^{2}/(12kD)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{Q}{\pi k}\ln\left(\frac{D}{\pi r}\right)=\frac{Q}{\pi k}=\ln\left(\frac{D}{\Omega}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Is dit de maximum extra verlaging ter hoogte van circa 1,5x de aquiferdikte?
+ Bestaat er een analytische vergelijking om het verloop van de watertafel in functie van x te bepalen?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Deze vergelijking geeft de radiale weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m]:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w=\frac{\Delta\phi}{Q}=\frac{1}{\pi k}\ln\left(\frac{D}{\Omega}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ is het stijghoogteverschil tussen sloot en grondwater direct onder de sloot.
+ Zonder slootweerstand,
+ dus in een volkomen sloot en zonder 
+\begin_inset Quotes pld
+\end_inset
+
+slootbodemweerstand
+\begin_inset Quotes prd
+\end_inset
+
+,
+ is 
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ gelijk aan nul evenals 
+\begin_inset Formula $w$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ is dus exact het verschil tussen slootpeil en de stijghoogte direct onder de sloot.
+ Bij infiltratie is dit de verhoging van het slootpeil nodig om de gewenste infiltratie flux te infiltreren nog zonder horizontale stroming in de aquifer.
+ Gaat het alleen om het neerslagoverschot dan geldt 
+\begin_inset Formula $Q=NL$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+De radiale weerstand heeft een invloed op de stijghoogte tot op ca.
+ 
+\begin_inset Formula $1.5D$
+\end_inset
+
+ vanaf de sloot.
+ Daar hebben we een analytische oplossing voor die in het andere stuk wordt gegeven
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(\sin\left(\frac{i\pi}{2D}z\right)\right)-\frac{Q}{D}z\ +\frac{2Q}{\pi}\ln2;\qquad x\ge0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Deze functie is in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Analytische-oplossing-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ weergegeven middels de stijghoogte- en de stroomlijnen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/Partial_penetration_analytic.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Analytische-oplossing-contractie"
+
+\end_inset
+
+Analytische oplossing van de stroming opgewekt door alleen de contractie van stroomlijnen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor 
+\begin_inset Formula $z\to0$
+\end_inset
+
+,
+ dus richting het hart van de sloot:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\ln\left(\frac{i\pi z}{2D}\right)+\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\ln\left(i\frac{\pi}{2D}re^{i\theta}\right)+\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\ln\left(i\frac{\pi}{D}re^{i\theta}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(z\right)=\frac{2Q}{\pi}\left(\ln\frac{\pi r}{D}+\ln i+i\theta\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(z\right)=\frac{2Q}{\pi}\left(\ln\frac{\pi r}{D}+\ln\left(1e^{i\pi/2}\right)+i\theta\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(z\right)=\frac{2Q}{\pi}\left(\ln\frac{\pi r}{D}+i\frac{\pi}{2}+i\theta\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(z\right)=\frac{2Q}{\pi}\left(\ln\frac{\pi r}{D}+i\left(\frac{\pi}{2}+\theta\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dus voor de potentiaal 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ en de stijghoogte 
+\begin_inset Formula $\phi$
+\end_inset
+
+ geldt (exact de formule van Huisman voor half-cirkelvormige slootdoorsnede
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Phi=k\phi=\frac{2Q}{\pi}\ln\frac{\pi r}{D}\approx\frac{2Q}{\pi}\ln\frac{\Omega}{D}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(het teken hangt af van Q.
+ Wil je postitieve 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ bij positieve 
+\begin_inset Formula $Q$
+\end_inset
+
+ dan gebruik je 
+\begin_inset Formula $\ln\frac{D}{\Omega}$
+\end_inset
+
+in plaats van 
+\begin_inset Formula $\ln\frac{\Omega}{D}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+en voor de stroomfunctie 
+\begin_inset Formula $\Psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Psi=\frac{2Q}{\pi}\left(\theta+\frac{\pi}{2}\right),\;\text{met}\;-\frac{\pi}{2}\le\theta\le0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De hoek van de stroomlijnen varieert van omlaag (
+\begin_inset Formula $\theta=-\frac{\pi}{2}$
+\end_inset
+
+) en van rechts (
+\begin_inset Formula $\theta=0$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Nu de stroming door de contractie van de stroomlijnen langs de top van het pakket,
+ 
+\begin_inset Formula $z=x$
+\end_inset
+
+,
+ 
+\begin_inset Formula $0<x<\infty$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(\sin\left(\frac{i\pi}{2D}z\right)\right)-\frac{Q}{D}z\ +\frac{2Q}{\pi}\ln2;\qquad x\ge0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor grote z:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(x\right)=\frac{2Q}{\pi}\ln\left(i\sinh\frac{\pi x}{2D}\right)-\frac{Q}{D}x+\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sinh w\to\frac{1}{2}e^{w}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(x\right)=\frac{2Q}{\pi}\left(\ln\left(\frac{i}{2}\exp\left(\frac{\pi x}{2D}\right)\right)\right)-\frac{Q}{D}x+\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(x\right)=\frac{2Q}{\pi}\left(\ln i-\ln2+\frac{\pi x}{2D}\right)-\frac{Q}{D}x+\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega\left(x\right)=\frac{2Q}{\pi}\ln i-\frac{2Q}{\pi}\ln2+\frac{2Q}{\pi}\frac{\pi x}{2D}-\frac{Q}{D}x+\frac{2Q}{\pi}\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega\left(x\right) & =\frac{2Q}{\pi}\ln1e^{i\frac{\pi}{2}}\\
+ & =iQ
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dus we hebben hiermee de invloed van de contractie van de stroomlijnen overal.
+ In de buurt van de sloot (
+\begin_inset Formula $z\to0$
+\end_inset
+
+) krijgen we de limiet van Huisman (Ernst) terug.
+ Voor zeer grote 
+\begin_inset Formula $z$
+\end_inset
+
+ wordt 
+\begin_inset Formula $\Phi=0$
+\end_inset
+
+ en 
+\begin_inset Formula $0\le\Psi\le Q$
+\end_inset
+
+,
+ of voor 
+\begin_inset Formula $z=x$
+\end_inset
+
+ langs de bovenzijde van het watervoerend pakket 
+\begin_inset Formula $\Psi=iQ$
+\end_inset
+
+ overal.
+\end_layout
+
+\begin_layout Standard
+Wil je de stijghoogte door de contractie van stroomlijnen langs het bovenvlak gebruik
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(\sin\left(\frac{i\pi}{2D}z\right)\right)-\frac{Q}{D}z\ +\frac{2Q}{\pi}\ln2;\qquad x\ge0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+en vul in 
+\begin_inset Formula $z=x$
+\end_inset
+
+.
+ Langs het ondervlak,
+ vul in 
+\begin_inset Formula $y=-iD$
+\end_inset
+
+ en voor de verticaal op de lijn 
+\begin_inset Formula $x=0$
+\end_inset
+
+ vul in 
+\begin_inset Formula $x=0$
+\end_inset
+
+ of langs de lijn 
+\begin_inset Formula $z=x-ix$
+\end_inset
+
+ (diagonaal omlaag) vul dat in enzovoort voor willekeurige lijnen in het 
+\begin_inset Formula $z$
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+-vlak
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+,
+ d.w.z.
+ door verticale doorsnede.
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-top-en-basis+Huisman"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft de stijghoogte door uitsluitend de contractie van de stroomlijnen langs de top en de basis van het watervoerende pakket zoals hierboven afgeleid,
+ samen met de benadering van Huisman (1972).
+ De stijghoogte langs top en basis van de doorsnede gaan naar nul voor 
+\begin_inset Formula $x\approx10=D$
+\end_inset
+
+.
+ We zeggen normaliter voor 
+\begin_inset Formula $\text{x>1.5D}$
+\end_inset
+
+.
+ De formule van Huisman heeft een geldigheidsbereik tot ca 
+\begin_inset Formula $x=1$
+\end_inset
+
+m,
+ dus hier 
+\begin_inset Formula $x/D<0.1$
+\end_inset
+
+ wat toch vrij beperkt lijkt.
+ Als we echter een fout tot 20% accepteren dan kan je zeggen dat de log hieronder in absolute waarde hoogsten 1 mag zijn:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{2Q}{\pi k}\ln\left(\frac{\pi r}{D}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dus 
+\begin_inset Formula $r<D/\pi\approx0.3D$
+\end_inset
+
+.
+ Dat is waar de rode lijn in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Stijghoogte-top-en-basis+Huisman"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ de nul-lijn snijdt.
+ De extra verlaging door contractie is dan altijd positief en benadert de werkelijkheid beter naarmate de radius van de sloot kleiner is.
+ De benadering is heel precies voor 
+\begin_inset Formula $x/D\le$
+\end_inset
+
+0.1
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/stijgh_top_basis_contractie.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Stijghoogte-top-en-basis+Huisman"
+
+\end_inset
+
+Stijghoogte langs de top de basis van het watervoerende pakket samen met de formule van Huisman (1972)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Vraag naar anisotropie
+\end_layout
+
+\begin_layout Standard
+Wanneer de doorsnede verticaal anisotroop is moet de werkelijke doorsnede eerst worden getransformeerd naar een isotrope.
+ Dit gaat met
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+x_{iso} & =x\sqrt{k/k_{h}}\\
+z_{iso} & =z\sqrt{k/k_{v}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k=\sqrt{k_{h}k_{v}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In de zo verkregen isotrope doorsnede kunnen alle berekening op de gebruikelijke manier worden uitgevoerd waarna de coördinaten van de doorsnede worden terug getransformeerd.
+ Nemen we bijvoorbeeld een doorsnede waarin 
+\begin_inset Formula $k_{v}=k_{h}/9$
+\end_inset
+
+ dan moet de verticale as met een factor 3 worden opgerekt en de horizontale met een factor drie worden samengedrukt en de berekening worden uitgevoerd met isotrope doorlatendheid 
+\begin_inset Formula $k=\sqrt{k_{h}k_{v}}=\sqrt{k_{h}k_{h}/9}=k_{h}/3$
+\end_inset
+
+.
+ Verder 
+\begin_inset Formula $x_{iso}=x\sqrt{k/k_{h}}=x\sqrt{1/3}=0.577x$
+\end_inset
+
+ en 
+\begin_inset Formula $z_{iso}=z\sqrt{k/k_{z}}=z\sqrt{3k_{z}/k_{z}}=z\sqrt{3}=1.73z$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verwerking-van-anisotropie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft hert resultaat van de exercitie.
+ De oorspronkelijke anisotrope doorsnede (onderste figuur) is eerst verschaald tot een isotrope doorsnede zoals weergegeven in de bovenste figuur.
+ Daarin zijn de contourlijnen berekend en getekend.
+ Vervolgens zijn dezelfde lijnen getekend met de overeenkomstige coördinaten van de anisotrope doorsnede,
+ de werkelijke doorsnede dus.
+ De doorsnede in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verwerking-van-anisotropie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is tweemaal zo breed gemaakt als in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Analytische-oplossing-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ om de reikwijdte van de anisotropie goed in beeld te brengen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/Partial_penetration_analytic_aniso.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verwerking-van-anisotropie"
+
+\end_inset
+
+Verwerking van anisotropie voor de contractie van stroomlijnen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verloop-top-bass-anisotroop"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft het verloop van de stijghoogte langs de op en de basis van de doorsnede in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verwerking-van-anisotropie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/2.
+ In plaats van 
+\begin_inset Formula $x$
+\end_inset
+
+ is nu 
+\begin_inset Formula $x/D$
+\end_inset
+
+ gebruikt op de horizontale as.
+ We zien nu dat het effect van de radiale weerstand nu een stuk verder reikt dan in de isotrope doorsnede.
+ Wellicht het best is dit te zien door de grootste 
+\begin_inset Formula $x$
+\end_inset
+
+-waarde van de buitenste rode lijn in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Analytische-oplossing-contractie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ te vergelijken met die in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verwerking-van-anisotropie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+/2.
+ Deze waarde gaat van 8 m naar ca.
+ 25 m.
+ 
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/stijgh_top_basis_contractie_aniso.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verloop-top-bass-anisotroop"
+
+\end_inset
+
+Verloop van de stijghoogte aan de top en basis van de doorsnede en toepassing van de benaderende formule van Huisman (1972)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Lw$
+\end_inset
+
+ niet in functie van 
+\begin_inset Formula $x$
+\end_inset
+
+?
+ Dichtbij de sloot neemt de radiale opbolling toch ook af binnen een afstand van circa 
+\begin_inset Formula $1.5D$
+\end_inset
+
+,
+ de aquiferdikte?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Nee,
+ 
+\begin_inset Formula $Lw$
+\end_inset
+
+ is de weerstand die bij de opbolling komt.
+ Je rekent het effect op het watervoerende pakket uit met slootweerstand nul en dan tel je ter plekke van de sloot de slootweerstand 
+\begin_inset Formula $Lw$
+\end_inset
+
+ daarbij op,
+ als of het alleen daar plaats vindt.
+ Wil je ook het verloop naast de sloot en verderop laten zien dan moet je de hele analytische oplossing van hierboven gebruiken.
+ Die geeft alle informatie over alleen de contractie van stroomlijnen.
+ Ernst (1962) heeft het over lijnendiagram in figuur 6.
+ Bij elke sloot een verticaal lijntje omhoog (slootweerstand maal flux naar de sloot) en daartussen lijntjes die alleen Dupuit weergeven zonder piek bij de sloot (dus met volkomen sloten).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+Waarom is:
+ De weerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d] van de vlakdekkende laag ter vervanging van de weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] van de sloten is niet gelijk aan de drainageweerstand?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Dat is hiervoor uitgelegd.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+Moet 
+\begin_inset Formula $\Delta\phi=N/c$
+\end_inset
+
+ niet 
+\begin_inset Formula $\Delta\phi=Nc$
+\end_inset
+
+ en 
+\begin_inset Formula $\Delta\phi=NL/w$
+\end_inset
+
+ niet 
+\begin_inset Formula $\Delta\phi=NLw$
+\end_inset
+
+ zijn?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Ja natuurlijk.
+ Ik heb het veranderd.
+ Gelukkig werkt het niet door,
+ 
+\begin_inset Formula $c=Lw$
+\end_inset
+
+ blijft.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+Kan je hiermee wel de kromming van de stroomlijnen,
+ en dus de radiale weerstand voldoende meerekenen?
+ Moet je niet meer lagen invoeren?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Nee dat hoeft niet,
+ want ik heb de de totale radiale weerstand zodanig over de 
+\begin_inset Formula $k_{z}$
+\end_inset
+
+ van de twee lagen verdeeld dat de totale radiale weerstand exact gelijk is aan de totale analytische radiale weerstand.
+ Maar je kan natuurlijk ook een flink aantal dunne lagen toepassen,
+ dan zorgt het model er zelf voor dat de radiale weerstand overeen komt met de analytische formules.
+ Maar met twee lagen kan het ook als je er maar voor zorgt dat de weerstanden exact kloppen.
+ Met een tweelagenmodel kan je natuurlijk geen mooi lijnenspel laten zien als hiervoor met de analytische formule en in het andere rapport met een fijn numeriek model.
+ In de formule en in het fijn numerieke model werden cellen toegepast van 10x10 cm.
+ Dus vandaar dat dat zo'n fraai lijnenpatroon oplevert en vandaar ook dat het numerieke model zo goed overeenkomt met de analytische formule.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+Zou je ook niet kunnen werken met een GHB-voorwaarde in één laag,
+ waarbij de conductantie 
+\begin_inset Formula $C=Lcel*Bcel/weerstand$
+\end_inset
+
+?
+ Dan vermijd je de lastige omzetting van de 
+\begin_inset Formula $Kv$
+\end_inset
+
+ denk ik.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Ja dat kan even goed.
+ Heb ik eerder wel gedaan om te vergelijken met een weerstandbiedende laag.
+ De uitkomst is exact hetzelfde.
+ Je hebt dan maar een modellaag nodig de stroming vanaf de buitenwereld naar de modelknoop loopt dan via de GHB link en de weerstand van de sloot wordt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+C=1/w
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $C$
+\end_inset
+
+ dimensie [m/d]=[d/m].
+ Vermenigvuldig 
+\begin_inset Formula $C$
+\end_inset
+
+ met 
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ en je krijgt de instroom in [m2/d] in de doorsnede.
+ Voor een 2D model moet je 
+\begin_inset Formula $w$
+\end_inset
+
+ feitelijk vermenigvuldigen met de lengte van de waterloop binnen de cel.
+ In de doorsnede wordt nu aangenomen dat die lengte 
+\begin_inset Formula $1$
+\end_inset
+
+ is (1 m loodrecht op de doorsnede).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DS:
+\end_layout
+
+\begin_layout Standard
+We zouden misschien voor 
+\begin_inset Formula $L<\lambda$
+\end_inset
+
+ een minimum weerstand kunnen opleggen,
+ de vraag is dan welke de beste benadering is.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+TO:
+\end_layout
+
+\begin_layout Standard
+Je bedoelt 
+\begin_inset Formula $\lambda<L$
+\end_inset
+
+.
+ Eens,
+ je zou 
+\begin_inset Formula $\lambda=L$
+\end_inset
+
+ wellicht kunnen nemen.
+ Dus 
+\begin_inset Formula $c=Lw\to\lambda=\sqrt{kDLw}\ge L$
+\end_inset
+
+ leidt tot
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+kDLw & \ge L^{2}\\
+w & \ge\frac{L}{kD}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Einde
+\end_layout
+
+\begin_layout Standard
+\align center
+-0-0-0-
+\end_layout
+
+\end_body
+\end_document
