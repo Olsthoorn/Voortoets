@@ -97,8 +97,6 @@ def get_Z(b, D, N=100, clip=1e-3):
     Z = X.clip(clip, None) + 1j * (Y.clip(clip, D-clip))
     return Z
 
-
-
 def stroming_analytisch(b=40, D=10, dxy=0.1, N=0.001, k=1, case=None, ax=None):    
     kh, kv = k, k
     Q = N * b
@@ -183,7 +181,6 @@ def stroming_analytisch(b=40, D=10, dxy=0.1, N=0.001, k=1, case=None, ax=None):
             ax.plot(b, D, 'ro', ms=20, mec='b', mfc='blue', zorder=100)
 
         fig.savefig(os.path.join(images, "Ernst_fig7_analytisch.png"))           
-
 
 def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=None):
     """Ernst's 1962 cross section is simulated, keeping the
@@ -292,9 +289,29 @@ def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=No
                         linewidths=0.5,
                         linestyles='solid')
         # ax.clabel(Cs, levels=Cs.levels)
+        
     
     ax.set_aspect(1)
-    print("Done case {ic}")
+    
+    if case==4:
+        def omega(z, Q, D):
+            return 2 * Q / np.pi * np.log(np.sin(1j * np.pi / (2 * D) * z)) - Q/D * z + 2 * Q/np.pi * np.log(2)
+        om1 = omega(gr.xm, Q, D)
+        om2 = omega(gr.xm - 1j * D, Q, D)
+        fig, ax = plt.subplots(figsize=(10,6))
+        ax.set_title('Stijghoogte langs top en basis en benadering,  contractiestroming')
+        ax.set(xlabel='x/D', ylabel='\phi [m]', xscale='log')
+        ax.grid()
+        ax.plot((b - gr.xm[:-1]) / D, out['Phi'][0, 0, :-1] - out['Phi'][0, 0, 0], 'b.', label=r'$\phi$ top, numeriek')
+        ax.plot((b - gr.xm) / D, out['Phi'][-1, 0] - out['Phi'][-1, 0, 0], 'bx', label=r'$\phi$ basis, numeriek')
+        ax.plot(gr.xm/D, om1.real / k, 'g-', label=r'$\phi$ top, analytisch')
+        ax.plot(gr.xm/D, om2.real / k, 'g--', label=r'$\phi$ basis, analytisch')
+        ax.plot(gr.xm/D, 2 * Q / (np.pi * k) * np.log(np.pi * gr.xm/D), 'r', label=r'$\frac{2Q}{\pi k}\,\ln\left(\frac{\pi x}{D}\right)$')
+        ax.legend(loc='lower right')
+        fig.savefig(os.path.join(images, "phi_top_basis.png"))
+        
+    
+    print(f"Done case {ic}")
     # --- Add field to out to use outside this function
     out['gr'] = gr
     return out
@@ -665,9 +682,9 @@ if __name__ == '__main__':
         stroming_analytisch(b=b, D=D, dxy=0.1, N=N, k=k, case=None, ax=None)
     if False:
         partial_penetraton(b=b, D=D, N=N, k=1, dxy=0.1)
-    if True:
+    if False:
         partial_penenetration_anisotropie(b=2 * b, D=D, N=N, kh=25, kv=25/9, dxy=0.1)
-    if False: # --- Numeric 1
+    if True: # --- Numeric 1
         # Simulating the styled rectangular X-section after Ernst (1962, fig 7), in which the
         # flow domain is kept rectangular with constant thickness and the ditch is reduced
         # to a single (0.1x01 m) cell in the upper right corner. This setup corresponds
