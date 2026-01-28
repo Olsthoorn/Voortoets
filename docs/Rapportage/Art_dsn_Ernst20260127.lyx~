@@ -1377,6 +1377,68 @@ Verloop van de stijghoogte aan de onderzijde (stippellijnen) en aan de bovenzijd
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(2i\sinh\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z;\qquad x\ge0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor 
+\begin_inset Formula $z\to0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega(z) & =\frac{2Q}{\pi}\,\ln\left(2i\sinh\left(\frac{\pi r_{0}}{2D}e^{i\theta}\right)\right)\\
+ & =\frac{2Q}{\pi}\left(\ln i+\ln\left(2\sinh\left(\frac{\pi r_{0}}{2D}e^{i\theta}\right)\right)\right)\approx\frac{2Q}{\pi}\left(\ln\left(\frac{\pi r_{0}}{D}\right)+i\left(\frac{\pi}{2}+\theta\right)\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Langs de verticale as,
+ 
+\begin_inset Formula $z=-iy$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(2\sin\left(-i\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z;\qquad x\ge0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(2\sin\left(\frac{\pi y}{2D}\right)\right)+\frac{Q}{D}iy;\qquad x\ge0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 De contractiestroming veroorzaakt een afwijking van de stijghoogte in de buurt van de sloot.
  Afb.
  
@@ -1460,6 +1522,28 @@ Afb.1f geeft het verloop van de stijghoogte langs de top en de basis van het wat
 \begin_inset Formula 
 \[
 \Delta\phi=\frac{2Q}{\pi k}\ln\left(\frac{D}{\pi r}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{2Q}{\pi k}\ln\left(\frac{D}{\pi r}\right)=\frac{Q}{kD}\Delta L
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+kw=\frac{2}{\pi}\ln\left(\frac{D}{\pi r}\right)=\frac{2r_{0}}{D}
 \]
 
 \end_inset
@@ -1618,7 +1702,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Ook omdraaien om consistent te blijven!
+Ook as omdraaien om consistent te blijven!
 \end_layout
 
 \end_inset
@@ -2439,6 +2523,83 @@ We hebben de complexe potentiaal voor de situatie in een doorsnede
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Langs het bovenvlak,
+ 
+\begin_inset Formula $z=x$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(x)=\frac{2Q}{\pi}\,\ln\left(i2\sinh\left(\frac{\pi x}{2D}\right)\right)-\frac{Q}{D}x;\qquad x\ge0,\ y=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(x)=\frac{2Q}{\pi}\,\left(\ln i+\ln\left(2\sinh\left(\frac{\pi x}{2D}\right)\right)\right)-\frac{Q}{D}x;\qquad x\ge0,\ y=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(x)=\frac{2Q}{\pi}\,\left(i\frac{\pi}{2}+\ln\left(2\sinh\left(\frac{\pi x}{2D}\right)\right)\right)-\frac{Q}{D}x;\qquad x\ge0,\ y=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(x)=\frac{2Q}{\pi}\left(\ln\left(2\sinh\left(\frac{\pi x}{2D}\right)\right)\right)-\frac{Q}{D}x+iQ;\qquad x\ge0,\ y=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Langs de verticaal,
+ 
+\begin_inset Formula $z=-iy$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Omega(y)=\frac{2Q}{\pi}\ln\left(2\sin\left(\frac{\pi y}{2D}\right)\right)+\frac{Q}{D}y;\qquad x=0,\ 0>y>-D
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Langs het bovenvlak
 \end_layout
 
 \begin_layout Standard

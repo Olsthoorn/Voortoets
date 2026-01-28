@@ -197,7 +197,7 @@ def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=No
     n = int(b / dxy) + 1
     m = int(D / dxy) + 1
     x = np.linspace(0, b, n+1)
-    z = np.linspace(0, D, m+1)
+    z = np.linspace(0, -D, m+1)
     gr = Grid(x, None, z, axial=False)
 
     # --- Define full size model arrays
@@ -261,8 +261,9 @@ def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=No
     Id = gr.NOD[IBOUND == -1]
 
     # --- Plot this "ditch" of point with given zero head.
-    ms = 20 if case in [0, 4, 5] else 10    
-    ax.plot(gr.XM.ravel()[Id], gr.ZM.ravel()[Id], 'ro', ms=ms, mec='b', mfc='blue', zorder=100)
+    if case in [0, 4, 5]:
+        ms = 10
+        ax.plot(gr.XM.ravel()[Id], gr.ZM.ravel()[Id], 'ro', ms=ms, mec='b', mfc='blue', zorder=100)
     
     # --- Simulate (compute heads and flows)
     out = fdm3.fdm3(gr, K=K, c=None, FQ=FQ, HI=HI, IBOUND=IBOUND, GHB=None)
@@ -289,26 +290,73 @@ def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=No
                         linewidths=0.5,
                         linestyles='solid')
         # ax.clabel(Cs, levels=Cs.levels)
-        
-    
+
     ax.set_aspect(1)
+    ax.set_xlim(b, 0)
+    
+    def w(z, D):
+        """Return ditch resistance, one-sided flow.
+        
+        For two sided flow use have this value
+        
+        Parameters
+        ----------
+        z: complex coordinate
+            The well is in z=0, and x>=0 and -D<y<0.
+        """
+        return 2 / np.pi * np.log(2 * np.sin(1j * np.pi * z / (2 * D))) - z/D
     
     if case==4:
-        def omega(z, Q, D):
-            return 2 * Q / np.pi * np.log(np.sin(1j * np.pi / (2 * D) * z)) - Q/D * z + 2 * Q/np.pi * np.log(2)
-        om1 = omega(gr.xm, Q, D)
-        om2 = omega(gr.xm - 1j * D, Q, D)
+        # Eenzijdige toestroming
+        om1 = w(gr.xm, D)
+        om2 = w(gr.xm - 1j * D, D)
         fig, ax = plt.subplots(figsize=(10,6))
         ax.set_title('Stijghoogte langs top en basis en benadering,  contractiestroming')
         ax.set(xlabel='x/D', ylabel='\phi [m]', xscale='log')
         ax.grid()
         ax.plot((b - gr.xm[:-1]) / D, out['Phi'][0, 0, :-1] - out['Phi'][0, 0, 0], 'b.', label=r'$\phi$ top, numeriek')
         ax.plot((b - gr.xm) / D, out['Phi'][-1, 0] - out['Phi'][-1, 0, 0], 'bx', label=r'$\phi$ basis, numeriek')
-        ax.plot(gr.xm/D, om1.real / k, 'g-', label=r'$\phi$ top, analytisch')
-        ax.plot(gr.xm/D, om2.real / k, 'g--', label=r'$\phi$ basis, analytisch')
+        ax.plot(gr.xm/D, Q * om1.real / k, 'g-', label=r'$\phi$ top, analytisch')
+        ax.plot(gr.xm/D, Q * om2.real / k, 'g--', label=r'$\phi$ basis, analytisch')
         ax.plot(gr.xm/D, 2 * Q / (np.pi * k) * np.log(np.pi * gr.xm/D), 'r', label=r'$\frac{2Q}{\pi k}\,\ln\left(\frac{\pi x}{D}\right)$')
         ax.legend(loc='lower right')
         fig.savefig(os.path.join(images, "phi_top_basis.png"))
+        
+        
+        # --- Fig. 11 Enrnst, tweezijdige toestroming
+        fig, ax = plt.subplots(figsize=(6,6))
+
+        ax.set_title('Fig 11 Ernst')
+        ax.set(xlabel=r'$\pi r_0/D$', ylabel=r'$k w$ [m]', xscale='log')
+                
+        # --- w from om for Ernst: Q/2
+        # ax.plot(np.pi * gr.xm/D, -om1.real / 2, 'b.', label=r'$\Phi/Q=kw$ top, analytisch')
+        
+        # --- w exactly the same, written out
+        ax.plot(np.pi * gr.xm/D, -1/np.pi * np.log(2 * 1j * np.sinh(np.pi * gr.xm / (2 * D))) + gr.xm / (2 * D), 'g-',
+                label=r'$-\frac{1}{\pi}\,\ln \left(2 i \sinh\left(\frac{\pi x}{2 D}\right)\right) + \frac{x}{2 D}$ (hor. top)')
+        
+        # --- w using sinh only
+        ax.plot(np.pi * gr.xm/D, -1/np.pi * np.log(2 * np.sinh(np.pi * gr.xm / (2 * D))), 'r-', mfc='none', mec='g',
+                label=r'$-\frac{1}{\pi}\,\ln \left(2\sinh\left(\frac{\pi x}{2 D}\right)\right)$')
+        
+        # --- w Huismand/Ernst
+        ax.plot(np.pi * gr.xm/D, -1/np.pi * np.log(np.pi * gr.xm / D), 'r--', label=r'$-\frac{1}{\pi}\,\ln\left(\frac{\pi x}{D}\right)$')
+        
+        # --- w along vertical using Q / 2
+        ax.plot(np.pi * gr.zm/D, -w(1j * gr.zm, D) / 2, 'b-',
+                label=r'$-\frac{1}{\pi}\,\ln\left(2 \sin\left(\frac{\pi y}{2 D}\right)\right) + i \frac{y}{D}$ (vert. onder sloot)')
+        
+        # --- kw = 2r0/D  
+        ax.plot(np.pi * gr.xm/D, +2*gr.xm/D, 'k--', label=r'$k w=\frac{2r_0}{D}$')
+        
+        ax.set_xlim(0.1, 3)
+        ax.set_ylim(-0.8, 0.8)
+        ax.grid(which='both')
+        ax.legend(loc='lower left')
+        
+        fig.savefig(os.path.join(images, "Ernst_fig_11.png"))
+        
         
     
     print(f"Done case {ic}")
@@ -669,8 +717,8 @@ def partial_penenetration_anisotropie(b=25, D=10, N=None, kh=None, kv=None, dxy=
     
     ax.grid(True)
     ax.set_xlim(1e-2, None)
-    # ax.set_ylim(None, 0.03)
-    ax.legend()
+    ax.set_ylim(-0.02, None)
+    ax.legend(loc='lower right')
     fig.savefig(os.path.join(images, "stijgh_top_basis_contractie_aniso.png"))
 
 # %% Complexe stroming in hoek
