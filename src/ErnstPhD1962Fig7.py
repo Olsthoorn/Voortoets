@@ -319,6 +319,17 @@ def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=No
         ax.plot(gr.xm/D, Q * om1.real / k, 'g-', label=r'$\phi$ top, analytisch')
         ax.plot(gr.xm/D, Q * om2.real / k, 'g--', label=r'$\phi$ basis, analytisch')
         ax.plot(gr.xm/D, 2 * Q / (np.pi * k) * np.log(np.pi * gr.xm/D), 'r', label=r'$\frac{2Q}{\pi k}\,\ln\left(\frac{\pi x}{D}\right)$')
+        # ax.plot(gr.xm/D, 2 * Q / (np.pi * k) * np.log(np.pi * gr.xm/D) - Q/D * gr.xm, 'c', label=r'$\frac{2Q}{\pi k}\,\ln\left(\frac{\pi x}{D}\right) - \frac{Q}{D} x$')
+        # --- Ernst ditch (r = 2 m)
+        r = 2
+        ir = np.argmin(np.abs((b - gr.xm) - r))
+        dphi_appr=2 * Q / (np.pi * k) * np.log(np.pi * r/D)        
+        dphi_num = out['Phi'][0, 0, ir] - out['Phi'][0, 0, 0] 
+        ax.plot(r/D, dphi_appr, 'o', ms=8, mfc='none', mec='r', label=f'sloot Ernst r={r}')
+        ax.plot(r/D, dphi_num,  'o', ms=8, mfc='none', mec='b', label=f' sloot Ernst r={r}')
+        
+        
+        
         ax.legend(loc='lower right')
         fig.savefig(os.path.join(images, "phi_top_basis.png"))
         
@@ -545,6 +556,8 @@ def xsec_Ernst_watertable_case(b=25, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=Non
         #ax.clabel(Cs, levels=Cs.levels)
     
     ax.set_aspect(1)
+    
+    ax.set_xlim(b, 0)
     print("Done case {ic}")
     # --- Add these fields to use outside this function
     out['gr'] = gr
@@ -721,18 +734,67 @@ def partial_penenetration_anisotropie(b=25, D=10, N=None, kh=None, kv=None, dxy=
     ax.legend(loc='lower right')
     fig.savefig(os.path.join(images, "stijgh_top_basis_contractie_aniso.png"))
 
+def comlexe_potentiaal(b=25, D=10, Q=1, d=1):
+    n, m = int(b/d) + 1, int(D/d) + 2
+    x = np.linspace(0, b, n); x[0] = 0.1
+    y = np.linspace(0, -D, m).clip(-D + 1e-6, 0 - 1e-6)
+    X,Y = np.meshgrid(x, y)
+    Z = X + 1j * Y
+        
+    zta1 = 1j * np.pi/2 / D * Z
+    zta2 = np.sin(zta1)
+    zta3 = np.log(zta2)
+    
+    fig, axs = plt.subplots(2, 1, sharex=True, sharey=True, figsize=(8, 7))
+    ax1, ax2 = axs
+            
+    dQ = Q / 20
+    
+    # --- omega0
+    omega = Q / (np.pi/2) * zta3
+    
+    phiLevels = np.arange(np.floor(omega.real.min() * 100) / 100, np.ceil(omega.real.max() * 100) / 100, dQ)
+    psiLevels = np.arange(np.floor(omega.imag.min() * 100) / 100, np.ceil(omega.imag.max() * 100) / 100, dQ)
+    
+    ax1.contour(Z.real, Z.imag, omega.real, colors='b', linewidths=0.5, levels=phiLevels)
+    ax1.contour(Z.real, Z.imag, omega.imag, colors='r', linewidths=0.5, levels=psiLevels)
+    ax1.set_aspect(1)    
+    ax1.set_ylabel('z')
+    ax1.set_title(r"$\Omega(\zeta)=\frac{2Q}{\pi}\,\ln\left(2 \sin\left(i\, \frac{\pi\zeta}{2D}\right)\right)$")
+    
+    # --- omega1
+    omega = omega - Q/D * Z
+    
+    # --- omega2
+    omega = omega + 2 * Q / np.pi * np.log(2)
+    
+    phiLevels = np.arange(np.floor(omega.real.min() * 100) / 100, np.ceil(omega.real.max() * 100) / 100, dQ)
+    psiLevels = np.arange(np.floor(omega.imag.min() * 100) / 100, np.ceil(omega.imag.max() * 100) / 100, dQ)    
+    
+    ax2.contour(Z.real, Z.imag, omega.real, colors='b', linewidths=0.5, levels=phiLevels)
+    ax2.contour(Z.real, Z.imag, omega.imag, colors='r', linewidths=0.5, levels=psiLevels)
+    ax2.set_aspect(1)
+    ax2.set_xlabel('x')
+    ax2.set_ylabel('z')
+    ax2.set_title(r"$\Omega(\zeta)=\frac{2Q}{\pi}\,\ln\left(2 \sin\left(i\, \frac{\pi\zeta}{2D}\right)\right)-\frac{Q}{D}\zeta$")
+    
+    fig.savefig(os.path.join(images, "radial_flow_deriv.png"))
+
+
 # %% Complexe stroming in hoek
 if __name__ == '__main__':
     
     b, D, N, k = 25, 10, 0.001, 0.025
     
+    if True:
+        comlexe_potentiaal(b=b, D=D, Q=1, d=0.1)    
     if False:
         stroming_analytisch(b=b, D=D, dxy=0.1, N=N, k=k, case=None, ax=None)
     if False:
         partial_penetraton(b=b, D=D, N=N, k=1, dxy=0.1)
     if False:
         partial_penenetration_anisotropie(b=2 * b, D=D, N=N, kh=25, kv=25/9, dxy=0.1)
-    if True: # --- Numeric 1
+    if False: # --- Numeric 1
         # Simulating the styled rectangular X-section after Ernst (1962, fig 7), in which the
         # flow domain is kept rectangular with constant thickness and the ditch is reduced
         # to a single (0.1x01 m) cell in the upper right corner. This setup corresponds
