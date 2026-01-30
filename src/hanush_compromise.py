@@ -12,6 +12,8 @@ from scipy.special import k0 as K0
 from fdm.src.fdm3 import fdm3
 from fdm.src.mfgrid import Grid
 
+import vtl_surf_water as sw
+
 cwd = os.getcwd()
 parts = Path(cwd).parts
 assert '2022-AGT' in parts, "2022-AGT must be in path for correct saving: {home}"
@@ -246,6 +248,20 @@ def two_simlataneous_3Dmdoels(L=500, D=25, k=1, ws=[0.25, 0.5, 1, 2], xw=2500, Q
     print(fr"lam/L = {np.sqrt(kD * np.array(ws) / L)}")
 
 
+
+def ttim_test():
+    # --- Definieer een aantal leidingen
+    
+    
+    # --- Maak daar TTIM elementen van.
+
+    # --- Reken ze door met TTIM
+
+    # --- Reken met TTIM met een semi-permeabele laag
+    
+    # --- Eventueel ook numeriek.
+    pass
+
 if __name__ == '__main__':
     L, D, k = 500, 25, 10
     w, xw, Qw = 0.2, 0, -1
@@ -253,10 +269,13 @@ if __name__ == '__main__':
     rDitch = 1
     if False:
         two_simlataneous_xsections(L=L, D=D, k=k, ws=ws, xw=xw, Qw=2400, rDitch=rDitch)
-    if True:
+    if False:
         two_simlataneous_3Dmdoels(L=L, D=D, k=k, ws=ws, xw=xw, Qw=-2400, rDitch=1)
     if False:
         analytic_test(L=500, D=25, k=1, w=1, xw=xw, Qw=Qw, rDitch=1)
+    if True:
+        water_gdf = sw.clip_water_to_gr(gr)
+        sw.distance_raster(water_gdf, pixelsize=10)
 
     plt.show()
     print("done")
