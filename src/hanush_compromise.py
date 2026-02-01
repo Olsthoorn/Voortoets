@@ -133,8 +133,7 @@ def two_simlataneous_xsections(L=500, D=25, k=1, ws=[0.25, 0.5, 1, 2], xw=2500, 
     
     print(fr"lam/L = {np.sqrt(kD * np.array(ws) / L)}")
         
-
-def two_simlataneous_3Dmdoels(L=500, D=25, k=1, ws=[0.25, 0.5, 1, 2], xw=2500, Qw=-2400, rDitch=1):
+def two_simlataneous_3Dmdoels(L=500, dxy=25, k=10, D=20, ws=[0.25, 0.5, 1, 2], xw=2500, Qw=-2400, rDitch=1):
     """Generate and run two jumeleaux (back-to-back) 3D (two-layer) FDM models.
     
     There is one well. This allows simulating only one halfspace in each model.
@@ -248,19 +247,101 @@ def two_simlataneous_3Dmdoels(L=500, D=25, k=1, ws=[0.25, 0.5, 1, 2], xw=2500, Q
     print(fr"lam/L = {np.sqrt(kD * np.array(ws) / L)}")
 
 
+def fdm_real_surfwater(xy=None, Q=-3000, b=500, L=15000, D=20, k=10, dxy=50, z=[0, -2, -22], w=2):
+    """Generate and run a LxL sized model with extraction Q, in location xy. 
+    
+    The model has two layers one to host the wells and and for the regional aquifer.
+    The radial surface water resistance is w [d/m]
+    The surface water is obtained from the OSM of Belgium.
+    """
+    dtypeGHB = np.dtype([('I', int), ('C', float), ('h', float)])
+    
+    xw, yw = xy 
+    xmin, ymin, xmax, ymax = xw - L/2, yw - L/2, xw + L/2, yw + L/2
+    nx, ny = int((xmax - xmin) / dxy) + 1, int((ymax - ymin) / dxy) + 1 
+          
+    gr = Grid(np.linspace(xmin, xmax, nx), np.linspace(ymin, ymax, ny), [0.02, 0, -D])
+    gr.crs = "EPSG:31370"
+    
+    # --- Indices of well cell
+    ixw, iyw= gr.ix(xw)[0]['idx'], gr.iy(yw)[0]['idx']
 
-def ttim_test():
-    # --- Definieer een aantal leidingen
+    IBOUND = gr.const(1, dtype=int)
+
+    # --- Model arrays
+    kx, ky, kz = gr.const(k), gr.const(k), gr.const(k)
+    c = 2 * b * w
+    
+    # --- make lambda 2b (trial)
+    lamb = 2 * b
+    c = lamb ** 2 / (k * D)
+
+    kz[0] = 0.5 * gr.DZ[0] / c
+    lam = np.sqrt(k * D * c)
+    
+    HI = gr.const(0.)
+    FQ = gr.const(0.)    
+    FQ[-1, iyw, ixw] = Q
+    
+    water_gdf = sw.clip_water_to_gr(gr)
+    line_len_gdf = sw.line_length_per_gr_cell(gr, water_gdf) # Hass a column length
+    
+    Id = line_len_gdf.index[line_len_gdf['water_length_m'] > 0]
+    GHB = np.zeros(len(Id), dtype=dtypeGHB)
+    GHB['I'] = Id + gr.nx * gr.ny
+    GHB['C'] = line_len_gdf.loc[Id, 'water_length_m'] / w
+    GHB['h'] = HI.ravel()[Id]
+    
+    out1 = fdm3(gr, K=(kx, ky, kz), c=None, FQ=FQ, HI=HI, IBOUND=IBOUND, GHB=GHB)
+    
+    IBOUND[0] = -1
+    out2 = fdm3(gr, K=(kx, ky, kz), c=None, FQ=FQ, HI=HI, IBOUND=IBOUND, GHB=None)
+    
+    r = np.sqrt((xw - gr.XM[0])**2 + (yw - gr.YM[0])**2)
+    phi_Glee = Q / (2 * np.pi * k * D) * K0(r/lam)
+
+    fig, ax = plt.subplots(figsize=(10, 10))
+    fig.suptitle(
+        f"Finite Diff Model: grid {L/1000}x{L/1000} km, cell_size={dxy} m, shape=(nz={gr.nz}, ny={gr.ny}, nx={gr.nx}))\n"
+        f"well: (Q={Q:.0f} m3/d at (xw,yw)=({xw:.0f}, {yw:.0f}), kD={k * D:.0f} m2/d\n" +
+        f"w={w:.1f} d/m, b={b:.0f} m, c={c:.0f} d, lambda={lam:.0f} m, recharge=0",
+        fontsize=12)
+    ax.set_title("Stijghoogteverandering door onttrekking (sloten vs unforme weerstandslaag/De Glee)")
+
+    phimin, phimax = np.floor(phi_Glee.min() * 10) / 10, np.ceil(phi_Glee.max() * 10) /10
+    levels = np.arange(phimin, phimax, 0.05) 
+    levels =np.unique(-np.array([0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]))
+
+    C1 = ax.contour(gr.xm, gr.ym, out1['Phi'][-1], colors='r', linewidths=1, levels=levels)
+    C2 = ax.contour(gr.xm, gr.ym, out2['Phi'][-1], colors='k', linewidths=1, levels=levels)
+    # C3 = ax.contour(gr.xm, gr.ym, phi_Glee,        colors='k', linewidths=0.75, levels=levels)
+    
+    ax.clabel(C1, levels=C1.levels, fmt='%.2f')
+    ax.clabel(C2, levels=C2.levels, fmt='%.2f')
+    # ax.clabel(C3, levels=C3.levels, fmt='%.2f')
+    
+    water_gdf.plot(color='blue', linewidth=0.75, ax=ax)
+    ax.plot(xw, yw, 'ro', ms=7, mec='k', mfc='r', label=f'well Q={Q} m3/d')
+    
+    # gr.plot_grid(ax=ax, linewidth=0.5, color='g')
+
+    ax.grid(which='both')
+    ax.set_aspect(1)
+    
+    fig.savefig(os.path.join(images, f"fdm_de_Glee_xy_{xw:.0f}_{yw:.0f}_2b.png"))
     
     
-    # --- Maak daar TTIM elementen van.
-
-    # --- Reken ze door met TTIM
-
-    # --- Reken met TTIM met een semi-permeabele laag
     
-    # --- Eventueel ook numeriek.
-    pass
+
+# --- Coordinaten ingreeplocaties
+well_coordinates = (
+    ((195000., 196500.), -3000, 600),
+    ((193400., 198550.), -3000, 600),
+    ((193500., 196200.), -3000, 800),   
+    ((192300., 194100.), -3000, 600), 
+    ((196250., 195600.), -3000, 350),   
+    )
+
 
 if __name__ == '__main__':
     L, D, k = 500, 25, 10
@@ -273,9 +354,32 @@ if __name__ == '__main__':
         two_simlataneous_3Dmdoels(L=L, D=D, k=k, ws=ws, xw=xw, Qw=-2400, rDitch=1)
     if False:
         analytic_test(L=500, D=25, k=1, w=1, xw=xw, Qw=Qw, rDitch=1)
-    if True:
+    if False:
         water_gdf = sw.clip_water_to_gr(gr)
         sw.distance_raster(water_gdf, pixelsize=10)
+
+        dist_to_water = sw.distance_grid_with_grates(xy=(194000, 195000), L=15000, dxy=50)
+        fig = plt.gcf()
+        ax = fig.axes[0]
+        for obs in well_coordinates:
+            path = sw.climb_to_ridge(*obs, dist=dist_to_water)[[0, -1]]
+            ax.plot(*path.T, 'r-')
+            ax.plot(*path[0], 'o', ms=7, mec='r', mfc='white', alpha=1)
+            ax.plot(*path[1], 'o', ms=7, mec='r', mfc='gold',  alpha=1)
+        fig.savefig(os.path.join(images, "afstand_tot_oppwater.png"))
+    if False:
+        for wel in well_coordinates:
+            xy, Q, b = wel[0], wel[1], wel[2]
+            L, D, k, w, dxy = 10000, 20, 10, 2, 50
+            print(f"Running well Q={Q} at {xy[0]}{xy[1]}, b={b} m")
+            fdm_real_surfwater(xy=xy, Q=Q, b=b, L=L, D=D, k=k, dxy=dxy, z=[0, -2, -2 - D], w=w)
+        print("Done")
+    if True:
+        fname = "Artikel-sloten_vs_claag_20260130_TO.tex"
+        with open(os.path.join(images, '../docs/Rapportage', fname), "rb") as f:    
+            for i, line in enumerate(f, 1):
+                if b'\x05' in line:
+                    print(f"Line {i} has ASCII 5 (^E)")
 
     plt.show()
     print("done")

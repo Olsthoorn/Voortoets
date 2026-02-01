@@ -216,7 +216,9 @@ def clip_water_to_gr(gr):
 
 def line_length_per_gr_cell(gr, clipped_gdf):
     """
-    Compute total length of poly_lines per grid cell.
+    Return total surface-water length per grid cell, with grid cell geometry.
+    Index: cell index I
+    Values: length in meters
     
     Parameters
     ----------
@@ -254,14 +256,15 @@ def line_length_per_gr_cell(gr, clipped_gdf):
     # --- 3. Compute length (in meters) of each intersection ---
     intersections["length_m"] = intersections.geometry.length
 
-    # --- 4. Spatial join to link intersections to parent grid cell ---
-    joined = gpd.sjoin(intersections, grid_cells_gdf, how="left", predicate="intersects")
-
-    # --- 5. Aggregate: total length per cell ---
-    lengths_per_cell = joined.groupby("index_right")["length_m"].sum()
+    lengths_per_cell = (
+        intersections
+        .groupby("I")["length_m"]
+        .sum()
+    )
 
     # --- 6. Attach results to grid ---
-    grid_cells_gdf["water_length_m"] = grid_cells_gdf.index.map(lengths_per_cell).fillna(0)
+    grid_cells_gdf['water_length_m'] = 0.0
+    grid_cells_gdf.loc[lengths_per_cell.index, "water_length_m"] = lengths_per_cell
     
     return grid_cells_gdf # water length for all cells
 
@@ -353,7 +356,8 @@ def climb_to_ridge(x:float, y:float, dist: Raster=None)->np.ndarray:
     dist: raster
         raster with distance to surface water
     """
-    ix, iy = ~dist.transform(x, y)
+    ix, iy = ~dist.transform * (x, y)
+    ix , iy = int(ix), int(iy)
     path = [(ix, iy)]
 
     # --- First step direction unknown.
@@ -363,12 +367,12 @@ def climb_to_ridge(x:float, y:float, dist: Raster=None)->np.ndarray:
 
     while True:
         """ --- Step until the ridge of the landscape is reached."""
-        current = dist.raster[iy, ix]
+        current = dist.array[iy, ix]
 
         # --- 3×3 window
         iy0, iy1 = max(iy-1, 0), min(iy+2, ny)
         ix0, ix1 = max(ix-1, 0), min(ix+2, nx)
-        window = dist[iy0:iy1, ix0:ix1]
+        window = dist.array[iy0:iy1, ix0:ix1]
 
         ndy, ndx = np.unravel_index(np.argmax(window), window.shape)
         iy_new = iy0 + ndy
@@ -384,7 +388,7 @@ def climb_to_ridge(x:float, y:float, dist: Raster=None)->np.ndarray:
             ix_fwd = ix + ndx_prev
 
             if (0 <= iy_fwd < ny and 0 <= ix_fwd < nx and
-                dist[iy_fwd, ix_fwd] <= current):
+                dist.array[iy_fwd, ix_fwd] <= current):
                     # --- cross maximum reached (so we're on the ridge)
                     break
 
@@ -394,7 +398,7 @@ def climb_to_ridge(x:float, y:float, dist: Raster=None)->np.ndarray:
         
     path = np.array(path, dtype=int)
     
-    return dist.transform * (path.T[0], path.T[1])
+    return np.vstack(dist.transform * (path.T[0], path.T[1])).T
 
 def get_distance_raster(water_gdf, pixelsize=10):
     """Return raster with distance to surface water."""
@@ -604,7 +608,7 @@ def cleanup_simplify(xy=None, L=15000):
     
 def distance_grid_with_grates(xy=None, L=15000, dxy=50):
     
-    xm, ym = xy()
+    xm, ym = xy
     xmin, ymin, xmax, ymax = xm - L/2, ym - L/2, xm + L/2, ym + L/2
     
     gr = Grid(x=np.linspace(xmin, xmax, nx+1), y=np.linspace(ymin, ymax, ny+1), z=[0, -1])
@@ -634,15 +638,12 @@ def distance_grid_with_grates(xy=None, L=15000, dxy=50):
         
 # --- Coordinaten van waarnemingsputten
 obs_coordinates = np.array([
-    [194591., 196868.],
-    [193362., 197692.],
-    [193214., 195058.],
-    [193470., 195612.],
-    [192660., 195882.],
-    [192876., 194018.],
-    [192619., 194275.],
-    [192430., 193816.],
-    [192890., 193478.]])
+    [195000., 196500.],
+    [193400., 198550.],
+    [193500., 196200.],    
+    [192300., 194100.], 
+    [196250., 195600.]   
+    ])
 
 # %%
 if __name__ == '__main__':
@@ -657,12 +658,14 @@ if __name__ == '__main__':
         cleanup_simplify(xy=xy, L=L)
     if True:
         dist_to_water = distance_grid_with_grates(xy=xy, L=L, dxy=dxy)
-        ax = plt.gca()
+        fig = plt.gcf()
+        ax = fig.axes[0]
         for obs in obs_coordinates:
-            path = climb_to_ridge(obs)[[0, -1]]
-            ax.plot(path.T, 'r-')
-            ax.plot(*path[0], 'o', ms=10, mec='r', mfc='none')
-            ax.plot(*path[1], 'o', ms=10, mec='b', mfc='none')
+            path = climb_to_ridge(*obs, dist=dist_to_water)[[0, -1]]
+            ax.plot(*path.T, 'r-')
+            ax.plot(*path[0], 'o', ms=7, mec='r', mfc='white', alpha=1)
+            ax.plot(*path[1], 'o', ms=7, mec='r', mfc='gold',  alpha=1)
+        fig.savefig(os.path.join(images, "afstand_tot_oppwater.png"))
  
     plt.show()
     
