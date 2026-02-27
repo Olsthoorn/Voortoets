@@ -3,7 +3,11 @@
 # [tool.ruff]
 # select = ["E", "F"]
 # ignore = ["I001"]
-
+import sys
+print(sys.executable)
+import tools
+print(tools.__file__)
+#%%
 import os
 from pathlib import Path
 from itertools import cycle
@@ -12,15 +16,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import PathPatch, Path as PPath
 
-from fdm.src import fdm3
-from fdm.src.mfgrid import Grid
+from tools.fdm.src import fdm3
+from tools.fdm.src.mfgrid import Grid
 
 
 # %%
 cwd = os.getcwd()
 parts = Path(cwd).parts
-assert '2022-AGT' in parts, "2022-AGT must be in path for correct saving: {home}"
-images = os.path.join(*parts[:parts.index("2022-AGT") + 1], "Coding", "images")
+assert '2022-AGT-Voortoets' in parts, "2022-AGT-Voortoets must be in path for correct saving: {home}"
+images = os.path.join(*parts[:parts.index("2022-AGT-Voortoets") + 1], "Coding", "images")
 
 
 def objpatch(xy, **kwargs):
@@ -312,7 +316,7 @@ def xsec_Ernst_rectangular_case(b=20, D=10, dxy=0.1, N=0.01, k=1., case=5, ax=No
         om2 = w(gr.xm - 1j * D, D)
         fig, ax = plt.subplots(figsize=(10,6))
         ax.set_title('Stijghoogte langs top en basis en benadering,  contractiestroming')
-        ax.set(xlabel='x/D', ylabel='\phi [m]', xscale='log')
+        ax.set(xlabel='x/D', ylabel=r'$\phi$ [m]', xscale='log')
         ax.grid()
         ax.plot((b - gr.xm[:-1]) / D, out['Phi'][0, 0, :-1] - out['Phi'][0, 0, 0], 'b.', label=r'$\phi$ top, numeriek')
         ax.plot((b - gr.xm) / D, out['Phi'][-1, 0] - out['Phi'][-1, 0, 0], 'bx', label=r'$\phi$ basis, numeriek')
@@ -792,7 +796,7 @@ if __name__ == '__main__':
         stroming_analytisch(b=b, D=D, dxy=0.1, N=N, k=k, case=None, ax=None)
     if False:
         partial_penetraton(b=b, D=D, N=N, k=1, dxy=0.1)
-    if False:
+    if True:
         partial_penenetration_anisotropie(b=2 * b, D=D, N=N, kh=25, kv=25/9, dxy=0.1)
     if False: # --- Numeric 1
         # Simulating the styled rectangular X-section after Ernst (1962, fig 7), in which the

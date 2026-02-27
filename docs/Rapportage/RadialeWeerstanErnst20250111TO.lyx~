@@ -145,15 +145,6 @@ T.N.Olsthoorn
 18 januari 2026
 \end_layout
 
-\begin_layout Standard
-\begin_inset CommandInset toc
-LatexCommand tableofcontents
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Abstract
 Grondwatersystemen kunnen in veel situaties worden geschematiseerd tot een stroomgebied gevoed door neerslag dat ondergronds afstroomt naar flankerend open water.
  Dit is evident wanneer het gaat om landbouwpercelen met omringende sloten,
@@ -252,6 +243,15 @@ literal "false"
 ,
  eventueel verticaal anisotroop,
  met vlakke bodem zonder onderliggende weerstandslagen.
+\end_layout
+
+\begin_layout Abstract
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

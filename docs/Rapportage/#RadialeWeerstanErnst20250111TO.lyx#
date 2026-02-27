@@ -1867,6 +1867,237 @@ De potentiaal,
 \end_layout
 
 \begin_layout Section
+Verticale anisotropie
+\end_layout
+
+\begin_layout Standard
+Verticale anisotropie komt algemeen voor,
+ en dikwijls wordt de verhouding tussen 
+\begin_inset Formula $k_{h}/k_{v}$
+\end_inset
+
+ in de orde van 10 geraamd.
+ Hoewel dit grote gevolgen heeft voor de stroomlijnen contractie en het bereik waarover deze de stijghoogte beïnvloedt,
+ wordt daar in de praktijk zelden echt rekening mee gehouden.
+ Zo kan de verticale anisotropie deze reikwijdte met factoren vergroten,
+ waardoor bijvoorbeeld de verlaging in waarnemingsputten bij pompproeven verkeerd wordt geïnterpreteerd.
+ De procedure bij anisotropie evenwijdig aan de coördinaatassen,
+ de verticale anisotropie,
+ is altijd als volgt:
+ 1) Verschaal de 
+\begin_inset Formula $x$
+\end_inset
+
+- en de 
+\begin_inset Formula $z$
+\end_inset
+
+-as zodanig dat de doorsnede isotroop wordt.
+ 2) Voer alle berekeningen in de isotrope doorsnede uit en 3) schaal terug voor de visualisatie.
+ Of:
+ A) kies een netwerk van 
+\begin_inset Formula $x$
+\end_inset
+
+- en 
+\begin_inset Formula $z$
+\end_inset
+
+-coördinaten in de doorsnede,
+ B) schaal die zodat de doorsnede isotroop is.
+ C) Bereken is in de isotrope doorsnede de stijghoogten en stroomfunctiewaarden uit op de knooppunten van dat verschaalde netwerk en D) contour deze stijghoogten en stroomfunctie vervolgens op het originele coördinatennetwerk.
+\end_layout
+
+\begin_layout Standard
+In afbeelding 5 is dit uitgewerkt voor dezelfde doorsnede als afbeelding 2 maar nu is verondersteld dat de verticale doorlatendheid 
+\begin_inset Formula $k_{z}$
+\end_inset
+
+ een factor 9 keer zo klein is als de horizontale 
+\begin_inset Formula $k_{x}$
+\end_inset
+
+ dus 
+\begin_inset Formula $k_{x}/k_{z}=9$
+\end_inset
+
+.
+ ,
+ wat een realistische waarde is voor veel watervoerende pakketten.
+ De verschaling loopt als volgt.
+ Eerst stappen we over op de doorlatendheid van de isotrope doorsnede:
+ 
+\begin_inset Formula $k=\sqrt{k_{x}k_{z}}=k_{x}/3=3k_{z}$
+\end_inset
+
+.
+ De horizontale as van de originele anisotrope doorsnede wordt hierdoor ingedrukt met een factor 
+\begin_inset Formula $\sqrt{k/k_{x}}=1/\sqrt{3}$
+\end_inset
+
+ en de verticale wordt hierdoor opgerekt met de factor 
+\begin_inset Formula $\sqrt{k/k_{z}}=\sqrt{3}$
+\end_inset
+
+.
+ De doorsnede wordt hierdoor isotroop (afbeelding 5,
+ boven).
+ Vervolgens worden alle berekeningen in deze isotrope doorsnede uitgevoerd (en gecontourd).
+ Het resultaat is het stelsel stijghoogte- en stroomlijnen in afbeelding 5 boven.
+ Tenslotte wordten worden in de bovenste figuur in afbeelding 5 nog een keer gecontourd op het originele netwerk met als resultaat de onderste figuur van afbeelding 5.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Afbeelding 5:
+ Doorsnede van afbeelding 2 maar met 
+\begin_inset Formula $k_{x}/k_{z}=9$
+\end_inset
+
+ zodat 
+\begin_inset Formula $k\sqrt{k_{x}k_{z}}=k_{x}/3=3k_{z}$
+\end_inset
+
+.
+ Boven:
+ isotroop gemaakte doorsnede door indrukken van de 
+\begin_inset Formula $x$
+\end_inset
+
+-as met factor 
+\begin_inset Formula $\sqrt{k/k_{x}}=1/\sqrt{3}$
+\end_inset
+
+ en oprekken van de 
+\begin_inset Formula $z$
+\end_inset
+
+-as met factor 
+\begin_inset Formula $\sqrt{k/k_{z}}=\sqrt{3}$
+\end_inset
+
+.
+ In deze isotrope doorsnede zijn de stijghoogten en stroomfunctiewaarden berekend en gecontourd.
+ Onder:
+ De contourlijnen van de potentiaal en de stroomfunctie uit de bovenste figuur getekend op het onverschaalde coördinatennetwerk in de originele doorsnede.
+ Voor het gemak is x=0 nu bij de onttrekking gelegd en loopt de doorsnede naar rechts door.
+\end_layout
+
+\begin_layout Standard
+Hoe zit het nu met de verschaling van de radiale weerstand in vergelijking (19)?
+ Nu komt het:
+ Als we een sloot hebben met halve breedte r zodat op de rand 
+\begin_inset Formula $x=r$
+\end_inset
+
+ dan verschalen we de 
+\begin_inset Formula $x$
+\end_inset
+
+ tot 
+\begin_inset Formula $x\sqrt{k/k_{x}}$
+\end_inset
+
+.
+ Met de 
+\begin_inset Formula $D$
+\end_inset
+
+ verschaald tot 
+\begin_inset Formula $D\sqrt{k/k_{z}}$
+\end_inset
+
+ volgt dan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\begin{matrix}\lim_{x\to0}\phi & \approx\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\mathrm{ln}\left(\frac{\pi x\sqrt{k/k_{x}}}{D\sqrt{k/k_{z}}}\right)\\
+ & \approx\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\mathrm{ln}\left(\frac{\pi x}{D}\sqrt{\frac{k_{x}}{k_{z}}}\right)
+\end{matrix}$
+\end_inset
+
+ (20)
+\end_layout
+
+\begin_layout Standard
+Hebben we echter een sloot met diepte r=y dan schalen we de verticale y hetzelfde als de verticale D,
+ dat wil zeggen:
+ dus niet:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lim_{y\to0}\phi\approx\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\mathrm{ln}\left(\frac{\pi y}{D}\right)$
+\end_inset
+
+ (21)
+\end_layout
+
+\begin_layout Standard
+Meestal zullen we in de praktijk eerder denken aan een sloot met halve breedte 
+\begin_inset Formula $x=r$
+\end_inset
+
+ dan halve diepte,
+ zodat vgl.
+ (20) moet worden genomen.
+ Met 
+\begin_inset Formula $\sqrt{k_{x}/k_{z}}=3$
+\end_inset
+
+ in dit voorbeeld zal dus ook de afstand tot waar de contractie van de stroomlijnen relevant is een factor 3 groter zijn dan in de anisotrope situatie!.
+ Dit is direct te zien door de uiterste stroomlijn in afbeelding 2/e te vergelijken met die in afbeelding 5/2.
+ In de eerste afbeelding reikt deze tot 8 m en in de tweede tot 24 m.
+ Dit blijkt ook wanneer we de stijghoogte in afbeelding 5/2 langs de top en basis van het pakket tekenen samen met de benadering volgens (20).
+ Zie afbeelding 6.
+\end_layout
+
+\begin_layout Standard
+Afbeelding 6:
+ Stijghoogte langs het boven- en ondervlak van de anisotrope doorsnede samen met de benadering (vgl.
+ 21) De afstand waarover beide blauwe lijnen uiteenlopen is nu 
+\begin_inset Formula $x<4.5D$
+\end_inset
+
+ in plaats van 
+\begin_inset Formula $x<1.5D$
+\end_inset
+
+ zoals in afbeelding 4.
+\end_layout
+
+\begin_layout Section
 Exacte analytische doorrekening Ernst (1962,
  fig.
  7)
