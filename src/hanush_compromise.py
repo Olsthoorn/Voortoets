@@ -2,22 +2,21 @@
 
 # %%
 import os
-from pathlib import Path
 from itertools import cycle
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.special import k0 as K0
-
-from fdm.src.fdm3 import fdm3
-from fdm.src.mfgrid import Grid
+from tools.fdm.src.fdm3 import fdm3
+from tools.fdm.src.mfgrid import Grid
 
 import vtl_surf_water as sw
 
 cwd = os.getcwd()
 parts = Path(cwd).parts
 assert '2022-AGT' in parts, "2022-AGT must be in path for correct saving: {home}"
-images = os.path.join(*parts[:parts.index("2022-AGT") + 1], "Coding", "images")
+images = os.path.join(*parts[:parts.index("2022-AGT-Voortoets") + 1], "Coding", "images")
 
 # %%
 def sinspace(x1, x2, th1=0, th2=np.pi, N=100):

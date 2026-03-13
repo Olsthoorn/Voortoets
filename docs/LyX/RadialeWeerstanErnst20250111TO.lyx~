@@ -1944,7 +1944,18 @@ In afbeelding 5 is dit uitgewerkt voor dezelfde doorsnede als afbeelding 2 maar 
  boven).
  Vervolgens worden alle berekeningen in deze isotrope doorsnede uitgevoerd (en gecontourd).
  Het resultaat is het stelsel stijghoogte- en stroomlijnen in afbeelding 5 boven.
- Tenslotte wordten worden in de bovenste figuur in afbeelding 5 nog een keer gecontourd op het originele netwerk met als resultaat de onderste figuur van afbeelding 5.
+ Tenslotte worden in de bovenste figuur in afbeelding 5 nog een keer gecontourd op het originele netwerk met als resultaat de onderste figuur van fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Doorsnede-anisotroop"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1956,33 +1967,42 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/Partial_penetration_analytic_aniso.png
+	width 80text%
 
-\end_layout
+\end_inset
 
-\begin_layout Plain Layout
+
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Doorsnede-anisotroop"
 
 \end_inset
 
+Doorsnede als in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Figuur-7-numeriek"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
 
-\end_layout
+\end_inset
 
-\begin_layout Standard
-Afbeelding 5:
- Doorsnede van afbeelding 2 maar met 
+/e (met onttrekking gemakshalve nu op 
+\begin_inset Formula $x=0$
+\end_inset
+
+ en rechts doorlopende naar 
+\begin_inset Formula $\infty$
+\end_inset
+
+) maar met 
 \begin_inset Formula $k_{x}/k_{z}=9$
 \end_inset
 
@@ -2015,6 +2035,20 @@ Afbeelding 5:
  Voor het gemak is x=0 nu bij de onttrekking gelegd en loopt de doorsnede naar rechts door.
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 Hoe zit het nu met de verschaling van de radiale weerstand in vergelijking (19)?
  Nu komt het:
@@ -2044,7 +2078,7 @@ Hoe zit het nu met de verschaling van de radiale weerstand in vergelijking (19)?
 
 \begin_layout Standard
 \begin_inset Formula $\begin{matrix}\lim_{x\to0}\phi & \approx\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\mathrm{ln}\left(\frac{\pi x\sqrt{k/k_{x}}}{D\sqrt{k/k_{z}}}\right)\\
- & \approx\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\mathrm{ln}\left(\frac{\pi x}{D}\sqrt{\frac{k_{x}}{k_{z}}}\right)
+ & \approx\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\mathrm{ln}\left(\frac{\pi x}{D}\sqrt{\frac{k_{z}}{k_{x}}}\right)
 \end{matrix}$
 \end_inset
 
@@ -2577,10 +2611,6 @@ Ernst fig.
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 

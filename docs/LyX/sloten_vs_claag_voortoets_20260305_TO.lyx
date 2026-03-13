@@ -142,11 +142,11 @@ T.N.Olsthoorn
 \end_layout
 
 \begin_layout Date
-24-01-2026
+05-03-2026
 \end_layout
 
 \begin_layout Abstract
-In voorliggend rapport wordt ten behoeve van de Voortoets van het Agentschap Bos en Natuur (Vlaaamse Overheid) onderzocht in hoeverre bij de berekening van de reikwijdte van een voorgestelde ingreep in het grondwatersysteem,
+In voorliggend rapport wordt ten behoeve van de Voortoets van het Agentschap Bos en Natuur (Vlaamse Overheid) onderzocht in hoeverre bij de berekening van de reikwijdte van een voorgestelde ingreep in het grondwatersysteem,
  zoals een onttrekking,
  kan worden volstaan met eenvoudige grondwaterformules,
  waarin het complexe oppervlaktewater wordt vervangen door een equivalente semi-permeabele laag bovenop het watervoerende pakket.
@@ -178,27 +178,29 @@ Onttrekking aan een freatisch pakket veroorzaakt verlagingen.
  Deze werken door tot de randvoorwaarden,
  zoals open water aan verdere verbreiding een halt toeroepen.
  Wanneer het open water maar voor een deel het watervoerend pakket doorsnijdt,
- zal de verlaging ook onder de waterlopen doorlopen.
- De mate waarin dit gebeurt hang af van de weerstand van de waterlopen,
- de slootweerstand.
- Deze is vooral het gevolg van de contractie van de stroomlijnen nabij de sloot en in mindere mate van de slootbodemweerstand.
- Het berekenen van de verlaging door een onttrekking hoort rekening te houden met het oppervlaktewater in de wijdere omgeving.
- Zulke berekeningen kunnen worden gemaakt met de Vlaamse Grondwatersimulator.
- Een voor dit project uitgewerkt alternatief is een model te genereren op basis van de laagopbouw in de Grondwatersimulator en daaraan het oppervlaktewater in de omgeving van de ingreep toe te voegen.
- Het genereren en draaien van dergelijke modellen rond een ingreep verloopt binnen ca.
+ zal de verlaging van de grondwaterstand ook onder de waterlopen doorlopen.
+ De mate waarin dit gebeurt hang af van de weerstand die de waterlopen en hun bodem bieden tegen in- en uitstroming van grondwater.
+ We noemen deze weerstand de slootweerstand.
+ Deze is vooral het gevolg van de contractie van de grondwaterstroomlijnen nabij de sloot (radiale weerstand genoemd,
+ waarbij ook verticale anisotropie een rol speelt) en van de slootbodemweerstand.
+ Het berekenen van de verlaging van de grondwaterstand door een onttrekking hoort rekening te houden met het oppervlaktewater in de wijdere omgeving.
+ Zulke berekeningen kunnen worden gemaakt met een regionale grondwatersimulator die lokaal wordt verfijnd.
+ Een alternatief voor het gebruik van een zware regionale grondwatersimulator kan zijn om een model te genereren op basis van de laagopbouw in de regionale grondwatersimulator en daaraan het oppervlaktewater in de omgeving van de ingreep toe te voegen.
+ Het genereren en draaien van dergelijke modellen rond een ingreep vergt op de computer ca.
  15 seconden.
- Echter het Agentschap Bos en Natuur geeft omwille van de robuustheid van de website van de te vernieuwen Voortoets toch de voorkeur aan een eenvoudiger aanpak geheel gebaseerd op eenvoudige analytische grondwaterformules.
+ Deze aanpak ligt in tussen het gebruik van analytische formules en het gebruik van een zwaarder regionaal model.
 \end_layout
 
 \begin_layout Standard
 In gebieden met een dicht oppervlaktewaterstelsel zoals in polders,
- is het gebruikelijk om voor de berekeningen de vele sloten die niet afzonderlijk in model te brengen.
+ is het gebruikelijk om voor de berekeningen de vele sloten niet afzonderlijk in model te brengen.
  Zij worden dan vervangen door een equivalente semi-permeabele laag op het watervoerende pakket.
- In de Vlaamse situatie is er in de regel een minder dicht slotenstelsel aanwezig,
- of komt het oppervlaktewater sporadisch voor in de vorm van beken op die vele honderden meters min of meer parallel aan elkaar stromen.
- Voor zulke situaties is vervangen van oppervlaktewater door een vlakdekkende weerstandslaag niet gebruikelijk,
- en worden de waterlopen wel afzonderlijk in het model aangebracht.
- De vraag die in deze rapportage voorligt is of ook in zulke gebieden met weinig oppervlaktewater de aanpak middels uniforme drainageweerstand acceptabel is om de invloed van onttrekkingen in freatische pakketten vast te stellen in de Voortoets.
+ In de Vlaamse situatie is het oppervlaktewaterstelsel in de regel een minder dicht,
+ of komt het oppervlaktewater slechts sporadisch voor in de vorm van beken op die vele honderden meters min of meer parallel aan elkaar stromen.
+ Voor zulke situaties is het vervangen van oppervlaktewater door een vlakdekkende weerstandslaag niet gebruikelijk;
+ de waterlopen worden dan wel afzonderlijk in het model aangebracht.
+ De vraag die in deze rapportage voorligt,
+ is of ook in gebieden met weinig oppervlaktewater de aanpak middels een uniforme drainageweerstand acceptabel is om de invloed van onttrekkingen in freatische pakketten vast te stellen in de Voortoets.
  Een zeer goede bron voor analytische formules voor de berekening van grondwaterstroming is 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -215,7 +217,8 @@ Drainageweerstand
 \end_layout
 
 \begin_layout Standard
-De drainageweerstand is per definitie de gebiedsgemiddelde grondwaterstand boven slootpeil 
+De drainageweerstand (ook wel lekweerstand genoemd) is een gebiedsparameter;
+ het is per definitie de gebiedsgemiddelde grondwaterstand boven slootpeil 
 \begin_inset Formula $\overline{h}-h_{sl}$
 \end_inset
 
@@ -229,28 +232,18 @@ De drainageweerstand is per definitie de gebiedsgemiddelde grondwaterstand boven
  want gemeten,
  zodat de drainageweerstand kan worden bepaald.
  De drainageweerstand is onafhankelijk van het neerslagoverschot.
- Dit geldt ook voor de onderliggende horizontale een radiale weerstand.
- Voor de slootbodemweerstand is er doorgaans wel een verschil tussen intrede- en uittredeweerstand ,wat de berekeningen afhankelijk maakt van de vraag of de grondwaterstand zich boven of onder het slootpeil bevindt.
+ Dit geldt ook voor de onderliggende horizontale een radiale weerstand binnen het grondwaterpakket.
+ Voor de slootbodemweerstand is er doorgaans een verschil tussen intredeweerstand (infiltratie vanuit de sloot) en uittredeweerstand (stroming van grondwater vanuit de grond naar de sloot).
+ Dit verschil maakt de berekeningen afhankelijk van de vraag of de grondwaterstand zich boven of onder het slootpeil bevindt.
 \end_layout
 
 \begin_layout Standard
-De drainageweerstand is op te splitsen in een vlakdekkende uniforme weerstand en een rond de sloten geconcentreerde radiale weerstand.
+De drainageweerstand is op te splitsen in enerzijds een vlakdekkende uniforme weerstand en anderzijds een rond de sloten geconcentreerde radiale weerstand.
  
 \end_layout
 
 \begin_layout Standard
-die bij gegeven peilverschil 
-\begin_inset Formula $\Delta\phi$
-\end_inset
-
- exact het neerslagoverschot doorlaat en de bij de sloten geconcentreerde radiale weerstand.
- is niet wat we nodig hebben voor de berekening van de verlaging en de vervanging van de slootweerstand door die van een equivalente vlakdekkende weerstandslaag.
- De drainageweerstand maakt het echter wel mogelijk om de slootweerstand te bepalen.
- De slootweerstand is de som van radiale weerstand en slootbodemweerstand.
-\end_layout
-
-\begin_layout Standard
-De gemiddeld hoogste grondwaterstand midden tussen tussen parallelle waterlopen is (
+De gemiddeld hoogste grondwaterstand midden tussen tussen parallelle waterlopen wordt gegeven door (
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Ernst62"
@@ -277,12 +270,12 @@ Hierin is
 \begin_inset Formula $N$
 \end_inset
 
-[m/d] het gemiddelde neerslagoverschot,
+ [m/d] het gemiddelde neerslagoverschot,
  
 \begin_inset Formula $L$
 \end_inset
 
- [m] de afstand tussen de waterlopen,
+ [m] de afstand tussen de (parallel veronderstelde) waterlopen,
  
 \begin_inset Formula $kD$
 \end_inset
@@ -291,7 +284,7 @@ Hierin is
 \begin_inset Formula $^{2}$
 \end_inset
 
-/d]het doorlaatvermogen van het freatische pakket en 
+/d] het doorlaatvermogen van het freatische pakket en 
 \begin_inset Formula $w$
 \end_inset
 
@@ -306,7 +299,7 @@ Hierin is
 \begin_inset Formula $w$
 \end_inset
 
- [d/m] is dan
+ [d/m] volgt dan uit
 \end_layout
 
 \begin_layout Standard
@@ -349,7 +342,7 @@ literal "false"
 
  (p57).
  Bij een isotroop medium geldt volgens Huisman dat de extra verlaging 
-\begin_inset Formula $\Delta\phi$
+\begin_inset Formula $\Delta h$
 \end_inset
 
  door onttrekking 
@@ -362,7 +355,7 @@ literal "false"
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\Delta\phi=\frac{Q}{\pi k}\ln\left(\frac{D}{\pi r}\right)\approx\frac{Q}{\pi k}\ln\left(\frac{D}{\Omega}\right)
+\Delta h=\frac{Q}{\pi k}\ln\left(\frac{D}{\pi r}\right)\approx\frac{Q}{\pi k}\ln\left(\frac{D}{\Omega}\right)
 \]
 
 \end_inset
@@ -372,7 +365,7 @@ literal "false"
 
 \begin_layout Standard
 Met 
-\begin_inset Formula $\pi r$
+\begin_inset Formula $\Omega=\pi r$
 \end_inset
 
  de natte omtrek van een sloot met half-circulaire doorsnede en 
@@ -403,7 +396,7 @@ Bij verticale anisotropie,
 \begin_layout Standard
 \begin_inset Formula 
 \[
-k=\sqrt{k_{x}k_{z}}
+w=\frac{1}{\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi b_{sl}}\sqrt{\frac{k_{x}}{k_{z}}}\right)
 \]
 
 \end_inset
@@ -412,7 +405,16 @@ k=\sqrt{k_{x}k_{z}}
 \end_layout
 
 \begin_layout Standard
-De breuk onder de logaritme moet hierbij niet worden verschaald omdat het in feite de verhouding betreft van twee radiï en niet van de verticale dikte en een circulaire sloot.
+met 
+\begin_inset Formula $b_{sl}$
+\end_inset
+
+ de halve slootbreedte.
+ Een verticale anisotropie met 
+\begin_inset Formula $k_{x}>k_{z}$
+\end_inset
+
+ vergroot de slootweerstand.
 \end_layout
 
 \begin_layout Section
@@ -424,7 +426,7 @@ Hoe zou de weerstand van waterlopen in een (voor nu homogeen verondersteld) gebi
 \begin_inset Formula $h$
 \end_inset
 
-.
+?
  Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -436,17 +438,18 @@ nolink "false"
 
 \end_inset
 
- geeft een denkbeeldig gebied weer met waterlopen (beken).
- Tussen de beken is de waterscheiding aangegeven met een streep-stippellijn,
+ geeft een denkbeeldig gebied weer met waterlopen zoals beken.
+ Tussen deze beken is de waterscheiding aangegeven met een streep-stippellijn,
  die in de praktijk door een GIS zal zijn gegenereerd.
- De kortste lijn tussen tussen elk paar waterlopen vormt een nagenoeg vlakke doorsnede waarin het verloop van de (in de tijd gemiddelde) grondwaterstand kan worden weergegeven met
+ De kortste lijn tussen tussen elk paar waterlopen vormt een nagenoeg vlakke doorsnede,
+ waarin het verloop van de (in de tijd gemiddelde) grondwaterstand kan worden weergegeven volgens
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-h=h_{0}+Lw+\frac{N}{2kD}\left(b^{2}-x^{2}\right)
-\]
+\begin{equation}
+h=h_{0}+Lw+\frac{N}{2kD}\left(b^{2}-x^{2}\right)\label{eq:h-tussen-beken}
+\end{equation}
 
 \end_inset
 
@@ -458,13 +461,25 @@ Hierin is
 \begin_inset Formula $h_{0}$
 \end_inset
 
- het beekpeil,
+ het beekpeil.
  
 \begin_inset Formula $Lw=2bw$
 \end_inset
 
- de stijghoogte boven het beekpeil,
- die wordt veroorzaakt door de radiale weerstand en de tweede term die de bijdrage vormt door de horizontale stroming via het watervoerende pakket.
+ is de stijghoogte boven het beekpeil,
+ zoals die wordt veroorzaakt door de radiale weerstand en de tweede term in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:h-tussen-beken"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+),
+ die de bijdrage tot de grondwaterstand vormt door de horizontale stroming via het watervoerende pakket.
  Verder is een aantal waternemingsputten weergegeven.
  De halve breedte 
 \begin_inset Formula $b$
@@ -474,12 +489,24 @@ Hierin is
 \begin_inset Formula $x$
 \end_inset
 
- van waterscheiding tot waarnemingsput is ook indicatief op enkele plaatsen aangegeven.
- Met bovenstaande formule kunnen we voor elke waarnemingsput de term 
+ van waterscheiding tot waarnemingsput is ook indicatief op enkele plaatsen aangestipt.
+ Met vgl.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:h-tussen-beken"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ kunnen we voor elke waarnemingsput de term 
 \begin_inset Formula $Lw$
 \end_inset
 
- berekenen en over een aantal waarnemingsputten middelen voor een bepaald gebied.
+ berekenen en deze daarna over een aantal waarnemingsputten middelen voor een bepaald gebied.
  Het kan zeer de moeite waard zijn om een dergelijke exercitie voor een gebied uit te voeren.
 \end_layout
 
@@ -544,7 +571,7 @@ Zoals hieronder wordt afgeleid kan de weerstand van de waterlopen vervangen word
 \begin_inset Formula $Lw$
 \end_inset
 
- volgt dus direct uit de veldgegevens.
+ volgt dus direct uit veldgegevens.
  Verderop zal blijken dat de situatie met afzonderlijke open waterlopen nauwelijks afwijkt van het resultaat waarin de waterlopen zijn vervangen door een toplaag met weerstand 
 \begin_inset Formula $c=Lw$
 \end_inset
@@ -564,22 +591,44 @@ Zoals hieronder wordt afgeleid kan de weerstand van de waterlopen vervangen word
 
  aanhouden in de toe te passen formules voor semi-spanningswater,
  nl.
- die van De Glee en Hantush.
- De Glee is de stationaire versie van Hantush,
+ die van De Glee (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:De-Glee"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) en Hantush.
+ De formule van De Glee is de stationaire versie van die van Hantush (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Hantush"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+),
  dus na voldoende lange tijd leveren beide formules hetzelfde resultaat.
 \end_layout
 
 \begin_layout Standard
 Het voordeel van het (verantwoord) gebruik van de formules voor semi-spanningssituaties in omstandigheden waarin discrete open waterlopen voorhanden zijn,
- is dat de bijdragen van andere onttrekkingen zonder meer gesuperponeerd (opgeteld) mogen worden.
+ is dat de bijdragen van andere onttrekkingen zonder meer gesuperponeerd (dus bij elkaar opgeteld) mogen worden.
  In het geval dat andere reeds vergunde onttrekkingen van wat voor soort dan ook in de wijdere omgeving van de geplande ingreep reeds aanwezig zijn,
- kunnen die in de berekeningen worden meegenomen om zo het cumulatieve effect te bepalen van wat reeds is vergund.
+ kunnen die in de berekeningen worden meegenomen om zo het cumulatieve effect te bepalen van de voorziene ingreep met wat reeds is vergund.
 \end_layout
 
 \begin_layout Standard
 Een tweede voordeel van het gebruik van de formule van Hantush is dat de duur van een onttrekking direct in de formule kan worden meegenomen,
  hoe lang of kort die ook moge zijn;
- ook wanneer een vergunning verlengd wordt,
+ Dus bijvoorbeeld wanneer een vergunning verlengd wordt,
  kan de totale duur vanaf de het verlenen van de oorspronkelijke vergunning worden ingevuld.
  Uiteraard zal de uitkomst dan in de regel gelijk zijn aan de stationaire einduitkomst,
  maar dat doet niets af aan het principe.
@@ -591,13 +640,15 @@ De Glee:
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\Delta\phi\left(r\right)=\frac{Q}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right)
-\]
+\begin{equation}
+\Delta\phi\left(r\right)=\frac{Q}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right),\;\lambda=\sqrt{kDc}\label{eq:De-Glee}
+\end{equation}
 
 \end_inset
 
-
+,
+\backslash
+;
 \end_layout
 
 \begin_layout Standard
@@ -606,9 +657,9 @@ Hantush
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\Delta\phi\left(r,t\right)=\frac{Q}{4\pi kD}\text{W}\left(u,\frac{r}{\lambda}\right),\;r=\frac{r^{2}S}{4kDt}
-\]
+\begin{equation}
+\Delta\phi\left(r,t\right)=\frac{Q}{4\pi kD}\text{W}\left(u,\frac{r}{\lambda}\right),\;u=\frac{r^{2}S}{4kDt}\label{eq:Hantush}
+\end{equation}
 
 \end_inset
 
@@ -616,7 +667,7 @@ Hantush
 \end_layout
 
 \begin_layout Standard
-Met 
+Hierin is 
 \begin_inset Formula $S$
 \end_inset
 
@@ -629,7 +680,7 @@ Met
 \end_inset
 
  in De Glee's formule is een standaardfunctie;
- de putformule van Hantush's kan gemakkelijk worden berekend.
+ de putformule van Hantush kan met een kleine procedure numeriek worden berekend.
 \end_layout
 
 \begin_layout Section
@@ -717,12 +768,11 @@ Model voor een vlakke doorsnede
 \end_layout
 
 \begin_layout Standard
-We zullen de voorgestelde methode,
- vervanging van sloten door een vlakdekkende weerstandslaag,
- illustreren aan de hand van een numeriek eindige differentie model.
+De voorgestelde methode om een stelsel van sloten (oppervlaktewater) te vervanging door een vlakdekkende weerstandslaag,
+ zullen we illustreren aan de hand van een numeriek eindige differentie model.
  Voor het gemak nemen we hiervoor een 1D doorsnede,
- die met 10 km lengte lang genoeg is om geen invloed van de modelranden te ondervinden.
- Dit model heeft ruim voldoende cellen in de 
+ die met 10 km lengte lang genoeg wordt geacht om geen invloed van de modelranden te ondervinden.
+ Dit model heeft ruim voldoende rekencellen in de 
 \begin_inset Formula $x$
 \end_inset
 
@@ -738,18 +788,19 @@ We zullen de voorgestelde methode,
 \end_inset
 
  [d/m],
- en in de tweede rij wordt het model geïmplementeerd voor de situatie zonder sloten maar met een uniforme weerstand 
+ en in de tweede rij wordt het model geïmplementeerd voor de situatie zonder sloten,
+ maar met een aquitard bovenop met uniforme weerstand 
 \begin_inset Formula $c$
 \end_inset
 
  [d].
- De twee rijen worden volledig van elkaar gescheiden door de doorlatendheid in 
+ De twee rijen worden volledig van elkaar gescheiden door in het model de doorlatendheid in 
 \begin_inset Formula $y$
 \end_inset
 
 -richting oneindig groot te maken.
- Het model bestaat voorts uit slechts twee lagen,
- maar er kunnen altijd willekeurig veel lagen aan worden toegevoegd.
+ Het model bestaat uit slechts twee lagen,
+ maar er kan altijd een willekeurig aantal lagen aan worden toegevoegd.
  De bovenste laag in de eerste rij (het eerste doorsnedemodel) bevat de sloten.
  De cellen tussen de sloten zijn ondoorlatend.
  De tweede laag stelt het watervoerend pakket voor.
@@ -772,7 +823,7 @@ water
  in het model stroomt tussen de centra van de modelcellen,
  de rekenpunten.
  De verticale stroming vanuit de toplaag is derhalve over de halve dikte van de toplaag onderweg voordat het in het watervoerende pakket aankomt.
- Daarna stroomt het nog door de halve dikte van het watervoerend pakket voordat het rekenpunt wordt bereikt.
+ Daarna stroomt het nog door de halve dikte van het watervoerend pakket voordat het onderliggende rekenpunt wordt bereikt.
  Het gaat ons om de stroming door de weerstandslaag.
  Dus de verticale doorlatendheid in deze weerstandslaag moet voldoen aan
 \end_layout
@@ -789,7 +840,7 @@ N=\Delta\phi\frac{k_{z}}{0.5\Delta z}=\frac{\Delta\phi}{c}
 \end_layout
 
 \begin_layout Standard
-zodat de volgende verticale doorlatendheid moet worden gebruikt in de toplaag
+De verticale doorlatendheid die moet worden gebruikt in de toplaag is dus gelijk aan
 \end_layout
 
 \begin_layout Standard
@@ -812,11 +863,11 @@ Voor het model met de sloten ligt de zaak iets ingewikkelder.
 .
  Hierdoor gaat de stromingsweerstand vanaf de onderzijde van de toplaag met sloot tot het rekenpunt in het midden van het watervoerende pakket een aanzienlijke bijdrage leveren aan de totale weerstand.
  We zullen deze weerstand dan ook expliciet moeten meenemen.
- We hebben het volgende verband tussen slootafvoer namelijk neerslagoverschot 
+ We hebben nu het volgende verband tussen slootafvoer namelijk neerslagoverschot 
 \begin_inset Formula $N$
 \end_inset
 
- [m/d] maar breedte 
+ [m/d] met breedte 
 \begin_inset Formula $L$
 \end_inset
 
@@ -874,10 +925,12 @@ Hierin is
 \end_inset
 
 ,
- omgekeerd evenredig met de celbreedte 
+ voorts omgekeerd evenredig met de breedte van de rekencel,
+ 
 \begin_inset Formula $\Delta x$
 \end_inset
 
+,
  en omgekeerd evenredig met de verticale doorlatendheid 
 \begin_inset Formula $k_{z1}$
 \end_inset
@@ -900,10 +953,12 @@ We gaan in het model de verticale doorlatendheid van de toplaag met de sloten aa
 \end_inset
 
  vast,
- terwijl ook 
+ terwijl ook de totale weerstand,
+ 
 \begin_inset Formula $w$
 \end_inset
 
+,
  gegeven was.
  Dus
 \end_layout
@@ -962,18 +1017,23 @@ In theorie zou de factor
 
 .
  Dat is het geval wanneer de verticale weerstand over de halve dikte van de tweede modellaag groter is dan de slootweerstand.
- Dit betekent alleen dat we de hoeveelheid water 
+ Deze situatie is te interpreteren als die waarbij de hoeveelheid water 
 \begin_inset Formula $NL$
 \end_inset
 
- niet in de sloot kwijt kunnen bij deze slootafstand.
+ niet via de sloot kan instromen bij deze slootafstand.
  Het model trekt zich hier niets van aan een rekent desnoods gewoon met een negatieve verticale doorlatendheid in de toplaag.
  Het lijkt verstandig om dit te signaleren en de eigenschappen van de doorsnede in dat geval eerst fysisch realistisch te maken,
- want dat is hetgeen een negatieve 
+ want een niet-fysische situatie is wat een negatieve 
 \begin_inset Formula $k_{z1}$
 \end_inset
 
  signaleert.
+\end_layout
+
+\begin_layout Standard
+Dit is overigens een wat lastige analyse die overbodig wordt wanneer de slootweerstand niet door een toplaag wordt gesimuleerd maar door een expliciete randvoorwaarde zoals in Modlfow de GHB (General Head Boundary).
+ Dat levert dezelfde uitkomst.
 \end_layout
 
 \begin_layout Section
@@ -997,7 +1057,7 @@ nolink "false"
 \begin_inset Formula $w$
 \end_inset
 
- [d/m] en equivalente uniforme drainageweerstand 
+ [d/m] en met een equivalente uniforme drainageweerstand 
 \begin_inset Formula $c=Lw$
 \end_inset
 
@@ -1014,7 +1074,7 @@ nolink "false"
 \end_inset
 
 voor de gebruikte waarden,
- inclusief 
+ inclusief dei van 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -1023,7 +1083,8 @@ voor de gebruikte waarden,
 \begin_inset Formula $L=500$
 \end_inset
 
- m uit elkaar en zijn ook in 
+ m uit elkaar en zijn ook in fig.
+ 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Verlaging-in-eendimensionaal"
@@ -1044,10 +1105,11 @@ nolink "false"
 \end_inset
 
 /d.
- Daar 
+ Omdat 
 \begin_inset Formula $c=Lw$
 \end_inset
 
+,
  geeft een kleine slootweerstand ook een kleine drainageweerstand en daarmee een kleine spreidingslengte 
 \begin_inset Formula $\lambda$
 \end_inset
@@ -1065,6 +1127,7 @@ nolink "false"
 \begin_inset Formula $-5000\le x\le5000$
 \end_inset
 
+,
  tonen de verschillende plaatjes in fig.
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1107,7 +1170,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/drawdown_xsec_4xw.png
+	filename ../../images/drawdown_xsec_4xw.png
 	width 100text%
 
 \end_inset
@@ -1126,20 +1189,22 @@ name "fig:Verlaging-in-eendimensionaal"
 \end_inset
 
 Verlaging in eendimensionale doorsnede.
- Blauw de oplossing met voeding via individuele waterlopen met intree/uittreeweerstand 
+ Blauw het rekenresultaat met voeding via individuele waterlopen met intree/uittreeweerstand 
 \begin_inset Formula $w$
 \end_inset
 
  [d/m].
- Rood de equivalente oplossing waarin de waterlopen zijn vervangen door een uniforme drainageweerstand 
+ Rood de equivalente oplossing,
+ waarin de waterlopen zijn vervangen door een uniforme drainageweerstand 
 \begin_inset Formula $c$
 \end_inset
 
- [d] De 
+ [d].
+ De 
 \begin_inset Formula $x$
 \end_inset
 
--as van de plaatjes is begrensd tussen 
+-as van de plaatjes is steeds begrensd tussen 
 \begin_inset Formula $-3\lambda<x<3\lambda$
 \end_inset
 
@@ -1148,11 +1213,43 @@ Verlaging in eendimensionale doorsnede.
 \begin_inset Formula $x$
 \end_inset
 
--as is 
-\begin_inset Formula $-5000<x<5000$
+-as loopt van 
+\begin_inset Formula $x=-5000$
 \end_inset
 
-.
+ tot 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $x=5000$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ m.
 \end_layout
 
 \end_inset
@@ -1170,7 +1267,18 @@ Verlaging in eendimensionale doorsnede.
 \end_layout
 
 \begin_layout Standard
-De figuur laat zien dat met name bij kleine 
+Figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat zien dat met name bij kleine 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -1181,10 +1289,11 @@ De figuur laat zien dat met name bij kleine
 
 ,
  er een aanmerkelijk verschil is tussen beide situaties.
- Hoe kleiner de 
+ Hoe kleiner 
 \begin_inset Formula $\lambda$
 \end_inset
 
+,
  hoe meer de individuele sloten het verlagingsbeeld bepalen.
  Pas bij 
 \begin_inset Formula $\lambda$
@@ -1194,6 +1303,7 @@ De figuur laat zien dat met name bij kleine
 \begin_inset Formula $L$
 \end_inset
 
+,
  ontlopen de rekenwijzen elkaar nauwelijks meer.
 \end_layout
 
@@ -1215,8 +1325,8 @@ nolink "false"
 
 \end_inset
 
- ook de analytisch berekende verlaging opgenomen en met markers aangegeven.
- Die van de doorsnede met sloten is van de ene sloot naar de andere gerekend met het constante debiet ertussen uit het numerieke model
+ is ook de analytisch berekende verlaging opgenomen en met markers aangegeven.
+ De analytische waarden van de doorsnede met sloten is van de ene sloot naar de andere gerekend met het constante debiet ertussen uit het numerieke model:
 \end_layout
 
 \begin_layout Standard
@@ -1231,7 +1341,7 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-De analytische verlaging in de doorsnede met weerstandbiedende toplaag is
+De analytische verlaging in de doorsnede met weerstandbiedende toplaag is volgt uit de standaard oplossing voor deze situatie (Formule van Mazure):
 \end_layout
 
 \begin_layout Standard
@@ -1249,11 +1359,12 @@ De analytische verlaging in de doorsnede met weerstandbiedende toplaag is
 De figuren laten zien dat de numerieke en analytische resultaten nauwkeurig met elkaar overeenkomen.
  De figuren laten verder zien dat wanneer de slootafstand groter is dan de spreidingslengte van de equivalente vlakdekkende toplaag,
  de uitkomsten van beide rekenmethoden nagenoeg niet meer van elkaar zijn te onderscheiden.
- Voor kleinere spreidingslengten wordt toepassing problematisch en des te meer naarmate de verhouding 
+ Voor kleinere spreidingslengten wordt toepassing problematisch,
+ des te meer naarmate de verhouding 
 \begin_inset Formula $\lambda/L$
 \end_inset
 
- meer onder de 1 uitkomt.
+ verder onder de waarde 1 ligt:
 \end_layout
 
 \begin_layout Standard
@@ -1279,7 +1390,11 @@ De figuren laten zien dat de numerieke en analytische resultaten nauwkeurig met 
 \end_layout
 
 \begin_layout Standard
-Dus voor de gegevens in de figuur met waarden
+Aldus geldt voor de gegevens in de figuur met de volgende waarden voor 
+\begin_inset Formula $w$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1288,6 +1403,14 @@ Dus voor de gegevens in de figuur met waarden
 w=[0.25,\;0.5,\;1,\;2]\;\text{[d/m]}
 \]
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+deze waarden voor 
+\begin_inset Formula $\lambda/L$
 \end_inset
 
 
@@ -1315,11 +1438,12 @@ We kunnen hetzelfde voorbeeld doorrekenen voor een 3D model met een (put)onttrek
 \begin_inset Formula $y$
 \end_inset
 
--richting op afstand 
+-richting op een vaste onderlinge afstand 
 \begin_inset Formula $L$
 \end_inset
 
- uit elkaar en met slootweerstand 
+.
+ De sloten hebben slootweerstand 
 \begin_inset Formula $w$
 \end_inset
 
@@ -1331,8 +1455,8 @@ We kunnen hetzelfde voorbeeld doorrekenen voor een 3D model met een (put)onttrek
 ,
  waarin,
  net als in de sloten,
- het peil wordt aangehouden.
- Het model heeft nu een vierkant netwerk met cellen en twee lagen.
+ hetzelfde vaste peil wordt aangehouden.
+ Het model heeft nu een vierkant netwerk met rekencellen en twee lagen.
  De lijn 
 \begin_inset Formula $y=0$
 \end_inset
@@ -1343,7 +1467,7 @@ We kunnen hetzelfde voorbeeld doorrekenen voor een 3D model met een (put)onttrek
 \begin_inset Formula $x$
 \end_inset
 
--richting,
+-richting;
  het verfijnt steeds tot ca.
  1 m celbreedte bij elke sloot.
  Het netwerk in 
@@ -1364,13 +1488,14 @@ We kunnen hetzelfde voorbeeld doorrekenen voor een 3D model met een (put)onttrek
 \end_inset
 
 m.
- De scheiding zelf in een rij van modelcellen 2 mm breed,
- 1 mm aan elke kant van de 
+ De scheiding zelf is een rij modelcellen van 2 mm breedte,
+ 1 mm aan elke kant van de lijn 
 \begin_inset Formula $y=0$
 \end_inset
 
- lijn,
- waarin de cellen op inactief zijn gezet en daarom niet meedoen.
+.
+ De cellen in deze rij zijn inactief gemaakt;
+ zij doen niet mee en scheiden zo de twee modellen.
 \end_layout
 
 \begin_layout Standard
@@ -1382,8 +1507,8 @@ Het model heeft twee lagen waarvan de bovenste 2 m dik is en de onderste 25 m.
 \end_layout
 
 \begin_layout Standard
-Op deze wijze ingericht zijn de hier beschreven twee modellen de 3D-evenknie van de doorsnedemodellen die hierboven zijn uitgewerkt,
- behalve de de put:
+Op deze wijze ingericht zijn de hier beschreven twee modellen de 3D-evenknie van de doorsnedemodellen die hierboven zijn uitgewerkt.
+ Alleen de put is wezenlijk anders:
  De onttrekking 
 \begin_inset Formula $Q_{w}$
 \end_inset
@@ -1397,7 +1522,7 @@ Op deze wijze ingericht zijn de hier beschreven twee modellen de 3D-evenknie van
 \begin_inset Formula $Q_{w}$
 \end_inset
 
- in het doorsnedemodel een verticale sleufonttrekking was met dimensie m
+ in het doorsnedemodel een verticale sleufonttrekking voorstelt met dimensie m
 \begin_inset Formula $^{2}$
 \end_inset
 
@@ -1405,18 +1530,21 @@ Op deze wijze ingericht zijn de hier beschreven twee modellen de 3D-evenknie van
 \end_layout
 
 \begin_layout Standard
-De slootweerstand 
+De slootweerstand is 
 \begin_inset Formula $w$
 \end_inset
 
- geldt voor een oneindig lange sloot (net als in de doorsnede) en volgt uit
+ [d/m] en geldt,
+ net als in de doorsnede,
+ voor een oneindig lange sloot.
+ Deze slootweerstand en volgt uit:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-w=\frac{\Delta\phi}{Q}
-\]
+\begin{equation}
+w=\frac{\Delta\phi}{Q}\label{eq:3D-slootweerstand}
+\end{equation}
 
 \end_inset
 
@@ -1428,7 +1556,7 @@ Met
 \begin_inset Formula $\Delta\phi$
 \end_inset
 
- slootpeil minus stijghoogte in de onderliggende aquifer en 
+ het slootpeil minus stijghoogte in de onderliggende aquifer en 
 \begin_inset Formula $Q$
 \end_inset
 
@@ -1440,7 +1568,8 @@ Met
 \begin_inset Formula $\times$
 \end_inset
 
-m_sloot_lengte)] Voor een cel met slootlengte 
+m_sloot_lengte)].
+ Voor een cel met slootlengte 
 \begin_inset Formula $\Delta y$
 \end_inset
 
@@ -1506,6 +1635,15 @@ m]=[d] is nu een verticale weerstand per oppervlakte-eenheid net als de
 
  [d] van een afdekkende laag.
  Hiermee kan de verticale stroming door een cel worden berekend.
+ Met 
+\begin_inset Formula $w_{1}$
+\end_inset
+
+ de weerstand in de bovenste en 
+\begin_inset Formula $w_{2}$
+\end_inset
+
+ die in de onderste laag geldt
 \end_layout
 
 \begin_layout Standard
@@ -1520,6 +1658,14 @@ w\Delta x=w1\Delta x+w2\Delta x
 \end_layout
 
 \begin_layout Standard
+Het debiet door de rekencel met breedte 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ is dan
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 Q_{v}=\frac{\Delta\phi}{w_{1}\Delta x+w_{2}\Delta x}\Delta x\Delta y=\frac{\Delta\phi}{\frac{0.5\Delta z_{1}}{k_{z1}}+\frac{0.5\Delta z_{2}}{k_{z2}}}\Delta x\Delta y
@@ -1528,6 +1674,10 @@ Q_{v}=\frac{\Delta\phi}{w_{1}\Delta x+w_{2}\Delta x}\Delta x\Delta y=\frac{\Delt
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+zodat
 \end_layout
 
 \begin_layout Standard
@@ -1542,6 +1692,14 @@ w_{1}\Delta x+w_{2}\Delta x=\frac{0.5\Delta z_{1}}{k_{z1}}+\frac{0.5\Delta z_{2}
 \end_layout
 
 \begin_layout Standard
+Waarin 
+\begin_inset Formula $w_{2}$
+\end_inset
+
+gegeven volgens
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 w_{2}=\frac{1}{k_{z2}}\frac{\Delta z_{2}}{2\Delta x}
@@ -1553,7 +1711,7 @@ w_{2}=\frac{1}{k_{z2}}\frac{\Delta z_{2}}{2\Delta x}
 \end_layout
 
 \begin_layout Standard
-We zoeken 
+We zoeken aleen 
 \begin_inset Formula $k_{z1}$
 \end_inset
 
@@ -1573,6 +1731,10 @@ We zoeken
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Zodat uiteindelijk de verticale doorlatendheid van de toplaag als volgt wordt
 \end_layout
 
 \begin_layout Standard
@@ -1619,7 +1781,18 @@ nolink "false"
 \end_inset
 
  [d].
- Met rode cirkels is de analytisch berekende verlaging getekend volgens De Glee:
+ Met rode cirkels is de analytisch berekende verlaging getekend volgens de formule van De Glee (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:De-Glee"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+):
 \end_layout
 
 \begin_layout Standard
@@ -1636,11 +1809,12 @@ nolink "false"
 \begin_layout Standard
 De sloten lopen loodrecht op de hier getekende doorsnede en liggen 500 m uit elkaar.
  Net als het geval was bij de resultaten van de verlaging door een verticale oneindig lange lijnonttrekking in de hiervoor uitgewerkte vlakke doorsnede,
- blijkt dat de uitkomsten verschillen voor 
+ blijkt dat de uitkomsten verschillen.
+ Maar voor 
 \begin_inset Formula $\lambda<L$
 \end_inset
 
- voor grotere afstanden is het verschil tussen de uitkomsten volstrekt verwaarloosbaar.
+ is het verschil tussen de uitkomsten volstrekt verwaarloosbaar.
 \end_layout
 
 \begin_layout Standard
@@ -1653,7 +1827,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/drawdown_3D_4xw.png
+	filename ../../images/drawdown_3D_4xw.png
 	width 100text%
 
 \end_inset

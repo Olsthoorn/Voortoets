@@ -8,9 +8,9 @@
 #
 # %% -- setup the cross section
 
-import numpy as np
 import matplotlib.pyplot as plt
-import etc
+import numpy as np
+import tools.etc
 
 def hx(hL=0., hR=10., N=0.002, kD=2000, L=20000):
     x = np.linspace(0, L, 2000)    

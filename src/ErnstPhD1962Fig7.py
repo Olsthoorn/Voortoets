@@ -183,6 +183,8 @@ def stroming_analytisch(b=40, D=10, dxy=0.1, N=0.001, k=1, case=None, ax=None):
         ax.set_ylim(0, 10)
         if not ax==axs[0]:
             ax.plot(b, D, 'ro', ms=20, mec='b', mfc='blue', zorder=100)
+            
+        ax.set_xlim(*ax.get_xlim()[::-1])
 
         fig.savefig(os.path.join(images, "Ernst_fig7_analytisch.png"))           
 
@@ -738,7 +740,7 @@ def partial_penenetration_anisotropie(b=25, D=10, N=None, kh=None, kv=None, dxy=
     ax.legend(loc='lower right')
     fig.savefig(os.path.join(images, "stijgh_top_basis_contractie_aniso.png"))
 
-def comlexe_potentiaal(b=25, D=10, Q=1, d=1):
+def complexe_potentiaal(b=25, D=10, Q=1, d=1):
     n, m = int(b/d) + 1, int(D/d) + 2
     x = np.linspace(0, b, n); x[0] = 0.1
     y = np.linspace(0, -D, m).clip(-D + 1e-6, 0 - 1e-6)
@@ -791,8 +793,8 @@ if __name__ == '__main__':
     b, D, N, k = 25, 10, 0.001, 0.025
     
     if True:
-        comlexe_potentiaal(b=b, D=D, Q=1, d=0.1)    
-    if False:
+        complexe_potentiaal(b=b, D=D, Q=1, d=0.1)    
+    if True:
         stroming_analytisch(b=b, D=D, dxy=0.1, N=N, k=k, case=None, ax=None)
     if False:
         partial_penetraton(b=b, D=D, N=N, k=1, dxy=0.1)

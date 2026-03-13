@@ -9,20 +9,19 @@ Created on Fri Sep 30 04:26:57 2016
 @author: Theo
 
 """
-import sys
-
-sys.path.append("/Users/Theo/GRWMODELS/python/tools/")
-sys.path.append("/Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter")
-
 import warnings
+
+import matplotlib.pylab as plt
 import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as la
-from scipy.special import k0 as K0, k1 as K1
-import matplotlib.pylab as plt
-from etc import newfig
+from scipy.special import k0 as K0
+from scipy.special import k1 as K1
+from tools.etc.etc import newfig
+from tools.fdm.src import mfgrid
+
 import wellfunctionalities as wf
-from fdm import mfgrid
+
 
 def quivdata(Out, x, y, iz=0):
     """Returns vector data for plotting velocity vectors.
@@ -398,7 +397,6 @@ class Fdm3():
         return Fdm3.itimize(cdr)
         
 
-        
     def simulate(self, *, DRN=None, RIV=None, GHB=None, FDR=None, tm=None, htol=1e-7, maxiter=50, verbose=False):
         """Compute a 3D steady state finite diff. model
 
@@ -820,7 +818,7 @@ def oneD_all_boundary_types(kw):
     With a single aquifer, resistance layers (c) cannot be used.
     """
     kD = (kw['k'] * kw['D'])[-1]      # m2/d, transmissivity of regional aquifer
-    lambda_  = np.sqrt(kD * float(kw['c'])) # spreading length of regional aquifer
+    lambda_  = np.sqrt(kD * float(np.squeeze(kw['c']))) # spreading length of regional aquifer
     
     # Set up the grid
     x = np.linspace(0, 6000., 601)
@@ -903,7 +901,7 @@ def axial_all_boundary_types(kw):
     With a single aquifer, resistance layers (c) cannot be used.
     """
     kD = (kw['k'] * kw['D'])[-1]      # m2/d, transmissivity of regional aquifer
-    lambda_  = np.sqrt(kD * float(kw['c'])) # spreading length of regional aquifer
+    lambda_  = np.sqrt(kD * float(np.squeeze(kw['c']))) # spreading length of regional aquifer
     
     # Set up the grid
     r = np.hstack((0., kw['rw'], kw['r'][kw['r'] > kw['rw']]))

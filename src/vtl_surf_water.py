@@ -28,29 +28,24 @@
 #
 
 # %%
-# Standard library
 import os
 from pathlib import Path
-import numpy as np
 
-# Third-party
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import numpy as np
-from shapely.geometry import box, Point # noqa: I001
-from fdm.src.mfgrid import Grid
 import rasterio
 from rasterio import features
 from rasterio.transform import from_origin
-from skimage.morphology import local_maxima, local_minima
-from scipy.spatial import cKDTree
-from scipy.ndimage import maximum_filter, distance_transform_edt
+from scipy.ndimage import distance_transform_edt
+from shapely.geometry import Point, box
+from tools.fdm.src.mfgrid import Grid
 
 # --- Get folder for saving images
 cwd = os.getcwd()
 parts = Path(cwd).parts
-assert '2022-AGT' in parts, "2022-AGT must be in path for correct saving: {home}"
-images = os.path.join(*parts[:parts.index("2022-AGT") + 1], "Coding", "images")
+assert '2022-AGT-Voortoets' in parts, "2022-AGT must be in path for correct saving: {home}"
+images = os.path.join(*parts[:parts.index("2022-AGT-Voortoets") + 1], "Coding", "images")
 
 # --- The data for the surface water vector file (OSM Belgium)
 GIS_folder = os.path.join(Path(__file__).resolve().parent.parent, 'data', 'QGIS')

@@ -591,7 +591,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ow_Belgie_tile_point.png
+	filename ../../images/ow_Belgie_tile_point.png
 	width 100text%
 
 \end_inset
@@ -646,7 +646,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/tile_plot.png
+	filename ../../images/tile_plot.png
 	width 80text%
 
 \end_inset
@@ -700,7 +700,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/surf_wat_in_cells.png
+	filename ../../images/surf_wat_in_cells.png
 	width 80text%
 
 \end_inset
@@ -756,7 +756,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/dd_example_1.png
+	filename ../../images/dd_example_1.png
 	width 80text%
 
 \end_inset
@@ -972,30 +972,6 @@ We kunnen de verlaging door een willekeurig ingreep op een willekeurige plek bin
  10 seconden op een PC en lijkt hiermee snel genoeg voor toepassing in een Voortoets.
  Voordeel is dat rekening wordt gehouden met het oppervlaktewater zoals dat in werkelijkheid aanwezig is,
  wat niet kan met een grondwaterberekening met analytische formules.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Zolang geen 
 \end_layout
 
 \end_body

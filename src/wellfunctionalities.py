@@ -1,20 +1,15 @@
-# %% [markdown]
-# # Aanleiding
-#
-# Dit bestand bevat de implementatie van de functies die gebruikt worden voor de analytische berekening
-# van grondwaterstandsverlagingen ten behoeven van de update van de Voortoets.
-# 
-# Deze functionaliteit wordt gebruikt in het notebook VoorToetsIllustraties.iynb.
-# 
-# 
-# @T.N.Olsthoorn Maart 2025
+"""
+# Aanleiding
+Dit bestand bevat de implementatie van de functies die gebruikt worden voor de analytische berekening
+van grondwaterstandsverlagingen ten behoeven van de update van de Voortoets.
 
-# %% ImportS
+Deze functionaliteit wordt gebruikt in het notebook VoorToetsIllustraties.iynb.
 
+@T.N.Olsthoorn Maart 2025
+"""
+# %%
 import os
-
 from abc import ABC, abstractmethod
-from importlib import reload
 from itertools import cycle
 
 import matplotlib.pyplot as plt
@@ -28,10 +23,7 @@ from scipy.special import erfc, exp1
 from scipy.special import k0 as K0
 from scipy.special import k1 as K1
 
-# %% [markdown]
-## Basic functionality
-
-# %%
+# %% --- Basic functionality
 class Dirs:
     """Namespace for directories in project"""
     def __init__(self):
@@ -61,10 +53,7 @@ def newfig(title, xlabel, ylabel, xlim=None, ylim=None, xscale=None, yscale=None
     ax.grid(True)
     return ax
 
-# %% [markdown]
-## Theis and Hantush well functions
-
-# %%
+# --- Theis and Hantush well functions
 def Wt(u):
     """Return Theis well function.
     
@@ -158,6 +147,7 @@ def Wb1(tau, rho=0):
     u = rho ** 2  / (4 * tau)
     return Wh(u, rho)
 
+
 def SRtheis(T=None, S=None, r=None, t=None):
     """Return Step Response for the Theis well function.
     
@@ -170,6 +160,7 @@ def SRtheis(T=None, S=None, r=None, t=None):
     u = r ** 2 * S / (4  * T * t[1:])
     return np.hstack((0, 1 / (4 * np.pi * T) * exp1(u)))
 
+
 def BRtheis(T=None, S=None, r=None, t=None):
     """Return Block Response for the Theis well function.
     
@@ -178,6 +169,7 @@ def BRtheis(T=None, S=None, r=None, t=None):
     """
     SR = SRtheis(T, S, r, t)
     return np.hstack((0, SR[1:] - SR[:-1]))
+
 
 def IRtheis(T=None, S=None, r=None, t=None):
     """Return the impulse response for the Theis well drawdown.
@@ -193,7 +185,6 @@ def IRtheis(T=None, S=None, r=None, t=None):
     u = np.hstack((np.nan, r ** 2 * S / (4 * T * t[1:])))
     return np.hstack((0, 1 / (4 * np.pi * T) *  np.exp(-u[1:]) / t[1:])) * dt[0]
 
-# %% [markdown]
 # Check Hantush and Bruggeman functions for a well in a leaky aquifer.
 # u, rho = 0.004, 0.03
 # print("Wh(u={:.4g}, rho={:.4g}) = {}".format(u, rho, Wh(u, rho)))
@@ -201,10 +192,7 @@ def IRtheis(T=None, S=None, r=None, t=None):
 # print("Wb(tau={:.4g}, rho={:.4g}) = {}".format(tau, rho, Wb(tau, rho)))
 
 
-# %% [markdown]
-## Wells
-
-# %%
+# --- Wells
 class WellBase(ABC):
     """Base class for all well functions that follow.
     
@@ -368,7 +356,6 @@ class WellBase(ABC):
         r[r < self.rw] = self.rw
         return r
     
-
 class wTheis(WellBase):
     """Class for handling drawdown and other calcuations according to Theis"""
     
@@ -466,7 +453,6 @@ class wTheis(WellBase):
         """
         sr = self.SR(r=r, t=t)
         return np.hstack((0, sr[1:] - sr[:-1]))
-
 
 class wTheisSimple(WellBase):
     """Class for handling drawdown and other calcuations according to simplified Theis Function
@@ -595,8 +581,6 @@ class wTheisSimple(WellBase):
         sr = self.SR(r=r, t=t)
         return np.hstack((0, sr[1:] - sr[:-1]))
 
-
-
 class wHantush(WellBase):
     """Clas for computing drawdown and other values according to Hantush."""
     
@@ -709,8 +693,6 @@ class wHantush(WellBase):
         sr = self.SR(r=r, t=t)
         return np.hstack((0, sr[1:] - sr[:-1]))
 
-    
-
 class wDupuit(WellBase):
     """General implementation of the Dupuit well function."""
     
@@ -793,7 +775,6 @@ class wDupuit(WellBase):
         """Return radius of water divide."""
         return np.NaN     
 
-
 class wDeGlee(WellBase):
     """Axial symmetric flow to well in semi-confiende aqufier according to De Glee.
     
@@ -867,9 +848,8 @@ class wDeGlee(WellBase):
         qy = WellBase.itimize(qy)
         return (qx, qy)
 
-
 class Brug370_1(WellBase):
-    """Class that implemnents Bruggemans solution 370_01, which
+    """Class that implements Bruggemans solution 370_01, which
     implements the steady-state drawdown due to a well in a leaky aquifer of
     which the transmissivity and the resistance of the overlying
     aquitard jump at x=0.
@@ -1012,7 +992,6 @@ class Brug370_1(WellBase):
     def qxqy(self, *args, **kwargs):
         raise NotImplementedError("qxqy is not implemented for Brug370_1")
 
-
 class wVerruijt(WellBase):
     """Axial symmetric flow according to Verruijt and Blom.
     
@@ -1144,8 +1123,6 @@ class wVerruijt(WellBase):
         r = np.sqrt(Q / (np.pi * N))
         return r if r < R else np.nan
 
-             
-   
 class wBlom(WellBase):
     """Axial symmetric flow according to Verruijt and Blom.
     
@@ -1397,10 +1374,6 @@ class wBlom(WellBase):
         ax.legend()
         return ax
 
-# %% [markdown]
-## Implementation of functions for computing drawdown or head in a 1D cross section.
-
-# %%
 class StripBase(ABC):
     """Base class for several 1D groundwater flow functions."""
         
@@ -1447,7 +1420,6 @@ class StripBase(ABC):
             x = StripBase.check_x(x)
         return x, t
     
-
 class Section(StripBase):
     """This class implements the head or drawdown in a cross section that between xL and xR
     is a water table aquifer or a confined aquifer with recharge. Outside, i.e. for x < xL
@@ -1578,7 +1550,6 @@ class Section(StripBase):
         Q[mask_C] = QL + N * (x[mask_C] - xL)
         Q[mask_R] = QR * np.exp(-(x[mask_R] - self.bnd['xR']) / (lamb_R + eps))
         return WellBase.itimize(Q)
-
 
 class Verruijt1D(StripBase):
     """Verruijt 1D solution.
@@ -1758,11 +1729,6 @@ class Blom1D(StripBase):
         else:
             return np.nan
         
-        
-# %% [markdown]
-## Generate a line that can illustrate ground surface elevation
-
-# %%
 
 def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
     r"""Return a ground surface elevation for visualization purposes.
@@ -1820,10 +1786,6 @@ def ground_surface(x, xL=None, xR=None, yM=1, Lfilt=20, seed=3):
     return filtered
 
 
-# %% [markdown]
-## Generate coordinates for mirror wells and mirror ditches
-
-# %%
 class Mirrors():
     """Class to compute mirror ditches plus signs or mirror wells plus signs
     
@@ -1956,10 +1918,8 @@ class Mirrors():
         ax.set_yticks([])
         return ax
     
-        
 
-# %% [markdown]
-## === E X A M P L E S ===
+# === E X A M P L E S ===
 
 # %%
 if __name__ == '__main__':
@@ -2158,8 +2118,6 @@ if __name__ == '__main__':
     hxR = sec2.h(xR, N)
     ax.plot([xL, xR], [hxL, hxR], 'ro', label=f"Hard boundary hL={sec2.bnd['hL']}, hR={sec2.bnd['hR']} m op  resp. x={sec2.bnd['xL']} en x={sec2.bnd['xR']}  m")
 
-
-    # plt.show()
 
 
     # %% [markdown]

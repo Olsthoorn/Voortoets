@@ -142,7 +142,7 @@ T.N.Olsthoorn
 \end_layout
 
 \begin_layout Date
-24-01-2026
+01-02-2026
 \end_layout
 
 \begin_layout Abstract
@@ -158,6 +158,13 @@ In voorliggend rapport wordt ten behoeve van de Voortoets van het Agentschap Bos
  of wellicht zelfs ca.
  2/3 daarvan.
  Dit criterium voor acceptabele toepassing kan direct worden berekend uit de drainageweerstand en het bekend veronderstelde doorlaatvermogen van het (freatische) watervoerende pakket.
+\end_layout
+
+\begin_layout Abstract
+De voorbeelden met een reëel gebied met echt oppervlaktewater laten zien dat er behoorlijke verschillen blijven tussen de berekeningen waarbij het oppervlaktewater randvoorwaarden zijn en die waarin dit oppervlaktewater is vervangen door een semi-permeabele toplaag,
+ waarvoor eenvoudige analytische formules van De Glee of Hantush kunnen worden gebruikt.
+ Zij komen bij elkaar in de buurt,
+ maar in hoeverre deze vereenvoudiging acceptabel is binnen de Voortoets zal in breder verband moeten worden besloten.
 \end_layout
 
 \begin_layout Standard
@@ -480,7 +487,14 @@ Hierin is
 \end_inset
 
  berekenen en over een aantal waarnemingsputten middelen voor een bepaald gebied.
- Het kan zeer de moeite waard zijn om een dergelijke exercitie voor een gebied uit te voeren.
+\end_layout
+
+\begin_layout Standard
+(Verderop in dit document worden bij wijze van voorbeeld berekeningen gemaakt waarin de berekeningen met sloten als randvoorwaarden worden vergeleken met die waarbij de sloten zijn vervangen door een equivalenten uniforme semi-permeabele toplaag bij gegeven slootweerstand).
+\end_layout
+
+\begin_layout Standard
+Het kan zeer de moeite waard zijn om een dergelijke exercitie voor een gebied uit te voeren.
 \end_layout
 
 \begin_layout Standard
@@ -512,15 +526,11 @@ name "fig:Denkbeeldig-oppervlaktestelsel"
 
 \end_inset
 
-Denkbeeldig oppervlaktestelsel waterscheiding (streepjeslijn) met waarnemingsputten 
+Denkbeeldig oppervlaktestelsel waterscheiding (streepjeslijn) met waarnemingsputten
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -1107,7 +1117,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/drawdown_xsec_4xw.png
+	filename ../../images/drawdown_xsec_4xw.png
 	width 100text%
 
 \end_inset
@@ -1157,10 +1167,6 @@ Verlaging in eendimensionale doorsnede.
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -1592,7 +1598,7 @@ Dit is hetzelfde als in het doorsnede model.
 \end_layout
 
 \begin_layout Section
-Voorbeeld
+Voorbeeld onttrekking in gebied met evenwijdige open leidingen
 \end_layout
 
 \begin_layout Standard
@@ -1653,7 +1659,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/drawdown_3D_4xw.png
+	filename ../../images/drawdown_3D_4xw.png
 	width 100text%
 
 \end_inset
@@ -1682,7 +1688,968 @@ name "fig:Verlaging-door-een-put"
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Test met een regionaal model
+\end_layout
+
+\begin_layout Standard
+We zullen nu de proef op de som nemen en de vereenvoudiging toepassen op een regionaal model.
+ Het model beslaat een willekeurig stuk van België met een karakteristiek stelsel oppervlaktewateren voornamelijk bestaande uit beken.
+ We gaan uit van een homogeen freatisch pakket met uniforme dikte en geven het oppervlaktewater overal dezelfde radiale weerstand.
+ We modelleren het gebied opnieuw met slechts twee modellagen.
+ Alle cellen van de eerste laag krijgen 
+\begin_inset Formula $k_{x}=k_{y}=0$
+\end_inset
+
+.
+ De verticale doorlatendheid wordt niet veranderd behalve bij de cellen die oppervlaktewater bevatten.
+ Voor die cellen wordt de verticale doorlatendheid zodanig aangepast dat deze precies de radiale weerstand van dat oppervlaktewater binnen de cel simuleert.
+ De cellen met oppervlaktewater krijgen een vaste stijghoogte gelijk aan nul.
+ Neerslag wordt niet toegepast.
+ De beoogde ingreep,
+ een onttrekking wordt aan de tweede laag opgelegd.
+ Dit is gelijk het enige dat in de tweede laag plaats vindt.
+\end_layout
+
+\begin_layout Standard
+Dit model wordt vergeleken met een model waarin het oppervlaktewater is vervangen door een equivalente semi-permeabele toplaag.
+ De weerstand daarvan wordt consistent gemaakt met die van het stelsel aan oppervlaktewater.
+ De stijghoogte in deze toplaag wordt vastgezet op 0.
+ Vervolgens wordt in de tweede laag de beoogde ingreep aangebracht op dezelfde manier als hiervoor.
+\end_layout
+
+\begin_layout Standard
+Beide modellen worden gedraaid en de resultaten worden daarna met elkaar vergeleken.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{Q}{\Delta\phi}=\frac{L}{w}=\frac{L}{w_{1}+w_{2}}=\frac{1}{\frac{w_{1}}{L}+\frac{w_{2}}{L}}=\frac{1}{c_{1}+c_{2}}=\frac{1}{\frac{2\Delta z_{1}}{k_{z1}}+\frac{2\Delta z_{2}}{k_{z2}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $w=w_{1}+w_{2}$
+\end_inset
+
+de totale weerstand van de sloot maar nu verdeeld over modellaag 1 en 2 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{w}{L}=c_{1}+c_{2}=\frac{2\Delta z_{1}}{k_{z1}}+\frac{2\Delta z_{2}}{k_{z2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met gegeven laageigenschappen is 
+\begin_inset Formula $c_{2}$
+\end_inset
+
+ bekend.
+ 
+\begin_inset Formula $c_{2}$
+\end_inset
+
+ is gegeven en wordt niet aangepast.
+ Dus resteert het aanpassen van de verticale doorlatendheid van de eerste modellaag 
+\begin_inset Formula $k_{z1}$
+\end_inset
+
+.
+ Deze volgt uit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{w}{L}=\frac{2\Delta z_{1}}{k_{z1}}+c_{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+zodat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k_{z1}=\frac{2\Delta z_{1}}{\frac{w}{L}-c_{2}};\;c_{2}=\frac{2\Delta z_{2}}{k_{z2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De vraag is nu welke equivalente weerstand moeten we gebruiken ter vervanging van het oppervlaktewater.
+ In de situatie waarin het open water was opgevat als evenwijdig,
+ wat dat eenduidig.
+ Die luxe gaat met willekeurig over het gebied verdeeld oppervlaktewater natuurlijk niet op.
+ We moeten voor deze waarde terugvallen op een of ander met GIS berekenbaar criterium.
+ Een mogelijkheid is om een fijn raster te maken met voor elke cel de afstand tot het dichtstbij zijnde oppervlaktewater.
+ Afb.@@@) laat het resultaat van zo'n bewerking zien.
+ Het is een berglandschap met uitsluitend positieve hoogtes variërend van 0 ter plaats van het oppervlaktewater tot een maximum daartussen.
+ Dit landschap heeft graten als in een echt berglandschap,
+ die waterscheidingen vormen.
+ De hoogte van de graat kan worden opgevat als de afstand 
+\begin_inset Formula $b$
+\end_inset
+
+,
+ de halve breedte van het gebied opgespannen tussen twee meestal min of meer evenwijdige waterlopen.
+ Het grondwaterverloop langs een doorsnede loodrecht op de hoogtelijnen tussen twee waterlopen zal ongeveer voldoen aan Dupuit:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+h-h_{0}\approx Nbw+\frac{N}{2kD}\left(b_{2}-x^{2}\right);\;\text{met \;0\ensuremath{\le}x\ensuremath{\le}b}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor elk punt in het gebied kan 
+\begin_inset Formula $b$
+\end_inset
+
+ uit deze rasterkaart worden bepaald door van dat punt de naar boven te klimmen tot de graat is bereikt.
+ Zoals hiervoor uitgelegd is de vervangende equivalente weerstand voor het gebied met evenwijdig oppervlaktewater op onderlinge afstand 
+\begin_inset Formula $L=2b$
+\end_inset
+
+ gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q=\frac{\Delta\phi}{w}=\frac{\Delta\phi}{c}L\to c=Lw
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit kunnen we ook in het ruimtelijke geval toepassen waarbij 
+\begin_inset Formula $L=2b$
+\end_inset
+
+ uit de afstandskaart in het gebied van de ingreep.
+ 
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft een kaart met de loop van oppervlaktewateren en contourlijnen van de kortste afstand tot het oppervlaktewater.
+ De 
+\begin_inset Quotes pld
+\end_inset
+
+kam
+\begin_inset Quotes prd
+\end_inset
+
+ met de hoogte waarden is geel aangegeven.
+ De kam hoogte is de halve breedte 
+\begin_inset Formula $b$
+\end_inset
+
+ ofwel 
+\begin_inset Formula $L/2$
+\end_inset
+
+ overeenkomstig de afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ tussen parallelle waterlopen.
+ De gele lijnen geven de grootste halve afstand tussen het lokale oppervlaktewater.
+ Hierna worden voorbeeldberekeningen gemaakt voor de vijf locaties die in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ zijn weergegeven als witte bolletjes.
+ Vanuit elk bolletje gaat een lijntje naar het lokale hoogste punt (grootste afstand tot het oppervlaktewater) dit levert de afstand 
+\begin_inset Formula $b$
+\end_inset
+
+ (locatie is aangegeven met oranje bolletjes).
+ Met deze gegevens,
+ de slootweerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ en het doorlaatvermogen kunnen de voorbeeldberekeningen worden gemaakt.
+ In de figuren met resultaten van elk van de voorbeeldberekeningen zijn de rode verlagingslijnen die de uitkomst weergeven van de berekening met het oppervlaktewater als randvoorwaarde,
+ terwijl de zwarte cirkelvormige verlagingslijnen het resultaat zijn van de berekening waarin het oppervlaktewater is vervangen door een equivalente semi-permeabele toplaag.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
 \begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/afstand_tot_oppwater.png
+	width 80text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "figAfstand-tot-het-pppervlaktewater"
+
+\end_inset
+
+Oppervlaktewater met contourlijnen van de afstand tot het oppervlaktewater.
+ De 
+\begin_inset Quotes pld
+\end_inset
+
+kam
+\begin_inset Quotes prd
+\end_inset
+
+ tussen het oppervlaktewater is geel aangeduid.
+ De afbeelding toont een vijftal locaties waar een ingreep wordt gesimuleerd (witte bollen).
+ De bij deze punten behorende 
+\begin_inset Formula $b=L/2$
+\end_inset
+
+ is met een gele bol aangegeven.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De procedure om de invloed of reikwijdte van een lokale ingreep in het grondwatersysteem te berekenen zou als volgt zijn:
+\end_layout
+
+\begin_layout Enumerate
+Bepaal de locatie.
+\end_layout
+
+\begin_layout Enumerate
+Ga vanaf deze locatie 
+\begin_inset Quotes pld
+\end_inset
+
+bergop
+\begin_inset Quotes prd
+\end_inset
+
+ tot de kam.
+\end_layout
+
+\begin_layout Enumerate
+Gebruik deze kamhoogte als 
+\begin_inset Formula $L$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Bereken de equivalente weerstand uit 
+\begin_inset Formula $c=Lw$
+\end_inset
+
+ met 
+\begin_inset Formula $w$
+\end_inset
+
+ de radiale slootweerstand eventueel vermeerderd met de bodemslibweerstand.
+\end_layout
+
+\begin_layout Enumerate
+Bereken analytisch met De Glee of Hantush de verlagingen en de verlagingscontouren.
+\end_layout
+
+\begin_layout Section
+Voorbeelden
+\end_layout
+
+\begin_layout Standard
+De volgende figuren geen de resultaten van de verlagingsberekening voor een onttrekking van 
+\begin_inset Formula $Q=3000$
+\end_inset
+
+ m3/d op achtereenvolgens vijf verschillende locaties in hetzelfde gebied.
+ De locaties zijn dezelfde als de witte bolletjes in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De locaties zijn zo gekozen dat de plek ten opzichte van het oppervlak voor elk punt wezenlijk anders is.
+ De rode contourlijnen geven de verlaging met het oppervlaktewater als randvoorwaarde,
+ waarbij al het oppervlaktewater dezelfde (radiale) weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ heeft zoals aangegeven in de kop van de figuur.
+ De zwarte contourlijnen geven de berekende verlaging weer waarbij het oppervlaktewater is vervangen door een toplaag met equivalente weerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ ook aangegeven in de op van elke figuur.
+ Deze weerstand 
+\begin_inset Formula $c=2bw$
+\end_inset
+
+ hangt af van de afstand tussen het oppervlaktewater (halve afstand 
+\begin_inset Formula $b$
+\end_inset
+
+ is de waarde van het corresponderende gele bolletje in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+ Deze afstand varieert feitelijk over het gebied maar de waarde voor het onttrekkingspunt is aangehouden.
+ De verlagingen volgens De Glee zijn gecheckt en komen strak overeen met de zwarte contourlijnen,
+ maar zijn om die reden hier niet getekend.
+\end_layout
+
+\begin_layout Standard
+In fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:192300-194100"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ blijkt de verlaging van de berekening met oppervlaktewater redelijk overeen te komen met die volgens De Glee,
+ behalve in het zuidwesten,
+ waar gewoon weinig oppervlaktewater aanwezig is om de verlaging te dempen,
+ daar is de verlaging groter dan volgens De Glee..
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_192300_194100.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:192300-194100"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(192300,194100)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193400-198550"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is de reikwijdte volgens de analytische formule van De Glee in het noordwesten veel groter dan de berekening met de sloten.
+ Dit wordt duidelijk veroorzaakt door een dichter stelsel oppervlaktewater ten noordwesten van de onttrekking.
+ De 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ waarde is relatief groot door de grote afstand tussen het oppervlaktewater rond de onttrekking.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_193400_198550.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:193400-198550"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(193400,198550)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193500-196200"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is de reikwijdte volgens De Glee in het noorden duidelijk groter dan die van de berekening met oppervlaktewater.
+ De reden is dat in het noorden de dichtheid van het oppervlaktewater groter is,
+ terwijl de 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ hier juist groot is door de grote afstand tussen het oppervlaktewater in het stroomgebied waar de onttrekking zich toevallig in bevindt 
+\begin_inset Formula $b=800$
+\end_inset
+
+,
+ 
+\begin_inset Formula $\lambda=800$
+\end_inset
+
+ m.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_193500_196200.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:193500-196200"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(193500,196200)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:195000-196500"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is het invloedsgebied volgens De Glee groter dan met het oppervlaktewater als randvoorwaarde.
+ De oorzaak hiervan is de ligging van de onttrekking vlakbij oppervlaktewater,
+ dat de reikwijdte verkleint terwijl de reikwijdte volgens De Glee afhangt van de 
+\begin_inset Formula $\lambda$
+\end_inset
+
+-waarde die juist groot is door de grote afstand tussen het oppervlaktewater in het gebied waar de onttrekking zich bevindt 
+\begin_inset Formula $\left(2b=1200,\;\lambda\approx700\right)$
+\end_inset
+
+ m.
+ en 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_195000_196500.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:195000-196500"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(195000,196500)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:196250-195600"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is een situatie waarin de reikwijdte van de berekening met oppervlaktewater juist groter is dan die volgens De Glee.
+ Dit wordt veroorzaakt door de wat geringere afstand tussen het oppervlaktewater en dus kleinere 
+\begin_inset Formula $b$
+\end_inset
+
+ en kleinere 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Maar de groter reikwijdte van de berekening met het oppervlaktewater komt ook door een geringe dichtheid van datzelfde oppervlaktewater in flinke delen van het beïnvloede gebied.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_196250_195600.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:196250-195600"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(196250,195600)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bij de voorbeelden met parallel oppervlaktewater is geconcludeerd dat 
+\begin_inset Formula $\lambda\ge2b$
+\end_inset
+
+ zou moeten zijn wil de berekeningsmethode goed werken.
+ Zulke grote waarden worden in deze voorbeelden niet gehaald.
+ Zet men 
+\begin_inset Formula $\lambda=2b$
+\end_inset
+
+,
+ dan zijn de verlagingen die met de vervangende semi-permeabele laag worden berekend in de meeste gevallen veel te groot.
+ Hieronder worden hiervan twee voorbeelden gegeven.
+ Zij zijn gelijk aan twee van de voorgaande voorbeelden maar met een grotere 
+\begin_inset Formula $\lambda=2b$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193400-198550-2b"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is dezelfde situatie als fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193400-198550"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ maar nu met 
+\begin_inset Formula $\lambda=2b$
+\end_inset
+
+.
+ De berekeningen met de vervangende semi-permeabele laag geven bij 
+\begin_inset Formula $\lambda=2b=1200$
+\end_inset
+
+ mu veel grotere verlagingen dan in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193400-198550"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ met 
+\begin_inset Formula $\lambda\approx700$
+\end_inset
+
+ m.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_193400_198550_2b.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:193400-198550-2b"
+
+\end_inset
+
+Zelfde situatie als in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193400-198550"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ maar met 
+\begin_inset Formula $\lambda=2b=1200$
+\end_inset
+
+ m
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:196250-195600-2b"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is dezelfde situatie als in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:196250-195600"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ maar nu met 
+\begin_inset Formula $\lambda=2b=700$
+\end_inset
+
+ m in plaats van 529 m.
+ In dit geval is 
+\begin_inset Formula $\lambda=2b$
+\end_inset
+
+ zelfs wat beter.
+ Dat komt ook omdat hier 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ en 
+\begin_inset Formula $2b$
+\end_inset
+
+ niet ver uiteen lopen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_196250_195600_2b.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:196250-195600-2b"
+
+\end_inset
+
+Zelfde situatie als in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:196250-195600"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ maar met 
+\begin_inset Formula $c=2b$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -1696,7 +2663,7 @@ Conclusies
 \end_layout
 
 \begin_layout Standard
-Het lijkt acceptabel om voor de berekening van de verlaging en zijn reikwijdte de sloten te vervangen door een equivalente semi-permeabele toplaag onder voorwaarde dat 
+In situaties met parallel oppervlaktewater lijkt het acceptabel om voor de berekening van de verlaging en zijn reikwijdte de sloten te vervangen door een equivalente semi-permeabele toplaag onder voorwaarde dat 
 \begin_inset Formula $\lambda/L>1$
 \end_inset
 
@@ -1706,6 +2673,111 @@ Het lijkt acceptabel om voor de berekening van de verlaging en zijn reikwijdte d
  Dit geldt zowel voor de eendimensionale situatie,
  dat wil zeggen een verticale vlakke doorsnede met lijnonttrekking,
  als in de driedimensionale situatie met een brononttrekking.
+\end_layout
+
+\begin_layout Standard
+Bij een min of meer willekeurige ruimtelijke en spaarzame verdeling van het oppervlaktewater over het gebied zijn er duidelijke verschillen tussen de uitkomsten van de berekening met het oppervlaktewater als randvoorwaarde en de uitkomsten van de berekening waarbij het oppervlaktewater is vervangen door een 
+\begin_inset Quotes pld
+\end_inset
+
+equivalente
+\begin_inset Quotes prd
+\end_inset
+
+ uniforme weerstandslaag.
+ De verschillen hangen sterk af van de daadwerkelijke verdeling van het oppervlaktewater over het gebied,
+ zoals blijkt uit de vijf voorbeelden waarbij de onttrekking steeds op een (significant) andere plek in het gebied werd geplaatst.
+\end_layout
+
+\begin_layout Standard
+De equivalente weerstand van de vervangende toplaag wordt berekend op basis van slootweerstand en afstand tussen het oppervlaktewater in het gebied waar de onttrekking zich bevindt.
+ Deze afstand kan van plaats tot plaats sterk verschillen waardoor er verschillen ontstaan tussen de twee rekenmethoden.
+ De rekenmethodes zijn eenduidig maar waar de verschillen optreden is niet a priori te zeggen.
+ De berekening met de vervangende semi-permeabele toplaag is in het algemeen minder accuraat tenzij de spreidingslengte 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ groter dan dan de afstand tussen het oppervlaktewater 
+\begin_inset Formula $2b$
+\end_inset
+
+.
+ Dat is hij echter in dit gebied nooit.
+ De vervangende weerstand 
+\begin_inset Formula $c=2bw$
+\end_inset
+
+ en hangt behalve van de 
+\begin_inset Formula $b$
+\end_inset
+
+ ook direct af van de grootte van de radiale weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+.
+ De waarde 
+\begin_inset Formula $w$
+\end_inset
+
+ die in deze vijf voorbeeldberekeningen is toegepast is 2 d/m,
+ en was de hoogste waarde toegepast in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-door-een-put"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Bij deze waarde is de 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ in dit gebied kleiner dan 
+\begin_inset Formula $2b$
+\end_inset
+
+ waardoor de equivalente scheidingslaag minder goed werkt.
+ Dit zal vermoedelijk altijd zo zijn in gebieden met een grote afstand tussen het oppervlaktewater.
+\end_layout
+
+\begin_layout Standard
+De 
+\begin_inset Quotes pld
+\end_inset
+
+eis
+\begin_inset Quotes prd
+\end_inset
+
+ 
+\begin_inset Formula $\lambda\ge2b$
+\end_inset
+
+ kan leiden tot een keuze voor 
+\begin_inset Formula $\lambda=2b$
+\end_inset
+
+ ongeacht wat 
+\begin_inset Formula $c=2bw$
+\end_inset
+
+ feitelijk is.
+ De laatste twee voorbeelden illustreren dat dit in zijn algemeenheid geen goed idee is.
+ De berekeningen met equivalenten semi-permeabele laag kunnen dan veel te grote verlagingen berekenen,
+ hoewel dat niet altijd het geval blijkt.
+ Dit maakt de berekeningswijze onbetrouwbaar en is dus af te raden.
+\end_layout
+
+\begin_layout Standard
+De hier uitgewerkte aanpak kan werken,
+ en is dan eenvoudig,
+ maar blijft verre van perfect.
+ In hoeverre deze voor de Voortoets acceptabel zal zijn moet in breder verband worden besloten.
 \end_layout
 
 \begin_layout Bibliography

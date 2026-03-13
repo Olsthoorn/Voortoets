@@ -1,5 +1,5 @@
 {
-  "python-envs.defaultEnvManager": "ms-python.python:system",
-  "python.envFile": "${workspaceFolder}/.env",
-  "python.defaultInterpreterPath": "/Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/.venv/bin/python"
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }
