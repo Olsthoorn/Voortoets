@@ -4420,7 +4420,7 @@ Voor de nieuwe coördinaten geldt
 \begin_inset Formula $\overline{\ensuremath{z}}=\sqrt{\frac{k}{k_{z}}}$
 \end_inset
 
-.,
+.
  De keuze van doorlatendheid 
 \begin_inset Formula $k$
 \end_inset
@@ -4522,12 +4522,29 @@ c=\frac{L^{2}}{12k_{h}D}-\frac{L}{\pi\sqrt{k_{x}k_{z}}}\left[\ln\left(2\sinh\lef
 \begin_layout Standard
 \begin_inset Formula 
 \[
-c_{a}=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi x_{sl}}\sqrt{\frac{k_{x}}{k_{z}}}\right)
+c=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi x_{sl}}\sqrt{\frac{k_{x}}{k_{z}}}\right)
 \]
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Merk op dat bij 
+\begin_inset Formula $k_{x}>k_{z}$
+\end_inset
+
+ zodat 
+\begin_inset Formula $k_{x}>k>z_{z}$
+\end_inset
+
+ bij de verschaling de x-as wordt ingedrukt en de z-as wordt opgerekt om de doorsnede isotroop te maken en dat 
+\begin_inset Formula $\sqrt{\frac{k_{x}}{k_{z}}}>1$
+\end_inset
+
+ zodat de weerstand toeneemt door verticale anisotropie waarbij de verticale doorlatendheid kleiner is dan de horizontale,
+ zoals praktisch altijd het geval is.
 \end_layout
 
 \begin_layout Standard
@@ -4563,7 +4580,7 @@ nolink "false"
 \end_inset
 
 m en de de lengte van het contactvlak tussen sloot en watervoerend pakket in de doorsnede 
-\begin_inset Formula $\Omega=1.5$
+\begin_inset Formula $\Omega=\pi x_{sl}=1.5$
 \end_inset
 
 
@@ -4571,7 +4588,7 @@ m en de de lengte van het contactvlak tussen sloot en watervoerend pakket in de 
 \end_inset
 
 m.
- De lijnen geven aan wat er met de lekweerstand gebeurt wanneer steeds een van de factoren verandert met een factor die op de horizontale as is weergegeven.
+ De lijnen geven aan wat er met de lekweerstand gebeurt wanneer steeds één van de factoren verandert met een factor die op de horizontale as is weergegeven.
  Omdat de verticale anisotropie in de praktijk altijd groter is dan 1,
  loopt de oranje lijn alleen naar rechts.
  Verder is bij het veranderen van de pakketdikte het doorlaatvermogen,
@@ -4599,7 +4616,15 @@ m.
  De figuur laat een uitgangswaarde voor de lekweerstand zien van ca.
  13 d,
  en laat voorts zien dat de lekweerstand gemakkelijk tussen enkele dagen en enkele honderden dagen kan variëren.
- Met name de afstand tussen de sloten en de pakketdikte zijn van belang.
+ Met name de afstand tussen de sloten 
+\begin_inset Formula $L$
+\end_inset
+
+ en de pakketdikte 
+\begin_inset Formula $D$
+\end_inset
+
+ zijn van belang.
  Hoe groter de pakketdikte,
  des te meer werkt de contractie van stroomlijnen nabij de sloten door in de totale weerstand.
 \end_layout
