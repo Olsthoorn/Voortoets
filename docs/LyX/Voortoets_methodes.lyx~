@@ -147,7 +147,7 @@ T.N.
 \end_layout
 
 \begin_layout Date
-3 april 2025
+14 maart 2026
 \end_layout
 
 \begin_layout Standard
@@ -194,11 +194,12 @@ Inleiding
 \end_layout
 
 \begin_layout Standard
-De Voortoets is een online instrument voor om vroegtijdig aanvragen voor een vergunning voor activiteiten die ingrijpen in het (grond)watersysteem te scheiden in zulke die al dan niet een wezenlijke invloed hebben op gebieden met bijzondere beschermingsstatus in het kader van Natura 2000,
+De Voortoets is een online instrument van de Vlaamse Overheid (Agentschap Natuur en Bos) om aanvragen voor een vergunning voor activiteiten die ingrijpen in het (grond)watersysteem vroegtijdig te scheiden in zulke die al dan niet een wezenlijke invloed hebben op gebieden met bijzondere beschermingsstatus in het kader van Natura 2000,
  de zogenoemde speciale beschermingszones (SBZ's).
  De Voortoets kijkt hierbij uitsluitend naar beïnvloeding via verandering van de omstandigheden van het grondwater,
  en richt zich op de verandering,
- meestal de verlaging van grondwaterstanden in gebieden met bijzondere beschermingsstatus.
+ meestal de verlaging,
+ van grondwaterstanden in gebieden met bijzondere beschermingsstatus.
 \end_layout
 
 \begin_layout Standard
@@ -252,19 +253,19 @@ De ecologische toestand van de natuur kan ook achteruitgaan door directe of indi
 Een essentieel uitgangspunt van de Voortoets is de analyse te beperken tot freatisch grondwater (grondwater met een vrije waterspiegel).
  Deze keuze is gemaakt omdat de Voortoets is bedoeld voor het screenen van de meer eenvoudige ingrepen,
  die praktisch altijd plaatsvinden in het freatische grondwater.
- Echter binnen de SBZ worden semi-gespannen grondwaterlagen,
+ Echter binnen de SBZs worden semi-gespannen grondwaterlagen,
  bij wijze van meest ongunstige situatie,
  wel meegenomen in de analyse.
 \end_layout
 
 \begin_layout Standard
 Voor de beoordeling binnen de Voortoets zijn uiteraard de locatie,
- aard en duur en omvang van de ingreep van belang.
+ aard,
+ duur en omvang van de ingreep van belang.
  Voor de screening zijn ook de opbouw van de ondergrond en de hydraulische eigenschappen van de relevante grondwatervoerende lagen essentieel,
  zoals de doorlatendheden,
- de laagdiktes,
- en bergingscoëfficiënten.
- Op basis van de coördinaten van de ingreep en de BSZ,
+ de laagdiktes en bergingscoëfficiënten.
+ Op basis van de coördinaten van de ingreep en de SBZ,
  worden deze binnen de Voortoets automatisch geselecteerd uit een ruimtelijke database.
 \end_layout
 
@@ -1070,7 +1071,7 @@ Hoge,
  grote gebieden met nauwelijks drainerend oppervlaktewater hebben echter een groot tijdsgeheugen,
  waarin het in de tijd fluctuerende neerslagoverschot uit voorgaande jaren zijn sporen nog lang kan nalaten.
  Lage,
- natte gebieden met veel drainagemiddelen bestaan uit een mozaïek van subgebieden,
+ natte gebieden met veel drainagemiddelen bestaan uit een mozaïek van deelgebieden,
  waarin het grondwater op veel kleinere ruimtelijke schaal werkt en daardoor nauwelijks tijdsgeheugen heeft.
  In zulke lage gebieden kan het zinvol zijn om stationaire berekeningen te maken,
  althans in tijden met gemiddeld een neerslagoverschot,
@@ -1457,6 +1458,7 @@ Verlagingen (onder) en in de tijd dalend onttrekkingsdebiet (boven) van een bouw
 \end_inset
 
 m.
+ De blauwe lijn is de doelverlaging van 5 m op de rand van de bouwput.
 \end_layout
 
 \end_inset
@@ -1484,6 +1486,10 @@ gracht
 \end_inset
 
  of sleuf
+\end_layout
+
+\begin_layout Subsection
+Plotselinge verlaging lijnbron
 \end_layout
 
 \begin_layout Standard
@@ -1596,7 +1602,11 @@ waarin
 \begin_inset Formula $\mathtt{erfc}\left(\right)$
 \end_inset
 
- de complementaire errorfunctie is.
+ de 
+\bar under
+complementaire error-functie
+\bar default
+ is.
  Met deze formule kan voor elk tijdstip worden berekend waar de 5 cm verlagingslijn zich bevindt
 \end_layout
 
@@ -1637,6 +1647,11 @@ Net als met de invloedsstraal het geval was,
 .
 \end_layout
 
+\begin_layout Subsection
+Sleuflengte,
+ lengte lijnbron
+\end_layout
+
 \begin_layout Standard
 Deze aanpak houdt geen rekening met de feitelijke,
  eindige lengte van de sleuf.
@@ -1645,8 +1660,126 @@ Deze aanpak houdt geen rekening met de feitelijke,
  de onttrekking per m sleuflengte toe.
  De verlagingslijnen zijn daar niet langer evenwijdig aan de sleuf,
  maar buigen naar elkaar toe en sluiten voor het uiteinde op elkaar aan,
- daarbij min of meer langgerekte ellipsen om de sleuf vormend.
- Wat de analyse betreft hoeft hier daar niet per se rekening mee te worden gehouden.
+ daarbij min of meer langgerekte ellipsen om de sleuf vormend zoals getoond in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sleuf"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ Deze figuur is verkregen middels conforme afbeelding 
+\begin_inset Formula $z=b\sin\left(i\frac{\pi}{Q}\Omega\right)$
+\end_inset
+
+ waarin 
+\begin_inset Formula $b$
+\end_inset
+
+ de halve sleuflengte,
+ 
+\begin_inset Formula $Q$
+\end_inset
+
+ de totale onttrekking en 
+\begin_inset Formula $\Omega=\Phi+i\Psi$
+\end_inset
+
+ o een regelmatig raster van potentialen 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ en stroomfunctiewaarden 
+\begin_inset Formula $\Psi$
+\end_inset
+
+.
+ De coördinaten 
+\begin_inset Formula $z$
+\end_inset
+
+ zijn vervolgens over 
+\begin_inset Formula $30^{o}$
+\end_inset
+
+ geroteerd en over 20 m in 
+\begin_inset Formula $x$
+\end_inset
+
+- en 
+\begin_inset Formula $y$
+\end_inset
+
+-richting verschoven middels een affine transformatie.
+ Een dergelijke berekening is voor een enkele sleuf en stationaire verlaging goed mogelijk maar wordt ingewikkeld voor tijdsafhankelijke verlaging of voor meer sleuven die aan elkaar gekoppeld zijn.
+ Hier zien we verder vanaf.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/sleuf.pdf
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sleuf"
+
+\end_inset
+
+Stroomlijnen en contourlijnen van de potentiaal rond een sleuf met constante (uniforme) verlaging en gegeven totaal debiet.
+ Berekend met conforme afbeelding en daarna geroteerd over 
+\begin_inset Formula $30^{o}$
+\end_inset
+
+ en verschoven over 20 m in 
+\begin_inset Formula $x$
+\end_inset
+
+- en 
+\begin_inset Formula $y$
+\end_inset
+
+-richting middels een affine transformatie.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wat de analyse betreft hoeft niet per se rekening te worden gehouden met de exacte vorm van de contourlijnen van de verlaging.
  Men kan eenvoudig uitgaan van de verlagingslijnen evenwijdig aan de sleuf en die rondom de uiteinden met halve cirkels met elkaar verbinden.
  Deze procedure is eenvoudig en is in feite een lichte overschatting van de verlaging,
  en is daarmee acceptabel voor de Voortoets.
@@ -3853,104 +3986,46 @@ nolink "false"
 \end_layout
 
 \begin_layout Section
-De lekweerstand
+Radiale weerstand
 \end_layout
 
 \begin_layout Standard
-De lekweerstand is een concept,
- dat de weerstand van het oppervlaktewatersysteem in een intensief gedraineerd gebied als een polder,
- met al zijn sloten,
- watergangen en drainages samenvat tot een enkele afvoerweerstand.
- Dit is toepasbaar op de regionale of subregionale schaal,
- waar individuele sloten niet meer herkenbaar zijn op het patroon van het grondwater.
- Dat is bijvoorbeeld het geval in polders met sloten op onderlinge afstanden in de orde van 100 m.
- Ook voor andere natte,
- intensief gedraineerde gebieden,
- met inbegrip van natte natuurgebieden,
- is dit concept toepasbaar en in mindere mate voor gebieden met een gespreid patroon van waterlopen met een aangepaste lekweerstand,
- rekening houdend met horizontale en radiale stroming (@@@).
-\end_layout
-
-\begin_layout Standard
-De lekweerstand 
-\begin_inset Formula $c$
+De radiale weerstand is de weerstand die wordt veroorzaakt door contractie van stroomlijnen in de richting van de onttrekkende sloot.
+ Deze stroming kan worden berekend in een half-oneindige doorsnede (dus 
+\begin_inset Formula $x\ge0$
 \end_inset
 
- [d] kan analytisch worden afgeleid en berekend,
- zoals hierna wordt gedaan.
- Zij kan ook in het veld worden bepaald als de gemiddelde grondwaterstand 
-\begin_inset Formula $\Delta h$
-\end_inset
-
- [m]boven de drainagebasis (de waterstand in de sloten) gedeeld door het neerslagoverschot 
-\begin_inset Formula $N$
-\end_inset
-
- [m/d],
- overeenkomend met de relatie 
-\begin_inset Formula $\Delta h=Nc$
-\end_inset
-
-.
- 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "Bot16"
-literal "false"
-
-\end_inset
-
- maakt in zijn Grondwaterzakboekje onderscheid tussen drainageweerstand en lekweerstand,
- waarbij de drainageweerstand is gebaseerd op de hoogste grondwaterstand en de lekweerstand op de gemiddelde grondwaterstand .
- Hier gebruiken we de gemiddelde grondwaterstand,
- en dus het begrip lekweerstand.
-\end_layout
-
-\begin_layout Standard
-De lekweerstand is het gevolg van weerstand die het water ondervindt van het punt van infiltratie van het neerslagoverschot op de freatisch vlak tot in de drainerende sloten.
- We gaan hier ervan uit dat kwel mag worden verwaarloosd.
- De weerstand die het geïnfiltreerde neerslagwater ondervindt is nu opgebouwd uit die door de verticale stroming vanaf de watertafel,
- die door de horizontale stroming en die door de contractie van stroomlijnen die optreedt bij het naderen van de sloot,
- waarvan de natte omtrek meestal veel kleiner is dan die pakketdikte.
- De bodemweerstand van de sloot kan worden verwaarloosd bij uittredend grondwater,
- wat hier centraal staat.
-\end_layout
-
-\begin_layout Subsection
-Afleiding van de lekweerstand in een isotroop en in een pakket met verticale anisotropie:
- 
-\begin_inset Formula $k_{x}\ne k_{z}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Isotroop pakket
-\end_layout
-
-\begin_layout Standard
-Voor een watervoerend pakket met dikte 
+),
+ met constante dikte 
 \begin_inset Formula $D$
 \end_inset
 
- tussen volledig penetrerende sloten op onderlinge afstand 
-\begin_inset Formula $L=2b$
+ met onttrekking in het hoekpunt 
+\begin_inset Formula $x=0,y=0$
 \end_inset
 
- is,
- met de gebruikelijke verwaarlozing van verticale stroming het verloop van de grondwaterstand geheel onafhankelijk van 
-\begin_inset Formula $z$
+ (
+\begin_inset Formula $y=-D$
 \end_inset
 
- en volgt
+ is de coördinaat van de basis van de aquifer.
+ De conforme afbeelding,
+ met 
+\begin_inset Formula $\xi=x+iz$
+\end_inset
+
+ en 
+\begin_inset Formula $\Omega=\Phi+i\Psi$
+\end_inset
+
+ is
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-s=\phi-\phi_{b}=\frac{N}{2k_{x}D}\left(b^{2}-x^{2}\right)
-\]
+\begin{equation}
+\Omega=\frac{2Q}{\pi}\ln\left(\sin\left(i\frac{\pi\xi}{2D}\right)\right)\label{eq:Phi-Psi-sloot}
+\end{equation}
 
 \end_inset
 
@@ -3958,13 +4033,249 @@ s=\phi-\phi_{b}=\frac{N}{2k_{x}D}\left(b^{2}-x^{2}\right)
 \end_layout
 
 \begin_layout Standard
-De gemiddelde grondwaterstand boven de sloten veroorzaakt door de horizontale stroming is dan
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Phi-Psi-sloot"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft de potentiaal- en stroomfunctielijnen (
+\begin_inset Formula $\Phi$
+\end_inset
+
+ en 
+\begin_inset Formula $\Psi$
+\end_inset
+
+) van deze formule.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/Vtm-Phi-Psi-sloot.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Phi-Psi-sloot"
+
+\end_inset
+
+Potentiaal en stroomlijnen door eenzijdige slootonttrekking.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit stroombeeld kan worden beschouwd als te zijn opgebouwd uit een uniforme stroming van rechts en radiale stroming.
+ De radiale stroming wordt verkregen door de uniforme stroming van vergelijking 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Phi-Psi-sloot"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ de uniforme stroming af te trekken
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Omega=\frac{2Q}{\pi}\ln\left(\sin\left(i\frac{\pi\xi}{2D}\right)\right)-\frac{Q}{D}z\label{eq:Phi-Psi-radial0}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het potentiaal- en stroomlijnenbeeld door de radiale stroming is in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Phi-Psi-radial0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ weergegeven.
+ De potentiaal 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ op punt 
+\begin_inset Formula $\left(20,-5\right)$
+\end_inset
+
+,
+ de rode stip,
+ is aangegeven en is niet nul.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/Vtm-Phi-Psi-radial0.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Phi-Psi-radial0"
+
+\end_inset
+
+De potentiaal en stroomlijnen behorend bij de radiale stroming veroorzaakt door de sloot.
+ De potentiaal van de radiale stroming volgens vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Phi-Psi-radial0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is nul in het hoekpunt onder de sloot in plaats van op 
+\begin_inset Formula $\xi\to\infty$
+\end_inset
+
+,
+ zie rode punt.
+ De waarde op de rode punt is 
+\begin_inset Formula $\Phi\approx-\frac{2Q}{\pi}\ln2$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is nog niet het hele verhaal.
+ De oplossing voor de radiale stroming heeft een eindige waarde op 
+\begin_inset Formula $x\to\infty$
+\end_inset
+
+ in plaats van 
+\begin_inset Formula $0$
+\end_inset
+
+.
+ Deze moet nog van de radiale stroming worden afgetrokken.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega\left(\xi\to\infty\right) & =\frac{2Q}{\pi}\ln\left(\sin\left(i\frac{\pi\xi}{2D}\right)\right)-\frac{Q}{D}\xi\\
+ & =\frac{2Q}{\pi}\ln\left(i\sinh\left(\frac{\pi\xi}{2D}\right)\right)-\frac{Q}{D}\xi\\
+ & =\frac{2Q}{\pi}\ln\left(i\exp\left(\frac{\pi\xi}{2D}\right)\frac{1}{2}\right)-\frac{Q}{D}\xi\\
+ & =\frac{2Q}{\pi}\ln i+\frac{2Q}{\pi}\frac{\pi\xi}{2D}-\frac{2Q}{\pi}\ln\left(2\right)\\
+ & =iQ-\frac{2Q}{\pi}\ln2
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We moeten de waarde 
+\begin_inset Formula $\frac{2Q}{\pi}\ln2$
+\end_inset
+
+ nog bij vergelijking 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:Phi-Psi-radial0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ optellen om ervoor te zorgen dat potentiaal van de radiale stromingscomponent op 
+\begin_inset Formula $\xi\to\infty$
+\end_inset
+
+ gelijk aan nul wordt.
+ De complete vergelijking voor de radiale stroming is dus
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-\overline{s_{h}} & =\frac{1}{3}\frac{Nb^{2}}{kD}=\frac{1}{12}\frac{NL^{2}}{kD}\label{eq:s-overline-h}
+\Omega & =\frac{2Q}{\pi}\ln\left(\sin\left(i\frac{\pi\xi}{2D}\right)\right)-\frac{Q}{D}\xi+\frac{2Q}{\pi}\ln2\nonumber \\
+ & =\frac{2Q}{\pi}\ln\left(2\sin\left(i\frac{\pi\xi}{2D}\right)\right)-\frac{Q}{D}\xi\label{eq:Omega-radial1}
 \end{align}
 
 \end_inset
@@ -3973,22 +4284,113 @@ De gemiddelde grondwaterstand boven de sloten veroorzaakt door de horizontale st
 \end_layout
 
 \begin_layout Standard
-De contractie van de stroomlijnen naar de sloot,
- die veel ondieper is dan de dikte van het watervoerende pakket,
- geeft een extra verhoging van de grondwaterstand langs het bovenvlak van het watervoerend pakket.
- Op afstand 
-\begin_inset Formula $x_{sl}$
+De contouren van de potentiaal en de stroom functie gegenereerd door radiale stroming zodanig dat 
+\begin_inset Formula $\Phi\left(\xi\to\infty\right)=0$
 \end_inset
 
- (halve slootbreedte) vanaf het hart van de sloot is deze gelijk aan
+ is in fig.
+ weergegeven.
+ De potentiaal op grotere afstand zoals op de rode punt is nu inderdaad nul.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/Vtm-Phi-Psi-radial1.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Phi-radial1"
+
+\end_inset
+
+Contouren van de potentiaal en stroomfunctie gegenereerd door de radiale stroming waarbij 
+\begin_inset Formula $\Phi\left(\xi\to\infty\right)=0$
+\end_inset
+
+,
+ zoals blijkt uit de potentiaal op de rode punt.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De radiale weerstand is de 
+\begin_inset Quotes pld
+\end_inset
+
+radiale
+\begin_inset Quotes prd
+\end_inset
+
+ stijghoogte op de rand van de sloot,
+ dus 
+\begin_inset Formula $\xi=r$
+\end_inset
+
+,
+ minus die op 
+\begin_inset Formula $\xi=\infty$
+\end_inset
+
+,
+ maar die is nul,
+ gedeeld door 
+\begin_inset Formula $Q$
+\end_inset
+
+.
+ Daar 
+\begin_inset Formula $\Phi=k\phi$
+\end_inset
+
+ met 
+\begin_inset Formula $\phi$
+\end_inset
+
+ de stijghoogte krijgen we voor de radiale weerstand de volgende uitdrukking:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\Delta s=\frac{NL}{\pi k}\ln\left(2\sinh\left(\frac{\pi x_{sl}}{2D}\right)\right)-\frac{NL}{2kD}x_{sl}\label{eq:Delta-s-rad-x}
-\end{equation}
+\begin{align}
+c_{rad} & =\frac{2}{\pi k}\ln\left(2\sin\left(i\frac{\pi r}{2D}\right)\right)-\frac{r}{kD}\label{eq:rad-weerstand0}\\
+\Delta\phi & =\frac{2Q}{\pi k}\ln\left(2\sin\left(i\frac{\pi r}{2D}\right)\right)-\frac{Q}{kD}r
+\end{align}
 
+\end_inset
+
+
+\begin_inset Newline newline
 \end_inset
 
 
@@ -3996,21 +4398,18 @@ De contractie van de stroomlijnen naar de sloot,
 
 \begin_layout Standard
 Voor 
-\begin_inset Formula $x_{sl}\rightarrow0$
+\begin_inset Formula $r\ll D$
 \end_inset
 
- valt de rechter tem weg en gaat de 
-\begin_inset Formula $\sinh\left(-\right)$
-\end_inset
-
- over in zijn argument waardoor de hele vergelijking overgaat in de bekende weerstandsformule voor radiale stroming
+ gaat deze vergelijking over in
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{equation}
-\Delta s=\frac{NL}{\pi k}\ln\left(\frac{\Omega}{D}\right)\label{eq:Delta-s-rad}
-\end{equation}
+\begin{align}
+c_{rad} & =\frac{2}{\pi k}\ln\left(\frac{\pi r}{D}\right)\label{eq:rad-weerstand2}\\
+\Delta\phi & =\frac{2Q}{\pi k}\ln\left(\frac{\pi r}{D}\right)\nonumber 
+\end{align}
 
 \end_inset
 
@@ -4018,43 +4417,15 @@ Voor
 \end_layout
 
 \begin_layout Standard
-Hierin is 
-\begin_inset Formula $\Omega$
+Waarin 
+\begin_inset Formula $Q$
 \end_inset
 
- de lengte van de contactzone (in de doorsnede) is tussen de sloot en het watervoerende pakket.
- De uitkomst is negatief,
- er treedt verlaging op door onttrekking.
- Wil men 
-\begin_inset Formula $\Delta s$
-\end_inset
-
- als 
-\begin_inset Quotes pld
-\end_inset
-
-verlaging
-\begin_inset Quotes prd
-\end_inset
-
- beschouwen,
- dus als een positief getal,
- dan moet men 
-\begin_inset Formula $\Omega$
-\end_inset
-
- verwisselen met 
-\begin_inset Formula $D.$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Deze bekende weerstandsvergelijking (
+ de eenzijdige aanstroming naar de sloot voorstelt.
+ Vgl.
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:Delta-s-rad"
+reference "eq:rad-weerstand2"
 plural "false"
 caps "false"
 noprefix "false"
@@ -4062,20 +4433,16 @@ nolink "false"
 
 \end_inset
 
-) wordt voor slootbreedtes groter dan 
-\begin_inset Formula $0.1D$
+ wordt algemeen gebruikt,
+ maar wordt voor 
+\begin_inset Formula $r>0.1D$
 \end_inset
 
  snel onnauwkeurig.
- Voor grotere slootbreedte groter dan ca.
- 
-\begin_inset Formula $0.1D$
-\end_inset
-
- kan daarom veel beter de exacte oplossing (
+ Vgl.
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:Delta-s-rad-x"
+reference "eq:rad-weerstand0"
 plural "false"
 caps "false"
 noprefix "false"
@@ -4083,165 +4450,43 @@ nolink "false"
 
 \end_inset
 
-) voor de radiale stroming langs het bovenvlak van het watervoerend pakket worden gebruikt.
-\end_layout
+ is over een veel bredere range accuraat.
+ Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Delta-phi-radial"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
 
-\begin_layout Standard
-In de contractie zone is er duidelijk sprake van verticale stroming,
- zodat hier de anisotropie in moet worden meegenomen.
- Dit wordt verderop gedaan.
-\end_layout
-
-\begin_layout Subsubsection
-Verticale stroming zonder radiale weerstand in homogeen pakket
-\end_layout
-
-\begin_layout Standard
-De neergaande stroming tussen freatisch vlak en de basis van het watervoerende pakket geeft een stijghoogteverschil tussen de top en de basis.
- De verticale stroming tussen de watertafel bij 
-\begin_inset Formula $z\approx D$
-\end_inset
-
- en de pakketbasis op 
-\begin_inset Formula $z=0$
-\end_inset
-
- verloopt van 
-\begin_inset Formula $q_{v}=N$
-\end_inset
-
- aan de top tot nul aan de basis waar 
-\begin_inset Formula $z=0$
 \end_inset
 
 .
- Aldus geldt
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-q_{v}=-k_{z}\frac{\partial\phi}{\partial z}=-N\frac{z}{D}
-\]
-
+ De figuur laat zien dat al vanaf 
+\begin_inset Formula $r=1$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Hier is 
-\begin_inset Formula $k_{z}$
+ m,
+ dus 
+\begin_inset Formula $r/D>0.1$
 \end_inset
 
- gebruikt omdat deze stroming geheel onafhankelijk is van de horizontale doorlatendheid.
-\end_layout
-
-\begin_layout Standard
-Na integratie volgt 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\phi=\frac{N}{2k_{z}D}z^{2}+C
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-De integratieconstante 
-\begin_inset Formula $C$
-\end_inset
-
- volgt uit 
-\begin_inset Formula $\phi=\phi_{z=H}$
-\end_inset
-
- voor 
-\begin_inset Formula $z=H$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\phi_{z=H}=\frac{ND}{2k_{z}}+C
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-De laatste vergelijking afgetrokken van de voorlaatste geeft het stijghoogteverloop langs elke verticaal in het freatische pakket buiten de zone met de contractie van stroomlijnen:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\phi_{H}-\phi=\frac{N}{2k_{z}D}\left(D^{2}-z^{2}\right)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Het stijghoogteverschil tussen top en basis is 
-\begin_inset Formula $\Delta s_{v}=\phi_{z=H}-\phi_{z=0}$
-\end_inset
-
- .
- Deze verkrijgen we door 
-\begin_inset Formula $z=0$
-\end_inset
-
- in te vullen
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\Delta s_{v}=\phi_{H}-\phi_{0}=\frac{ND}{2k_{z}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-De stijghoogte aan de basis van het watervoerende pakket is dus altijd 
-\begin_inset Formula $\Delta s_{v}$
-\end_inset
-
- lager dan langs het freatisch vlak,
- althans buiten de zone waar de radiale stroming van invloed is.
- Bij de weerstand van de radiale stroming is deze verticale stroming ingegrepen.
- Dit komt omdat de analytische oplossing voor de radiale stroming exact de de stroming compenseert die bij een zonder de sloot een doorlopend watervoerend pakket de verticaal door het slootmidden passeert.
-\end_layout
-
-\begin_layout Subsubsection
-Weerstand door radiale stroming in isotroop pakket
-\end_layout
-
-\begin_layout Standard
-De extra stijghoogte daling 
-\begin_inset Formula $\Delta s$
-\end_inset
-
- door uitsluitend de afbuiging van de stroomlijnen nabij de sloot is boven gegeven (
+ er een behoorlijke discrepantie is tussen de exacte uitdrukking (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:Delta-s-rad-x"
+reference "eq:rad-weerstand0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) en de benaderende formule (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rad-weerstand2"
 plural "false"
 caps "false"
 noprefix "false"
@@ -4250,83 +4495,95 @@ nolink "false"
 \end_inset
 
 ).
- Hiermee hebben ook een uitdrukking voor de lekweerstand 
-\begin_inset Formula $c=\left|\frac{\Delta s}{N}\right|$
-\end_inset
-
- waarin 
-\begin_inset Formula $\Delta s$
-\end_inset
-
- het extra stijghoogtedaling vanaf de gemiddelde hoogte van het freatisch vlak en de sloot met halve breedte 
-\begin_inset Formula $x_{sl}$
-\end_inset
-
-:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\begin{equation}
-\Delta s=\frac{NL^{2}}{12kD}-\frac{NL}{\pi k}\left[\ln\left(2\sinh\left(\frac{\pi x_{sl}}{2D}\right)\right)-\frac{\pi x_{sl}}{2D}\right]\label{eq:Delta-s-rad-x-1}
-\end{equation}
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/Vtm-crad-comparison.png
+	width 80text%
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-De totale lekweerstand is dan
-\end_layout
+\begin_layout Plain Layout
+\begin_inset Caption Standard
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-c=\frac{L^{2}}{12k_{x}D}-\frac{L}{\pi k}\left[\ln\left(2\sinh\left(\frac{\pi x_{sl}}{2D}\right)\right)-\frac{\pi x_{sl}}{2D}\right]
-\]
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Delta-phi-radial"
+
+\end_inset
+
+Extra verlaging 
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ op rand van sloot met halve breedte 
+\begin_inset Formula $r$
+\end_inset
+
+ en ongeveer half-cirkelvormig als gevolg van contractie van stroomlijnen.
+ Al bij 
+\begin_inset Formula $r=1$
+\end_inset
+
+ m,
+ dus 
+\begin_inset Formula $r/D=0.1$
+\end_inset
+
+ wijkt de eenvoudige formule (vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rad-weerstand2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) al behoorlijk af van de exacte waarde (vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rad-weerstand0"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+\end_layout
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-En voor 
-\begin_inset Formula $x_{sl}\le0.1D$
-\end_inset
-
- kan ook de volgende wat eenvoudiger uitdrukking gebruikt worden met 
-\begin_inset Formula $\Omega=\pi x_{sl}$
-\end_inset
-
+\begin_layout Plain Layout
 
 \end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-c=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi k}\ln\left(\frac{D}{\Omega}\right)
-\]
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-Het is direct duidelijk dat de doorlatendheid in de eerste term de horizontale moet zijn.
- Maar dat geldt niet voor de tweede term waarvoor verticale en horizontale stroming een rol spelen.
-\end_layout
-
-\begin_layout Standard
-Resteert nog om voor de middelste term de anisotropie in rekening te brengen,
- dat wil zeggen,
- de verhouding tussen de horizontale en de verticale doorlatendheid.
-\end_layout
-
-\begin_layout Subsubsection
-Verwerking van verticale anisotropie in de lekweerstand
+\begin_layout Subsection
+Verwerking van verticale anisotropie in de radiale weerstand
 \end_layout
 
 \begin_layout Standard
@@ -4428,7 +4685,7 @@ Voor de nieuwe coördinaten geldt
  is geheel vrij.
  De verschaling maakt niets uit voor het rechterlid.
  Dus blijven de voeding,
- de berging en de onttrekking gelijk aan de isotrope siutuatie.
+ de berging en de onttrekking gelijk aan de isotrope situatie.
  Dit geldt voor alle debieten.
 \end_layout
 
@@ -4458,62 +4715,136 @@ Het is gebruikelijk
  verschalen,
  we in het verschaalde isotrope pakket niet alleen dezelfde stroming maar ook dezelfde stijghoogten krijgen.
  In dit verschaalde isotrope pakket staan de stijghoogte- en stroomlijnen loodrecht op elkaar.
- We kunnen nu de tweede term verschalen,
- waarin 
-\begin_inset Formula $L$
+\end_layout
+
+\begin_layout Subsubsection
+Toepassing van anisotropie op de radiale weerstand
+\end_layout
+
+\begin_layout Standard
+Wanneer we 
+\begin_inset Formula $r$
 \end_inset
 
- niet wordt meegenomen omdat die afkomstig was van 
-\begin_inset Formula $NL$
+ opvatten als slootbreedte en dus als coördinaat in 
+\begin_inset Formula $x$
 \end_inset
 
- zijnde de totale afvoer van de sloot;
- deze 
-\begin_inset Formula $L$
+-richting dan is verschaling van
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{2Q}{\pi k}\ln\left(2i\sinh\left(\frac{\pi r}{2D}\right)\right)-\frac{Q}{kD}r
+\]
+
 \end_inset
 
- blijft ongewijzigd aangezien anders het debiet verandert.
- We verschalen nu horizontale 
-\begin_inset Formula $x_{sl}$
+
+\end_layout
+
+\begin_layout Standard
+als volgt met
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{r}{D}\to\frac{r\sqrt{\frac{k}{k_{x}}}}{D\sqrt{\frac{k}{k_{z}}}}=\frac{r}{D}\sqrt{\frac{k_{z}}{k_{x}}}
+\]
+
 \end_inset
 
- tot 
-\begin_inset Formula $\overline{x_{sl}}=x_{sl}\sqrt{\frac{k}{k_{x}}}$
+
+\end_layout
+
+\begin_layout Standard
+en
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{Q}{kD}=\frac{Q}{k_{x}D}r\to\frac{Q}{k_{x}}\frac{r}{D}\sqrt{\frac{k_{z}}{k_{x}}}=\frac{Q}{k}\frac{r}{D}\sqrt{\frac{k_{z}}{k_{x}}}
+\]
+
 \end_inset
 
- de verticale pakketdikte 
-\begin_inset Formula $D$
+
+\end_layout
+
+\begin_layout Standard
+De extra stijghoogte in de situatie met anisotropie wordt hiermee beschreven door
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\ln\left(2i\sinh\left(\frac{\pi r}{2D}\sqrt{\frac{k_{z}}{k_{x}}}\right)\right)-\frac{Q}{\sqrt{k_{x}k_{z}}}\frac{r}{D}\sqrt{\frac{k_{z}}{k_{x}}}
+\]
+
 \end_inset
 
- tot 
-\begin_inset Formula $\overline{D}=D\sqrt{\frac{k}{k_{z}}}$
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+Voor de eenvoudige formule met anisotropie geldt
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{2Q}{\pi k}\ln\left(\frac{\pi r}{D}\right)\to\Delta\phi=\frac{2Q}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{r}{D}\sqrt{\frac{k_{z}}{k_{x}}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+De lekweerstand inclusief radiale weerstand en weerstand van de sliblaag op de slootbodem
+\end_layout
+
+\begin_layout Standard
+De lekweerstand 
+\begin_inset Formula $c_{L}$
+\end_inset
+
+ [d] is de gemiddelde grondwaterstand 
+\begin_inset Formula $\overline{\phi}$
+\end_inset
+
+ [m] minus het slootpeil 
+\begin_inset Formula $\phi_{sl}$
+\end_inset
+
+ [m] gedeeld door het neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+ [m/d] 
+\begin_inset Formula $Q$
 \end_inset
 
 .
- De tweede term wordt dan
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{1}{\pi k}\ln\frac{D}{\pi x_{sl}}\rightarrow\frac{1}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D\sqrt{\frac{k}{k_{z}}}}{\pi\sqrt{\frac{k}{k_{x}}}}\right)=\frac{1}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi x_{sl}}\sqrt{\frac{k_{x}}{k_{z}}}\right)
-\]
-
+ Het is de som van het stijghoogteverval door horizontale stroming,
+ door de contractie van stroming nabij de sloot en door passage van een sliblaag op de slootbodem.
+ De sliblaag heeft een weerstand 
+\begin_inset Formula $c_{slb}$
 \end_inset
 
+ [d].
+ Het stijghoogteverval kan dus vanwege 
+\begin_inset Formula $Q=NL/2$
+\end_inset
 
-\end_layout
-
-\begin_layout Standard
-De uiteindelijke lekweerstand wordt hiermee
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-c=\frac{L^{2}}{12k_{h}D}-\frac{L}{\pi\sqrt{k_{x}k_{z}}}\left[\ln\left(2\sinh\left(\frac{\pi x_{sl}}{2D}\sqrt{\frac{k_{x}}{z_{z}}}\right)\right)-\frac{\pi x_{sl}}{2D}\sqrt{\frac{k_{x}}{k_{z}}}\right]
-\]
-
+ geschreven worden als de som van drie termen 
+\begin_inset Formula $\Delta\phi_{h}+\Delta\phi_{r}+\Delta\phi_{sl}$
 \end_inset
 
 
@@ -4521,9 +4852,11 @@ c=\frac{L^{2}}{12k_{h}D}-\frac{L}{\pi\sqrt{k_{x}k_{z}}}\left[\ln\left(2\sinh\lef
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-c=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi x_{sl}}\sqrt{\frac{k_{x}}{k_{z}}}\right)
-\]
+\begin{align*}
+\Delta\phi & =\overline{\phi}-\phi_{sl}\\
+ & =\Delta\phi_{h}+\Delta\phi_{r}+\Delta\phi_{sl}\\
+ & =\frac{NL^{2}}{12k_{x}D}-\left(\frac{NL}{\pi\sqrt{k_{x}k_{z}}}\ln\left(2\sinh\left(\frac{\pi r}{2D}\sqrt{\frac{k_{x}}{k_{z}}}\right)\right)-\frac{NL/2}{\sqrt{k_{x}k_{z}}}\frac{r}{D}\right)+\frac{NL}{\pi r}c_{slb}
+\end{align*}
 
 \end_inset
 
@@ -4531,20 +4864,72 @@ c=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi x_{
 \end_layout
 
 \begin_layout Standard
-Merk op dat bij 
-\begin_inset Formula $k_{x}>k_{z}$
+De gebiedsgemiddelde lekweerstand 
+\begin_inset Formula $c_{L}$
 \end_inset
 
- zodat 
-\begin_inset Formula $k_{x}>k>z_{z}$
+ [d] krijgen we door deling van het totale stijghoogteverval 
+\begin_inset Formula $\Delta\phi$
 \end_inset
 
- bij de verschaling de x-as wordt ingedrukt en de z-as wordt opgerekt om de doorsnede isotroop te maken en dat 
-\begin_inset Formula $\sqrt{\frac{k_{x}}{k_{z}}}>1$
+ door het neerslagoverschot 
+\begin_inset Formula $N$
 \end_inset
 
- zodat de weerstand toeneemt door verticale anisotropie waarbij de verticale doorlatendheid kleiner is dan de horizontale,
- zoals praktisch altijd het geval is.
+ [m/d]
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+c_{L} & =\frac{\overline{\phi}-\phi_{sl}}{N}\\
+ & =c_{h}+c_{r}+c_{sl}\\
+ & =\frac{L^{2}}{12k_{x}D}-\left(\frac{L}{\pi\sqrt{k_{x}k_{z}}}\ln\left(2\sinh\left(\frac{\pi r}{2D}\sqrt{\frac{k_{x}}{k_{z}}}\right)\right)-\frac{L/2}{\sqrt{k_{x}k_{z}}}\frac{r}{D}\right)+\frac{L}{\pi r}c_{slb}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Deze drie termen hebben alle dimensie tijd,
+ dus meestal [d].
+ De laatste twee termen kunnen ook begrepen worden als het stijghoogteverlies tet plaatse van de sloot.
+ Maar dan moet niet door 
+\begin_inset Formula $N$
+\end_inset
+
+ maar door 
+\begin_inset Formula $NL$
+\end_inset
+
+ worden gedeeld en wordt de dimensie [d/m] in plaats van dag.
+ 
+\begin_inset Formula $NL$
+\end_inset
+
+ is dan het debiet per m slootlengte dat de sloot draineert.
+\end_layout
+
+\begin_layout Standard
+Dezelfde uitwerking voor de vereenvoudigde formule voor radiale weerstand levert
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+c_{L} & =\frac{\overline{\phi}-\phi_{sl}}{N}\\
+ & =\frac{L^{2}}{12k_{x}D}-\frac{1}{\pi\sqrt{k_{x}k_{z}}}\ln\left(\frac{\pi r}{D}\sqrt{\frac{k_{x}}{k_{z}}}\right)+\frac{L}{\pi r}c_{slb}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+.
 \end_layout
 
 \begin_layout Standard
@@ -4559,134 +4944,115 @@ nolink "false"
 
 \end_inset
 
- is de weergave van een gevoeligheid van de lekweerstand voor de factoren die hem bepalen.
- De dikke rode punt is het resultaat van de uitgangswaarden zoals die in de legenda zijn genoemd:
- De afstand tussen de sloten 
-\begin_inset Formula $L=100$
+ is de weergave van een gevoeligheid van de lekweerstand 
+\begin_inset Formula $c_{L}$
 \end_inset
 
- m,
- verticale anisotropie 
-\begin_inset Formula $a=k_{x}/k_{z}=1$
+ voor factoren die hem bepalen.
+ Voor elke parameter zijn twee lijnen getekend berekend met de formules die in de kop van de figuur zijn gegeven.
+\end_layout
+
+\begin_layout Standard
+De parameters waarvan de invloed op de lekweerstand is bepaald zijn achtereenvolgens de afstand tussen de waterlopen 
+\begin_inset Formula $L$
 \end_inset
 
 ,
- pakketdikte 
-\begin_inset Formula $D=20$
+ de verticale anisotropie 
+\begin_inset Formula $a=k_{x}/k_{z}$
 \end_inset
 
-
-\begin_inset space ~
+,
+ de pakketdikte 
+\begin_inset Formula $D$
 \end_inset
 
-m en de de lengte van het contactvlak tussen sloot en watervoerend pakket in de doorsnede 
-\begin_inset Formula $\Omega=\pi x_{sl}=1.5$
+,
+ de slootradius 
+\begin_inset Formula $r$
 \end_inset
 
-
-\begin_inset space ~
+,
+ en de weerstand van de sliblaag op de slootbodem 
+\begin_inset Formula $c_{slb}$
 \end_inset
 
-m.
+.
+ De dikke punt is de lekweerstand behorend bij de uitgangswaarden;
+ deze staan in de titel van de figuur.
  De lijnen geven aan wat er met de lekweerstand gebeurt wanneer steeds één van de factoren verandert met een factor die op de horizontale as is weergegeven.
- Omdat de verticale anisotropie in de praktijk altijd groter is dan 1,
- loopt de oranje lijn alleen naar rechts.
- Verder is bij het veranderen van de pakketdikte het doorlaatvermogen,
- 
-\begin_inset Formula $kD$
+ De rode lijnen voor de gevoeligheid van de verticale anisotropie lopen vanaf 
+\begin_inset Formula $a=1$
 \end_inset
 
-,
- constant gehouden,
- waardoor de horizontale doorlatendheid,
+ omdat de verticale anisotropie in de praktijk altijd groter is dan 1 (
+\begin_inset Formula $k_{z}<k_{x}\to a>1$
+\end_inset
+
+).
+ Verder is de horizontale doorlatendheid,
  
 \begin_inset Formula $k_{x}$
 \end_inset
 
- ,
- afneemt.
- Hierbij is de verticale doorlatendheid steeds gelijk gehouden aan de horizontale,
- 
-\begin_inset Formula $k_{z}=k_{x}$
-\end_inset
-
-.
- De keuze van de uitgangswaarden is wat arbitrair,
- maar zij zijn redelijk in overeenstemming met wat men in de praktijk aantreft.
- De figuur laat een uitgangswaarde voor de lekweerstand zien van ca.
- 13 d,
- en laat voorts zien dat de lekweerstand gemakkelijk tussen enkele dagen en enkele honderden dagen kan variëren.
- Met name de afstand tussen de sloten 
-\begin_inset Formula $L$
-\end_inset
-
- en de pakketdikte 
-\begin_inset Formula $D$
-\end_inset
-
- zijn van belang.
- Hoe groter de pakketdikte,
- des te meer werkt de contractie van stroomlijnen nabij de sloten door in de totale weerstand.
+ steeds constant gehouden op de uitgangswaarde.
 \end_layout
 
 \begin_layout Standard
-@@@fout:->DE WEERSTAND DOOR DE VERTICALE STROMING TUSSEN HET FREATISCH VLAK EN DE BASIS VAN HET PAKKET IS IN DE UITGANGSSITUATIE 
-\begin_inset Formula $D/\left(2k_{z}\right)=20/10=2$
+Het verschil tussen de twee gestreepte en getrokken lijnen (dus de twee formules) is steeds gering,
+ behalve voor de slootradius.
+ In de uitgangssituatie is 
+\begin_inset Formula $r/D=0.1$
 \end_inset
 
-
-\begin_inset space ~
+;
+ over de gevoeligheidsrange varieert 
+\begin_inset Formula $r/D$
 \end_inset
 
-D,
- MAAR BIJ EEN VERTICALE ANISTROPIE VAN 
-\begin_inset Formula $a=10$
-\end_inset
-
- IS DIT AL 20
-\begin_inset space ~
-\end_inset
-
-D,
- EN BIJ EEN VIJFMAAL GROTERE PAKKETDIKTE VAN 100
-\begin_inset space ~
-\end_inset
-
-M EN EEN VIJFMAAL KLEINERE VERTICALE DOORLATENDHEID VAN 2
-\begin_inset space ~
-\end_inset
-
-M/D HEEFT DEZE TERM EEN WAARDE VAN 50
-\begin_inset space ~
-\end_inset
-
-D,
- EN DAT IS BESLIST NIET TE VERWAARLOZEN.
- Voor de uitgangswaarden zijn de waarden van de afzonderlijke termen als volgt:
+ van 0.012 tot 0.8.
  
-\begin_inset Formula $c_{dr}=13.4\,d$
-\end_inset
-
-,
- 
-\begin_inset Formula $c_{hor}=4.2\,d$
-\end_inset
-
-,
- 
-\begin_inset Formula $c_{rad}=8.2\,d$
-\end_inset
-
-,
- 
-\begin_inset Formula $c_{ver}=1.0\,d$
+\begin_inset Formula $r/D=0.8$
 \end_inset
 
 .
- De radiale weerstand is het grootst en neemt sterk toe bij verticale anisotropie,
- terwijl de horizontale weerstand daarbij constant blijft.
- Door de dominantie van de radiale weerstand is de grondwaterstand in de praktijk tamelijk vlak tussen de sloten,
- om sterk te dalen in de buurt daarvan.
+ Dit laatste impliceert een sloot met een radius 
+\begin_inset Formula $r$
+\end_inset
+
+ gelijk aan 0.8 maal de pakketdikte 
+\begin_inset Formula $D$
+\end_inset
+
+.
+ Bij deze waarde berekent de eenvoudige weerstandsformule een circa tweemaal zo grote weerstand als de exacte formule.
+\end_layout
+
+\begin_layout Standard
+Bijzonder is wellicht de groene lijn voor de gevoeligheid van pakketdikte 
+\begin_inset Formula $D$
+\end_inset
+
+.
+ De lekweerstand neemt zowel voor kleine als voor grote 
+\begin_inset Formula $D$
+\end_inset
+
+ toe.
+ Voor kleine 
+\begin_inset Formula $D$
+\end_inset
+
+ wordt dit veroorzaakt door de horizontale weerstand (klein doorlaatvermogen 
+\begin_inset Formula $kD$
+\end_inset
+
+) en voor hoge 
+\begin_inset Formula $D$
+\end_inset
+
+ door de dan grotere radiale weerstand,
+ meer afbuiging van stroomlijnen.
 \end_layout
 
 \begin_layout Standard
@@ -4700,7 +5066,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename ../../images/drainageweerstand.png
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/drainageweerstand.pdf
 	width 80text%
 
 \end_inset
@@ -4744,10 +5110,6 @@ Gevoeligheidsanalyse van de lekweerstand.
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 

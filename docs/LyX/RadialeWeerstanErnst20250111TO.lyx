@@ -2278,6 +2278,10 @@ Dit is geen mooie analytische functie,
 .
 \end_layout
 
+\begin_layout Subsection
+Contractie van stroomlijnen
+\end_layout
+
 \begin_layout Standard
 De stroming door contractie van stroomlijnen kan worden afgeleid van die waarbij een onttrekking ter grootte 
 \begin_inset Formula $Q=Nb$
@@ -2316,14 +2320,23 @@ De stroming door contractie van stroomlijnen kan worden afgeleid van die waarbij
 \end_inset
 
  te superponeren.
- De stroming door de wodt verkregen door een complexe transformatie;
- hij voldoet aan:
+ Het is het eenvoudigst om 
+\begin_inset Formula $\xi=b-z$
+\end_inset
+
+ als variabele te nemen,
+ zodat 
+\begin_inset Formula $\xi=0$
+\end_inset
+
+ ter plaatse van de sloot.
+ De stroming wordt nu verkregen door een complexe transformatie
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\Omega_{1}=-\frac{Q}{2\pi}\ln\left(\sin\left(i\frac{\pi}{2}\left(\frac{b-z}{D}-i\right)\right)\right)
+\Omega_{1}=\frac{2Q}{\pi}\ln\left(\sin\left(i\frac{\pi}{2}\left(\frac{\xi}{D}\right)\right)\right)
 \]
 
 \end_inset
@@ -2332,13 +2345,25 @@ De stroming door contractie van stroomlijnen kan worden afgeleid van die waarbij
 \end_layout
 
 \begin_layout Standard
-De op te trekken uniforme tegenstroming voldoet aan
+Langs het ondervlak en op er verticaal onder de sloot is 
+\begin_inset Formula $Q=0$
+\end_inset
+
+ en langs het bovenvlak 
+\begin_inset Formula $Q=Q$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+De aan te trekken uniforme tegenstroming voldoet aan
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\Omega_{2}=Q\left(\frac{b-Z}{D}-i\right)
+\Omega_{2}=Q\frac{\xi}{D}
 \]
 
 \end_inset
@@ -3415,7 +3440,7 @@ We hebben gezien dat de stroming door contractie van de stroomlijnen analytisch 
 \begin_inset Formula $Q=Nb$
 \end_inset
 
- in de bovenhoek plus een tegenstroom die de horizontale flux in fig 3 exact compenseert.
+ in de bovenhoek plus een tegenstroom die de horizontale flux in fig.3 exact compenseert.
  Leggen we voor de eenvoud de onttrekking op 
 \begin_inset Formula $Z=0$
 \end_inset
@@ -3435,8 +3460,114 @@ We hebben gezien dat de stroming door contractie van de stroomlijnen analytisch 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-\Omega(z)=\frac{2Q}{\pi}\,\ln\left(\sin\left(\frac{i\pi}{2D}z\right)\right)-\frac{Q}{D}z\ ;\qquad x\ge0,\ 0>y>-D\label{eq:omega_contratie}
+\Omega(z)=\frac{2Q}{\pi}\,\ln\left(i\sinh\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z\ ;\qquad x\ge0,\ 0>y>-D\label{eq:omega_contratie}
 \end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We willen echter dat 
+\begin_inset Formula $\Omega\left(z\right)\to0$
+\end_inset
+
+ voor 
+\begin_inset Formula $z\to\infty$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor 
+\begin_inset Formula $u\to\infty$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\sinh\left(u\right)\approx\ln\frac{e^{u}}{2}=u-\ln2
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega\left(z\to\infty+iy\right) & =\frac{2Q}{\pi}\ln i+\left(\frac{2Q}{\pi}\frac{\pi z}{2D}-\frac{2Q}{\pi}\ln2\right)-\frac{Q}{D}z\\
+ & =\frac{2Q}{\pi}\ln i+\frac{Q}{D}z-\frac{2Q}{\pi}\ln2-\frac{Q}{D}z\\
+ & =\frac{2Q}{\pi}\left(\ln1+i\frac{\pi}{2}\right)-\frac{2Q}{\pi}\ln2\\
+ & =iQ-\frac{2Q}{\pi}\ln2
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Om de potentiaal,
+ het reële deel van 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ nul te maken op 
+\begin_inset Formula $z\to\infty$
+\end_inset
+
+ moeten we 
+\begin_inset Formula $\frac{2Q}{\pi}\ln2$
+\end_inset
+
+ optellen bij vgl.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+dit 0 te maken op 
+\begin_inset Formula $z\to\infty$
+\end_inset
+
+ moeten we 
+\begin_inset Formula $\frac{2Q}{\pi}\ln2$
+\end_inset
+
+ optellen bij vgl.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:omega_contratie"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De complete analytische uitdrukking die de contractie van stromingen beschrijft is dus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega(z) & =\frac{2Q}{\pi}\,\ln\left(i\sinh\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z+\frac{2Q}{\pi}\ln2\\
+ & =\frac{2Q}{\pi}\ln\left(2i\sinh\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z
+\end{align*}
 
 \end_inset
 
@@ -3499,21 +3630,14 @@ nolink "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\Omega(-iD) & =\frac{2Q}{\pi}\ln\left(\sin\left(\frac{\pi}{2}\right)\right)-iQ\\
- & =-iQ
+\Omega(-iD) & =\frac{2Q}{\pi}\ln\left(2\sin\left(i\frac{\pi z}{2D}\right)\right)-iQ\\
+ & =\frac{2Q}{\pi}\ln\left(2\sin\left(\frac{\pi}{2}\right)\right)-iQ\\
+ & =\frac{2Q}{\pi}\ln\left(2\right)-iQ
 \end{align*}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Met andere woorden de potentiaal in deze functie is daar nul.
- Let wel,
- dat wil niet zeggen dat de werkelijke potentiaal daar nul is,
- immers er kan een willekeurige waarde bij worden opgeteld.
- Daar komen we verderop op terug.
 \end_layout
 
 \begin_layout Standard
@@ -3523,7 +3647,29 @@ Wat is de potentiaal vlak in de buurt van de onttrekking?
 \end_inset
 
 ?
- De rechter term in vergl.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\Omega(z & \to0)=\frac{2Q}{\pi}\,\ln\left(i2\sinh\left(\frac{\pi z}{2D}\right)\right)-\frac{Q}{D}z\\
+ & =\frac{2Q}{\pi}\ln\left(i2\sinh\frac{\pi r}{2D}e^{i\theta}\right)\\
+ & =\frac{2Q}{\pi}\ln i+\frac{2Q}{\pi}\ln\left(2\sinh\left(\frac{\pi r}{2D}e^{i\theta}\right)\right)\\
+ & =Qi+\frac{2Q}{\pi}\ln\left(\frac{\pi r}{D}e^{i\theta}\right)\\
+ & =Qi+\frac{2Q}{\pi}\ln\frac{\pi r}{D}+i\frac{2Q}{\pi}\theta\\
+ & =\frac{2Q}{\pi}\ln\frac{\pi r}{D}+iQ\left(1+\frac{2\theta}{\pi}\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De rechter term in vergelijking 
+\end_layout
+
+\begin_layout Standard
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:omega_contratie"
