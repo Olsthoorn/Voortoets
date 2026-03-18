@@ -3381,7 +3381,7 @@ en voor het verband tussen weerstand en afvoer
 \end_layout
 
 \begin_layout Standard
-de volgende afvoerrelatie ontstaat,
+Hiermee ontstond de volgende afvoerrelatie,
  waaruit de slootdiepte 
 \begin_inset Formula $h$
 \end_inset
@@ -3390,8 +3390,7 @@ de volgende afvoerrelatie ontstaat,
 \begin_inset Formula $h_{0}$
 \end_inset
 
-.
- De afvoer is dan gegeven door
+:
 \end_layout
 
 \begin_layout Standard
@@ -3406,19 +3405,21 @@ q=\frac{\phi-h_{0}}{\left(\gamma+\eta\right)^{2}}\left(\phi-h_{0}\right)
 \end_layout
 
 \begin_layout Standard
-Dit impliceert dat de coëfficiënt voor de factor 
+Dit impliceert dat de coëfficiënt vóór de factor 
 \begin_inset Formula $\phi-h_{0}$
 \end_inset
 
  de rol speelt van reciproque weerstand,
  of,
- in Modflow-termen,
- als specifieke conductantie 
+ in,
+ Modflow-termen,
+ van specifieke conductantie 
 \begin_inset Formula $C_{s}$
 \end_inset
 
 ,
- die alleen nog met het oppervlak van de rekencel moet worden vermenigvuldigd om specifieke Modflow-conductantie te krijgen
+ die alleen nog met het oppervlak van de rekencel moet worden vermenigvuldigd om Modflow-conductantie te krijgen.
+ De specifiek conductantie is derhalve
 \end_layout
 
 \begin_layout Standard
@@ -3460,8 +3461,11 @@ Deze uitdrukking geeft weer dat bij de getroffen aannamen over de slootdiepte en
 \begin_inset Formula $\eta$
 \end_inset
 
- helemaal niet nodig.
- Wat we nodig hebben is de specifieke conductantie in de referentiesituatie
+ niet nodig en gebruiken de de specifieke conductantie in de referentiesituatie 
+\begin_inset Formula $C_{sN}$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3586,7 +3590,7 @@ q_{\phi}=\sum_{i}\left\{ C_{i}\left(\phi-h_{i}\right),\phi>h_{i}\right\}
 \begin_layout Standard
 Dit is dus een niet-lineaire grondwaterstand-afvoerrelatie.
  Terwijl de standaard DRN optie,
- met slechts één DRN per cel een lineaire grondwaterstand-afvoerrelatie vertegenwoordigt
+ met slechts één DRN per cel een lineaire grondwaterstand-afvoerrelatie vertegenwoordigt voglens
 \end_layout
 
 \begin_layout Standard
@@ -3601,11 +3605,11 @@ q_{\phi}=C_{s,dr}\left(\phi-h\right)=\frac{1}{c_{dr}}\left(\phi-h\right)
 \end_layout
 
 \begin_layout Standard
-Waarbij normaliter het oppervlaktewaterpeil 
+Hierbij wordt normaliter het oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
- of de drainagebasis wordt gebruikt met vast peil 
+ of de drainagebasis gebruikt met vast drainniveau 
 \begin_inset Formula $h$
 \end_inset
 

@@ -898,14 +898,14 @@ def oneD_all_boundary_types(kw):
     
     # --- Using 6 drn levels between h-y0 and h
     DRN6 = np.zeros(len(Ig) * 6, dtype=Fdm3.dtype['drn'])
-    C = gr.Area.ravel() / (kw['c'])
-    h6 = np.linspace(kw['h'] - kw['y0'], kw['h'], 7)[:-1]    
+    C = gr.Area.ravel() / (kw['c'])    
+    C6, h6 = get_ch(h0=kw['h'] - kw['y0'], phiN=kw['h'], C=C, n=6)
     L = len(Ig)
     for i, hi in enumerate(h6):
         i1, i2 = i * L, (i + 1) * L
         DRN6[i1:i2]['Ig']= Ig
         DRN6[i1:i2]['h'] = hi
-        DRN6[i1:i2]['C'] = C / 6
+        DRN6[i1:i2]['C'] = C6
 
     # --- Instantiate the Fdm3 model using different boundaries in turn
     mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
@@ -1042,13 +1042,13 @@ def axial_all_boundary_types(kw):
     # --- Using 6 drn levels between h-y0 and h
     DRN6 = np.zeros(len(Ig) * 6, dtype=Fdm3.dtype['drn'])
     C = gr.Area.ravel() / (kw['c'])
-    h6 = np.linspace(kw['h'] - kw['y0'], kw['h'], 7)[:-1]    
+    C6, h6 = get_ch(h0=kw['h'] - kw['y0'], phiN=kw['h'], C=C, n=6)
     L = len(Ig)
     for i, hi in enumerate(h6):
         i1, i2 = i * L, (i + 1) * L
         DRN6[i1:i2]['Ig']= Ig
         DRN6[i1:i2]['h'] = hi
-        DRN6[i1:i2]['C'] = C / 6
+        DRN6[i1:i2]['C'] = C6
         
     # --- Run the model for each set of boundary coditions in turn  
     out_ghb = mdl.simulate(GHB=GHB) # run model

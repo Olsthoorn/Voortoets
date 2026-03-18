@@ -4042,59 +4042,64 @@ Vergelijking van modellen met verschillende randvoorwaarden
 \end_layout
 
 \begin_layout Standard
-Met een en hetzelfde grondwatermodel hier Fdm3,
- kunnen verschillende modellen worden opgezet die over en weer kunnen geverifieerd en ook kunnen worden vergelijken met analytische oplossingen,
+Met een en hetzelfde grondwatermodel,
+ hier Fdm3,
+ kunnen verschillende modellen worden opgezet die over en weer kunnen geverifieerd en die we ook kunnen vergelijken met analytische oplossingen,
  althans voor zover deze analytische oplossingen bestaan.
- Voor niet-lineaire grondwaterproblemen bestaan die vaak niet.
- Met het oorspronkelijk in Matlab en de laatste jaren in Python doorontwikkelde eindige differentie model kunnen stationaire en tijdsafhankelijke modellen worden opgezet met een model netwerk bestaande uit rechthoekige cellen en lagen waarvan de laagdikte variabel is per cel.
+ Voor niet-lineaire grondwaterproblemen bestaan die meestal niet.
+ Met het oorspronkelijk Python ontwikkelde eindige differentie model,
+ Fdm3,
+ kunnen stationaire en tijdsafhankelijke modellen worden opgezet met een modelnetwerk dat bestaat uit rechthoekige cellen en lagen waarvan de laagdikte variabel is per cel.
  Dit is dezelfde opzet als bij oudere Modflow modellen.
- Zo'n netwerk is relatief eenvoudig maar maakt het Python programma van hoogstens een paar honderd regels code uiterst transparant.
+ Zo'n netwerk is relatief eenvoudig,
+ maar maakt het Python programma van hoogstens een paar honderd regels uiterst transparant.
  Fdm3 is verder uitermate geschikt voor het maken van doorsnedemodellen,
  zowel vlakke als axiaal-symmetrische.
 \end_layout
 
 \begin_layout Standard
-Voor het oplossen van het stelsel vergelijkingen wordt gebruik gemaakt van de 
+Voor het oplossen van het stelsel vergelijkingen wordt gebruik gemaakt van een 
 \begin_inset Quotes pld
 \end_inset
 
-solvers
+solver
 \begin_inset Quotes prd
 \end_inset
 
  uit de Scipy Library,
- de beste ter wereld,
+ behorend tot de beste ter wereld,
  waardoor oplossing van het grondwatermodel geen probleem is,
  zolang het model lineair is.
- Net als Modflow heeft het Python model,
- Fdm3,
- ook niet-lineaire randvoorwaarden,
+ Net als Modflow kunnen ook niet-lineaire randvoorwaarden worden gedefineerd,
  namelijk DRN (drains),
  RIV (river) en FDR (vrije drainage).
- De DRN cellen laten alleen water het model uit wanneer de stijghoogte in de betreffende cel hoger is dan het opgegeven niveau van de drain(s).
+ De rekencellen DRN randvoorwaarde laten alleen water het model uit wanneer de stijghoogte in de betreffende cel hoger is dan het opgegeven niveau van de drain(s).
  Nooit kan er water via de DRN het model instromen.
- De RIV-cellen laten water in- en uitstromen zolang de stijghoogte van de RIV-cellen in het grondwatermodel is hoger dan het opgegeven niveau van de rivierboden.
- Zakt de stijghoogte tot onder de rivierbodem dan raakt de infiltratie via de rivierbodem los van de stijghoogte het grondwater;
+ De rekencellen met RIV randvoorwaarde laten water in- en uitstromen,
+ maar alleen zolang de stijghoogte van de RIV-cellen in het grondwatermodel hoger is dan het opgegeven niveau van de rivierboden.
+ Zakt de stijghoogte tot onder de waterbodem,
+ dan raakt de infiltratie via de waterbodem los van de stijghoogte van het grondwater;
  zij wordt dan constant en gelijk aan de diepte van de rivier gedeeld door de opgegeven weerstand van de rivierbodem.
- Zowel DRN als RIV randvoorwaarden zijn niet-lineair en maken het grondwatermodel dus ook niet-lineair.
+ Zowel DRN- als RIV-randvoorwaarden zijn niet-lineair en maken het grondwatermodel zelf niet-lineair.
  Fdm3 heeft nog een derde niet-lineaire randvoorwaarde,
  namelijk die voor vrije ontwatering,
  FDR,
- waarin de lekweerstand afhankelijk is van de slootdiepte,
- dus van de waterstand in de sloot minus de hoogte van de slootbodem.
+ waarin de lekweerstand afhankelijk is van de waterdiepte van de watergangen,
+ dus van de waterstand in de watergang minus de hoogte van de waterbodem.
  Bij vrije afwatering is geen infiltratie mogelijk,
  net zoals bij de DRN-cellen;
- alleen is bij DRN-cellen de uittreeweerstand constant terwijl die bij vrije ontwatering,
+ alleen is bij DRN-cellen de uittredeweerstand constant,
+ terwijl die bij vrije ontwatering,
  FDR,
- een functie is van de actuele slootdiepte.
- Daarnaast is ook de slootdiepte zelf een functie is van de afvoer vanuit het model via de cellen met vrije afwatering.
+ een functie is van de actuele waterdiepte.
+ Daarnaast is ook de waterdiepte zelf een functie is van de afvoer vanuit het model via de cellen met vrije afwatering.
  De laatste vorm van afwatering sluit beter aan bij de situatie in hogere of overgangsgebieden met een vrije afvoer,
  waar geen extern water naartoe geleid of gepompt kan worden.
 \end_layout
 
 \begin_layout Standard
 De afleiding voor de randvoorwaarden met vrije drainage is hiervoor al gegeven.
- FDR komt in twee varianten
+ De randvoorwaarde FDR komt in twee varianten
 \end_layout
 
 \begin_layout Enumerate
@@ -4111,24 +4116,25 @@ In dit hoofdstuk staat de verificatie van het model Fdm3 centraal onder verschil
 \end_layout
 
 \begin_layout Section
-Vlakke en axiaal symmetrische doorsnede modellen met verschillende randvoorwaarden
+Vlakke en axiaal symmetrische doorsnedemodellen met verschillende randvoorwaarden
 \end_layout
 
 \begin_layout Standard
 Het gemakkelijkst is de werking van de verschillende randvoorwaarden te demonstreren aan de hand van vlakke of axiaal-symmetrische doorsnedemodellen.
- De essentie hierbij is het zoveel mogelijk kunnen toetsen aan analytische oplossingen en de modellen met verschillende randvoorwaarden onderling te kunnen vergelijken en toetsen.
+ De essentie hierbij is het zoveel mogelijk kunnen toetsen aan analytische oplossingen en verder om de modellen met verschillende randvoorwaarden onderling te kunnen vergelijken en toetsen.
  
 \end_layout
 
 \begin_layout Standard
-We beginnen met vlakke eendimensionale modellen.
- Deze bestaan gemakshalve steeds uit slechts een modellaag.
- We kunnen zo'n model bestaande uit slechts een laag semi-gespannen maken door gebruik van de verschillende randvoorwaarden GHB,
+We beginnen met vlakke ééndimensionale modellen.
+ Deze bestaan gemakshalve steeds uit slechts een enkele modellaag.
+ We kunnen zo'n model van slechts één laag semi-gespannen maken dooreen of meer van de verschillende randvoorwaarden GHB,
  DRN,
- RIV en of FDR.
- Zo kunnen we alle cellen GHB cellen maken (general head boundaries).
- Door de zogenoemde conductantie van de GHB-cellen equivalent te maken aan de weerstand van een scheidende laag wordt de laag in feite semi-gespannen en wordt hetzelfde als met een analytische oplossing voor een semi-gespannen grondwater.
- Om de drainage te simuleren kiezen we een semi-gespannen laag waar we direct het neerslagoverschot in injecteren.
+ RIV en of FDR in te zetten.
+ Door bijvoorbeeld de zogenoemde conductantie van de GHB-cellen equivalent te maken aan de weerstand van een scheidende laag,
+ wordt de modellaag in feite semi-gespannen en wordt het gedrag van het model hetzelfde als van een analytische oplossing voor een semi-gespannen grondwater.
+ Om de drainage te simuleren,
+ kiezen we dan een semi-gespannen laag waar we direct het neerslagoverschot in injecteren.
  Hierdoor lekt water via de scheidingslaag opwaarts.
  Verder leggen we een onttrekking 
 \begin_inset Formula $q_{0}$
@@ -4139,7 +4145,7 @@ We beginnen met vlakke eendimensionale modellen.
 \end_inset
 
 .
- Hier door gaat water op korte afstand van de onttrekking van de weerstandslaag infiltreren.
+ Hierdoor gaat op korte afstand van de onttrekking water via de weerstandslaag infiltreren.
 \end_layout
 
 \begin_layout Section
@@ -4147,11 +4153,12 @@ Vergelijking tussen GHB- en DRN-randvoorwaarden
 \end_layout
 
 \begin_layout Standard
-Bij GHB randvoorwaarden kan water zowel infiltreren als exfiltreren;
- bij DRN randvoorwaarden is alleen exfiltratie mogelijk.
- Het eenlaagsmodel met GHB randvoorwaarden is gelijk aan een tweelaagsmodel met een vast peil in de bovenste laag en tussen de twee lagen een weerstand biedende laag.
- We laten hierna de resultaten zien van de simulatie in een vlak 1D doorsnedemodel en in een axiaal-symmetrisch doorsnede model.
+Bij GHB-randvoorwaarden kan water zowel infiltreren als exfiltreren;
+ bij DRN-randvoorwaarden is alleen exfiltratie mogelijk.
+ Het éénlaagsmodel met GHB-randvoorwaarden is volledig equivalent aan een tweelaagsmodel met een vast peil in de bovenste laag en tussen de twee lagen een weerstandbiedende laag.
+ We laten hierna de resultaten zien van de simulatie in een vlak 1D doorsnedemodel en in een axiaalsymmetrisch doorsnedemodel.
  Deze resultaten worden vergeleken met die van de analytische oplossing voor hetzelfde probleem.
+ De zullen hierna de resultaten van de modellering grafisch weergeven waarbij steeds een simulatie wordt toegevoegd.
 \end_layout
 
 \begin_layout Subsection
@@ -4163,7 +4170,8 @@ De analytische oplossing voor deze situatie is die van Mazure plus
 \begin_inset Formula $Nc$
 \end_inset
 
-
+,
+ het product van neerslagoverschot en laagweerstand:
 \end_layout
 
 \begin_layout Standard
@@ -4200,18 +4208,18 @@ Met
 \begin_inset Formula $\phi-h=Nc$
 \end_inset
 
- en uniform,
+ en uniform;
  dit is de stijghoogte die nodig is om het neerslagoverschot 
 \begin_inset Formula $N$
 \end_inset
 
- via de weerstand naar de omgeving te laten lekken.
+ via de bovenliggende weerstandbiedende laag naar de omgeving te laten lekken.
  De weerstand 
 \begin_inset Formula $c$
 \end_inset
 
  moet hier worden opgevat als lekweerstand,
- dus de weerstand die het aanwezige oppervlaktesysteem biedt tegen lek van grondwater.
+ dus de regionale weerstand die het aanwezige oppervlaktewaterstelsel biedt tegen lek van grondwater.
  De stijghoogte zal door het neerslagoverschot in een groot deel van het model boven de drainagebasis 
 \begin_inset Formula $h$
 \end_inset
@@ -4221,7 +4229,7 @@ Met
  In de formule voor semi-gespannen water en bij gebruik van GHB-cellen,
  treedt daar dan infiltratie op.
  Bij gebruik van DRN-cellen wordt deze infiltratie afgekapt.
- Hierdoor is de verlaging nabij de onttrekking bij gebruik van DRN cellen groter dan bij GHB cellen als randvoorwaarde.
+ Hierdoor is de verlaging nabij de onttrekking bij gebruik van DRN-cellen groter dan bij GHB-cellen als randvoorwaarde.
 \end_layout
 
 \begin_layout Standard
@@ -4236,12 +4244,12 @@ nolink "false"
 
 \end_inset
 
- geeft het resultaat van zowel de analytische oplossingen en de simulatie met het Fdm3 model voor de vlakke (1D) doorsnede.
- De analytische oplossing voor de situatie met semi-spanningswater over de gehele 
+ geeft het resultaat van zowel de analytische oplossing en de simulatie met het Fdm3-model voor de vlakke (1D) doorsnede.
+ De analytische oplossing voor de situatie met semi-spanningswater valt over de gehele 
 \begin_inset Formula $x$
 \end_inset
 
--as valt samen met die van de Fdm3-simulatie waarbij GHB-randvoorwaarden zijn gebruikt,
+-as samen met die van de Fdm3-simulatie waarbij GHB-randvoorwaarden zijn gebruikt,
  waardoor zowel lek als infiltratie kan optreden.
  Dit is identiek aan een grondwaterpakket dat is afgedekt door een slechtdoorlatende laag met daarboven een vast peil 
 \begin_inset Formula $h$
@@ -4264,13 +4272,15 @@ nolink "false"
 
 \end_inset
 
- geeft hiernaast de analytische oplossing volgens Blom samen met de numerieke waarbij voor de bovenrandvoorwaarde in plaats van GHB-cellen DRN-cellen zijn toegepast.
+ geeft hiernaast de analytische oplossing volgens Blom samen met de numerieke van Fdm3,
+ waarbij voor de bovenrandvoorwaarde in plaats van GHB-cellen DRN-cellen zijn toegepast.
  DRN-cellen laten geen infiltratie toe.
  Bij Blom treedt lek op zolang de grondwaterstand boven het oppervlaktewaterpeil (de drainagebasis) blijft.
- De lek is daar een deel van het neerslagoverschot de voeding is daar gelijk aan het neerslagoverschot minus de lek.
+ De lek is daar een deel van het neerslagoverschot;
+ de voeding is daar gelijk aan het neerslagoverschot minus de lek.
  Binnen het gebied waar de de grondwaterstand onder de drainagebasis zakt treedt geen lek meer op.
  De voeding is daar gelijk aan het gehele neerslagoverschot.
- De afstand waarop de grondwater is verlaagd tot de drainagebasis (verlaging is 
+ De afstand waarop de grondwaterstand is verlaagd tot de drainagebasis (verlaging is 
 \begin_inset Formula $Nc_{dr}$
 \end_inset
 
@@ -4279,7 +4289,20 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-De figuur met de lek en de voeding laat zien dat de lek voor 
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Vlakke-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ onderste paatje,
+ met de lek en de voeding,
+ laat zien dat de lek voor 
 \begin_inset Formula $x<L$
 \end_inset
 
@@ -4289,17 +4312,25 @@ De figuur met de lek en de voeding laat zien dat de lek voor
 \begin_inset Formula $x<L$
 \end_inset
 
- gelijk aan het neerslagoverschot en neemt daarbuiten af tot nul voor grote 
-\begin_inset Formula $x$
+ gelijk aan het neerslagoverschot en neemt daarbuiten af tot nul.
+ De som van de analytische voeding en de numeriek berekende lek is gelijk aan het neerslagoverschot.
+ Het bovenste plaatjes van fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Vlakke-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
 \end_inset
 
-.
- De som van de analytische voeding en de numeriek berekende lek is gelijk aan het neerslagoverschot.
- De bovenste figuur laat ook zien dat de verticale lijn het punt snijdt waar de grondwaterstand is gezakt tot de drainagebasis 
+ laat ook zien dat de verticale lijn het punt snijdt waar de grondwaterstand is gezakt tot de drainagebasis 
 \begin_inset Formula $h=0$
 \end_inset
 
- vanaf de grondwaterstand zonder onttrekking 
+ vanaf de grondwaterstand zonder onttrekking,
+ die gelijk is aan 
 \begin_inset Formula $\phi=h+Nc$
 \end_inset
 
@@ -4336,9 +4367,9 @@ name "fig:Vlakke-dsn"
 
 Analytische oplossingen en Fdm3-simulatie van vlakke doorsnede.
  Het Fdm3-model bestaat uit een enkele modellaag.
- Voor de gebruikte gegevens zie de kop van de bovenste figuur.
- Vergelijking tussen de situaties met GHB- en met DRN-cellen.
- Boven de stijghoogten en onder de lek respectievelijk de voeding van het pakket.
+ Voor de gebruikte gegevens zie de kop van de bovenste afbeelding.
+ De figuur vergelijkt de situaties met GHB- en met DRN-cellen.
+ De bovenste afbeelding toont de stijghoogten en de onderste de lek respectievelijk de voeding van het pakket.
 \end_layout
 
 \end_inset
@@ -4356,11 +4387,11 @@ Analytische oplossingen en Fdm3-simulatie van vlakke doorsnede.
 \end_layout
 
 \begin_layout Subsection
-De axiaal-symmetrische doorsnede
+De axiaalsymmetrische doorsnede
 \end_layout
 
 \begin_layout Standard
-Figuur 
+Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Ax-symm-dsn"
@@ -4371,8 +4402,8 @@ nolink "false"
 
 \end_inset
 
- geeft de resultaten berekende analytische oplossing en de numerieke simulatie voor een axiaal-symmetrische doorsnede met exact dezelfde gegevens als hiervoor gebruikt zijn bij de vlakke doorsnede.
- Alleen de onttrekking heeft nu dimensie m
+ geeft de resultaten voor de analytische oplossing samen met de numerieke simulatie voor een axiaalsymmetrische doorsnede met verder exact dezelfde gegevens als hiervoor gebruikt zijn bij de vlakke doorsnede;
+ alleen de onttrekking heeft nu dimensie m
 \begin_inset Formula $^{3}$
 \end_inset
 
@@ -4412,11 +4443,11 @@ name "fig:Ax-symm-dsn"
 
 \end_inset
 
-Analytische oplossingen en Fdm3-simulatie van axiaal-symmetrische verticale doorsnede.
- Het Fdm3-model bestaat uit een enkele modellaag.
+Analytische oplossingen en Fdm3-simulatie van een axiaalsymmetrische verticale doorsnede.
+ Het Fdm3-model bestaat uit één enkele modellaag.
  Voor de gebruikte gegevens zie de kop van bovenste figuur.
- Vergelijking situatie met GHB- en DRN-cellen.
- Boven de stijghoogten en onder de lek,
+ De figuur vergelijkt de situatie e met GHB- en DRN-randvoorwaarden.
+ De bovenste afbeelding toont de stijghoogten en de onderste de lek,
  respectievelijk de voeding van het pakket.
 \end_layout
 
@@ -4447,7 +4478,11 @@ De analytische oplossing voor de situatie met een onttrekking
 \begin_inset Formula $N$
 \end_inset
 
- in het watervoerende pakket is dan
+ in het watervoerende pakket is die volgens De Glee plus 
+\begin_inset Formula $Nc$
+\end_inset
+
+ het product van neerslagoverschot en weerstand van de afdekkende laag:
 \end_layout
 
 \begin_layout Standard
@@ -4466,10 +4501,10 @@ De analytische oplossing voor de situatie met een onttrekking
 \end_inset
 
  is uiteraard de bekende gemodificeerde Besselfunctie en 
-\begin_inset Formula $\lambda$
+\begin_inset Formula $\lambda=\sqrt{kDc}$
 \end_inset
 
- als hiervoor.
+ [m] als hiervoor.
  Zonder de injectie,
  dus met 
 \begin_inset Formula $N=0$
@@ -4479,7 +4514,7 @@ De analytische oplossing voor de situatie met een onttrekking
 \begin_inset Formula $Q=0$
 \end_inset
 
- krijgen we net als hiervoor een uniforme stijghoogte 
+ krijgen we evenals hiervoor een uniforme stijghoogte 
 \begin_inset Formula $\phi=h+Nc$
 \end_inset
 
@@ -4497,12 +4532,12 @@ De analytische oplossing voor de situatie met een onttrekking
  wordt getrokken.
  Hetzelfde krijgen we als we in het model GHB-randvoorwaarden gebruiken.
  De analytische en de numeriek oplossingen blijken geheel in overeenstemming,
- evenals de berekende lek/voeding die in de onderste figuur is weergegeven.
+ evenals de berekende lek/voeding die in het onderste plaatje is afgebeeld.
  De voeding 
 \begin_inset Formula $n_{r}$
 \end_inset
 
- is natuurlijk 
+ is natuurlijk gelijk aan 
 \begin_inset Formula $n_{r}=\frac{\phi_{r}-h}{c}$
 \end_inset
 
@@ -4510,9 +4545,9 @@ De analytische oplossing voor de situatie met een onttrekking
 \end_layout
 
 \begin_layout Standard
-Bij gebruik van DRN-randvoorwaarden wordt deze infiltratie volledig afgekapt.
- De verlaging is hierdoor groter bij gebruik van DRN-randvoorwaarden dan bij GHB-randvoorwaarden.
- De analytische oplossing die volgens 
+Bij gebruik van DRN-randvoorwaarden wordt de infiltratie volledig afgekapt.
+ De verlaging is hierdoor groter dan bij gebruik van GHB-randvoorwaarden.
+ De analytische oplossing volgens 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Blom73"
@@ -4520,11 +4555,11 @@ literal "false"
 
 \end_inset
 
- die geldt voor het gebied 
+ voor het gebied 
 \begin_inset Formula $r>R$
 \end_inset
 
- is de formule die 
+ is gelijk aan de formule die 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Glee30"
@@ -4532,30 +4567,42 @@ literal "false"
 
 \end_inset
 
- voor semi-spanningswater afleidde.
- Die voor het gebied met 
+.
+ Die oplossing voor het gebied met 
 \begin_inset Formula $r<R$
 \end_inset
 
- is de zogenaamde formule van Verruijt (dit is de formule van Dupuit plus neerslagoverschot).
- De figuur laat zien dat de analytische oplossing volgens Blom geheel overeenkomt met de numeriek oplossing met DRN-cellen als bovenrandvoorwaarde.
+ is gelijk aan de zogenaamde formule van Verruijt (dit is de formule van Dupuit plus neerslagoverschot).
+ Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Ax-symm-dsn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat zien dat de analytische oplossing volgens Blom geheel overeenkomt met de numerieke oplossing met DRN-cellen als bovenrandvoorwaarde.
  De grens tussen beide gebieden is aangegeven met de verticale zwarte lijn.
- Dit is de straal waar de stijghoogte is gedaald tot de drainagebasis 
+ Dit is de straal waar de stijghoogte is gedaald tot op de drainagebasis 
 \begin_inset Formula $h$
 \end_inset
 
 .
- De onderste figuur met de lek/voeding laat zien dat de lek voor 
+ De onderste afbeelding toont de lek/voeding en laat zien dat de lek voor 
 \begin_inset Formula $r<R$
 \end_inset
 
- gelijk aan nul is,
- maar de voeding gelijk aan het gehele neerslagoverschot.
- Op deze grens is de verlaging gelijk aan 
+ gelijk aan nul is.
+ De de voeding is daar gelijk aan het gehele neerslagoverschot.
+ Op deze grens tussen beide gebieden is de verlaging gelijk aan 
 \begin_inset Formula $Nc_{dr}$
 \end_inset
 
- en is de voeding gelijk aan 
+,
+ de voeding gelijk aan 
 \begin_inset Formula $N$
 \end_inset
 
@@ -4563,7 +4610,7 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-Voor de verhouding tussen van voeding 
+Voor de verhouding tussen voeding 
 \begin_inset Formula $n_{r}$
 \end_inset
 
@@ -4571,7 +4618,7 @@ Voor de verhouding tussen van voeding
 \begin_inset Formula $r$
 \end_inset
 
- ten opzichte van de voeding 
+ ten de voeding 
 \begin_inset Formula $n_{R}=N$
 \end_inset
 
@@ -4600,14 +4647,15 @@ Simulatie met vrije afwatering of vrije drainage
 \begin_layout Standard
 Hiervoor zagen we dat de analytische situatie volgens Blom identiek is aan de numerieke simulatie met DRN-cellen als bovenrandvoorwaarde en directe injectie in het watervoerende pakket.
  De situatie met vrije afwatering lijkt hierop,
- maar verschilt in het feit dat daarbij de drainagebasis (het oppervlaktewaterpeil) lager wordt naarmate de lek afneemt en het feit dat de lekweerstand toeneemt met de afnemende slootdiepte.
- Er kan alleen lek zijn zolang de grondwaterstand hoger is dan de slootbodem.
+ maar verschilt in het feit dat daarbij de drainagebasis (het oppervlaktewaterpeil) lager wordt naarmate de lek afneemt.
+ De lekweerstand neemt daarbij toe met de afnemende waterdiepte van de watergangen.
+ Er kan alleen lek zijn zolang de grondwaterstand hoger is dan de waterbodem.
  Zodra de grondwaterstand daaronder zakt is de lek nul en de lekweerstand dus oneindig groot.
- In een vrij afwaterend gebied is geen aanvoer van water en geen infiltratie mogelijk.
+ In een vrij afwaterend gebied is geen aanvoer van water mogelijk om het oppervlaktewater op peil te houden.
+ Hierdoor is er ook geen infiltratie mogelijk.
  Dit is in de werkelijkheid niet overal helemaal waar,
- omdat er natuurlijk water van bovenstrooms naar de sloten kan lekken,
- dat vervolgens benedenstrooms weer infiltreert.
- Zulke omstandigheden vallen buiten bestek van dit document en kunnen alleen met een combinatie van een grond- en een oppervlaktewatermodel enigszins zinvol worden gemodelleerd.
+ aangezien water dat bovenstrooms naar de watergangen lekt benedenstrooms weer kan infiltreren.
+ Zulke omstandigheden vallen buiten bestek van dit document en kunnen alleen door een gecombineerd grond- en een oppervlaktewatermodel zinvol worden gesimuleerd.
 \end_layout
 
 \begin_layout Standard
@@ -4626,10 +4674,10 @@ c_{dr}=\frac{\phi-h}{N}
 \end_layout
 
 \begin_layout Standard
-Dat wil zeggen het verschil tussen de gemiddelde grondwaterstand met het drainageniveau (het oppervlaktewaterpeil) gedeeld door de gemiddelde drainage (zonder kwel is dat gelijk aan het neerslagoverschot).
+Dat wil zeggen het verschil tussen de gemiddelde grondwaterstand met het drainageniveau (het oppervlaktewaterpeil) gedeeld door de gemiddelde afvoer (zonder kwel is deze gelijk aan het neerslagoverschot).
  In deze formule zit ook het drainageniveau,
- dat echter bij vrije afwatering zelf afhang van de lek.
- En daarmee is de lekweerstand ook afhankelijk van de actuele lek.
+ dat echter bij vrije afwatering zelf afhangt van de lek.
+ Daarmee is de lekweerstand ook afhankelijk van de actuele lek.
  In de theoretische afleidingen hebben we echter gezien dat we ook de weerstand als volgt kunnen definiëren,
 \end_layout
 
@@ -4641,21 +4689,23 @@ c=\frac{\phi-h_{0}}{N}
 
 \end_inset
 
-waarbij in plaats van de actuele maar variabele drainagebasis 
+In deze formule staat,
+ in plaats van de actuele maar variabele drainagebasis 
 \begin_inset Formula $h$
 \end_inset
 
- nu de vaste bodemhoogte van de sloten 
+,
+ nu de vaste hoogte 
 \begin_inset Formula $h_{0}$
 \end_inset
 
- staat.
+ van de waterbodem.
  De weerstand 
 \begin_inset Formula $c$
 \end_inset
 
  is dan dus niet meer de lekweerstand maar een andere,
- grotere.
+ grotere weerstand volgens:
 \end_layout
 
 \begin_layout Standard
@@ -4674,7 +4724,8 @@ Hierin is de slootdiepte
 \begin_inset Formula $y=h-h_{0}$
 \end_inset
 
- verwerkt waarvoor is gesteld dat die via een eenvoudige functie van de lek 
+ verwerkt,
+ waarvoor eerder is gesteld dat die via een eenvoudige functie van de lek 
 \begin_inset Formula $q$
 \end_inset
 
@@ -4720,104 +4771,6 @@ waarin de coëfficiënt
 
 \begin_layout Subsection
 De vlakke 1D doorsnede
-\end_layout
-
-\begin_layout Standard
-Figuur 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Vlakke-dsn"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- geeft het resultaat voor de simulatie van de vlakke doorsnede met GHB randvoorwaarde en de bijbehorende analytische oplossing
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\phi=h+Nc-\frac{\lambda}{kD}Qe^{-\frac{x}{\lambda}},\,\,\,\lambda=\sqrt{kDc_{dr}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-samen met het resultaat met DRN randvoowaarden en de daarbij behorende analytische oplossing van Blom.
- Het resultaat met de GHB-randvoorwaarden valt samen met de analytische oplossing en dat met de DRN-randvoorwaarde valt samen met de analytische oplossing volgens Blom.
- De onderste figuur geeft de bijbehorende lek.
- Die voor het model met de GHB-randvoorwaarde slaat om in infiltratie zodra de grondwaterstand onder het (vaste) oppervlaktewaterpeil zakt,
- dat wil zeggen,
- zodra de verlaging groter is dan 
-\begin_inset Formula $Nc_{dr}$
-\end_inset
-
-.
- Die voor het model met de DRN-randvoorwaarde wordt nul zodra dit het geval is.
- De grens waarbinnen de drains droogvallen is aangegeven met de verticale lijn.
- De onderste figuur geeft ook de voeding van het grondwater volgens Blom.
- Deze is nul waar de sloten het volledige neerslagoverschot drains/sloten het volledige neerslagoverschot afvoeren en is gelijk aan het neerslagoverschot waar de drains niets afvoeren.
- De voeding plus lek is gelijk aan het neerslagoverschot.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement document
-alignment document
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename ../../images/example_fdm3_1D.png
-	width 80text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Vlakke-dsn+GHB+DRN"
-
-\end_inset
-
-Analytische oplossingen en Fdm3-simulatie voor GHB randvoorwaarden en voor DRN randvoorwaarden.
- De drains vallen droog zodra de grondwaterstand onder het drainniveau daalt,
- dat hier gelijk is aan het oppervlaktewaterpeil.
- De verlaging is dan 
-\begin_inset Formula $Nc$
-\end_inset
-
-.
- Boven de stijghoogten en onder de lek en de voeding volgens Blom die overeenkomt met de numerieke situatie met DRN randvoorwaarden.
- Voeding volgens Blom plus lek met DRN randvoorwaarden is gelijk aan het neerslagoverschot.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -4882,7 +4835,7 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-Figuur 
+Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Vlak-DRN+FDR"
@@ -4904,7 +4857,7 @@ nolink "false"
 
 \end_inset
 
- maar geeft nu ook de numeriek berekende stijghoogte en lek voor de situaties met vrije drainage.
+ maar geeft nu ook de numeriek berekende stijghoogte en lek voor de situatie met vrije drainage.
  Bij de variant 
 \begin_inset Quotes pld
 \end_inset
@@ -4917,6 +4870,7 @@ FDR
 \begin_inset Formula $c_{dr}=\frac{\gamma}{\sqrt{q}}$
 \end_inset
 
+,
  terwijl in de variant 
 \begin_inset Quotes pld
 \end_inset
@@ -4926,7 +4880,7 @@ FDR1
 \end_inset
 
  de lekweerstand is berekend op basis van het slootprofiel en de grootte van het contactvlak tussen sloot en watervoerend pakket,
- dat weer van de slootdiepte afhangt.
+ dat zelf weer van de waterdiepte afhangt.
  Het blijkt dat de uitkomsten van deze twee varianten heel weinig van elkaar verschillen.
  Wel zien we dat de grondwaterstand bij vrije drainage meer wordt verlaagd dan in de situatie met een vast drainagepeil.
  Verder blijkt dat de lek pas geheel wegvalt wanneer de grondwaterstand onder de slootbodem 
@@ -4934,18 +4888,17 @@ FDR1
 \end_inset
 
  zakt,
- die hier op -1 m ligt.
- De grondwaterstand wordt of blijft gelijk aan 
+ die hier op -1 m is gelegd.
+ De grondwaterstand op grote afstand van de onttrekking blijft gelijk aan 
 \begin_inset Formula $h+Nc$
 \end_inset
 
  zonder lek.
- Dit gebeurt aan de rechterzijde van het model.
  De einduitkomst laat zien dat de verlaging bij vrije drainage behoorlijk groter is dan in de situatie met reguliere drainage.
 \end_layout
 
 \begin_layout Standard
-Figuur 
+Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Vlak+FDR+DRNn"
@@ -4970,7 +4923,7 @@ nolink "false"
  met daaraan toegevoegd het resultaat van de berekening met vrije drainage middels een zestal drainniveaus,
  met alle dezelfde conductantie,
  zodanig dat de lek bij een grondwaterstand gelijk aan de referentiewaarde gelijk is aan het neerslagoverschot,
- net zoals dat bij alle varianten het geval is.
+ zoals dat bij alle varianten het geval is.
  Dit is de wijze waarop vrije afwatering in Modflow kan worden gemodelleerd.
  We zien dat het resultaat niet of nauwelijks afwijkt van dat van de andere twee varianten met vrije afwatering die hierboven zijn genoemd.
 \end_layout
@@ -5035,7 +4988,7 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-Figuur 
+Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Lek-DRNn"
@@ -5046,8 +4999,8 @@ nolink "false"
 
 \end_inset
 
- geeft de berekende lek is de situatie met een DRN per rekencel en die met verschillende drainniveaus per rekencel (zie legenda).
- De groene lijn is het resultaat met een DRN die droogvalt zodra de grondwaterstand zakt tot onder het oppervlaktewaterpeil 
+ geeft de berekende lek in de situatie met één DRN per rekencel en in de situatie met verschillende drainniveaus per rekencel (zie legenda).
+ De groene lijn is het resultaat met één DRN die droogvalt zodra de grondwaterstand zakt tot onder het oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
@@ -5056,9 +5009,10 @@ nolink "false"
 \end_inset
 
 ).
- De paarse lijn met stippen is het resultaat voor de situatie met de verschillende drainniveaus.
- De totale lek is in beide situaties hetzelfde namelijk gelijk aan het totale neerslagoverschot op het model minus de onttrekking.
- De gekleurde lijnen geven de lek die afkomstig is van de verschillende drainniveaus.
+ De paarse lijn met stippen is het resultaat voor de situatie met de alle drainniveaus.
+ De totale lek is in beide situaties hetzelfde,
+ namelijk gelijk aan het totale neerslagoverschot op het model minus de onttrekking.
+ De gekleurde lijnen geven de lek die afkomstig is van de afzonderlijke drainniveaus.
  De bruine lijn is voor het hoogste drainniveau,
  dat het snelst droogvalt namelijk al op ca.
  1200 m vanaf de onttrekking.
@@ -5069,8 +5023,8 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-Het is duidelijk dat de lek bij vrije drainage veel verder doorgaat dan bij drains met vast drainniveau op de hoogte van het oppervlaktewaterpeil.
- Dit is een veel reëlere schematisatie omdat bij vrije afwatering het oppervlaktewaterpeil meezakt met de verlaging en de lek pas stopt als de verlaging (en het oppervlaktewaterpeil) onder de slootbodem zakken.
+Het is duidelijk dat de lek bij vrije drainage veel verder doorgaat dan bij drains met vast drainniveau gelegd op de hoogte van het oppervlaktewaterpeil.
+ Dit oplossing met een aantal drainniveaus levert een veel reëlere schematisatie omdat bij vrije afwatering het oppervlaktewaterpeil meedaalt met de verlaging en de lek pas stopt als de verlaging (en het oppervlaktewaterpeil) onder de waterbodem zakken.
 \end_layout
 
 \begin_layout Standard
@@ -5126,112 +5080,14 @@ Lek in het vlakke doorsnede model voor de situatie met een drainniveau (groene l
 \end_layout
 
 \begin_layout Subsection
-De axiaal-symmetrische doorsnede
-\end_layout
-
-\begin_layout Standard
-De axiaal-symmetrische doorsnede werkt qua invoer hetzelfde als de vlakke doorsnede,
- met uitzondering van de analytische oplossing die voor de situatie met GHB overeenkomt met de Glee plus 
-\begin_inset Formula $Nc$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\phi=h+Nc-\frac{Q}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right),\,\,\,\lambda=\sqrt{kDc_{dr}}
-\]
-
-\end_inset
-
-
+De axiaalsymmetrische doorsnede met vrije afwatering
 \end_layout
 
 \begin_layout Standard
 Figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:Ax-symm-dsn"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- geeft het resultaat.
- De analytische oplossing valt samen met de numeriek met GHB randvoorwaarden en de analytische oplossing volgens Blom valt samen met de numerieke met DRN randvoorwaarden.
- De straal waarbinnen de grondwaterstand onder de drains is getrokken is aangegeven met de verticale lijn.
- Dit punt komt overeen met een verlaging gelijk aan 
-\begin_inset Formula $Nc$
-\end_inset
-
-.
- De onderste figuur geelt de lek.
- Voor het model met de DRN randvoorwaarde is de lek gelijk nu binnen de zojuist genoemde radius.
- Voor het model met de GHB randvoorwaarde is wel infiltratie mogelijk waar de grondwaterstand zakt onder het oppervlaktewaterpeil.
- Voor de analytische oplossing volgens Blom is de voeding van de watervoerende laag weergegeven.
- Deze is nul waar de sloten het volledige neerslagoverschot afvoeren en is gelijk aan het neerslagoverschot waar de sloten niets afvoeren.
- De som van voeding en lek is voor Blom/DRN gelijk aan het neerslagoverschot.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-placement document
-alignment document
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Graphics
-	filename ../../images/example_fdm3_axym.png
-	width 80text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:Axsym-dsn"
-
-\end_inset
-
-Analytische oplossingen en Fdm3-simulatie van axiaal-symmetrische verticale doorsnede.
- Het Fdm3-model bestaat uit een enkele modellaag.
- Voor de gebruikte gegevens zie de kop van bovenste figuur.
- Vergelijking situatie met GHB- en DRN-cellen.
- Boven de stijghoogten en onder de lek,
- respectievelijk de voeding.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Figuur 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Axsym-dsn"
+reference "fig:Axym-dsn+FDR"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5278,7 +5134,7 @@ FDR1
  maar dat komt door de veel kleinere verticale schaal van de grafiek ten opzichte van die bij figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:Vlakke-dsn+GHB+DRN"
+reference "fig:Vlak-DRN+FDR"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5287,52 +5143,8 @@ nolink "false"
 \end_inset
 
  voor de vlakke 1D doorsnede.
- Deze schaalverschillen zijn het gevolg van de veel grotere afmaling in het axiaal symmetrische model ten opzichte van die van het vlakke model.
- Ook hier zien we dat de lek aan de rechter zijde gelijk wordt aan het neerslagoverschot.
-\end_layout
-
-\begin_layout Standard
-Figuur 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Vlakke-dsn+GHB+DRN"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- is hetzelfde als figuur 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:Ax-symm-dsn"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- maar met de resultaten van beide varianten van de vrije afwatering er aan toegevoegd.
- FDR de variant met wiskundig opgelegde lekweerstand (
-\begin_inset Formula $c_{dr}=\frac{\gamma}{\sqrt{q}}$
-\end_inset
-
-) en FDR1 die waarbij de lekweerstand is berekend op basis van het fysieke slootprofiel.
- Het verschil tussen beide blijkt heel gering.
- De grafiek laat zien dat de verlaging bij vrije drainage,
- dus wanneer het oppervlaktewaterpeil meezakt met de grondwaterstand of met afnemende lek,
- is groter dan bij vast oppervlaktewaterpeil.
- De reikwijdte blijkt belangrijk groter dan bij vast oppervlaktewaterpeil.
- De onderste figuur laat zien de lek doorgaat tot de verlaging onder de hoogte van de slootbodem zakt.
- Het is net of de sloten veel langer nat blijven dan bij de DRN randvoorwaarde.
- Maar dat is maar schijn.
- Het model met de DRN randvoorwaarde is eenvoudig een slechte representatie voor vrije afwatering,
- en datzelfde geldt voor het schema van Blom,
- eenvoudig omdat in deze twee benaderingen het oppervlaktewaterpeil niet meedaalt met de grondwaterverlaging en omdat de lek in werkelijkheid niet zomaar stopt wanneer de grondwaterstand zakt onder het oppervlaktewaterpeil in de referentiesituatie.
- Kortom modellering van vrije afwatering of lek met de standaard DRN optie met vast oppervlaktewaterpeil of het schema volgens Blom zijn niet geschikt voor modellering van grondwater dat vrij lekt naar sloten zonder externe aanvoer,
- die meeademen met de grondwaterstand en in droge tijden of bij onttrekking eenvoudig geheel droog vallen.
+ Deze schaalverschillen zijn het gevolg van de veel grotere verlaging in het axiaal symmetrische model ten opzichte van die van het vlakke model.
+ Ook hier zien we dat de lek voor grote afstand van de onttrekking gelijk wordt aan het neerslagoverschot.
 \end_layout
 
 \begin_layout Standard
@@ -5394,8 +5206,36 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-Tenslotte bekijken we de gemodelleerde vrije afwatering werkt out wanneer we deze simuleren met een aantal (in dit geval 6) drainniveaus binnen en enkele rekencel,
- zodanig dat de conductantie (reciproque weerstand) toeneemt met de grondwaterstand boven de slootbodem.
+De bovenste afbeelding van fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Axym-dsn+FDR"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+laat zien dat de verlaging bij vrije drainage,
+ dus wanneer het oppervlaktewaterpeil meezakt met de grondwaterstand,
+ groter is dan bij een vast oppervlaktewaterpeil.
+ Hierdoor blijkt ook de reikwijdte belangrijk groter dan bij vast oppervlaktewaterpeil.
+ De onderste afbeelding laat zien dat de lek doorgaat tot het punt waarop de grondwaterstand tot onder de hoogte van de waterbodem zakt.
+ Het is net of de sloten veel langer nat blijven dan bij de DRN-randvoorwaarde.
+ Maar dat is maar schijn.
+ Het model met de DRN-randvoorwaarde is simpelweg een slechte representatie van vrije afwatering.
+ Datzelfde geldt dus ook voor het schema van Blom omdat in deze twee benaderingen het oppervlaktewaterpeil nu eenmaal niet meedaalt met de grondwaterverlaging,
+ en voorts omdat de lek in werkelijkheid niet zomaar stopt wanneer de grondwaterstand zakt onder het oppervlaktewaterpeil in de referentiesituatie.
+ Kortom,
+ numerieke modellering van vrije afwatering of lek met de standaard DRN-optie met vast oppervlaktewaterpeil of het schema volgens Blom zijn niet geschikt voor modellering van grondwater dat vrij lekt naar watergangen zonder externe aanvoer,
+ watergangen dus waarin het waterpeil meeademt met de grondwaterstand en die in droge tijden en/of bij onttrekking eenvoudig geheel droogvallen.
+\end_layout
+
+\begin_layout Standard
+Tenslotte bekijken we de hoe gemodelleerde vrije afwatering uitwerkt wanneer we deze simuleren met een aantal (in dit geval 6) drainniveaus binnen en enkele rekencel,
+ zodanig dat de conductantie (de reciproque weerstand dus) toeneemt met de grondwaterstand boven de slootbodem.
  Het resultaat is te zien in figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -5408,7 +5248,7 @@ nolink "false"
 \end_inset
 
 .
- Het berekeningsresultaat van de 
+ Het berekeningsresultaat van deze 
 \begin_inset Quotes pld
 \end_inset
 
@@ -5416,8 +5256,7 @@ Modflow-methode
 \begin_inset Quotes prd
 \end_inset
 
-,
- met meer drainniveaus per rekencel blijkt min of meer perfect overeen te komen met de andere twee varianten voor het modelleren van vrije afwatering.
+ met meer drainniveaus per rekencel blijkt niet te onderscheidden van de andere twee varianten voor het modelleren van vrije afwatering.
  Dit impliceert dat de methode gewoon werkt in Modflow.
 \end_layout
 
@@ -5449,10 +5288,10 @@ name "fig:Axym-DRNn"
 
 \end_inset
 
-Grondwaterstand en lek in de axiaal-symmetrische doorsnede berekend met dezelfde randvoorwaarden als figuur 
+Grondwaterstand en lek in de axiaalsymmetrische doorsnede berekend met dezelfde randvoorwaarden als figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:Vlakke-dsn+GHB+DRN"
+reference "fig:Axym-dsn+FDR"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5460,8 +5299,9 @@ nolink "false"
 
 \end_inset
 
- maar met daaraan toegevoegd de berekening met vrije afwatering overeenkomstig Modflow,
- waarbij de conductantie in 6 stapjes vanaf de slootbodem toeneemt met de grondwaterstand zodanig dat de afvoer bij de referentiestijghoogte gelijk is aan het neerslagoverschot,
+ maar met daaraan toegevoegd de berekening met vrije afwatering berekend met meerdere drainniveaus per rekencel,
+ zoals in Modflow mogelijk is.
+ Hier zijn 6 drainniveaus gebruikt vanaf de waterbodem waardoor de conductantie toeneemt met de grondwaterstand zodanig dat de afvoer bij de referentiestijghoogte gelijk is aan het neerslagoverschot,
  evenals dat voor de andere berekeningsvarianten het geval is.
 \end_layout
 
@@ -5480,7 +5320,7 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-Figuur 
+Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Axym-voeding"
@@ -5492,14 +5332,20 @@ nolink "false"
 \end_inset
 
  geeft de voeding van het watervoerende pakket voor het model met alle toegepaste randvoorwaarden.
- Het is een resultaat van dezelfde simulaties als in de voorgaande figuur.
- De blauwe lijn geeft aan dat bij GHB-randvoorwaarden de voeding evenredig is met de verlaging en dus hoog kan oplopen.
- Daarom is de voeding verder van de put,
- bij grotere 
-\begin_inset Formula $r$
+ Het is het resultaat van dezelfde simulaties als in de voorgaande fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Axym-DRNn"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
 \end_inset
 
- bij vrije drainage minder dan bij de andere randvoorwaarden.
+.
+ De blauwe lijn geeft aan dat bij GHB-randvoorwaarden de voeding evenredig is met de verlaging en dus hoog kan oplopen.
+ Daarom is de voeding verder van de put bij vrije drainage minder dan bij de andere randvoorwaarden.
  Waar de grondwaterstand bij de DRN randvoorwaarde onder het niveau van de drains valt (
 \begin_inset Formula $\phi<h=0)$
 \end_inset
@@ -5514,21 +5360,25 @@ nolink "false"
 \begin_inset Formula $Nc$
 \end_inset
 
- neemt de voeding af tot 0 op voldoende grote afstand van de put.
+ en neemt de voeding geleidelijk af tot 0 op grote afstand van de onttrekking op 
+\begin_inset Formula $r=0$
+\end_inset
+
+.
  De voeding voor vrije drainage neemt eerder af dan die voor vaste drainage,
- namelijk vanaf de afstand waarop grondwaterstand boven de bodemhoogte 
+ namelijk al vanaf de afstand waarop grondwaterstand boven de waterbodem 
 \begin_inset Formula $h_{0}=0$
 \end_inset
 
  van de sloten uitkomt.
- Het verschil tussen de twee varianten met vrije drainage en de variant waarbij de conductantie toeneemt met de grondwaterstand door middel van een aantal drainniveaus per rekencel is bijzonder gering.
- De drie varianten voor de simulatie van de vrije drainage zijn in de praktijk equivalent.
- Vrije drainage kan gemakkelijk met Modflow worden gesimuleerd door gebruik te maken van meerdere drainniveaus per rekencel,
- dus door meer DRN randvoorwaarden aan dezelfde rekencel toe te kennen.
- Als laatste conclusie:
- het verschil tussen vaste en vrije drainage is echter aanzienlijk,
- en dat is het gevolg van het meedalen van het oppervlaktewaterpeil met de grondwaterstand en de daarbij horende afname van de conductantie,
- respectievelijk de toename van de intreeweerstand tussen watervoerend pakket en de sloten.
+ Het verschil tussen de twee varianten met vrije drainage en de variant waarin de conductantie toeneemt met de grondwaterstand door middel van een aantal drainniveaus per rekencel,
+ blijkt bijzonder gering:
+ de drie varianten voor de simulatie van de vrije drainage zijn voor de praktijk blijkbaar equivalent.
+ Dit rechtvaardigt de conclusie dat vrije drainage gemakkelijk met Modflow worden kan gesimuleerd door gebruik te maken van meerdere drainniveaus per rekencel,
+ dus door meer DRN-randvoorwaarden aan dezelfde rekencel toe te kennen.
+ Deze optie is beschikbaar in de meest recente versies van Modflow6.
+ Ook moet worden geconcludeerd dat het verschil tussen vaste en vrije drainage echter aanzienlijk is als gevolg van het meedalen van het oppervlaktewaterpeil met de grondwaterstand en de daarmee gepaard gaande afname van de conductantie,
+ respectievelijk de toename van de intreeweerstand tussen watervoerend pakket en het oppervlaktewaterstelsel.
 \end_layout
 
 \begin_layout Standard
@@ -5578,7 +5428,7 @@ Axiaal-symmetrische doorsnede,
 \end_layout
 
 \begin_layout Standard
-Figuur 
+Fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:Axsym_lek_DRNn"
@@ -5589,21 +5439,28 @@ nolink "false"
 
 \end_inset
 
- geeft de lek voor de situatie met een enkele DRN per rekencel en met 6 drainniveau per rekencel zodanig dat de lek bij de referentiestijghoogte 
+ geeft de lek weer voor de situatie met één enkel DRN-niveau per rekencel en met 6 drainniveau per rekencel zodanig dat de lek bij de referentiestijghoogte 
 \begin_inset Formula $\phi_{N}$
 \end_inset
 
- gelijk is aan het neerslagoverschot.
- De groene lijn is die voor de berekening met een enkel drainniveau en de paarse lijn met puntjes die voor de situatie met 6 drainniveaus.
- De totale lek is in beide gevallen gelijk aan het totale neerslagoverschot op het model minus de onttrekking.
- Dit is hier niet direct te zien omdat voor een gemakkelijker inzicht de lek steeds is gedeeld door 
+ gelijk is aan het neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+.
+ De groene lijn is die voor de berekening met één enkel drainniveau en de paarse lijn met puntjes die voor de situatie met 6 drainniveaus.
+ De totale lek is in beide gevallen gelijk aan het totale neerslagoverschot op het model,
+ minus de onttrekking.
+ Dit feit is hier niet direct te zien,
+ omdat voor een gemakkelijker inzicht de lek steeds is gedeeld door 
 \begin_inset Formula $2\pi r$
 \end_inset
 
- zodat het antwoord in m/d wordt verkregen.
+,
+ waardoor het antwoord in m/d wordt verkregen.
  De gekleurde lijnen geven de lek voor elk van de 6 drainniveaus (zie legenda).
- De som van de gekleurde grafieken is gelijk aan de paarse met de balletjes.
- De bruine lijn is het hoogste drainniveau.
+ De som van de gekleurde grafieken is gelijk aan de paarse lijn met de balletjes.
+ De bruine lijn is de afvoer via het hoogste drainniveau.
  Het is duidelijk dat dit het eerste droogvalt,
  voor 
 \begin_inset Formula $r<500$
@@ -5611,8 +5468,8 @@ nolink "false"
 
  m.
  De blauwe lijn is de lek via de drains met het laagste drainniveau.
- Deze lekken het meest omdat het verschil tussen de grondwaterstand en dit laagste drainniveau het grootst is,
- terwijl alle drains dezelfde conductantie hebben (zie legend).
+ Deze drains lekken het meest omdat het verschil tussen de grondwaterstand en dit laagste drainniveau het grootst is,
+ terwijl alle drains dezelfde conductantie hebben (zie legenda).
  Het drainniveau van de blauwe lijn (
 \begin_inset Formula $h_{i}=-1$
 \end_inset
@@ -5794,6 +5651,32 @@ Modflow variant
 
 
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De conuctancie
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+C_{\phi} & =\frac{\phi-h_{0}}{\left(\gamma+\eta\right)^{2}};\;C_{N}=\frac{\phi_{N}-h_{0}}{\left(\gamma+\eta\right)^{2}}\to\frac{C_{\phi}}{\phi-h_{0}}=\frac{C_{N}}{\phi_{N}-h_{0}}\to C_{\phi}=C_{N}\frac{\phi-h_{0}}{\phi_{N}-h_{0}}\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+C_{\phi_{i+1}}-C_{\phi_{i}}=C_{N}\left[\frac{\phi_{i+1}-\phi_{i}}{\phi_{N}-h_{0}}\right]=C_{N}\frac{\left(\phi_{N}-\phi_{0}\right)/n}{\phi_{N}-h_{0}}=C_{N}/n
+\]
 
 \end_inset
 
