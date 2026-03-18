@@ -148,7 +148,7 @@ T.N.Olsthoorn
 \begin_layout Standard
 \align center
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D+FDR.png
+	filename ../../images/example_fdm3_1D+FDR.png
 	width 60text%
 
 \end_inset
@@ -184,53 +184,74 @@ Samenvatting en conclusies
 \end_layout
 
 \begin_layout Standard
-Er zijn veel gebieden met vrije drainage,
- meestal lagere waarin het oppervlaktewater grondwater afvoert afkomstig van aangrenzende hoger gelegen gebieden met diepere grondwaterstanden waarin geen oppervlaktewater aanwezig is.
- beekdalen zijn hiervan een voorbeeld,
+Er zijn veel gebieden met vrije drainage.
+ Dit zijn meestal lagere gebieden waarin het oppervlaktewater grondwater afvoert dat afkomstig is van aangrenzende hoger gelegen gebieden met diepere grondwaterstanden waarin geen oppervlaktewater aanwezig is.
+ Beekdalen zijn hiervan een voorbeeld,
  maar ook oorspronkelijke moerassen,
  waar het neerslagwater niet diep kan infiltreren maar min of meer direct via het oppervlaktewaterstelsel wordt afgevoerd.
  Waar geen water extern kan worden aangevoerd,
  is de afvoer van het oppervlaktewater volledig afhankelijk van de aanvoer van grondwater.
- Deze afvoer ademt mee met fluctuerende grondwaterstanden die kenmerkend zijn voor de verschillende seizoenen en is bovendien gevoelig voor verlaging van diezelfde grondwaterstanden door onttrekkingen voor uiteenlopende doelen als drinkwatervoorziening,
+ Deze afvoer ademt mee met fluctuerende grondwaterstanden die kenmerkend zijn voor de verschillende seizoenen.
+ Deze afvoer is bovendien gevoelig voor verlaging van diezelfde grondwaterstanden door onttrekkingen zoals die voor de drinkwatervoorziening,
  bemaling of irrigatie.
  Zulke gebieden met vrije drainage zijn kwetsbaar voor menselijk ingrijpen en dat geldt uiteraard ook voor de daarin aanwezige natuur.
 \end_layout
 
 \begin_layout Standard
-Het berekenen of modelleren van de verlaging van de grondwaterstanden en de afvoer in zulke gebieden is minder recht-toe-recht-aan omdat met de daling van de grondwaterstand niet alleen de afvoer zelf afneemt,
- maar ook het waterpeil in de open waterlopen.
- Het slootpeil stijgt en daalt daar met de grondwaterstand en daarmee met de lek naar de sloten,
+Het berekenen of modelleren van de verlaging van de grondwaterstanden en de afvoer in gebieden met vrije drainage is minder recht-toe-recht-aan omdat met de daling van de grondwaterstand niet alleen de afvoer afneemt,
+ maar ook het peil in de open waterlopen daalt.
+ Het oppervlaktewaterpeil stijgt en daalt samen met de aanvoer van grondwater,
  terwijl infiltratie vanuit de sloten in vrij afwaterende gebieden niet mogelijk is.
  De gebruikelijke modellering gaat uit van een vaste drainagebasis.
  Omdat de drainagebasis,
- dat wil zeggen het slootpeil,
- in vrij afwaterende gebieden meezakt met de verlaging van de grondwaterstand is de verlaging van de grondwaterstand zelf ook groter dan bij vaste drainagebasis het geval zou zijn.
- Het zal dus voor een adequate modellering van belang zijn hier rekening mee te houden.
+ dat wil zeggen het oppervlaktewaterpeil,
+ in vrij afwaterende gebieden meezakt met de verlaging van de grondwaterstand,
+ is de verlaging van de grondwaterstand zelf ook groter dan bij vaste drainagebasis het geval zou zijn.
+ Een adequate modellering houdt hier rekening mee.
  Hoewel voor situaties met vaste drainagebasis analytische oplossingen (berekeningen) mogelijk zijn,
- is dat voor situaties met variabele drainagebasis niet het geval.
- We kunnen deze alleen modelleren met een grondwatermodel waarin het gedrag van het slootpeil is verdisconteerd.
+ is dat bij variabele drainagebasis niet het geval.
+ We kunnen deze omstandigheden alleen modelleren met een grondwatermodel waarin het gedrag van het oppervlaktewaterpeil zelf wordt meegenomen.
 \end_layout
 
 \begin_layout Standard
-Meenemen van het gedrag van het oppervlaktewater is slechts beperkt mogelijk zonder het grondwatermodel te koppelen aan een oppervlaktewatermodel dat behalve met de lokale afvoer naar de sloten ook rekening houdt met wat bovenstrooms gebeurt,
+Dit is echter slechts slechts beperkt mogelijk zonder het grondwatermodel te koppelen aan een oppervlaktewatermodel dat behalve met de lokale afvoer naar de sloten ook rekening houdt met wat bovenstrooms gebeurt,
  zodat water dat bovenstrooms naar het oppervlaktewater lekt eventueel benedenstrooms kan infiltreren.
  Een dergelijke aanpak gaat hier veel te ver.
- Daarom wordt in dit document het slootpeil afhankelijk gemaakt van de lek ter plekke zonder te kijken naar het gehele bovenstroomse gebied.
+ Daarom wordt in dit document het oppervlaktewaterpeil afhankelijk gemaakt van de lek ter plekke zonder te kijken naar het gehele bovenstroomse gebied.
  Dit is een benadering die in de praktijk veelal voldoende zal zijn.
 \end_layout
 
 \begin_layout Standard
+De lekweerstand is een centraal begrip.
+ Het is de gebiedsgemiddelde grondwaterstand boven het oppervlaktewaterpeil gedeeld door het neerslagoverschot.
+ Dit wordt soms ook de drainageweerstand genoemd,
+ maar Bot (2016) definieert de drainageweerstand als de hoogste grondwaterstand,
+ die op de waterscheiding,
+ boven het oppervlaktewaterpeil gedeeld door het neerslagoverschot.
+ Het drainagepeil is in feite het oppervlaktewaterpeil of het peil van het oppervlaktewater.
+ Vaak wordt hierna 
+\begin_inset Quotes pld
+\end_inset
+
+slootafstand
+\begin_inset Quotes prd
+\end_inset
+
+ gebruikt wat moet worden gelezen als gemiddelde afstand tussen de waterlopen in het te beschouwen gebied.
+\end_layout
+
+\begin_layout Standard
 Drainage leidt tot een grondwaterstand-afvoerrelatie.
- Bij een vast drainpeil en vaste drainageweerstand is dat een verticale lijn zolang het grondwater zich beneden het drainagepeil bevindt (dat wil zeggen geen afvoer) en een rechte schuine lijn wanneer de grondwaterstand zich ter plaatse boven het drainagepeil bevindt (dat wil zeggen vaste drainageweerstand).
- In de praktijk kan de drainageweerstand afnemen met toenemende grondwaterstand,
+ Bij een vast drainagepeil en vaste lekweerstand is dat een verticale lijn zolang het grondwater zich beneden het drainagepeil bevindt (dat wil zeggen geen afvoer) en een rechte schuine lijn wanneer de grondwaterstand zich boven het drainagepeil bevindt (dat wil zeggen vaste lekweerstand).
+ In de praktijk kan de lekweerstand afnemen met toenemende grondwaterstand,
  waar door de grondwaterstand-afvoerrelatie een kromme lijn wordt.
  Dit is ook het geval bij vrije drainage.
  De afvoer neemt dan lineair toe met de grondwaterstand,
  zodra de grondwaterstand zich boven de slootbodem bevindt.
- Het slootpeil speelt dan geen rol meer in de modellering,
- die is als het ware uit de vergelijking geëliminieerd.
- Vrije drainage kan zodoende met een standaard model zoals Modflow worden gesimuleerd door de drainageweerstand te laten afnemen met de grondwaterstand,
- via een op deze wijzen vastgelegde grondwaterstand-afvoerrelatie (
+ Het oppervlaktewaterpeil speelt dan geen rol meer in de modellering;
+ die is als het ware uit de vergelijking geëlimineerd.
+ Vrije drainage kan zodoende met een standaard model zoals Modflow worden gesimuleerd door de lekweerstand te laten afnemen met de grondwaterstand,
+ via een op deze wijze vastgelegde grondwaterstand-afvoerrelatie (
 \begin_inset CommandInset citation
 LatexCommand cite
 key "MF6"
@@ -242,27 +263,28 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-Dit document leidt de vrije drainage uit vanaf de basis,
- wat leidt tot modelrandvoorwaarden voor de vrije drainage die direct in een model kunnen worden geïmplementeerd en arbitraire keuzen voor de grondwaterstandafvoerrelatie zoveel mogelijk elimineren.
+Dit document leidt de vrije drainage af vanaf de basis,
+ wat leidt tot model-randvoorwaarden voor de vrije drainage die direct in een model kunnen worden geïmplementeerd en arbitraire keuzen voor de grondwaterstand-afvoerrelatie zoveel mogelijk elimineren.
  Bovendien wordt uitgegaan van gegevens die gemakkelijk in het veld kunnen worden vastgesteld.
- Deze gegevens zijn grondwaterstand,
- slootpeil,
- slootdiepte,
- en neerslagoverschot in de referentiesituatie,
- dus meestal de gemiddelde situatie en wanneer de drainageweerstand wordt berekend uit slootprofiel en slootbreedte ook de slootbreedte en de gemiddelde slootafstand.
- Dit impliceert dat de afgeleide en geïmplementeerde vrije drainage in twee variante komt:
- A) waar de dainageweerstand wiskundig is opgelegd en B) waar deze wordt berekend uit slootprofiel en slootdiepte.
+ Deze gegevens zijn de grondwaterstand,
+ het oppervlaktewaterpeil,
+ de slootdiepte,
+ en het neerslagoverschot in de referentiesituatie.
+ Dit is meestal de gemiddelde situatie,
+ waarvoor de lekweerstand wordt berekend uit gemiddeld nat slootprofiel en gemiddelde slootafstand.
+ Dit impliceert dat de afgeleide en geïmplementeerde vrije drainage in twee varianten komt:
+ A) waar de lekweerstand wiskundig is opgelegd en B) waar deze wordt berekend uit slootprofiel en slootdiepte.
  Uiteindelijk zal het verschil tussen beide varianten niet groot blijken te zijn,
  maar het verschil met de situatie met vaste drainagebasis is dat wel.
 \end_layout
 
 \begin_layout Standard
-De vrije drainage is geïmplementeerd in een eindig differentie model,
- als een type randvoorwaarde met de naam FDR (free drainage) naast de bekende typen GHB (general head boundaries),
+De vrije drainage is hierna geïmplementeerd in een eindig differentie model,
+ als een apart type randvoorwaarde met de naam FDR (free drainage) naast de bekende typen GHB (general head boundaries),
  DRN (drain boundaries) en RIV (river boundaries).
  Hiermee zijn de resultaten met verschillende randvoorwaarden gemakkelijk onderling te vergelijken in de voorbeelden in dit document.
- De afgeleide en geïmplementeerde randvoorwaarde voor vrije drainage kunnen direct in Modflow worden geïmplementeerd als een afzonderlijk package.
- De relatie tussen grondwaterstand en afvoer die de vrije drainage kenmerkt kan in Modflow ook worden opgelegd door deze op te leggen als een gebroken lijn in de DRN module van Modflow zelf.
+ De afgeleide en geïmplementeerde randvoorwaarde voor vrije drainage kunnen direct in Modflow worden geïmplementeerd als een afzonderlijk rekenpakket.
+ De relatie tussen grondwaterstand en afvoer die de vrije drainage kenmerkt kan in Modflow ook worden opgelegd door deze op te leggen als een gebroken door meer DRN randvoorwaarden met verschillende niveaus per Moflow-cel toe te passen.
  De afleiding in dit document helpt dan bij de keuze van deze lijn.
 \end_layout
 
@@ -275,6 +297,7 @@ In het algemeen is het belangrijk om vrije drainage mee te nemen in de modelleri
  Door bij de afleiding uit te gaan van gemakkelijk uit het veld verkrijgbare gegevens,
  is implementatie in de praktijk transparant en eenvoudig.
  Het is ten alle tijde mogelijk om de resultaten te vergelijken met die van vaste drainage of de analytische oplossingen die daar wel voor beschikbaar zijn.
+ Vrije drainage kan ook met een standaard model als Modflow worden geïmplementeerd door meerdere DRN niveaus en dus DRN randvoorwaarden per Modflow cel te definiëren.
 \end_layout
 
 \begin_layout Standard
@@ -294,28 +317,32 @@ Intro
 
 \begin_layout Standard
 In een gebied met vrije afwatering,
- dus zonder de mogelijkheid van kunstmatige toevoer van extern water of van peilbeheer,
- hangt het slootpeil van de afvoer af,
- dat wil zeggen van de lek van het grondwater naar de sloten.
- Zonder afvoer zijn de sloten droog en bij gemiddelde afvoer is er een gemiddeld slootpeil.
- Hiervan kan een drainageweerstand worden afgeleid,
- zijnde de gemiddelde stijghoogte van ht grondwater boven het gemiddelde slootpeil gedeeld door de gemiddelde afvoer;
- deze is in de regel gelijk aan het neerslagoverschot,
- en waar van toepassing vermeerderd met de kwel.
+ dus zonder de mogelijkheid van kunstmatige toevoer van extern water,
+ hangt het oppervlaktewaterpeil in mindere of meerdere mate van de afvoer af,
+ dat wil zeggen van de hoeveelheid lek van het grondwater naar de sloten.
+ Zonder afvoer zijn de sloten droog en bij gemiddelde afvoer is heerst een gemiddeld oppervlaktewaterpeil.
+ Hiervan kan een lekweerstand worden afgeleid,
+ zijnde de gemiddelde stijghoogte van het grondwater boven het gemiddelde oppervlaktewaterpeil gedeeld door de gemiddelde afvoer.
+ De gemiddelde afvoer is in de regel gelijk aan het neerslagoverschot,
+ en waar van toepassing,
+ vermeerderd met de kwel.
 \end_layout
 
 \begin_layout Standard
 Bij verlaging van de grondwaterstand,
- of dit nu komt door natuurlijke processen of door grondwateronttrekking of peilwijziging,
- daalt de afvoer en dus ook het slootpeil.
+ of dit nu komt door natuurlijke processen,
+ door grondwateronttrekking of peilwijziging,
+ daalt de afvoer en dus ook het sloot- of beekpeil.
  Om het grondwater in een gebied met vrije afwatering adequaat te kunnen modelleren zou een grondwatermodel moeten worden gekoppeld aan een oppervlaktewatermodel.
- Een stap minder complex is om het verband tussen afvoer en slootpeil als een vaste relatie op te nemen in het grondwatermodel.
+ Een stap minder complex is om het verband tussen afvoer en oppervlaktewaterpeil als een vaste relatie op te nemen in het grondwatermodel.
  Dat is wat in dit document wordt uitgewerkt.
 \end_layout
 
 \begin_layout Standard
-Bij afnemende afvoer daalt het slootpeil om uiteindelijk,
- bij afvoer nul de slootbodem te bereiken.
+Bij afnemende afvoer daalt het oppervlaktewaterpeil,
+ om uiteindelijk,
+ bij afvoer nul,
+ de slootbodem te bereiken.
  Hoe dat verband er precies uitziet is niet bij voorbaat helemaal duidelijk,
  maar een verband zoals getekend in figuur 
 \begin_inset CommandInset ref
@@ -333,22 +360,22 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-De drainageweerstand is de ruimtelijk gemiddelde grondwaterstand minus slootpeil ( = de drainagebasis) gedeeld door de gebiedsafvoer,
+De lekweerstand is de ruimtelijk gemiddelde grondwaterstand minus oppervlaktewaterpeil ( = de drainagebasis) gedeeld door de gebiedsafvoer,
  zoals het neerslagoverschot.
- Ook de drainageweerstand verandert met het slootpeil en dus met de afvoer.
- De drainageweerstand definiëren we voor het in de tijd gemiddelde neerslagoverschot,
+ Ook de lekweerstand verandert met het oppervlaktewaterpeil en dus met de afvoer.
+ De lekweerstand definiëren we voor het in de tijd gemiddelde neerslagoverschot,
  
 \begin_inset Formula $N$
 \end_inset
 
 ,
  eventueel plus kwel.
- Hij wordt oneindig groot wanneer het stijghoogte en daarmee ook het slootpeil zijn gedaald tot op de slootbodem,
+ Hij wordt oneindig groot wanneer het stijghoogte en daarmee ook het oppervlaktewaterpeil zijn gedaald tot op de slootbodem,
  en blijft dat zolang de grondwaterstand daaronder zit.
 \end_layout
 
 \begin_layout Standard
-Men kan deze variabele drainageweerstand als een vaste relatie opleggen,
+Men kan deze variabele lekweerstand als een vaste relatie opleggen,
  zoals in het onderste plaatje van figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -361,10 +388,10 @@ nolink "false"
 \end_inset
 
  is weergegeven.
- Men kan de drainageweerstand echter ook berekenen op basis van het slootprofiel en de actuele slootdiepte.
- Deze fysische drainageweerstand bestaat uit een aantal bijdragen waarvan de radiale weerstand,
+ Men kan de lekweerstand echter ook berekenen op basis van het slootprofiel en de actuele slootdiepte.
+ Deze fysische lekweerstand bestaat uit een aantal bijdragen waarvan de radiale weerstand,
  die ontstaat door contractie van stroomlijnen in de richting van de sloot,
- mede wordt bepaald door de grootte van het natte contactvlak tussen sloot en watervoerend pakket.
+ welke mede wordt bepaald door de grootte van het natte contactvlak tussen sloot en watervoerend pakket.
  Bij daling van de grondwaterstand wordt dit contactvlak uiteindelijk nul,
  en de weerstand dus oneindig groot.
  Zoals uit de uitgewerkte voorbeelden zal blijken zit er niet heel veel licht tussen de uitkomsten berekend met een weerstand die als vaste wiskundige relatie wordt opgelegd en een weerstand die wordt berekend op basis van de grootte van genoemd contactvlak,
@@ -383,7 +410,7 @@ literal "false"
 
 \end_inset
 
- and Ernst (
+ en Ernst (
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Lou22"
@@ -391,14 +418,14 @@ literal "false"
 
 \end_inset
 
-) behandelde vrije afwatering in eerste instantie als een gebied met een bepaalde vaste drainageweerstand,
- waarin hij de werking van het drainerende oppervlaktewater samenvatte.
+) behandelden vrije afwatering in eerste instantie als een gebied met een bepaalde vaste lekweerstand,
+ waarin waarin de werking van het drainerende oppervlaktewater werd samengevat.
  Bij een onttrekking ontstaat een binnengebied waarbinnen de grondwaterstand daalt tot beneden het niveau waarop de afwatering nul wordt,
  en een buitengebied waar het ontwateringsstelsel nog wel een deel van het neerslagoverschot afvoert.
  In het binnengebied voedt al het niet meer afgevoerde neerslagoverschot het grondwater,
  en in het buitengebied is dit een deel van het neerslagoverschot,
- dat bij een constante drainageweerstand evenredig is aan de verlaging.
- De grens tussen beide gebieden ligt waar de verlaging gelijk is aan 
+ dat bij een constante lekweerstand evenredig is aan de verlaging ter plaatse.
+ De grens tussen beide gebieden ligt daar waar de verlaging gelijk is aan 
 \begin_inset Formula $Nc$
 \end_inset
 
@@ -407,14 +434,14 @@ literal "false"
 \begin_inset Formula $N$
 \end_inset
 
- en drainageweerstand 
+ en lekweerstand 
 \begin_inset Formula $c$
 \end_inset
 
 .
  De analytische formule die geldt voor de stroming in het binnengebied is dan die van Verruijt,
  dat wil zeggen Dupuit plus neerslagoverschot,
- en in het buitengebied die voor onttrekking aan semi-gespannen grondwater volgens 
+ en in het buitengebied komt de stroming en verlaging overeen met die volgens een puntonttrekking aan semi-gespannen grondwater volgens 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Glee30"
@@ -428,14 +455,14 @@ literal "false"
 \begin_layout Standard
 De hierboven beschreven benadering kan geheel analytisch worden opgelost,
  maar impliceert een lineair verband tussen verlaging en voeding en een vast peil van het oppervlaktewater,
- het drainagepeil of de drainagebasis,
- en een constante drainageweerstand zolang de grondwaterstand zich boven het drainagepeil bevindt.
+ het drainagepeil,
+ en een constante lekweerstand zolang de grondwaterstand zich boven het drainagepijl bevindt.
  In een vrij afwaterend gebied zijn beide factoren echter niet constant.
  In de eerste plaats neemt de drainagebasis,
- het slootpeil,
+ het oppervlaktewaterpeil,
  toe met de afvoer.
- In de tweede plaats verandert het slootprofiel met het slootpeil en is derhalve ook de uittreeweerstand,
- en daarmee de drainageweerstand niet constant.
+ In de tweede plaats verandert het slootprofiel met het oppervlaktewaterpeil en geldt dit dus ook voor uittredeweerstand,
+ waardoor de lekweerstand niet constant is.
  In het laatste deel van zijn rapport gaat 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -444,12 +471,12 @@ literal "false"
 
 \end_inset
 
- daarom uit van een parabolisch verloop van de drainageweerstand en de drainagebasis met de afvoer.
- Hij ijkt deze aan het grondwaterstandsafvoerverloop voor enkele vrij afwaterende gebieden in de provincie Drenthe en toetst dit aan een model waar deze parabolische,
+ daarom uit van een parabolisch verband tussen de lekweerstand en afvoer.
+ Hij ijkt deze aan het grondwaterstand-afvoerverloop voor enkele vrij afwaterende gebieden in de provincie Drenthe en toetst dit aan een model waar deze parabolische,
  dus niet lineaire,
  benadering was ingebouwd.
- Voor deze niet-lineaire relaties waren en zijn geen analytische oplossingen bekend,
- waardoor op een numeriek model moest worden teruggevallen.
+ Voor deze niet-lineaire relaties zijn geen analytische oplossingen bekend,
+ waardoor Blom op een numeriek model moest teruggevallen.
 \end_layout
 
 \begin_layout Section
@@ -457,29 +484,29 @@ Modflow
 \end_layout
 
 \begin_layout Standard
-In de afgelopen 50 jaar later hebben we veel ervaring opgedaan met numerieke modellen van verschillende snit.
+In de afgelopen 50 jaar later we veel ervaring opgedaan met numerieke modellen van verschillende snit.
  Het meest gebruikte model,
  dat ook veel opties heeft voor randvoorwaarden is Modflow.
  De nieuwste versie,
  Modflow6,
  heeft intern een aanpak die het convergentiegedrag sterk verbetert ten opzichte van voorgaande versies,
- waarin met name het droogvallen en/of nat worden van oorspronkelijk droge rekencellen frequent leidde tot het niet convergeren van de numerieke oplossing.
+ waarin met name het droogvallen en/of opnieuw nat worden van oorspronkelijk droge rekencellen frequent leidde tot het niet convergeren van de numerieke oplossing.
  Dat is nu verleden tijd.
  Maar al vanaf de eerste versie van Modflow,
  uit 1988,
  had het programma opties voor drains die alleen afvoeren wanneer de grondwaterstand hoger is dan het niveau van de drains,
- en voor rivieren waarin,
+ en voor rivieren die,
  zodra de stijghoogte daalt tot beneden de rivierbodem,
- de infiltratie een maximum bereikt dat verder constant blijft.
- Beide stijghoogterandvoorwaarden zijn niet-lineair omdat bij infiltratie de voeding wordt beperkt of gelijk aan nul wordt.
+ de infiltratie verder constant blijft.
+ Beide stijghoogte-randvoorwaarden zijn niet-lineair omdat bij infiltratie de voeding wordt beperkt of gelijk aan nul wordt.
  Tegenwoordig kan de infiltratieweerstand bij drains in Modflow afhankelijk worden gemaakt van de waterstand boven de drains.
- Daarmee kan een niet-lineaire grondwaterstandafvoerrelatie worden gesimuleerd,
- die overeen komt met een afvoerstelsel bestaande uit sloten uit verschillende categoriëen,
+ Daarmee kan een niet-lineaire grondwaterstand-afvoerrelatie worden gesimuleerd,
+ die overeen komt met een afvoerstelsel bestaande uit sloten uit verschillende categorieën,
  dus met verschillende breedtes en dieptes.
 \end_layout
 
 \begin_layout Standard
-Met al deze opties is het wel mogelijk om de drainage- of lekweerstand te afhankelijk te maken van de stijghoogte,
+Met al deze opties is het wel mogelijk om de of lekweerstand afhankelijk te maken van de stijghoogte,
  maar nog steeds is het drainageniveau daarbij constant,
  terwijl dat in de praktijk zeker niet zo is.
  Hierna zal met name dit aspect van vrij afwaterende gebieden worden meegenomen in de analyse.
@@ -488,14 +515,14 @@ Met al deze opties is het wel mogelijk om de drainage- of lekweerstand te afhank
 \begin_layout Standard
 Wanneer we de eerste aanpak van Blom vergelijken met wat we in Modflow met de optie van drains kunnen doen,
  zal duidelijk worden dat beide identiek zijn.
- In een vlak Modflowmodel dat is belegd met drains met een weerstand die overeenkomt met de drainageweerstand en wordt belast met een constant neerslagoverschot,
+ In een vlak Modflow model dat is belegd met drains met een weerstand die overeenkomt met de lekweerstand en wordt belast met een constant neerslagoverschot,
  voert elke draincel exact dit neerslagoverschot af en wordt de stijghoogte uniform gelijk aan 
 \begin_inset Formula $\phi=h_{drain}+Nc$
 \end_inset
 
  .
  Voegen we een onttrekking toe,
- dan daalt de afvoer in evenredigheid met de verlaging en de drainageweerstand,
+ dan daalt de afvoer in evenredigheid met de verlaging en de lekweerstand,
  behalve voor rekencellen waarin de verlaging groter is dan 
 \begin_inset Formula $Nc$
 \end_inset
@@ -521,7 +548,7 @@ literal "false"
 Het gebruik van de optie DRN in Modflow,
  is dus geschikt voor het implementeren van afvoer van sloten zodra de grondwaterstand boven het drainniveau uitkomt.
  Voor het regelen van de infiltratie van sloten werkt dit niet.
- In de praktijk is de uittreeweerstand van sloten een stuk kleiner dan de intreeweerstand.
+ In de praktijk is de uittredeweerstand (drainage) van sloten een stuk kleiner dan de intredeweerstand (infiltratie).
  In Modflow kunnen we met de 
 \begin_inset Quotes pld
 \end_inset
@@ -530,24 +557,25 @@ general head boundary
 \begin_inset Quotes prd
 \end_inset
 
- optie (GHB) een uitwisseling tussen het model en een slootpeil simuleren die evenredig is met het stijghoogteverschil gedeeld door de weerstand.
- Bij de GHB optie wordt geen onderscheid gemaakt tussen infiltratie vanuit en exfiltratie naar sloten.
+ optie (GHB) een uitwisseling tussen het model en een oppervlaktewaterpeil simuleren die evenredig is met het stijghoogteverschil gedeeld door de weerstand.
+ Bij de GHB optie wordt geen onderscheid gemaakt tussen infiltratie vanuit en drainage naar sloten.
  Door de GHB optie te combineren met de DRN optie kan in Modflow uitwisseling met sloten worden gesimuleerd,
- waarbij de uittreeweerstand lager is dan de intreeweerstand.
+ waarbij de uittredeweerstand lager is dan de intredeweerstand.
  Dit wordt in de modelleringspraktijk vaak toegepast.
  Voor vrij afwaterende gebieden waarin geen aanvoer van buiten mogelijk is,
  en geen peil in de sloten kan worden gefixeerd,
  is dit niet aan de orde.
  De RIV optie in Modflow werkt als de GHB optie zolang de grondwaterstand hoger is dan de rivierbodem.
  Bij stijghoogten beneden de rivierbodem blijft de infiltratie gelijk aan die bij het bereiken van de rivierbodem.
- Dit weerspiegelt een onverzadigde zone die daarbij onder de rivierbodem ontstaat.
+ Dit weerspiegelt een onverzadigde percolatiezone die daarbij onder de rivierbodem ontstaat.
  Zet men in de RIV optie de waterstand in de rivier gelijk aan de hoogte van de rivierbodem,
- dan werkt deze identiek aan de DRN optie.
- Door beide te combineren kan men de drainage-weerstand op een gewenst niveau laten verspringen.
+ dan werkt de RIV optie identiek aan de DRN optie.
+ Door beide te combineren,
+ kan men de lekweerstand op een gewenst niveau laten verspringen.
  Volledige vrijheid ontstaat wanneer men meer DRN opties binnen een enkele cel mag toepassen.
+ Dit is het geval in de nieuwste versie van Modflow (Modflow6).
  Hetzelfde wordt bereikt door in Modflow gebruik te maken van de optie om de relatie tussen afvoer en stijghoogte als een gebroken lijn op te leggen.
  Deze veralgemeniseerde DRN-optie is minder kunstmatig en geeft meer flexibiliteit.
- Maar geen van deze opties biedt de mogelijkheid om ook het drainageniveau zelf te laten oplopen met de afvoer/kwel.
 \end_layout
 
 \begin_layout Standard
@@ -567,16 +595,17 @@ Intro
 
 \begin_layout Standard
 We zullen hierna op een natuurlijke wijze de relatie tussen stijghoogte,
- slootpeil en afvoer afleiden en implementeren.
+ oppervlaktewaterpeil en afvoer afleiden en implementeren.
  We gaan hierbij uit van gegevens die direct vanuit de veldsituatie op een gemakkelijke manier kunnen worden verkregen.
  Dit betreft de stijghoogte,
- het slootpeil,
+ het oppervlaktewaterpeil,
  en het neerslagoverschot in de gemiddelde,
  zeg referentie-situatie,
- en voorts de hoogte van de slootbodem.
- In de variant waarin we de drainageweerstand berekenen op basis van het slootprofiel komen daar de slootbreedte en de gemiddelde slootafstand nog bij.
+ en voorts de hoogte van de bodems van het oppervlaktewater.
+ In de variant waarin we de lekweerstand berekenen op basis van het slootprofiel,
+ komen daar de slootbreedte en de gemiddelde slootafstand nog bij.
  Dit zijn allemaal gegevens die direct in het veld kunnen worden vastgesteld.
- Dit leidt tot een nieuwe optie,
+ De afleiding hierna leidt tot een nieuwe optie,
  FDR gedoopt,
  wat staat voor Free Drainage,
  die aan Modflow kan worden toegevoegd,
@@ -608,24 +637,23 @@ Hierin is
 \begin_inset Formula $q$
 \end_inset
 
- de afvoer per oppervlakteëenheid,
+ [m/d] de afvoer per oppervlakte-eenheid,
  
 \begin_inset Formula $\phi$
 \end_inset
 
- de grondwaterstijghoogte,
+ [m] de grondwaterstijghoogte,
  
 \begin_inset Formula $h$
 \end_inset
 
- het slootpeil (= de drainagebasis) en 
+ [m] het oppervlaktewaterpeil (= de drainagebasis) en 
 \begin_inset Formula $c$
 \end_inset
 
- de uittree-,
- drainage- of lekweerstand,
+ [d] de lekweerstand,
  die hier als identiek worden beschouwd.
- Het slootpeil en de lekweerstand hangen in vrij afwaterende gebieden van de afvoer 
+ Het oppervlaktewaterpeil en de lekweerstand hangen in vrij afwaterende gebieden van de afvoer 
 \begin_inset Formula $q$
 \end_inset
 
@@ -659,7 +687,7 @@ Door de relaties
 \end_layout
 
 \begin_layout Standard
-We zullen verderop zien dat het variabele slootpeil 
+We zullen verderop zien dat het variabele oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
@@ -668,6 +696,7 @@ We zullen verderop zien dat het variabele slootpeil
 \end_inset
 
 .
+ Dit maakt de convergentie van het model veel beter.
 \end_layout
 
 \begin_layout Standard
@@ -683,7 +712,7 @@ nolink "false"
 \end_inset
 
  geeft in het bovenste plaatje de situatie weer.
- Bij toenemende stijghoogte nemen het slootpeil en de afvoer volgens een bepaald verband toe.
+ Bij toenemende stijghoogte nemen het oppervlaktewaterpeil en de afvoer volgens een bepaald verband toe.
  We kiezen de gemiddelde afvoer 
 \begin_inset Formula $q=N$
 \end_inset
@@ -701,7 +730,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename ../jupyter/images/vrije_afwatering.png
+	filename ../../images/vrije_afwatering.png
 	width 80text%
 
 \end_inset
@@ -720,8 +749,8 @@ name "fig:afvoerrelaties"
 \end_inset
 
 Relatie stijghoogte,
- slootpeil,
- drainageweerstand en afvoer.
+ oppervlaktewaterpeil,
+ lekweerstand en afvoer.
 \end_layout
 
 \end_inset
@@ -739,11 +768,11 @@ Relatie stijghoogte,
 \end_layout
 
 \begin_layout Section
-Relatie tussen slootpeil en afvoer
+Relatie tussen oppervlaktewaterpeil en afvoer
 \end_layout
 
 \begin_layout Standard
-De vraag is hoe de relatie tussen slootpeil en afvoer eruit zou moeten zien.
+De vraag is hoe de relatie tussen oppervlaktewaterpeil en afvoer eruit zou moeten zien.
  Met afvoer zou taalkundig de afvoer in de langsrichting van de sloot kunnen worden bedoeld,
  die uiteraard sterk afhankelijk is van de afvoer uit bovenstrooms gebied.
  Daar kan echter alleen rekening mee worden gehouden door het grondwatermodel direct te koppelen aan een model voor het oppervlaktewater.
@@ -756,13 +785,12 @@ In dit document wordt met afvoer de kwel of lek of drainage bedoeld vanuit het w
  die in een vrij afwaterend gebied optreedt zodra de grondwaterstand boven de slootbodem uitstijgt.
  We zullen de afvoer vlakdekkend interpreteren,
  zodat we geen individuele sloten hoeven mee te nemen in de analyse.
- Zo'n beperking is voor het eindige differentie model niet van toepassing.
 \end_layout
 
 \begin_layout Standard
-We mogen ervan uitgaan dat het gemiddelde slootpeil van een te modelleren gebied bekend is.
- Het slootpeil mag ook zonder bezwaar ruimtelijk variëren.
- We gaan er voorts van uit dat we dit slootpeil kunnen relateren aan de gemiddelde afvoer,
+We mogen ervan uitgaan dat het gemiddelde oppervlaktewaterpeil van een te modelleren gebied bekend is.
+ Het oppervlaktewaterpeil zal ruimtelijk variëren.
+ We gaan er voorts van uit dat we dit oppervlaktewaterpeil kunnen relateren aan de gemiddelde afvoer,
  en dat die gemiddelde afvoer gelijk is aan het neerslagoverschot 
 \begin_inset Formula $N$
 \end_inset
@@ -781,7 +809,7 @@ We mogen ervan uitgaan dat het gemiddelde slootpeil van een te modelleren gebied
 \end_inset
 
 [L/T].
- De drainageweerstand 
+ De lekweerstand 
 \begin_inset Formula $c$
 \end_inset
 
@@ -802,17 +830,17 @@ We mogen ervan uitgaan dat het gemiddelde slootpeil van een te modelleren gebied
 \begin_inset Formula $h_{N}$
 \end_inset
 
- het daarbij horende slootpeil.
+ het daarbij horende oppervlaktewaterpeil.
  We laten verder de kwel buiten beschouwing omdat we die later altijd bij het neerslagoverschot kunnen optellen in situaties waar kwel een wezenlijke rol speelt.
- Het tweede punt van het gezochte verband tussen slootpeil en afvoer,
- is het punt waar slootpeil en slootbodem samenvallen,
+ Het tweede punt van het gezochte verband tussen oppervlaktewaterpeil en afvoer,
+ is het punt waar oppervlaktewaterpeil en slootbodem samenvallen,
  het punt dus waar de sloot droog valt.
- Het ligt voor de hand dat het verband tussen afvoer en slootpeil vlakbij de slootbodem 
+ Het ligt voor de hand dat het verband tussen afvoer en oppervlaktewaterpeil vlakbij de slootbodem 
 \begin_inset Formula $h\downarrow h_{0}$
 \end_inset
 
  zeer steil zal verlopen.
- Het meest eenvoudige wiskundig verband dat aan de gegeven criteria voldoet is de wortel-functie
+ Het meest eenvoudige wiskundig verband dat aan de gegeven criteria voldoet is de wortel-functie:
 \end_layout
 
 \begin_layout Standard
@@ -827,7 +855,12 @@ h=h_{0}+\eta\sqrt{q}
 \end_layout
 
 \begin_layout Standard
-Met 
+Waarin 
+\begin_inset Formula $\eta$
+\end_inset
+
+ een uit metingen te bepalen constante voorstelt.
+ Met 
 \begin_inset Formula $y=h-h_{0}$
 \end_inset
 
@@ -849,10 +882,10 @@ Deze relatie is niet direct fysiek;
  Immers een fysiek verband tussen afvoer en slootdiepte kan niet worden vastgesteld zonder daarvoor ook het stroomopwaartse deel van het oppervlaktewatersysteem te modelleren,
  inclusief de relatie met het grondwater dat dit oppervlaktewater over zijn totale lengte voedt.
  Dit is in de praktijk niet mogelijk en al helemaal niet zonder daarvoor een uitgebreid oppervlaktewatermodel op te zetten,
- dit te koppelen met grondwater en te ijken.
+ dit te koppelen met grondwater en vervolgens te ijken.
  Zoiets valt volledig buiten de context van deze analyse en van de meeste andere projecten met interactie tussen grond- en oppervlaktewater.
- Dus het geschetste en plausibel gemaakte wiskundige verband tussen slootdiepte en afvoer is uitgangspunt van deze analyse,
- het veronderstelt dat de relatie tussen slootwaterstand en afvoer tevredenstellend kan worden benaderd met uitsluitend het gegeven verband tussen slootdiepte en lek van het grondwater naar het oppervlaktewater.
+ Dus het geschetste en plausibel gemaakte wiskundige verband tussen de diepte van het oppervlaktewater en de grondwaterafvoer is uitgangspunt van deze analyse;
+ het veronderstelt dat de relatie tussen oppervlaktewaterpeil en grondwaterafvoer tevredenstellend kan worden benaderd met uitsluitend het gegeven verband tussen oppervlaktewaterdiepte en lek van het grondwater naar het oppervlaktewater.
 \end_layout
 
 \begin_layout Standard
@@ -862,7 +895,7 @@ Dit gezegd hebbende,
 \end_inset
 
  berekend worden uit de bekende lek in de gemiddelde situatie,
- de referentiesituatie,
+ de referentiesituatie genoemd,
  waarbij een eveneens bekende slootdiepte 
 \begin_inset Formula $y_{N}$
 \end_inset
@@ -877,16 +910,16 @@ Wanneer gemiddeld
 \end_inset
 
  geldt,
- hebben we het bijbehorende slootpeil 
+ en we hebben het bijbehorende oppervlaktewaterpeil 
 \begin_inset Formula $h=h_{N}$
 \end_inset
 
 ,
- waaruit coëfficiënt 
+ dan volgt coëfficiënt 
 \begin_inset Formula $\eta$
 \end_inset
 
- volgt
+ uit
 \end_layout
 
 \begin_layout Standard
@@ -902,32 +935,34 @@ y_{N}=\eta\sqrt{N}\rightarrow\eta=\frac{y_{N}}{\sqrt{N}}
 
 \begin_layout Standard
 Wanneer de referentiesituatie hoort bij een andere afvoer,
- zoals in een kwelgebied,
+ zoals bijvoorbeeld in een kwelgebied,
  dan moet die afvoer voor 
 \begin_inset Formula $N$
 \end_inset
 
- worden ingevuld,
- waarvan wordt aangenomen dat die bekend is uit andere gebiedsgegevens.
+ worden ingevuld.
+ Deze moet dan bekend zijn uit andere gebiedsgegevens.
  Beschouw eenvoudig overal waar 
 \begin_inset Formula $N$
 \end_inset
 
- wordt gebruikt de gebezigde formules als behorend tot de referentiesituatie,
- die zonodig over een gebied varieert.
+ wordt gebruikt in de gebezigde formules als de grondwaterafvoer die behoort bij de referentiesituatie,
+ die zo nodig over een gebied varieert.
 \end_layout
 
 \begin_layout Section
-De drainageweerstand opgelegd als wiskundige functie
+De lekweerstand opgelegd als wiskundige functie
 \end_layout
 
 \begin_layout Standard
-Voor de reciproke drainageweerstand 
+Voor de reciproque lekweerstand,
+ 
 \begin_inset Formula $\frac{1}{c}$
 \end_inset
 
- kan eenzelfde redenering worden losgelaten als hiervoor voor het waterpeil in de sloot in gedaan.
- Deze drainageweerstand 
+,
+ kan eenzelfde redenering worden gebezigd als voor het waterpeil.
+ Deze lekweerstand 
 \begin_inset Formula $c_{N}=Nc$
 \end_inset
 
@@ -936,7 +971,7 @@ Voor de reciproke drainageweerstand
 \end_inset
 
 ,
- terwijl deze reciproke weerstand 
+ terwijl deze reciproque weerstand 
 \family roman
 \series medium
 \shape up
@@ -973,7 +1008,7 @@ Voor de reciproke drainageweerstand
 \end_inset
 
 .
- We krijgen hiermee eenzelfde eenvoudig wiskundig verband tussen de reciproke drainageweerstand en afvoer als we hiervoor kregen tussen slootpeil en afvoer
+ We krijgen hiermee eenzelfde eenvoudig wiskundig verband tussen de reciproque lekweerstand en afvoer als hiervoor tussen oppervlaktewaterpeil en afvoer:
 \end_layout
 
 \begin_layout Standard
@@ -1015,7 +1050,7 @@ Met bekende waarden
 \end_layout
 
 \begin_layout Standard
-Wanneer we de waarde van de drainageweerstand bij gemiddelde afvoer in het veld kunnen vaststellen,
+Wanneer we de waarde van de lekweerstand bij gemiddelde afvoer in het veld kunnen vaststellen,
  hebben we dus ook de waarde van de gezochte coëfficiënt 
 \begin_inset Formula $\gamma$
 \end_inset
@@ -1025,7 +1060,7 @@ Wanneer we de waarde van de drainageweerstand bij gemiddelde afvoer in het veld 
 \end_layout
 
 \begin_layout Standard
-Dit verband is in het onderste plaatje van figuur 
+Dit verband is in het onderste plaatje van fig.
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:afvoerrelaties"
@@ -1040,8 +1075,8 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-De drainageweerstand kan in het veld worden vastgesteld in de gemiddelde situatie op basis van de gebiedsgemiddelde grondwaterstand,
- het slootpeil (de drainagebasis) en de eveneens gemiddelde afvoer 
+De lekweerstand kan in het veld worden vastgesteld in de gemiddelde situatie op basis van de gebiedsgemiddelde grondwaterstand,
+ het oppervlaktewaterpeil (=de drainagebasis) en de eveneens gemiddelde afvoer 
 \begin_inset Formula $N$
 \end_inset
 
@@ -1071,11 +1106,11 @@ Met deze twee wiskundige relaties,
 
 ,
  is het grondwatermodel voor de vrije afwatering volledig bepaald.
- Verderop zullen we ook de situatie analyseren waarin het verband tussen afvoer en drainageweerstand op basis van het fysieke slootprofiel wordt bepaald en dit niet direct mathematisch wordt opgelegd.
+ Verderop zullen we ook de situatie analyseren waarin het verband tussen afvoer en lekweerstand op basis van het fysieke slootprofiel wordt bepaald en niet direct mathematisch wordt opgelegd.
 \end_layout
 
 \begin_layout Subsection
-Eliminatie van het variabele slootpeil 
+Eliminatie van het variabele oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
@@ -1091,18 +1126,18 @@ De afvoer
 \begin_inset Formula $\phi$
 \end_inset
 
- [m] minus slootpeil 
+ [m] minus oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
- [m] gedeeld door de drainageweerstand 
+ [m] gedeeld door de lekweerstand 
 \begin_inset Formula $c$
 \end_inset
 
  [d].
  De laatste varieert met de grondwaterstand.
- We kunnen het variabele slootpeil echter uit de vergelijkingen elimineren,
- waarna de afvoer kan worden berekend op basis van de grondwaterstand minus de constante slootbodemhoogte 
+ We kunnen het variabele oppervlaktewaterpeil echter uit de vergelijkingen elimineren,
+ waarna de afvoer kan worden berekend op basis van de grondwaterstand minus de verder constante slootbodemhoogte 
 \begin_inset Formula $h_{0}$
 \end_inset
 
@@ -1183,7 +1218,7 @@ Zodat de afvoer
 \begin_inset Formula $\phi-h$
 \end_inset
 
- en waarin de drainageweerstand is vervangen door
+ en waarin de lekweerstand is vervangen door
 \end_layout
 
 \begin_layout Standard
@@ -1237,7 +1272,7 @@ Waarin de coëfficiënt voor de factor
 \begin_inset Formula $\phi-h_{0}$
 \end_inset
 
- de rol speelt van reciproke weerstand
+ de rol speelt van reciproque weerstand
 \end_layout
 
 \begin_layout Standard
@@ -1262,14 +1297,23 @@ Beide rechter uitdrukkingen zijn equivalent en hangen af van de actuele grondwat
 \end_inset
 
 .
- Deze weerstand is duidelijk niet constant.
- De uitdrukkingen geven aan dat deze reciproke weerstand negatief zou worden wanneer de stijghoogte tot onder de slootbodem zakt terwijl 
+ Deze weerstand is duidelijk niet constant want hangt van 
+\begin_inset Formula $q$
+\end_inset
+
+ zelf,
+ respectievelijk 
+\begin_inset Formula $\phi$
+\end_inset
+
+ af die niet van tevoren bekend zijn.
+ De uitdrukkingen geven aan dat deze reciproque weerstand negatief zou worden wanneer de stijghoogte tot onder de slootbodem zakt terwijl 
 \begin_inset Formula $\sqrt{q}$
 \end_inset
 
  dan onbepaald is.
- Het is duidelijk dat de reciproke weerstand en de afvoer in dat geval gewoon nul moeten blijven.
- Bij de implementatie zullen we ervoor zorgen dat reciproke weerstand niet negatief kan worden.
+ Het is duidelijk dat de reciproque weerstand en de afvoer in dat geval gewoon nul moeten blijven.
+ Bij de implementatie zullen we ervoor zorgen dat reciproque weerstand niet negatief kan worden.
  We doen dit door deze snel en asymptotisch naar nul te laten gaan beneden een stijghoogte die slechts een fractie (bijv.
  1 cm) boven de slootbodem is.
 \end_layout
@@ -1288,9 +1332,9 @@ Voorkom dat
 \end_layout
 
 \begin_layout Standard
-In het model kan de stijghoogte lager worden dan de slootbodem.
- In dat geval wordt hierboven een negatieve waarde van de drainageweerstand worden berekend,
- wat fysisch niet mogelijk is en bovendien botst met de berekening van 
+In het grondwatermodel kan de stijghoogte lager worden dan de slootbodem.
+ In dat geval wordt met een negatieve waarde van de lekweerstand worden,
+ wat fysisch niet mogelijk is en wat bovendien botst met de berekening van 
 \begin_inset Formula $\sqrt{q}$
 \end_inset
 
@@ -1435,7 +1479,7 @@ Waarin
 \end_inset
 
 ,
- en ligt 
+ dan ligt 
 \begin_inset Formula $\lambda$
 \end_inset
 
@@ -1447,31 +1491,35 @@ Waarin
 \end_layout
 
 \begin_layout Section
-Fysieke drainageweerstand op basis van veldgegevens
+Fysieke lekweerstand op basis van veldgegevens
 \end_layout
 
 \begin_layout Standard
-In het voorgaande hoofdstuk was de drainageweerstand opgelegd als wiskundige functie die weliswaar plausibel is gemaakt maar niettemin geen fysiek verband had met de werkelijke stroming in de ondergrond.
- In dit hoofdstuk wordt de drainageweerstand gedefinieerd op basis van de grondwaterstroming in de ondergrond en het slootprofiel.
- Dit is de fysieke benadering van de drainageweerstand.
+In het voorgaande hoofdstuk was de lekweerstand opgelegd als wiskundige functie die weliswaar plausibel is gemaakt,
+ maar niettemin geen fysiek verband had met de werkelijke stroming in de ondergrond.
+ In dit hoofdstuk wordt de lekweerstand gedefinieerd op basis van de grondwaterstroming in de ondergrond en het slootprofiel.
+ Dit is de fysieke benadering van de lekweerstand.
 \end_layout
 
 \begin_layout Standard
-De fysieke drainageweerstand bestaat verschillende onderdelen,
+De fysieke lekweerstand bestaat verschillende onderdelen,
  namelijk de weerstand door horizontale stroming,
- die door verticale stroming en die door de contractie van de stroomlijnen in de richting van de sloot,
- de radiale weerstand.
- De weerstand door slib op de slootbodem speelt bij uittredend grondwater geen rol.
+ en die door de contractie van de stroomlijnen in de richting van de watergang,
+ de radiale weerstand en de weerstand van de sliblaag 
+\begin_inset Formula $c_{slb}$
+\end_inset
+
+ op de bodem van de watergang.
 \end_layout
 
 \begin_layout Standard
-Opgesplitst naar deze drie termen wordt de drainageweerstand als volgt
+Opgesplitst naar deze drie termen wordt de lekweerstand als volgt
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-c=\frac{L^{2}}{12k_{x}D}+\frac{D}{2k_{z}}+\frac{L}{\pi k}\ln\left(\frac{D}{\Omega}\right)
+c=\frac{L^{2}}{12k_{x}D}+\frac{L}{\pi k}\ln\left(\frac{D}{\Omega}\right)+\frac{c_{slb}}{\Omega}L
 \]
 
 \end_inset
@@ -1480,7 +1528,11 @@ c=\frac{L^{2}}{12k_{x}D}+\frac{D}{2k_{z}}+\frac{L}{\pi k}\ln\left(\frac{D}{\Omeg
 \end_layout
 
 \begin_layout Standard
-We bekijken hierna eerst de radiale weerstand en passen die vervolgens in de totale drainageweerstand,
+De weerstand door slib op de slootbodem speelt bij uittredend grondwater geen rol en wordt verder buiten beschouwing gelaten.
+\end_layout
+
+\begin_layout Standard
+We bekijken hierna eerst de radiale weerstand en passen die vervolgens in de totale lekweerstand,
  die we weer baseren op gemakkelijk verkrijgbare veldgegevens.
 \end_layout
 
@@ -1534,7 +1586,7 @@ Hierin is
 \begin_inset Formula $\Omega$
 \end_inset
 
- de lengte in dwarsdoorsnede van het natte contactvlak tussen sloot en watervoerend pakket.
+ de lengte van het natte contactvlak tussen sloot en watervoerend pakket.
  
 \begin_inset Formula $\Omega$
 \end_inset
@@ -1548,12 +1600,16 @@ Hierin is
 \begin_inset Formula $\beta$
 \end_inset
 
-.
+ de parameter die waterdiepte en 
+\begin_inset Formula $\Omega$
+\end_inset
+
+ bepaalt.
  De formule voor de grootte van de natte omtrek 
 \begin_inset Formula $\Omega$
 \end_inset
 
- wordt verderop afgeleid voor een paraboolvormig slootprofiel.
+ wordt verderop afgeleid voor een paraboolvorming slootprofiel.
 \end_layout
 
 \begin_layout Standard
@@ -1599,7 +1655,7 @@ Dit betekent dat we hiermee de radiale weerstand bij elke slootdiepte,
 \end_inset
 
 ,
- waarvan we ook de drainageweerstand 
+ waarvan we ook de lekweerstand 
 \begin_inset Formula $c_{N}$
 \end_inset
 
@@ -1607,18 +1663,22 @@ Dit betekent dat we hiermee de radiale weerstand bij elke slootdiepte,
 \begin_inset Formula $\phi_{N}$
 \end_inset
 
- boven het gemiddelde slootpeil 
+ boven het gemiddelde oppervlaktewaterpeil 
 \begin_inset Formula $h_{N}$
 \end_inset
 
 .
- De totale drainageweerstand wordt hiermee
+ De totale lekweerstand 
+\begin_inset Formula $c_{dr}$
+\end_inset
+
+ [d] wordt hiermee
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-c_{dr}=c_{h}+c_{v}+c_{r,y_{0}}+\frac{L}{\pi k}\ln\left(\frac{\Omega_{y_{0}}}{\Omega_{y}}\right)
+c_{dr}=c_{h}+c_{r,y_{0}}+\frac{L}{\pi k}\ln\left(\frac{\Omega_{y_{0}}}{\Omega_{y}}\right)
 \]
 
 \end_inset
@@ -1627,19 +1687,18 @@ c_{dr}=c_{h}+c_{v}+c_{r,y_{0}}+\frac{L}{\pi k}\ln\left(\frac{\Omega_{y_{0}}}{\Om
 \end_layout
 
 \begin_layout Standard
-De eerste drie termen aan de rechterkant van het isgelijkteken vormen de drainageweerstand bij gemiddeld neerslagoverschot,
+De eerste twee termen aan de rechterkant van het isgelijkteken vormen de lekweerstand bij gemiddeld neerslagoverschot,
  die gelijk is aan 
 \begin_inset Formula $c_{N}=\frac{\phi_{N}-h_{N}}{N}$
 \end_inset
 
  en is dus bekend.
- We krijgen dus nu een uiterst eenvoudige uitdrukking die de drainageweerstand voor willekeurige slootdiepte,
+ We krijgen dus op deze manier een uiterst eenvoudige uitdrukking die de lekweerstand beschrijft voor willekeurige slootdiepte,
  
 \begin_inset Formula $y$
 \end_inset
 
-,
- beschrijft.
+.
  Ook 
 \begin_inset Formula $\Omega$
 \end_inset
@@ -1676,7 +1735,7 @@ We hebben in deze formule
 ,
  hebben we daarin niet verschaald,
  want als we dat zouden doen,
- dan moeten we ook het neerslagoverschot dat op het horizontale vlak valt verschalen en vallen beide veschalingen tegen elkaar weg.
+ dan moeten we ook het neerslagoverschot verschalen en vallen beide verschalingen tegen elkaar weg.
  De 
 \begin_inset Formula $\Omega's$
 \end_inset
@@ -1685,7 +1744,7 @@ We hebben in deze formule
 \end_layout
 
 \begin_layout Standard
-De enige variabele in deze uitdrukking voor de drainageweerstand is de grootte van het contactvlak tussen sloot en watervoerend pakket 
+De enige variabele in deze uitdrukking voor de lekweerstand is de grootte van het contactvlak tussen sloot en watervoerend pakket 
 \begin_inset Formula $\Omega_{y}$
 \end_inset
 
@@ -1695,7 +1754,8 @@ De enige variabele in deze uitdrukking voor de drainageweerstand is de grootte v
 \end_layout
 
 \begin_layout Standard
-Het is van belang om te merken dat de term met de logarithme de drainageweerstand nooit tot extreme hoogte kan opstuwen als gevolg van de numerieke nauwkeurigheid van de computer.
+Het is van belang op te merken,
+ dat de term met de logaritme de lekweerstand nooit tot extreme hoogte kan opstuwen.
  Bij de implementatie wordt ervoor gezorgd dat de slootdiepte 
 \begin_inset Formula $y$
 \end_inset
@@ -1725,11 +1785,12 @@ Het is van belang om te merken dat de term met de logarithme de drainageweerstan
 \end_inset
 
  begrensd.
- Het kleinste getal waar de computer mee kan werken is ca 
+ Het kleinste getal waar de computer mee kan werken is ca.
+ 
 \begin_inset Formula $10^{-308}$
 \end_inset
 
- waarvan de natuurlijke logarithme ca.
+ waarvan de natuurlijke logaritme ca.
  -710 is.
  Wanneer we 
 \begin_inset Formula $\Omega$
@@ -1742,7 +1803,8 @@ Het is van belang om te merken dat de term met de logarithme de drainageweerstan
 
  dan is de natuurlijke log daarvan ca.
  -46.
- Dit betekent dat wanneer voor een droge sloot 
+ Dit betekent,
+ dat wanneer we voor een droge sloot 
 \begin_inset Formula $\Omega_{y_{0}}/\Omega_{y}$
 \end_inset
 
@@ -1759,9 +1821,9 @@ Het is van belang om te merken dat de term met de logarithme de drainageweerstan
 \end_inset
 
 ,
- de radiale weerstand de drainageweerstand nooit verder kan vergroten dan met ca.
+ en daardoor de radiale weerstand de lekweerstand nooit groter kan worden dan ca.
  46 d.
- Omdat in het programma echter werken met de weerstand die hoort bij 
+ Omdat in het model echter werkt met de weerstand die hoort bij 
 \begin_inset Formula $\phi-h_{0}$
 \end_inset
 
@@ -1769,7 +1831,8 @@ Het is van belang om te merken dat de term met de logarithme de drainageweerstan
 \begin_inset Formula $\phi-h$
 \end_inset
 
- hebben we hier in het model geen last van aangezien de daarin gebruikte weerstand gelijk aan 
+ hebben we hier in het model geen last van,
+ immers de daarin gebruikte weerstand gelijk aan 
 \begin_inset Formula $c=c_{dr}+\frac{\eta}{\sqrt{q}}$
 \end_inset
 
@@ -1798,8 +1861,7 @@ Natte slootomtrek
 De grootte van het contactvlak tussen sloot en het watervoerende pakket hangt af van de mate waarin de sloot is gevuld.
  De vorm van het contactvlak hangt af van het slootprofiel.
  In de context van deze analyse wordt het slootprofiel benaderd door een parabool met armen naar boven en basis op de slootbodem.
- Maar men kan natuurlijk ook geheel andere slootprofielen kiezen,
- bijvoorbeeld een die de profielen van verschillende categoriëen sloten combineert.
+ Maar men kan natuurlijk ook geheel andere slootprofielen kiezen.
  Elk profiel vergt zijn eigen uitwerking.
  Hier beperken we ons tot het parabolische slootprofiel,
  waarvan de wiskundige uitdrukking als volgt is
@@ -1950,7 +2012,7 @@ Na integratie volgt
 
 \end_inset
 
-De integratieconstante is weggelaten omdat deze 0 is aangezien 
+De integratieconstante is 0 aangezien 
 \begin_inset Formula $\Omega=0$
 \end_inset
 
@@ -1958,7 +2020,7 @@ De integratieconstante is weggelaten omdat deze 0 is aangezien
 \begin_inset Formula $y=0$
 \end_inset
 
-.
+ en valt dus weg.
 \end_layout
 
 \begin_layout Standard
@@ -1966,7 +2028,7 @@ Voor
 \begin_inset Formula $y\downarrow0$
 \end_inset
 
- wordt het parabolische slootprofiel evenwijdig aan de 
+ nadert het parabolische slootprofiel asymptotisch tot een lijn evenwijdig aan de 
 \begin_inset Formula $x$
 \end_inset
 
@@ -2080,7 +2142,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/parabola_omega.png
+	filename ../../images/parabola_omega.png
 	width 80text%
 
 \end_inset
@@ -2103,7 +2165,7 @@ Paraboolvormig slootprofiel met halve omtrek
 \end_inset
 
 2.
- De have omtrek moet een rechte line worden evenwijdig aan 
+ De have omtrek moet een rechte lijn worden evenwijdig aan 
 \begin_inset Formula $x=y$
 \end_inset
 
@@ -2141,8 +2203,8 @@ Elimineren van de slootwaterstand
 \end_layout
 
 \begin_layout Standard
-Op dezelfde wijze als hiervoor is gedaan bij de wiskundig opgelegde drainageweerstand,
- kan bij de fysieke weerstand het variabele slootpeil uit het model worden gëelimineerd.
+Op dezelfde wijze als hiervoor is gedaan bij de wiskundig opgelegde lekweerstand,
+ kan bij de fysieke weerstand het variabele oppervlaktewaterpeil uit het model worden geëlimineerd.
  Merk daarbij op dat het wiskundige verband tussen slootdiepte en afvoer 
 \begin_inset Formula $y=\eta\sqrt{q}$
 \end_inset
@@ -2174,11 +2236,11 @@ q & =\frac{\phi-h_{0}}{c_{dr}+\frac{\eta}{\sqrt{q}}}
 \end_layout
 
 \begin_layout Standard
-Waarin de oorspronkelijke drainageweerstand 
+Waarin de oorspronkelijke lekweerstand 
 \begin_inset Formula $c_{dr}$
 \end_inset
 
- is uitgebreid met de term 
+ nu is uitgebreid met de term 
 \begin_inset Formula $\frac{\eta}{\sqrt{q}}$
 \end_inset
 
@@ -2191,7 +2253,8 @@ Uiteraard is de weerstand
 \end_inset
 
  nu een functie van de slootdiepte.
- Echter in een externe rekencyclus wordt de lek 
+ Echter,
+ in een externe iteratieve rekenlus wordt de lek 
 \begin_inset Formula $q$
 \end_inset
 
@@ -2212,9 +2275,9 @@ Uiteraard is de weerstand
 
 ,
  net zoals dat bij vrije drainage ook in werkelijkheid het geval is.
- Voor de drainageweerstand geldt,
+ Voor de lekweerstand geldt,
  eveneens om fysische redenen,
- dat zijn reciproke waarde 
+ dat zijn reciproque waarde 
 \begin_inset Formula $\ge$
 \end_inset
 
@@ -2240,7 +2303,7 @@ Uiteraard is de weerstand
 \end_layout
 
 \begin_layout Standard
-Hiermee zijn alle gegevens nodig voor een model met vrije afwatering bekend.
+Hiermee zijn alle voor een model met vrije afwatering benodigde gegevens bekend.
 \end_layout
 
 \begin_layout Subsection
@@ -2270,15 +2333,7 @@ Omwille van de convergentie van de oplossing van het op te stellen stelsel verge
 \end_inset
 
  continu en positief zijn,
- aangezien zowel 
-\begin_inset Formula $\frac{1}{c}$
-\end_inset
-
- als 
-\begin_inset Formula $q$
-\end_inset
-
- beide verticaal zijn wanneer slootdiepte 
+ dus ook zijn wanneer slootdiepte 
 \begin_inset Formula $y\downarrow0$
 \end_inset
 
@@ -2288,12 +2343,7 @@ Omwille van de convergentie van de oplossing van het op te stellen stelsel verge
 \end_inset
 
  negatief kan worden is hiervoor al beschreven.
- Ook de reciproke drainageweerstand moet positief blijven,
- maar wel praktisch nul voor 
-\begin_inset Formula $\phi<h_{0}$
-\end_inset
-
-.
+ Ook de reciproque lekweerstand moet positief blijven.
  
 \begin_inset Formula $\Omega$
 \end_inset
@@ -2302,7 +2352,7 @@ Omwille van de convergentie van de oplossing van het op te stellen stelsel verge
 \begin_inset Formula $\phi<h_{0}$
 \end_inset
 
- (negatieve slootdieptes) en is dus dus niet continu bij 
+ (negatieve slootdieptes) en is dus niet continu bij 
 \begin_inset Formula $y\downarrow0$
 \end_inset
 
@@ -2623,7 +2673,7 @@ halve slootbreedte
 \end_inset
 
 .
- Dit lijkt een prima grootte voor in het grondwatermodel.
+ Dit lijkt een prima grootte voor gebruik in het grondwatermodel.
  Eventueel kiezen we 
 \begin_inset Formula $\hat{y}=0.001$
 \end_inset
@@ -2646,7 +2696,7 @@ halve slootbreedte
 \end_inset
 
  nog slechts 
-\begin_inset Formula $e^{-5}\delta\approx0.006\,\delta\approx4\times10^{4}\,m$
+\begin_inset Formula $e^{-5}\delta\approx0.006\,\delta\approx4\times10^{-4}\,m$
 \end_inset
 
  is,
@@ -2682,18 +2732,9 @@ Intro
 \end_layout
 
 \begin_layout Standard
-Fdm3 is een stationair (intern tijdsafankelijk) eindig differentie model,
- 
-\begin_inset Quotes pld
-\end_inset
-
-Fdm3
-\begin_inset Quotes prd
-\end_inset
-
-,
+Fdm3 is een stationair (intern tijdsafhankelijk) grondwatermodel gebaseerd op eindige differenties,
  waarmee vlakke en axiaal-symmetrische doorsneden,
- evenals volledig 3D eindige differentiemodellen kunnen worden opgezet.
+ evenals volledig 3D simulaties kunnen worden opgezet.
  Een eindig differentie model als Modflow of in dit geval Fdm3,
  berekent de volumestroom 
 \begin_inset Formula $Q_{cel}$
@@ -2722,32 +2763,44 @@ Hierin is
 \begin_inset Formula $C$
 \end_inset
 
- [L2/T] de zogenoemde conductance (in Modflow jargon) verder conductantie genoemd,
+ [L
+\begin_inset Formula $^{2}$
+\end_inset
+
+/T] de zogenoemde conductantie (in Modflow jargon),
  
 \begin_inset Formula $h$
 \end_inset
 
- de gefixeerde stijghoogte buiten het model (slootpeil bijv.),
- dit is het zogenaamde drainagepeil,
+ [m] de gefixeerde stijghoogte buiten het model (meestal het oppervlaktewaterpeil),
+ dit is het zogenaamde drainageniveau,
  en 
 \begin_inset Formula $\phi$
 \end_inset
 
- de berekende stijghoogte in het model.
+ [m] de berekende stijghoogte in het model.
  
 \begin_inset Formula $A$
 \end_inset
 
- het oppervlak van de rekencel en 
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+] is het oppervlak van de rekencel en 
 \begin_inset Formula $c$
 \end_inset
 
- [T] de vlakdekkende weerstand van deze rekencel tegen verticale grondwaterstroming.
+ [d] de vlakdekkende weerstand van deze rekencel tegen verticale grondwaterstroming.
  We zien dus dat 
 \begin_inset Formula $Q$
 \end_inset
 
- in het model positief is bij infiltratie en negatief bij lek.
+ [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d] in het model positief is bij infiltratie en negatief bij lek.
 \end_layout
 
 \begin_layout Standard
@@ -2778,7 +2831,15 @@ In de situatie met vrije afwatering is de drainagebasis
 \begin_inset Formula $h$
 \end_inset
 
- afhankelijk van de lek zelf.
+ [m] afhankelijk van de lek 
+\begin_inset Formula $Q$
+\end_inset
+
+ [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d] zelf.
  Omdat bij lek 
 \begin_inset Formula $Q<0$
 \end_inset
@@ -2803,7 +2864,7 @@ De drainagebasis
 \begin_inset Formula $h$
 \end_inset
 
- is onbepaald (niet bestaand) voor 
+ [m] is onbepaald (niet bestaand) voor 
 \begin_inset Formula $q<0$
 \end_inset
 
@@ -2815,7 +2876,7 @@ De drainagebasis
 
  dan volkomen onbepaald,
  aangezien bij vrije drainage infiltratie fysisch niet kan optreden;
- de sloten dan dan immers droog.
+ de watergangen staan dan immers droog.
  De weerstand 
 \begin_inset Formula $c$
 \end_inset
@@ -2828,8 +2889,16 @@ De drainagebasis
 \end_layout
 
 \begin_layout Standard
-De berekening van de stijghoogten moet iteratief gebeuren omdat de weerstand afhangt van de te berekenen stijghoogte zelf.
- Deze iteratieve berekening vindt plaats een zognaamde rekenlus 
+De berekening van de stijghoogten 
+\begin_inset Formula $\phi$
+\end_inset
+
+ [m] moet iteratief gebeuren omdat de weerstand afhangt van de te berekenen stijghoogte 
+\begin_inset Formula $\phi$
+\end_inset
+
+ zelf.
+ Deze iteratieve berekening vindt plaats een zogenoemde rekenlus 
 \begin_inset Quotes pld
 \end_inset
 
@@ -2837,7 +2906,9 @@ outer loop
 \begin_inset Quotes prd
 \end_inset
 
- waarin steeds opnieuw de stijghoogten worden herberekend en waarna telkens de weerstanden worden aangepast totdat de weerstanden en stijghoogten niet meer veranderen.
+ waarin steeds opnieuw de stijghoogten worden herberekend en waarna telkens de weerstand van elke betrokken rekencel wordt aangepast,
+ totdat de weerstanden en stijghoogten niet meer veranderen,
+ en het grondwatermodel dus is geconvergeerd naar een stabiel resultaat.
 \end_layout
 
 \begin_layout Section
@@ -2853,16 +2924,14 @@ outer loop
 \begin_inset Quotes prd
 \end_inset
 
- waarbinnen telkens de stijghoogten worden berekend,
- waarna de (drainage)weerstanden steeds opnieuw worden aangepast,
+ waarbinnen telkens de stijghoogten worden berekend en de (drainage)weerstanden steeds opnieuw worden aangepast,
  totdat convergentie is verkregen.
- Het op deze manier bereiken van convergentie is echter hoogst onzeker.
- Dit is in het algemeen zo bij niet-lineaire systemen,
- maar hier in het bijzonder omdat een stationaire oplossing alleen mogelijk is wanneer de stijghoogte in minstens een van de rekencellen direct of indirect wordt vastgehouden.
- Hieraan wordt niet voldaan bij drainage wanneer alle stijghoogten lager zijn dan het drainageniveau.
- Bovendien kunnen de conductanties van de draincellen tussen opeenvolgende rekenlussen  op een neer blijven springen,
- waardoor er ook om deze reden in een aantal situaties nooit convergentie optreedt.
- Dit op een neer springen van de drainageweerstand tussen opeenvolgende rekenlussen is op te lossen door de overgang tussen wel drainage en geen drainage geleidelijk te laten verlopen.
+ Het op deze manier bereiken van convergentie is echter hoogst onzeker bij niet-lineaire systemen,
+ en hier in het bijzonder omdat een stationaire oplossing alleen mogelijk is wanneer de stijghoogte in minstens één van de rekencellen direct of indirect wordt vastgehouden.
+ Hieraan wordt niet voldaan bij drainage wanneer alle stijghoogten lager zijn dan het drainageniveau (de bodems van de watergangen).
+ Bovendien kunnen de conductanties van de draincellen tussen opeenvolgende iteraties op een neer blijven springen,
+ waardoor er ook om deze reden soms geen convergentie optreedt.
+ Dit op een neer springen van de lekweerstand tussen opeenvolgende iteraties is echter op te voorkomen door de overgang tussen wel drainage en geen drainage geleidelijk te laten verlopen.
  Dit kan door de conductanties te vermenigvuldigen met een sigmoïde functie die snel naar 1 gaat voor 
 \begin_inset Formula $\phi>h$
 \end_inset
@@ -2916,11 +2985,11 @@ Het fundamentele probleem met de convergentie,
  stationaire eindwaarde.
  Deze eindwaarde is stabiel (stationair) mits er uiteindelijk in het model cellen aanwezig zijn die de stijghoogte direct of indirect via drains of vrije drainage vasthouden.
  Dat is bij vrije drainage altijd het geval,
- omdat een model met vrije drainage kan alleen zinvol kan zijn bij neerslag of permanente aanvoer,
- waardoor initieel te lage grondwaterstanden gedurende de iteratiestappen stijgen totdat de drainage aanslaat en stijghoogten in een deel van het model alsnog worden gefixeerd.
- Hiermee is het convergentieprobleem fundamenteel opgelost.
- We rekenen dus feitelijk niet-stationair ons stationair-bedoelde model door,
- met niet-lineaire randvoorwaarden die over een korte hoogte soepel overgaan naar nul,
+ omdat een model met vrije drainage alleen zinvol kan zijn bij neerslag of permanente aanvoer.
+ Hierdoor stijgen initieel te lage grondwaterstanden gedurende de iteratiestappen totdat de drainage aanslaat en stijghoogten in een deel van het model alsnog worden gefixeerd.
+ Door het model niet stationair door te rekenen naar een stabiele eindwaarde is het convergentieprobleem fundamenteel opgelost.
+ We rekenen dus feitelijk niet-stationair ons stationair bedoelde model door.
+ We doen dit met niet-lineaire randvoorwaarden die over een korte hoogte soepel overgaan naar nul,
  zonder die nul ooit te bereiken.
  De keuze van de begintijdstap en de vermenigvuldigingsfactor is aan de gebruiker.
  De keuze van de hoogte waarover de randvoorwaarden overgaan naar praktisch nul,
@@ -2938,8 +3007,8 @@ Andere niet-lineaire randvoorwaarden
 \end_layout
 
 \begin_layout Standard
-In het eindige differentie model zijn naast de besproken vrije drainage (FDR) ook andere randvoorwaarden geïmplementeerd,
- die overeenkomen met die in Modflow.
+In het eindige differentie model zijn naast de besproken vrije drainage (FDR) ook andere randvoorwaarden geïmplementeerd.
+ Deze komen overeen met die in Modflow.
  Dit zijn:
  GHB (general head boundaries),
  DRN (drains) en RIV (rivers).
@@ -2952,7 +3021,7 @@ In geval van GHB-cellen zijn de conductanties constant zodat het model net zo ma
 
 \begin_layout Standard
 DRN-cellen kunnen lekken maar niet infiltreren.
- Deze randvoorwaarde is niet-lineair en vergt wel een rekenlus waarin het stelsel van vergelijkingen herhaald moet worden opgelost na bijstellen van paramaters.
+ Deze randvoorwaarde is niet-lineair en vergt wel een rekenlus waarin het stelsel van vergelijkingen herhaald moet worden opgelost na bijstellen van parameters.
  Bovendien wordt ervoor gezorgd dat de overgang tussen 
 \begin_inset Quotes pld
 \end_inset
@@ -2977,7 +3046,8 @@ uit
 \begin_inset Formula $\phi<h$
 \end_inset
 
-) geleidelijk verloopt over een hoogte van ca 10 cm (
+) geleidelijk verloopt over een hoogte van ca.
+ 10 cm (
 \begin_inset Formula $\lambda=0.05\,m)$
 \end_inset
 
@@ -2985,13 +3055,13 @@ uit
 \end_layout
 
 \begin_layout Standard
-RIV-cellen kunnen lekken en infiltreren zolang de stijghoogte zich boven de bodem van de river (
+RIV-cellen kunnen lekken en infiltreren zolang de stijghoogte zich boven de bodem van de watergang (
 \begin_inset Formula $r_{bot}$
 \end_inset
 
 ) bevindt.
- Daaronder blijft de infiltratie constant en gelijk aan de conductantie maal de rivierdiepte.
- Door de rivierstand even hoog in te stellen als de hoogte van de rivierbodem,
+ Daaronder blijft de infiltratie constant en gelijk aan de conductantie maal de waterdiepte boven de bodem.
+ Door de waterstand even hoog in te stellen als de hoogte van de bodem,
  
 \begin_inset Formula $h=r_{bot}$
 \end_inset
@@ -3006,7 +3076,8 @@ RIV-cellen kunnen lekken en infiltreren zolang de stijghoogte zich boven de bode
 \begin_inset Formula $\phi<r_{bot}$
 \end_inset
 
- geleidelijk gemaakt over een hoogte van ca 10 cm.
+ geleidelijk gemaakt over een hoogte van ca.
+ 10 cm.
 \end_layout
 
 \begin_layout Standard
@@ -3056,7 +3127,7 @@ De vraag is nu hoe de parameters zijn te verkrijgen die nodig zijn voor de simul
  Ook hebben we de daarvoor de horizontale en verticale doorlatendheid van het watervoerend pakket nodig.
  Deze zijn echter in de invoer van het grondwatermodel aanwezig.
  Hiermee liggen alle voor de simulatie van vrije drainage benodigde gegevens vast,
- en kunnen de parameters worden bepaald die nodig zijn om de drainageweerstand en het slootpeil te berekenen als functie van de afvoer.
+ en kunnen de parameters worden bepaald die nodig zijn om de lekweerstand en het oppervlaktewaterpeil te berekenen als functie van de afvoer.
  Deze parameters zijn 
 \begin_inset Formula $\gamma$
 \end_inset
@@ -3142,7 +3213,7 @@ Samenvattend:
 \end_layout
 
 \begin_layout Standard
-Items 5 t/m 7 zijn alleen nodig indien we de drainageweerstand fysisch willen berekenen op basis van het slootprofiel in niet via de direct opgegeven wiskundige relatie.
+Items 5 t/m 7 zijn alleen nodig indien we de lekweerstand fysisch willen berekenen op basis van het slootprofiel in niet via de direct opgegeven wiskundige relatie.
  Items 5 en 7 zijn dan ook optioneel.
  Bevat de invoer de gegevens 
 \begin_inset Formula $w$
@@ -3152,9 +3223,9 @@ Items 5 t/m 7 zijn alleen nodig indien we de drainageweerstand fysisch willen be
 \begin_inset Formula $L$
 \end_inset
 
- dan rekent het model met de fysische drainageweerstand op basis van een parabolisch slootprofiel.
+ dan rekent het model met de fysische lekweerstand op basis van een parabolisch slootprofiel.
  Bij afwezigheid,
- rekent het model met de wiskundig opgelegde relatie tussen afvoer en drainageweerstand.
+ rekent het model met de wiskundig opgelegde relatie tussen afvoer en lekweerstand.
 \end_layout
 
 \begin_layout Standard
@@ -3162,7 +3233,7 @@ Met deze gegevens kunnen we de verschillende coëfficiënten als volgt berekenen
 \end_layout
 
 \begin_layout Standard
-De drainageweerstand in de referentiesituatie:
+De lekweerstand in de referentiesituatie:
 \end_layout
 
 \begin_layout Standard
@@ -3177,7 +3248,7 @@ De coëfficiënt
 \begin_inset Formula $\gamma$
 \end_inset
 
- waar we vervolgens de drainageweerstand wiskundig kunnen uitrekenen als functie van de actuele afvoer:
+ waar we vervolgens de lekweerstand wiskundig kunnen uitrekenen als functie van de actuele afvoer:
 \end_layout
 
 \begin_layout Standard
@@ -3242,7 +3313,7 @@ Met gegeven halve breedte
 \begin_inset Formula $w_{N}=2b_{N}$
 \end_inset
 
- bij slootpeil 
+ bij oppervlaktewaterpeil 
 \begin_inset Formula $h_{N}$
 \end_inset
 
@@ -3339,13 +3410,13 @@ Wat impliceert dat de coëfficiënt voor de factor
 \begin_inset Formula $\phi-h_{0}$
 \end_inset
 
- de rol speelt van reciproke weerstand,
+ de rol speelt van reciproque weerstand,
  of Modflow-termen als specifieke conductantie 
 \begin_inset Formula $C_{s}$
 \end_inset
 
 ,
- die alleen nog met het celoppervlak moet worden vermenigvuldigd om de typische Modflow conductantie te krijgen
+ die alleen nog met het cel-oppervlak moet worden vermenigvuldigd om de typische Modflow conductantie te krijgen
 \end_layout
 
 \begin_layout Standard
@@ -3376,7 +3447,7 @@ Deze uitdrukking geeft weer dat bij de getroffen aannamen over de slootdiepte en
 \begin_inset Formula $h_{0}$
 \end_inset
 
- kan nu de specifieke conductantie direct worden gegeven als lineaire functie van de grondwaterstand boven het slootpeil.
+ kan nu de specifieke conductantie direct worden gegeven als lineaire functie van de grondwaterstand boven het oppervlaktewaterpeil.
  We hebben daarvoor de 
 \begin_inset Formula $\gamma$
 \end_inset
@@ -3429,7 +3500,7 @@ Verder geldt dat
 \begin_inset Formula $C_{s}$
 \end_inset
 
- linear tussen 
+ lineair tussen 
 \begin_inset Formula $\phi=h_{0}$
 \end_inset
 
@@ -3508,9 +3579,9 @@ q_{\phi}=\sum_{i}\left\{ C_{i}\left(\phi-h_{i}\right),\phi>h_{i}\right\}
 \end_layout
 
 \begin_layout Standard
-Dit is dus een niet-lineaire grondwaterstandafvoerrelatie.
+Dit is dus een niet-lineaire grondwaterstand-afvoerrelatie.
  Terwijl de standaard DRN optie,
- met een DRN per cel een lineaire grondwaterstandafvoerrelatie vertegenwoordigt
+ met een DRN per cel een lineaire grondwaterstand-afvoerrelatie vertegenwoordigt
 \end_layout
 
 \begin_layout Standard
@@ -3525,7 +3596,7 @@ q_{\phi}=C_{s,dr}\left(\phi-h\right)=\frac{1}{c_{dr}}\left(\phi-h\right)
 \end_layout
 
 \begin_layout Standard
-Waarbij normaliter het slootpeil 
+Waarbij normaliter het oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
@@ -3649,7 +3720,7 @@ nolink "false"
 
 \end_inset
 
- laat voor verschillend aantal drainniveau's de cumulatieve conductantie zien,
+ laat voor verschillend aantal drainniveaus de cumulatieve conductantie zien,
  waarvan de stapjes voldoen aan bovenstaande vergelijking.
  De rode punt geeft de situatie met slechts één stap en de referentiestijghoogte 
 \begin_inset Formula $\phi_{N}$
@@ -3668,7 +3739,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/plt_test.png
+	filename ../../images/plt_test.png
 	width 80text%
 
 \end_inset
@@ -3715,7 +3786,7 @@ nolink "false"
 
 \end_inset
 
- toont de lek (afvoer) als functie van de grondwaterstand bij een verschillend aantal drainageniveau's.
+ toont de lek (afvoer) als functie van de grondwaterstand bij een verschillend aantal drainniveaus.
  De conductantie van de drainagestappen is berekend met bovenstaande formule zodanig dat de afvoer bij de referentiegrondwaterstand 
 \begin_inset Formula $\phi_{N}$
 \end_inset
@@ -3738,7 +3809,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/lek_vs_phi_drn1.png
+	filename ../../images/lek_vs_phi_drn1.png
 	width 80text%
 
 \end_inset
@@ -3756,7 +3827,7 @@ name "fig:Afvoer-vs-phi"
 
 \end_inset
 
-Afvoer als functie van de grondwaterstand bij een verschillend aantal drainageniveau's.
+Afvoer als functie van de grondwaterstand bij een verschillend aantal drainniveaus.
 \end_layout
 
 \end_inset
@@ -3785,7 +3856,7 @@ nolink "false"
 
 \end_inset
 
- geeft dus in feite de grondwaterstandafvoerrelatie voor verschillend aantal drainageniveau's.
+ geeft dus in feite de grondwaterstand-afvoerrelatie voor verschillend aantal drainniveaus.
  Bij een enkel niveau is dit verband lineair.
  Maar met toenemend aantal komt de relatie steeds beter overeen met de oorspronkelijk aangenomen vorm van de weerstand,
  
@@ -3813,7 +3884,7 @@ nolink "false"
 \begin_inset Formula $q$
 \end_inset
 
- lineair omdat daar geen verdere drainageniveau's meer zijn gedefinieerd.
+ lineair omdat daar geen verdere drainniveaus meer zijn gedefinieerd.
  Maar dat zou natuurlijk wel kunnen.
 \end_layout
 
@@ -3822,7 +3893,7 @@ We kunnen natuurlijk hele discussies gaan voeren over de vraag of het verband tu
 \begin_inset Formula $\sqrt{q}$
 \end_inset
 
- danwel het verband tussen het (geëlimineerde) slootpeil en 
+ danwel het verband tussen het (geëlimineerde) oppervlaktewaterpeil en 
 \begin_inset Formula $\sqrt{q}$
 \end_inset
 
@@ -3834,10 +3905,10 @@ We kunnen natuurlijk hele discussies gaan voeren over de vraag of het verband tu
  Maar natuurlijk staat het de gebruiker toe om elk ander verband middels meervoudige drainages in rekencellen te verwezenlijken,
  bijvoorbeeld op basis van verschillende typen sloten die in een gebied voorkomen.
  Ik verwacht echter weinig wezenlijk verschil omdat bij vrije drainage voor elk type sloot een lineair verband moet worden verwacht tussen conductantie en grondwaterstand,
- zodat dat ook mag worden verwacht bij representatie van het voorkomen van sloten van verschillende categoriëen,
+ zodat dat ook mag worden verwacht bij representatie van het voorkomen van sloten van verschillende categorieën,
  wanneer die alle voldoen aan vrije afwatering.
  Tenslotte,
- het staat ieder vrij om in dergelijke situaties de drainniveau's voor het representeren van vrije drainage te mengen met standaard Modflow drains die sloten modelleren met een vast peil in hetzelfde gebied.
+ het staat ieder vrij om in dergelijke situaties de drainniveaus voor het representeren van vrije drainage te mengen met standaard Modflow drains die sloten modelleren met een vast peil in hetzelfde gebied.
  Het zijn tenslotte alle standaard drain-opties die worden toegepast,
  hoeveel dat er per rekencel zijn is om het even.
 \end_layout
@@ -3846,7 +3917,7 @@ We kunnen natuurlijk hele discussies gaan voeren over de vraag of het verband tu
 Hieraan mag worden toegevoegd dat wat hier geldt voor drains op vergelijkbare wijze van toepassing is op de RIV (rivier) optie.
  Ook daarvan kan men vele aan een enkele cel opgeven om een groot aantal waterlopen tegelijk te simuleren.
  En natuurlijk geldt hetzelfde voor de algemene GHB (general head) optie,
- de enige lineaire optie die geen buiteniteraties nodig heeft.
+ de enige lineaire optie die geen buiten-iteraties nodig heeft.
 \end_layout
 
 \begin_layout Standard
@@ -3903,7 +3974,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/DRNn_leakage.png
+	filename ../../images/DRNn_leakage.png
 	width 80text%
 
 \end_inset
@@ -3966,7 +4037,15 @@ Met een en hetzelfde grondwatermodel hier Fdm3,
 \end_layout
 
 \begin_layout Standard
-Voor het oplossen van het stelsel vergelijkingen wordt gebruik gemaakt van de solvers uit de Scipy library,
+Voor het oplossen van het stelsel vergelijkingen wordt gebruik gemaakt van de 
+\begin_inset Quotes pld
+\end_inset
+
+solvers
+\begin_inset Quotes prd
+\end_inset
+
+ uit de Scipy Library,
  de beste ter wereld,
  waardoor oplossing van het grondwatermodel geen probleem is,
  zolang het model lineair is.
@@ -3984,7 +4063,7 @@ Voor het oplossen van het stelsel vergelijkingen wordt gebruik gemaakt van de so
  Fdm3 heeft nog een derde niet-lineaire randvoorwaarde,
  namelijk die voor vrije ontwatering,
  FDR,
- waarin de drainageweerstand afhankelijk is van de slootdiepte,
+ waarin de lekweerstand afhankelijk is van de slootdiepte,
  dus van de waterstand in de sloot minus de hoogte van de slootbodem.
  Bij vrije afwatering is geen infiltratie mogelijk,
  net zoals bij de DRN-cellen;
@@ -4002,11 +4081,11 @@ De afleiding voor de randvoorwaarden met vrije drainage is hiervoor al gegeven.
 \end_layout
 
 \begin_layout Enumerate
-De drainageweerstand is een opgelegde wiskundige functie van de afvoer.
+De lekweerstand is een opgelegde wiskundige functie van de afvoer.
 \end_layout
 
 \begin_layout Enumerate
-De drainageweerstand wordt berekend op basis van de actuele slootdiepte en het slootprofiel,
+De lekweerstand wordt berekend op basis van de actuele slootdiepte en het slootprofiel,
  waarbij de slootdiepte afhankelijk is van de afvoer.
 \end_layout
 
@@ -4114,7 +4193,7 @@ Met
 \begin_inset Formula $c$
 \end_inset
 
- moet hier worden opgevat als drainageweerstand,
+ moet hier worden opgevat als lekweerstand,
  dus de weerstand die het aanwezige oppervlaktesysteem biedt tegen lek van grondwater.
  De stijghoogte zal door het neerslagoverschot in een groot deel van het model boven de drainagebasis 
 \begin_inset Formula $h$
@@ -4147,7 +4226,7 @@ nolink "false"
 
 -as valt samen met die van de Fdm3-simulatie waarbij GHB-randvoorwaarden zijn gebruikt,
  waardoor zowel lek als infiltratie kan optreden.
- Dit is identiek aan een grondwaterpakket dat is afgedekt door een slecht-doorlatende laag met daarboven een vast peil 
+ Dit is identiek aan een grondwaterpakket dat is afgedekt door een slechtdoorlatende laag met daarboven een vast peil 
 \begin_inset Formula $h$
 \end_inset
 
@@ -4170,7 +4249,7 @@ nolink "false"
 
  geeft hiernaast de analytische oplossing volgens Blom samen met de numerieke waarbij voor de bovenrandvoorwaarde in plaats van GHB-cellen DRN-cellen zijn toegepast.
  DRN-cellen laten geen infiltratie toe.
- Bij Blom treedt lek op zolang de grondwaterstand boven het slootpeil (de drainagebasis) blijft.
+ Bij Blom treedt lek op zolang de grondwaterstand boven het oppervlaktewaterpeil (de drainagebasis) blijft.
  De lek is daar een deel van het neerslagoverschot de voeding is daar gelijk aan het neerslagoverschot minus de lek.
  Binnen het gebied waar de de grondwaterstand onder de drainagebasis zakt treedt geen lek meer op.
  De voeding is daar gelijk aan het gehele neerslagoverschot.
@@ -4220,7 +4299,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D.png
+	filename ../../images/example_fdm3_1D.png
 	width 80text%
 
 \end_inset
@@ -4298,7 +4377,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_axsym.png
+	filename ../../images/example_fdm3_axsym.png
 	width 80text%
 
 \end_inset
@@ -4388,7 +4467,7 @@ De analytische oplossing voor de situatie met een onttrekking
 \end_inset
 
 ,
- die nodig is om het geïnjecteerde neerslagoverschot naar het oppervlaktewater te laten lekken via de drainageweerstand 
+ die nodig is om het geïnjecteerde neerslagoverschot naar het oppervlaktewater te laten lekken via de lekweerstand 
 \begin_inset Formula $c_{dr}$
 \end_inset
 
@@ -4504,18 +4583,18 @@ Simulatie met vrije afwatering of vrije drainage
 \begin_layout Standard
 Hiervoor zagen we dat de analytische situatie volgens Blom identiek is aan de numerieke simulatie met DRN-cellen als bovenrandvoorwaarde en directe injectie in het watervoerende pakket.
  De situatie met vrije afwatering lijkt hierop,
- maar verschilt in het feit dat daarbij de drainagebasis (het slootpeil) lager wordt naarmate de lek afneemt en het feit dat de drainageweerstand toeneemt met de afnemende slootdiepte.
+ maar verschilt in het feit dat daarbij de drainagebasis (het oppervlaktewaterpeil) lager wordt naarmate de lek afneemt en het feit dat de lekweerstand toeneemt met de afnemende slootdiepte.
  Er kan alleen lek zijn zolang de grondwaterstand hoger is dan de slootbodem.
- Zodra de grondwaterstand daaronder zakt is de lek nul en de drainageweerstand dus oneindig groot.
+ Zodra de grondwaterstand daaronder zakt is de lek nul en de lekweerstand dus oneindig groot.
  In een vrij afwaterend gebied is geen aanvoer van water en geen infiltratie mogelijk.
  Dit is in de werkelijkheid niet overal helemaal waar,
  omdat er natuurlijk water van bovenstrooms naar de sloten kan lekken,
- dat vervolgens benendenstrooms weer infiltreert.
+ dat vervolgens benedenstrooms weer infiltreert.
  Zulke omstandigheden vallen buiten bestek van dit document en kunnen alleen met een combinatie van een grond- en een oppervlaktewatermodel enigszins zinvol worden gemodelleerd.
 \end_layout
 
 \begin_layout Standard
-De drainageweerstand wordt gedefinieerd als
+De lekweerstand wordt gedefinieerd als
 \end_layout
 
 \begin_layout Standard
@@ -4530,10 +4609,10 @@ c_{dr}=\frac{\phi-h}{N}
 \end_layout
 
 \begin_layout Standard
-Dat wil zeggen het verschil tussen de gemiddelde grondwaterstand met het drainageniveau (het slootpeil) gedeeld door de gemiddelde drainage (zonder kwel is dat gelijk aan het neerslagoverschot).
+Dat wil zeggen het verschil tussen de gemiddelde grondwaterstand met het drainageniveau (het oppervlaktewaterpeil) gedeeld door de gemiddelde drainage (zonder kwel is dat gelijk aan het neerslagoverschot).
  In deze formule zit ook het drainageniveau,
  dat echter bij vrije afwatering zelf afhang van de lek.
- En daarmee is de drainageweerstand ook afhankelijk van de actuele lek.
+ En daarmee is de lekweerstand ook afhankelijk van de actuele lek.
  In de theoretische afleidingen hebben we echter gezien dat we ook de weerstand als volgt kunnen definiëren,
 \end_layout
 
@@ -4558,7 +4637,7 @@ waarbij in plaats van de actuele maar variabele drainagebasis
 \begin_inset Formula $c$
 \end_inset
 
- is dan dus niet meer de drainageweerstand maar een andere,
+ is dan dus niet meer de lekweerstand maar een andere,
  grotere.
 \end_layout
 
@@ -4656,7 +4735,7 @@ nolink "false"
 samen met het resultaat met DRN randvoowaarden en de daarbij behorende analytische oplossing van Blom.
  Het resultaat met de GHB-randvoorwaarden valt samen met de analytische oplossing en dat met de DRN-randvoorwaarde valt samen met de analytische oplossing volgens Blom.
  De onderste figuur geeft de bijbehorende lek.
- Die voor het model met de GHB-randvoorwaarde slaat om in infiltratie zodra de grondwaterstand onder het (vaste) slootpeil zakt,
+ Die voor het model met de GHB-randvoorwaarde slaat om in infiltratie zodra de grondwaterstand onder het (vaste) oppervlaktewaterpeil zakt,
  dat wil zeggen,
  zodra de verlaging groter is dan 
 \begin_inset Formula $Nc_{dr}$
@@ -4680,7 +4759,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D.png
+	filename ../../images/example_fdm3_1D.png
 	width 80text%
 
 \end_inset
@@ -4700,14 +4779,14 @@ name "fig:Vlakke-dsn+GHB+DRN"
 
 Analytische oplossingen en Fdm3-simulatie voor GHB randvoorwaarden en voor DRN randvoorwaarden.
  De drains vallen droog zodra de grondwaterstand onder het drainniveau daalt,
- dat hier gelijk is aan het slootpeil.
+ dat hier gelijk is aan het oppervlaktewaterpeil.
  De verlaging is dan 
 \begin_inset Formula $Nc$
 \end_inset
 
 .
- Boven de stijghoogten en onder de lek en de voeding volgens Blom die overeenkomt met de numerieke situatie met DRN randvoowaarden.
- Voeding volgens BLom plus lek met DRN randvoorwaarden is gelijk aan het neerslagoverschot.
+ Boven de stijghoogten en onder de lek en de voeding volgens Blom die overeenkomt met de numerieke situatie met DRN randvoorwaarden.
+ Voeding volgens Blom plus lek met DRN randvoorwaarden is gelijk aan het neerslagoverschot.
 \end_layout
 
 \end_inset
@@ -4734,7 +4813,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D+FDR.png
+	filename ../../images/example_fdm3_1D+FDR.png
 	width 80text%
 
 \end_inset
@@ -4766,7 +4845,7 @@ nolink "false"
 
 .
  Hieraan is het resultaat van de vrije afwatering toegevoegd,
- zowel die met wiskundig opgelegde drainageweerstand (variant FDR) als die met fysisch berekende drainageweerstand (variant FDR1).
+ zowel die met wiskundig opgelegde lekweerstand (variant FDR) als die met fysisch berekende lekweerstand (variant FDR1).
  Boven de stijghoogten en onder de lek,
  respectievelijk de voeding van het pakket.
 \end_layout
@@ -4817,7 +4896,7 @@ FDR
 \begin_inset Quotes prd
 \end_inset
 
- is de drainageweerstand wiskundig opgelegd als 
+ is de lekweerstand wiskundig opgelegd als 
 \begin_inset Formula $c_{dr}=\frac{\gamma}{\sqrt{q}}$
 \end_inset
 
@@ -4829,7 +4908,7 @@ FDR1
 \begin_inset Quotes prd
 \end_inset
 
- de drainageweerstand is berekend op basis van het slootprofiel en de grootte van het contactvlak tussen sloot en watervoerend pakket,
+ de lekweerstand is berekend op basis van het slootprofiel en de grootte van het contactvlak tussen sloot en watervoerend pakket,
  dat weer van de slootdiepte afhangt.
  Het blijkt dat de uitkomsten van deze twee varianten heel weinig van elkaar verschillen.
  Wel zien we dat de grondwaterstand bij vrije drainage meer wordt verlaagd dan in de situatie met een vast drainagepeil.
@@ -4871,7 +4950,7 @@ nolink "false"
 
 \end_inset
 
- met daaraan toegevoegd het resultaat van de berekening met vrije drainage middels een zestal drainniveau's,
+ met daaraan toegevoegd het resultaat van de berekening met vrije drainage middels een zestal drainniveaus,
  met alle dezelfde conductantie,
  zodanig dat de lek bij een grondwaterstand gelijk aan de referentiewaarde gelijk is aan het neerslagoverschot,
  net zoals dat bij alle varianten het geval is.
@@ -4889,7 +4968,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D+FDR+DRN1.png
+	filename ../../images/example_fdm3_1D+FDR+DRN1.png
 	width 80text%
 
 \end_inset
@@ -4920,7 +4999,7 @@ nolink "false"
 \end_inset
 
 .
- Hieraan is het resultaat van de vrije afwatering toegevoegd zoals die met meerdere (in dit geval 6) drainniveau's per rekencel is uitgevoerd op de wijze waarop men dat in Modflow zou modelleren.
+ Hieraan is het resultaat van de vrije afwatering toegevoegd zoals die met meerdere (in dit geval 6) drainniveaus per rekencel is uitgevoerd op de wijze waarop men dat in Modflow zou modelleren.
  Boven de stijghoogten en onder de lek respectievelijk de voeding van het pakket.
 \end_layout
 
@@ -4950,8 +5029,8 @@ nolink "false"
 
 \end_inset
 
- geeft de berekende lek is de situatie met een DRN per rekencel en die met verschillende drainniveau's per rekencel (zie legenda).
- De groene lijn is het resultaat met een DRN die droogvalt zodra de grondwaterstand zakt tot onder het slootpeil 
+ geeft de berekende lek is de situatie met een DRN per rekencel en die met verschillende drainniveaus per rekencel (zie legenda).
+ De groene lijn is het resultaat met een DRN die droogvalt zodra de grondwaterstand zakt tot onder het oppervlaktewaterpeil 
 \begin_inset Formula $h$
 \end_inset
 
@@ -4960,21 +5039,21 @@ nolink "false"
 \end_inset
 
 ).
- De paarse lijn met stippen is het resultaat voor de situatie met de verschillende drainniveau's.
+ De paarse lijn met stippen is het resultaat voor de situatie met de verschillende drainniveaus.
  De totale lek is in beide situaties hetzelfde namelijk gelijk aan het totale neerslagoverschot op het model minus de onttrekking.
- De gekleurde lijnen geven de lek die afkomstig is van de verschillende drainniveau's.
+ De gekleurde lijnen geven de lek die afkomstig is van de verschillende drainniveaus.
  De bruine lijn is voor het hoogste drainniveau,
  dat het snelst droogvalt namelijk al op ca.
  1200 m vanaf de onttrekking.
  De blauwe lijn is voor het laagste drainniveau,
  dat het laatst droogvalt namelijk hier op ca.
  450 m vanaf de onttrekking.
- De som van de lek volgens de verschillende drainniveau's is gelijk aan de totale lek.
+ De som van de lek volgens de verschillende drainniveaus is gelijk aan de totale lek.
 \end_layout
 
 \begin_layout Standard
-Het is duidelijk dat de lek bij vrije drainage veel verder doorgaat dan bij drains met vast drainniveau op de hoogte van het slootpeil.
- Dit is een veel reëlere schematisatie omdat bij vrije afwatering het slootpeil meezakt met de verlaging en de lek pas stopt als de verlaging (en het slootpeil) onder de slootbodem zakken.
+Het is duidelijk dat de lek bij vrije drainage veel verder doorgaat dan bij drains met vast drainniveau op de hoogte van het oppervlaktewaterpeil.
+ Dit is een veel reëlere schematisatie omdat bij vrije afwatering het oppervlaktewaterpeil meezakt met de verlaging en de lek pas stopt als de verlaging (en het oppervlaktewaterpeil) onder de slootbodem zakken.
 \end_layout
 
 \begin_layout Standard
@@ -4987,7 +5066,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D_DRNn_leakage.png
+	filename ../../images/example_fdm3_1D_DRNn_leakage.png
 	width 80text%
 
 \end_inset
@@ -5005,9 +5084,9 @@ name "fig:Lek-DRNn"
 
 \end_inset
 
-Lek in het vlakke doorsnede model voor de situatie met een drainniveau (groene lijn) en met 6 drainniveau's (paarse lijn met stippen).
- De gekleurde lijnen geven de lek afkomstig van de drains met verschillende drainniveau's.
- De drains op de verschillende drainniveau's hebben dezelfde conductantie,
+Lek in het vlakke doorsnede model voor de situatie met een drainniveau (groene lijn) en met 6 drainniveaus (paarse lijn met stippen).
+ De gekleurde lijnen geven de lek afkomstig van de drains met verschillende drainniveaus.
+ De drains op de verschillende drainniveaus hebben dezelfde conductantie,
  zodanig dat de lek bij de referentiegrondwaterstand (
 \begin_inset Formula $\phi_{N}=h+Nc=0.2$
 \end_inset
@@ -5075,7 +5154,7 @@ nolink "false"
 .
  De onderste figuur geelt de lek.
  Voor het model met de DRN randvoorwaarde is de lek gelijk nu binnen de zojuist genoemde radius.
- Voor het model met de GHB randvoorwaarde is wel infiltratie mogelijk waar de grondwaterstand zakt onder het slootpeil.
+ Voor het model met de GHB randvoorwaarde is wel infiltratie mogelijk waar de grondwaterstand zakt onder het oppervlaktewaterpeil.
  Voor de analytische oplossing volgens Blom is de voeding van de watervoerende laag weergegeven.
  Deze is nul waar de sloten het volledige neerslagoverschot afvoeren en is gelijk aan het neerslagoverschot waar de sloten niets afvoeren.
  De som van voeding en lek is voor Blom/DRN gelijk aan het neerslagoverschot.
@@ -5091,7 +5170,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_axym.png
+	filename ../../images/example_fdm3_axym.png
 	width 80text%
 
 \end_inset
@@ -5164,7 +5243,7 @@ FDR
 \begin_inset Quotes prd
 \end_inset
 
- is de drainageweerstand als wiskundige functie opgelegd:
+ is de lekweerstand als wiskundige functie opgelegd:
  
 \begin_inset Formula $c_{dr}=\frac{\gamma}{\sqrt{q}}$
 \end_inset
@@ -5177,7 +5256,7 @@ FDR1
 \begin_inset Quotes prd
 \end_inset
 
- is de drainageweerstand berekend op basis van het slootprofiel en de actuele slootdiepte.
+ is de lekweerstand berekend op basis van het slootprofiel en de actuele slootdiepte.
  De verlaging bij vrije drainage lijkt hier nauwelijks groter dan bij reguliere drainage,
  maar dat komt door de veel kleinere verticale schaal van de grafiek ten opzichte van die bij figuur 
 \begin_inset CommandInset ref
@@ -5219,23 +5298,23 @@ nolink "false"
 \end_inset
 
  maar met de resultaten van beide varianten van de vrije afwatering er aan toegevoegd.
- FDR de variant met wiskundig opgelegde drainageweerstand (
+ FDR de variant met wiskundig opgelegde lekweerstand (
 \begin_inset Formula $c_{dr}=\frac{\gamma}{\sqrt{q}}$
 \end_inset
 
-) en FDR1 die waarbij de drainageweerstand is berekend op basis van het fysieke slootprofiel.
+) en FDR1 die waarbij de lekweerstand is berekend op basis van het fysieke slootprofiel.
  Het verschil tussen beide blijkt heel gering.
  De grafiek laat zien dat de verlaging bij vrije drainage,
- dus wanneer het slootpeil meezakt met de grondwaterstand of met afnemende lek,
- is groter dan bij vast slootpeil.
- De reikwijdte blijkt belangrijk groter dan bij vast slootpeil.
+ dus wanneer het oppervlaktewaterpeil meezakt met de grondwaterstand of met afnemende lek,
+ is groter dan bij vast oppervlaktewaterpeil.
+ De reikwijdte blijkt belangrijk groter dan bij vast oppervlaktewaterpeil.
  De onderste figuur laat zien de lek doorgaat tot de verlaging onder de hoogte van de slootbodem zakt.
  Het is net of de sloten veel langer nat blijven dan bij de DRN randvoorwaarde.
  Maar dat is maar schijn.
  Het model met de DRN randvoorwaarde is eenvoudig een slechte representatie voor vrije afwatering,
  en datzelfde geldt voor het schema van Blom,
- eenvoudig omdat in deze twee benaderingen het slootpeil niet meedaalt met de grondwaterverlaging en omdat de lek in werkelijkheid niet zomaar stopt wanneer de grondwaterstand zakt onder het slootpeil in de referentiesituatie.
- Kortom modellering van vrije afwatering of lek met de standaard DRN optie met vast slootpeil of het schema volgens Blom zijn niet geschikt voor modellering van grondwater dat vrij lekt naar sloten zonder externe aanvoer,
+ eenvoudig omdat in deze twee benaderingen het oppervlaktewaterpeil niet meedaalt met de grondwaterverlaging en omdat de lek in werkelijkheid niet zomaar stopt wanneer de grondwaterstand zakt onder het oppervlaktewaterpeil in de referentiesituatie.
+ Kortom modellering van vrije afwatering of lek met de standaard DRN optie met vast oppervlaktewaterpeil of het schema volgens Blom zijn niet geschikt voor modellering van grondwater dat vrij lekt naar sloten zonder externe aanvoer,
  die meeademen met de grondwaterstand en in droge tijden of bij onttrekking eenvoudig geheel droog vallen.
 \end_layout
 
@@ -5249,7 +5328,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_axym+FDR.png
+	filename ../../images/example_fdm3_axym+FDR.png
 	width 80text%
 
 \end_inset
@@ -5279,8 +5358,8 @@ nolink "false"
 \end_inset
 
  maar met daaraan toegevoegd de resultaten van de twee varianten met vrije drainage.
- FDR is de variant met wiskundig opgelegde drainageweerstand,
- FDR1 die met de drainageweerstand berekend op basis van het slootprofiel.
+ FDR is de variant met wiskundig opgelegde lekweerstand,
+ FDR1 die met de lekweerstand berekend op basis van het slootprofiel.
 \end_layout
 
 \end_inset
@@ -5298,8 +5377,8 @@ nolink "false"
 \end_layout
 
 \begin_layout Standard
-Tenslotte bekijken we de gemodelleerde vrije afwatering werkt out wanneer we deze simuleren met een aantal (in dit geval 6) drainniveau's binnen en enkele rekencel,
- zodanig dat de conductantie (reciproke weerstand) toeneemt met de grondwaterstand boven de slootbodem.
+Tenslotte bekijken we de gemodelleerde vrije afwatering werkt out wanneer we deze simuleren met een aantal (in dit geval 6) drainniveaus binnen en enkele rekencel,
+ zodanig dat de conductantie (reciproque weerstand) toeneemt met de grondwaterstand boven de slootbodem.
  Het resultaat is te zien in figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -5321,7 +5400,7 @@ Modflow-methode
 \end_inset
 
 ,
- met meer drainniveau's per rekencel blijkt min of meer perfect overeen te komen met de andere twee varianten voor het modelleren van vrije afwatering.
+ met meer drainniveaus per rekencel blijkt min of meer perfect overeen te komen met de andere twee varianten voor het modelleren van vrije afwatering.
  Dit impliceert dat de methode gewoon werkt in Modflow.
 \end_layout
 
@@ -5335,7 +5414,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_axym+FDR+DRN1.png
+	filename ../../images/example_fdm3_axym+FDR+DRN1.png
 	width 80text%
 
 \end_inset
@@ -5425,13 +5504,13 @@ nolink "false"
 \end_inset
 
  van de sloten uitkomt.
- Het verschil tussen de twee varianten met vrije drainage en de variant waarbij de conductantie toeneemt met de grondwaterstand door middel van een aantal drainiveau's per rekencel is bijzonder gering.
+ Het verschil tussen de twee varianten met vrije drainage en de variant waarbij de conductantie toeneemt met de grondwaterstand door middel van een aantal drainniveaus per rekencel is bijzonder gering.
  De drie varianten voor de simulatie van de vrije drainage zijn in de praktijk equivalent.
- Vrije drainage kan gemakkelijk met Modflow worden gesimuleerd door gebruik te maken van meerdere drainageniveau's per rekencel,
+ Vrije drainage kan gemakkelijk met Modflow worden gesimuleerd door gebruik te maken van meerdere drainniveaus per rekencel,
  dus door meer DRN randvoorwaarden aan dezelfde rekencel toe te kennen.
  Als laatste conclusie:
  het verschil tussen vaste en vrije drainage is echter aanzienlijk,
- en dat is het gevolg van het meedalen van het slootpeil met de grondwaterstand en de daarbij horende afname van de conductantie,
+ en dat is het gevolg van het meedalen van het oppervlaktewaterpeil met de grondwaterstand en de daarbij horende afname van de conductantie,
  respectievelijk de toename van de intreeweerstand tussen watervoerend pakket en de sloten.
 \end_layout
 
@@ -5445,7 +5524,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_axym_voeding.png
+	filename ../../images/example_fdm3_axym_voeding.png
 	width 80text%
 
 \end_inset
@@ -5498,14 +5577,14 @@ nolink "false"
 \end_inset
 
  gelijk is aan het neerslagoverschot.
- De groene lijn is die voor de berekening met een enkel drainniveau en de paarse lijn met puntjes die voor de situatie met 6 drainniveau's.
+ De groene lijn is die voor de berekening met een enkel drainniveau en de paarse lijn met puntjes die voor de situatie met 6 drainniveaus.
  De totale lek is in beide gevallen gelijk aan het totale neerslagoverschot op het model minus de onttrekking.
  Dit is hier niet direct te zien omdat voor een gemakkelijker inzicht de lek steeds is gedeeld door 
 \begin_inset Formula $2\pi r$
 \end_inset
 
  zodat het antwoord in m/d wordt verkregen.
- De gekleurde lijnen geven de lek voor elk van de 6 drainniveau's (zie legenda).
+ De gekleurde lijnen geven de lek voor elk van de 6 drainniveaus (zie legenda).
  De som van de gekleurde grafieken is gelijk aan de paarse met de balletjes.
  De bruine lijn is het hoogste drainniveau.
  Het is duidelijk dat dit het eerste droogvalt,
@@ -5540,7 +5619,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_axym_DRNn_leakage.png
+	filename ../../images/example_fdm3_axym_DRNn_leakage.png
 	width 80text%
 
 \end_inset
@@ -5572,7 +5651,7 @@ In detail de voeding (aanvulling) van het watervoerende pakket in de axiaal-symm
 \end_layout
 
 \begin_layout Section
-Inclusief de Modflow manier met meerdere drainniveau's binnen een rekencel
+Inclusief de Modflow manier met meerdere drainniveaus binnen een rekencel
 \end_layout
 
 \begin_layout Standard
@@ -5608,7 +5687,7 @@ Modflow resultaat
 \end_inset
 
  (lijn Numeriek DRN1),
- waarin de vrije afwatering is gesimuleerd met 6 drainniveau's binnen elke cel zoals weergegeven in figuur 
+ waarin de vrije afwatering is gesimuleerd met 6 drainniveaus binnen elke cel zoals weergegeven in figuur 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:vlak-1D-drn1"
@@ -5631,9 +5710,9 @@ nolink "false"
 \end_inset
 
 .
- Het blijkt dat noch de verlaging noch de lek met verschillende drainniveau's met de juiste conductantie zoals hierboven berekend,
+ Het blijkt dat noch de verlaging noch de lek met verschillende drainniveaus met de juiste conductantie zoals hierboven berekend,
  nauwelijks afwijkt van de twee andere varianten met vrije ontwatering.
- Dit betekent dat de methode om vrije afwatering in Modflow te simuleren door middel van meerdere drainniveau's binnen rekencellen volledig werkt.
+ Dit betekent dat de methode om vrije afwatering in Modflow te simuleren door middel van meerdere drainniveaus binnen rekencellen volledig werkt.
 \end_layout
 
 \begin_layout Standard
@@ -5646,7 +5725,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/jupyter/images/example_fdm3_1D+FDR+DRN1.png
+	filename ../../images/example_fdm3_1D+FDR+DRN1.png
 	width 80text%
 
 \end_inset
@@ -5673,7 +5752,7 @@ Lek Numeriek DRN1
 \begin_inset Quotes prd
 \end_inset
 
- is berekend met 6 drainniveau's.
+ is berekend met 6 drainniveaus.
  De resultaten voor deze 
 \begin_inset Quotes pld
 \end_inset
