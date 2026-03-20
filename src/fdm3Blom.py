@@ -26,6 +26,9 @@ run from the above-mentioned jupyter notebook.
 @author: Theo  April 2025, March 2026.
 
 """
+# %%
+
+import os
 import warnings
 
 import matplotlib.pylab as plt
@@ -34,12 +37,23 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as la
 from scipy.special import k0 as K0
 from scipy.special import k1 as K1
-from tools.etc.etc import newfig
 from tools.fdm.src import mfgrid
+from tools.etc.etc import logo
 
 import wellfunctionalities as wf
     
+class Dirs:
+    """Namespace for directories in project"""
+    def __init__(self):
+        self.home = '/Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/coding/src/'
+        self.data = os.path.join(self.home, '../data')
+        self.images = os.path.join(self.home, '../images')
+    
+dirs = Dirs()
+assert os.path.isdir(dirs.data), f"{dirs.data} not found!"
+assert os.path.isdir(dirs.images), f"{dirs.images} not found!"
 
+# %%
 def quivdata(Out, x, y, iz=0):
     """Returns vector data for plotting velocity vectors.
 
@@ -783,42 +797,246 @@ def watbal(out):
     print(f"Q2 (boundaries)          = {Q2:15.3f} m3/d, total from boundaries")
     print("===== end of water balance =====\n")
     return
-  
-def get_ch(h0:float, phiN:float, C:float | np.ndarray, n:float)->tuple:
-    """Return condunctances Ci and hdrn for multiple drainlevels per cel.
-    
-    Voor $n$ gelijke stapjes met elk eenzelfde conductance Ci moet gelden
-    gelden
-    
-    $\sum_{i}^{n} C_i(\phi-h_i) = C(\phi - h_i)$
-    
-    zodat
 
-    $C_i = \frac{C}{n}\times\frac{\phi_0-\overline{h_i}}{\phi_0-h_0}$
+# --- Define DRNn class which computes stepped conductance
+class DRNcond:
+    """Class to generate conductances using n drains in a cell.
     
-    Parameters
-    ----------
-    h0: float
-        elevation of bottom of water courses
-    phiN: float
-        reference water stage (at which recharge surplus is drained)
-    C: float
-        conductance at phiN
-    n: int
-        number of drainlevels from h0 to PhiN
+    These drains may be used in the same cell to generate a non-constant
+    conductanced.
+    In this case the conducrance is to increase linearl in steps between
+    the bottom elevation of the water course to the reference water level
+    coinciding with the watet level at which the surface water drains
+    the net recharge surplus N.    """
+
+    def __init__(self, h0:float, N:float, hN:float):
+        """Constructor just sets the regional values.
+                        
+        The __init__ only takes the basis parameters, not the number of steps.
+        The specific conductance equals 1/cdr (regional leakage resistance [d])
         
-    Returns:
-    --------
-    Cdrn: float or array of length C
-        Conductance same for each level.
-    hdrn: ndarray of length n
-        drainlevels with equal distance from h0, phi0 not included
-    """  
-    hdrn =np.linspace(h0, phiN, n + 1)[:-1]
-    Cdrn = C / n * (phiN - h0) / (phiN - np.mean(hdrn))
-    return Cdrn, hdrn
+        Parameters
+        ----------
+        h0: float
+            water bottom elevation.
+        phiN: float
+            surface water reference level (at N)
+        n: int
+            number of drain levels between h0 and phiN (phiN not included)
+        """
+        self.h0 = h0
+        self.hN = hN
+        self.N = N        
+        
+    def get_ch(self, n:int)->tuple:
+        """Return conductance values and the step elevations.
+        
+        Parmeters
+        ---------
+        n: int
+            Number of n steps between h0 and phiN, phiN not included.
+            
+        Returns both Cs[n] and hdrn[n]
+            All conductance steps are the same because the total Cs is linear in y.
+        """
+        # --- Ref. depth of water course
+        yN = self.hN - self.h0
+        
+        # --- Step water course depths
+        y = np.linspace(0, yN, n + 1)        
 
+        # --- Total conductance ($C_s = 2 \frac{N}{y_N^2) y$)
+        Cs = 2 * self.N * yN**2 * y
 
+        # --- Conductivity steps
+        DeltaC = np.diff(Cs)
+        ym = 0.5 * (y[:-1] + y[1:])
+
+        # --- Return the conductivity steps and the step elevations
+        return DeltaC, self.h0 + ym
+
+    def q(self)->float|np.ndarray:
+        """Return discharge continuous between h0 and phiN."""
+        yN = self.hN - self.h0
+        y = np.linspace(0, yN)
+        return self.N * (y / yN) ** 2, self.h0 + y
+    
+    def qCsteps(self, n:int=6)->float | np.ndarray:
+        """Return drain flux for surface water level at phi using n conductance steps.
+    
+        Parameters
+        ----------
+        phi: float | np.ndarray
+            surface water level for which drainage is computed.
+        
+        Returns
+        -------
+        q: float | np.ndarray
+            The drainage flux at levels phi given the number of conductance steps.
+        """
+        phi = np.linspace(self.h0, self.hN)
+
+        DeltaC, hdrn = self.get_ch(n=n)
+
+        q = np.zeros_like(phi)        
+        for DCi, hi in zip(DeltaC, hdrn):
+            q[phi > hi] += DCi * (phi[phi > hi] - hi)        
+        return q, phi
+    
+
+    def cond(self)->float | np.ndarray:
+        """Return total conductance at between h=h0 and h=phiN.
+        
+        Parameters
+        ----------
+        n: int
+            Number of drainage levels.
+            
+        Returns
+        -------
+        cond_: float | np.ndarray
+            conductance at levels phi given number of conductance substeps.
+        """
+        yN = self.hN - self.h0
+        y = np.linspace(0, yN)
+        phi = self.h0 + y
+        cond = 2 * self.N * yN**2 * y
+        return cond, phi
+
+    def condSteps(self, n:int=None)->float | np.ndarray:
+        """Return total conductance between h0 and phiN using n conductance steps.
+        
+        Parameters
+        ----------
+        phi: float
+            Current surface water level.
+        n: int
+            Number of drainage levels.
+            
+        Returns
+        -------
+        cond_: float | np.ndarray
+            conductance at levels phi given number of conductance substeps.
+        """
+        yN = self.hN - self.h0
+        y = np.linspace(0, yN)[0:-1]
+        DeltaC, hdrn = self.get_ch(n=n)
+        cond = np.zeros_like(y)
+        phi = self.h0 + y
+        for DCi, hi in zip(DeltaC, hdrn):
+            cond[phi >= hi] += DCi
+        return cond, phi
+
+# %%
+def show_conductances():
+    r"""Show the continuous discharge with free drainage and with conductance steps.
+    
+    The drainage is defined by $q = N \frac{y}{y_N}^2$ in which
+    y is the depth of the water course (ditch), i.e. water stage minus bottom elevation.
+
+    It is shown how the continuous discharge with a continously
+    linearly increasing conductance is approached by using a
+    set of equal conductances at differente levels. This way
+    the continuous conductance can be approach by a model
+    such as Modlow using multiple drains in the same cell.
+    
+    The continuous conductance follows from
+
+           $$C = \frac{dq}{dy} = 2 frac{N}{y_N^2} \frac y$$
+           
+    The steps start at y=0 (phi = h0) and do not inlcude $y=y_N$.
+    Hence, the conductance is >0 from $y=0$.
+    
+    Not that the more steps, the lower the discharge, with
+    a minimum equal to the continous discharge for $n=\infty$.
+    
+    TO 2026-03-19
+    """
+    h0, hN, N = -1, 0, 0.001
+
+    cdr = (hN - h0) / N
+    Cs = 1 / cdr
+
+    drnc = DRNcond(h0=h0, N=N, hN=hN)
+    
+    # --- show the discharge continuous and with conductivy steps
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(10, 6))
+    fig.suptitle("Waterdiepe als functie van lek q en conductantie.\n"
+       + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cdr}, $C_s$={Cs:.3g} 1/d")
+       
+    ax1.set(title="Discharge [m/d]", xlabel=r"$q$ [m/d]", ylabel=r"Waterdiepte $y  = \phi - h_0$")
+    ax2.set(title="Specific conductance [1/d]", xlabel=r"$cond$ [m/d]", ylabel=r"Waterdiepte $y = \phi - h_0$")
+
+    q, phi = drnc.q()
+    ax1.plot(q, phi - h0, '-', label="q, continuous")
+
+    cond, phi = drnc.cond()
+    ax2.plot(cond, phi - h0, '-', label = 'total conducance, continuous')
+    
+    # --- discharge Compute for different number of steps
+    for n in [1, 2, 4]:
+        # --- Show the discharge continous and with conductance steps
+
+        qCsteps, phiCsteps = drnc.qCsteps(n=n)
+        
+        ax1.plot(qCsteps, phiCsteps - h0, '+', label=f"n_steps={n}")        
+        
+        # --- show the total conductance continuous and in steps
+        
+        condSteps, phiSteps = drnc.condSteps(n=n)
+        
+        ax2.step(condSteps, phiSteps - h0, label = f'n_steps={n}')        
+        
+
+    ax1.plot(N, hN - h0, 'o', mec='k', mfc='r', label=fr"$q(\phi_N)$={N} m/d")
+
+    ax1.grid(); ax2.grid()
+    ax1.legend(); ax2.legend()
+    logo(fig, os.path.basename(__file__))
+    fig.savefig(os.path.join(dirs.images, "VAW-phi_vs_q_en_cond.png"))
+
+    
+    # --- Revert the x and y axes for better comprehension
+    fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(10, 6))
+    fig.suptitle("Lek en specifieke conductantie als functie van waterdiepte y.\n"
+       + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cdr}, $C_s$={Cs:.3g} 1/d")
+       
+    ax1.set(title="Discharge [m/d]", xlabel=r"Waterdiepte $y = h - h_0$", ylabel=r"$q$ [m/d]")
+    ax2.set(title="Specific conductance [1/d]", xlabel=r"Waterdiepte $y = h - h_0$", ylabel=r"$cond$ [m/d]")
+
+    q, phi = drnc.q()
+    ax1.plot(phi - h0, q, '-', label="q, continuous")
+
+    cond, phi = drnc.cond()    
+    ax2.plot(phi - h0, cond, '-', label = 'total conducance, continuous')
+
+    # --- discharge Compute for different number of steps
+    for n in [1, 2, 4]:
+        # --- Show the discharge continous and with conductance steps
+
+        qCsteps, phiCsteps = drnc.qCsteps(n=n)
+        
+        ax1.plot(phiCsteps - h0, qCsteps,  '+', label=f"n_steps={n}")
+        
+        # --- show the total conductance continuous and in steps
+        
+        condSteps, phiSteps = drnc.condSteps(n=n)
+        
+        ax2.step(phiSteps -h0, condSteps, label = f'n_steps={n}')
+        
+    ax1.plot(hN - h0, N, 'o', mec='k', mfc='r', label=fr"$q(\phi_N)$={N} m/d")
+
+    ax1.grid(); ax2.grid()
+    ax1.legend(); ax2.legend()
+    logo(fig, os.path.basename(__file__))
+    
+    fig.savefig(os.path.join(dirs.images, "VAW-q-cond-vs-y.png"))
+    plt.plot()
+    
+show_conductances()
+  
+# %%
 def oneD_all_boundary_types(kw):
     """Run 1D cross section examples, using all available boundary types,
     just a single layer to simulate drainage:
