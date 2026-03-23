@@ -342,7 +342,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/regional_grids.png
+	filename ../../images/vtl_fdm/regional_grids.png
 	width 80text%
 
 \end_inset
@@ -478,7 +478,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/regional_convex_hull.png
+	filename ../../images/vtl_fdm/regional_convex_hull.png
 	width 80text%
 
 \end_inset
@@ -678,7 +678,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/ow_Belgie_tile_point.png
+	filename ../../images/ow_Belgie_tile_point.png
 	width 100text%
 
 \end_inset
@@ -745,7 +745,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/tile_plot.png
+	filename ../../images/tile_plot.png
 	width 80text%
 
 \end_inset
@@ -834,7 +834,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/surf_wat_in_cells.png
+	filename ../../images/surf_wat_in_cells.png
 	width 80text%
 
 \end_inset
@@ -1051,7 +1051,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/bm-216-retourbemaling-bronnen_t183d_Z10.png
+	filename ../../images/vtl_fdm/bm-216-retourbemaling-bronnen_t183d_Z10.png
 	width 80text%
 
 \end_inset
@@ -1117,7 +1117,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/bm-216-retourbemaling-bronnen_ht.png
+	filename ../../images/vtl_fdm/bm-216-retourbemaling-bronnen_ht.png
 	width 80text%
 
 \end_inset
@@ -1296,7 +1296,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/Theo/Entiteiten/Hygea/2022-AGT/Coding/images/vtl_fdm/bm-216-retourbemaling-bronnen_Qt.png
+	filename ../../images/vtl_fdm/bm-216-retourbemaling-bronnen_Qt.png
 	width 80text%
 
 \end_inset

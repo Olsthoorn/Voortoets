@@ -151,6 +151,50 @@ T.N.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "default"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+Prof.dr.ir.TN.Olsthoorn
+\end_layout
+
+\begin_layout Plain Layout
+Hygea Consult
+\end_layout
+
+\begin_layout Plain Layout
+Strawinskylaan 54
+\end_layout
+
+\begin_layout Plain Layout
+NL 2102 CR Heemstede
+\end_layout
+
+\begin_layout Plain Layout
+tolsthoorn@xs4all.nl
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \align center
 \begin_inset Graphics
 	filename ../../images/lijnbronnen_contours.png
@@ -4583,7 +4627,7 @@ nolink "false"
 \end_layout
 
 \begin_layout Subsection
-Verwerking van verticale anisotropie in de radiale weerstand
+Verticale anisotropie in de radiale weerstand
 \end_layout
 
 \begin_layout Standard
@@ -4717,8 +4761,8 @@ Het is gebruikelijk
  In dit verschaalde isotrope pakket staan de stijghoogte- en stroomlijnen loodrecht op elkaar.
 \end_layout
 
-\begin_layout Subsubsection
-Toepassing van anisotropie op de radiale weerstand
+\begin_layout Section
+Radiale weerstand met verticale anisotropie
 \end_layout
 
 \begin_layout Standard
@@ -4806,8 +4850,8 @@ Voor de eenvoudige formule met anisotropie geldt
 
 \end_layout
 
-\begin_layout Subsubsection
-De lekweerstand inclusief radiale weerstand en weerstand van de sliblaag op de slootbodem
+\begin_layout Section
+De lekweerstand en parametergevoeligheid met verticale anisotropie
 \end_layout
 
 \begin_layout Standard

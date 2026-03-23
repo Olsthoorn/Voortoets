@@ -809,7 +809,7 @@ class DRNcond:
     coinciding with the watet level at which the surface water drains
     the net recharge surplus N.    """
 
-    def __init__(self, h0:float, N:float, hN:float):
+    def __init__(self, h0:float, hN:float, cN:float, N:float, ):
         """Constructor just sets the regional values.
                         
         The __init__ only takes the basis parameters, not the number of steps.
@@ -819,14 +819,29 @@ class DRNcond:
         ----------
         h0: float
             water bottom elevation.
-        phiN: float
-            surface water reference level (at N)
-        n: int
-            number of drain levels between h0 and phiN (phiN not included)
+        hN: float
+            surface water level at discharge equal to N.
+        cN: float
+            reference leakage resistance at discharge of N
+        N: float
+            time averaged net recharge (precipitation surplus)        
         """
         self.h0 = h0
         self.hN = hN
-        self.N = N        
+        self.cN = np.atleast_1d(cN)[0].item() # first if array. Must be scalar
+        self.N = N
+ 
+        # --- Ref. depth of water course
+        self.yN = self.hN - self.h0
+        
+        self.eta = self.yN / np.sqrt(self.N)
+        self.gamma = self.cN * np.sqrt(self.N)
+        
+        # --- Reference head
+        self.phiN = self.hN + self.cN * self.N
+        
+        # --- Value of continous Cs at phiN  is dq/dphi | phi=phiN
+        self.CN = 2 * (self.phiN - self.h0) / (self.eta + self.gamma) ** 2
         
     def get_ch(self, n:int)->tuple:
         """Return conductance values and the step elevations.
@@ -839,27 +854,24 @@ class DRNcond:
         Returns both Cs[n] and hdrn[n]
             All conductance steps are the same because the total Cs is linear in y.
         """
-        # --- Ref. depth of water course
-        yN = self.hN - self.h0
+                
+        # --- Steps of z, the height of the head phi above the water course bottom h0 
+        z = np.linspace(0, self.phiN - self.h0, n + 1)
+        zm = 0.5 * (z[:-1] + z[1:])
         
-        # --- Step water course depths
-        y = np.linspace(0, yN, n + 1)        
-
-        # --- Total conductance ($C_s = 2 \frac{N}{y_N^2) y$)
-        Cs = 2 * self.N * yN**2 * y
+        # --- Cs is linear along z
+        Cs = self.CN * (z / (self.phiN - self.h0))
 
         # --- Conductivity steps
         DeltaC = np.diff(Cs)
-        ym = 0.5 * (y[:-1] + y[1:])
 
         # --- Return the conductivity steps and the step elevations
-        return DeltaC, self.h0 + ym
+        return DeltaC, self.h0 + zm
 
     def q(self)->float|np.ndarray:
         """Return discharge continuous between h0 and phiN."""
-        yN = self.hN - self.h0
-        y = np.linspace(0, yN)
-        return self.N * (y / yN) ** 2, self.h0 + y
+        phi = np.linspace(self.h0, self.phiN)             
+        return  ((phi - self.h0) / (self.eta + self.gamma)) ** 2, phi
     
     def qCsteps(self, n:int=6)->float | np.ndarray:
         """Return drain flux for surface water level at phi using n conductance steps.
@@ -874,11 +886,9 @@ class DRNcond:
         q: float | np.ndarray
             The drainage flux at levels phi given the number of conductance steps.
         """
-        phi = np.linspace(self.h0, self.hN)
-
+        q, phi = self.q()
         DeltaC, hdrn = self.get_ch(n=n)
-
-        q = np.zeros_like(phi)        
+        q *= 0.
         for DCi, hi in zip(DeltaC, hdrn):
             q[phi > hi] += DCi * (phi[phi > hi] - hi)        
         return q, phi
@@ -896,11 +906,11 @@ class DRNcond:
         -------
         cond_: float | np.ndarray
             conductance at levels phi given number of conductance substeps.
-        """
-        yN = self.hN - self.h0
-        y = np.linspace(0, yN)
-        phi = self.h0 + y
-        cond = 2 * self.N * yN**2 * y
+        """        
+        phi = np.linspace(self.h0, self.phiN)
+        z = phi - self.h0        
+        cond = 2 * z / (self.eta + self.gamma) ** 2
+        phi = self.h0 + z
         return cond, phi
 
     def condSteps(self, n:int=None)->float | np.ndarray:
@@ -918,17 +928,15 @@ class DRNcond:
         cond_: float | np.ndarray
             conductance at levels phi given number of conductance substeps.
         """
-        yN = self.hN - self.h0
-        y = np.linspace(0, yN)[0:-1]
+        cond, phi = self.cond()     
         DeltaC, hdrn = self.get_ch(n=n)
-        cond = np.zeros_like(y)
-        phi = self.h0 + y
+        cond *= 0.
         for DCi, hi in zip(DeltaC, hdrn):
             cond[phi >= hi] += DCi
         return cond, phi
 
 # %%
-def show_conductances():
+def show_conductances(h0=None, hN=None, cN=None, N=None):
     r"""Show the continuous discharge with free drainage and with conductance steps.
     
     The drainage is defined by $q = N \frac{y}{y_N}^2$ in which
@@ -950,23 +958,32 @@ def show_conductances():
     Not that the more steps, the lower the discharge, with
     a minimum equal to the continous discharge for $n=\infty$.
     
+    Parameters
+    ----------
+    h0: float
+        Elevation of surfce water bottoms.
+    hN: float
+        Surface water level at which discharge equals N.
+    cN: float
+        Leakage resistance in reference situation with dicharge = N
+    N: float
+        Preciptaton surplus [m/d].
+    
     TO 2026-03-19
     """
-    h0, hN, N = -1, 0, 0.001
+    cN = np.atleast_1d(cN)[0].item() # --- force scalar
+    Cs = 1 / cN
 
-    cdr = (hN - h0) / N
-    Cs = 1 / cdr
-
-    drnc = DRNcond(h0=h0, N=N, hN=hN)
+    drnc = DRNcond(h0=h0, hN=hN, cN=cN, N=N)
     
     # --- show the discharge continuous and with conductivy steps
 
     fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(10, 6))
     fig.suptitle("Waterdiepe als functie van lek q en conductantie.\n"
-       + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cdr}, $C_s$={Cs:.3g} 1/d")
+       + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cN}, $C_s$={Cs:.3g} 1/d")
        
-    ax1.set(title="Discharge [m/d]", xlabel=r"$q$ [m/d]", ylabel=r"Waterdiepte $y  = \phi - h_0$")
-    ax2.set(title="Specific conductance [1/d]", xlabel=r"$cond$ [m/d]", ylabel=r"Waterdiepte $y = \phi - h_0$")
+    ax1.set(title="Discharge [m/d]", xlabel=r"$q$ [m/d]", ylabel=r"$\phi - h_0$")
+    ax2.set(title="Specific conductance [1/d]", xlabel=r"$cond$ [m/d]", ylabel=r"$\phi - h_0$")
 
     q, phi = drnc.q()
     ax1.plot(q, phi - h0, '-', label="q, continuous")
@@ -989,7 +1006,7 @@ def show_conductances():
         ax2.step(condSteps, phiSteps - h0, label = f'n_steps={n}')        
         
 
-    ax1.plot(N, hN - h0, 'o', mec='k', mfc='r', label=fr"$q(\phi_N)$={N} m/d")
+    ax1.plot(N, phi[-1] - h0, 'o', mec='k', mfc='r', label=fr"$q(\phi_N)$={N} m/d")
 
     ax1.grid(); ax2.grid()
     ax1.legend(); ax2.legend()
@@ -999,11 +1016,11 @@ def show_conductances():
     
     # --- Revert the x and y axes for better comprehension
     fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(10, 6))
-    fig.suptitle("Lek en specifieke conductantie als functie van waterdiepte y.\n"
-       + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cdr}, $C_s$={Cs:.3g} 1/d")
+    fig.suptitle(r"Lek en specifieke conductantie als functie van $\phi - h_0$." + "\n"
+       + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cN}, $C_s$={Cs:.3g} 1/d")
        
-    ax1.set(title="Discharge [m/d]", xlabel=r"Waterdiepte $y = h - h_0$", ylabel=r"$q$ [m/d]")
-    ax2.set(title="Specific conductance [1/d]", xlabel=r"Waterdiepte $y = h - h_0$", ylabel=r"$cond$ [m/d]")
+    ax1.set(title="Discharge [m/d]", xlabel=r"Waterdiepte $\phi - h_0$", ylabel=r"$q$ [m/d]")
+    ax2.set(title="Specific conductance [1/d]", xlabel=r"$\phi - h_0$", ylabel=r"$cond$ [m/d]")
 
     q, phi = drnc.q()
     ax1.plot(phi - h0, q, '-', label="q, continuous")
@@ -1025,7 +1042,7 @@ def show_conductances():
         
         ax2.step(phiSteps -h0, condSteps, label = f'n_steps={n}')
         
-    ax1.plot(hN - h0, N, 'o', mec='k', mfc='r', label=fr"$q(\phi_N)$={N} m/d")
+    ax1.plot(phi[-1] - h0, N, 'o', mec='k', mfc='r', label=fr"$q(\phi_N)$={N} m/d")
 
     ax1.grid(); ax2.grid()
     ax1.legend(); ax2.legend()
@@ -1034,7 +1051,8 @@ def show_conductances():
     fig.savefig(os.path.join(dirs.images, "VAW-q-cond-vs-y.png"))
     plt.plot()
     
-show_conductances()
+show_conductances(h0=-1., hN=0., cN=200, N=0.001)
+
   
 # %%
 def oneD_all_boundary_types(kw):
@@ -1060,7 +1078,7 @@ def oneD_all_boundary_types(kw):
     lambda_  = np.sqrt(kD * float(np.squeeze(kw['c'])))
     
     # --- Set up the grid
-    x = np.linspace(0, 6000., 601)
+    x = np.linspace(0, 2000., 201)
     # --- One layer only
     z = (kw['z0'] - np.cumsum(np.hstack((0., kw['D']))))[1:]
     
@@ -1115,15 +1133,17 @@ def oneD_all_boundary_types(kw):
     FDR2['w'], FDR2['L'] = kw['w2'], kw['L']
     
     # --- Using 6 drn levels between h-y0 and h
-    DRN6 = np.zeros(len(Ig) * 6, dtype=Fdm3.dtype['drn'])
-    C = gr.Area.ravel() / (kw['c'])    
-    C6, h6 = get_ch(h0=kw['h'] - kw['y0'], phiN=kw['h'], C=C, n=6)
-    L = len(Ig)
-    for i, hi in enumerate(h6):
-        i1, i2 = i * L, (i + 1) * L
-        DRN6[i1:i2]['Ig']= Ig
-        DRN6[i1:i2]['h'] = hi
-        DRN6[i1:i2]['C'] = C6
+    drncond = DRNcond(h0=kw['h'] - kw['y0'], hN=kw['h'], cN=kw['c'], N=kw['N'])
+    
+    nDrn = 1
+    DRNn = np.zeros(len(Ig) * nDrn, dtype=Fdm3.dtype['drn'])    
+    DC, hdr = drncond.get_ch(n=nDrn)
+    DRNn = np.zeros(len(hdr) * gr.nx, dtype=Fdm3.dtype['drn'])
+    for i, (DCi, hi) in enumerate(zip(DC, hdr)):
+        i1, i2 = i * len(Ig), (i + 1) * len(Ig)
+        DRNn[i1:i2]['Ig']= Ig
+        DRNn[i1:i2]['h'] = hi
+        DRNn[i1:i2]['C'] = DCi * gr.Area
 
     # --- Instantiate the Fdm3 model using different boundaries in turn
     mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ)
@@ -1134,7 +1154,7 @@ def oneD_all_boundary_types(kw):
     out_riv = mdl.simulate(RIV=RIV,   tm=[1., 5.])
     out_fdr1 = mdl.simulate(FDR=FDR1, tm=[1., 5.])
     out_fdr2 = mdl.simulate(FDR=FDR2, tm=[1., 5.])
-    out_drn6 = mdl.simulate(DRN=DRN6, tm=[1., 5.])
+    out_drnn = mdl.simulate(DRN=DRNn, tm=[1., 5.])
     
     # --- Show the results
     
@@ -1148,12 +1168,12 @@ def oneD_all_boundary_types(kw):
     ax.plot(gr.xm, Nc.item() + kw['Q'] * lambda_ / kD * np.exp(-gr.xm / lambda_),'+', label='Mazure')
 
     # --- Plot numerical results
-    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :],      label='Fdm3 GHB')
-    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], 'x', label='Fdm3 DRN')
-    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :],      label='Fdm3 RIV, h=rbot')
-    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :],      label='Fdm3 FDR, math. drainage')
-    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :],      label='Fdm3 FDR, phys. drainage')
-    ax.plot(gr.xm, out_drn6['Phi'][-1, 0, :],      label='Fdm3 DRN6, 6 drainage levels')
+    ax.plot(gr.xm, out_ghb[ 'Phi'][-1, 0, :],      label='GHB')
+    ax.plot(gr.xm, out_drn[ 'Phi'][-1, 0, :], 'x', label='DRN')
+    ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :],      label='RIV, h=rbot')
+    ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :],      label='FDR, math. drainage')
+    ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :],      label='FDR, phys. drainage')
+    ax.plot(gr.xm, out_drnn['Phi'][-1, 0, :],      label=f'DRN{nDrn} drainage levels')
     
         
     ax.grid()
@@ -1169,7 +1189,7 @@ def oneD_all_boundary_types(kw):
     ax.plot(gr.XM.ravel()[out_riv['RIV']['Ig']], out_riv[ 'RIV']['q'], '+', label='Fdm3 RIV')
     ax.plot(gr.XM.ravel()[out_fdr1['FDR']['Ig']], out_fdr1[ 'FDR']['q'],    label='Fdm3 FDR1 math. drainage')
     ax.plot(gr.XM.ravel()[out_fdr2['FDR']['Ig']], out_fdr2[ 'FDR']['q'],    label='Fdm3 FDR2 phys. drainage')
-    ax.plot(gr.XM.ravel()[out_drn6['DRN']['Ig']], out_drn6[ 'DRN']['q'],    label='Fdm3 DRN6 6 drainage levels')
+    ax.plot(gr.XM.ravel()[out_drnn['DRN']['Ig']], out_drnn[ 'DRN']['q'],    label='Fdm3 DRNn drainage levels')
     ax.grid()
     ax.legend()
     
@@ -1257,16 +1277,18 @@ def axial_all_boundary_types(kw):
     # --- Instantiate the model
     mdl = Fdm3(gr=gr, K=k, c=None, IBOUND=IBOUND, HI=HI, FQ=FQ) # run model  
     
-    # --- Using 6 drn levels between h-y0 and h
-    DRN6 = np.zeros(len(Ig) * 6, dtype=Fdm3.dtype['drn'])
-    C = gr.Area.ravel() / (kw['c'])
-    C6, h6 = get_ch(h0=kw['h'] - kw['y0'], phiN=kw['h'], C=C, n=6)
-    L = len(Ig)
-    for i, hi in enumerate(h6):
-        i1, i2 = i * L, (i + 1) * L
-        DRN6[i1:i2]['Ig']= Ig
-        DRN6[i1:i2]['h'] = hi
-        DRN6[i1:i2]['C'] = C6
+    # --- Using n drn levels between h-y0 and h
+    drncond = DRNcond(h0=kw['h'] - kw['y0'], hN=kw['h'], cN=kw['c'], N=kw['N'])
+    nDrn = 4
+    
+    DRNn = np.zeros(len(Ig) * nDrn, dtype=Fdm3.dtype['drn'])    
+    DC, hdr = drncond.get_ch(n=nDrn)
+    DRNn = np.zeros(len(hdr) * gr.nx, dtype=Fdm3.dtype['drn'])
+    for i, (DCi, hi) in enumerate(zip(DC, hdr)):
+        i1, i2 = i * len(Ig), (i + 1) * len(Ig)
+        DRNn[i1:i2]['Ig']= Ig
+        DRNn[i1:i2]['h'] = hi
+        DRNn[i1:i2]['C'] = DCi
         
     # --- Run the model for each set of boundary coditions in turn  
     out_ghb = mdl.simulate(GHB=GHB) # run model
@@ -1274,7 +1296,7 @@ def axial_all_boundary_types(kw):
     out_riv = mdl.simulate(RIV=RIV, tm=[1., 5.])
     out_fdr1 = mdl.simulate(FDR=FDR1, tm=[1., 5.])
     out_fdr2 = mdl.simulate(FDR=FDR2, tm=[1., 5.])
-    out_drn6 = mdl.simulate(DRN=DRN6, tm=[1., 5.]) 
+    out_drn6 = mdl.simulate(DRN=DRNn, tm=[1., 5.]) 
     
     # --- Show the results
     
@@ -1292,7 +1314,7 @@ def axial_all_boundary_types(kw):
     ax.plot(gr.xm, out_riv[ 'Phi'][-1, 0, :],      label='RIV h=rbot')
     ax.plot(gr.xm, out_fdr1['Phi'][-1, 0, :],      label='FDR math. drainage')
     ax.plot(gr.xm, out_fdr2['Phi'][-1, 0, :],      label='FDR phys. drainage')
-    ax.plot(gr.xm, out_drn6['Phi'][-1, 0, :],      label='DRN 6 drainage levels')
+    ax.plot(gr.xm, out_drn6['Phi'][-1, 0, :],      label=f'DRN {nDrn} drainage levels')
     ax.set_xlim(0, 2000)
     ax.set_ylim(-3., 1.)
     ax.grid()
@@ -1310,7 +1332,7 @@ def axial_all_boundary_types(kw):
     ax.plot(gr.XM.ravel()[out_riv['RIV']['Ig']], out_riv[ 'RIV']['q'], '+', label='RIV h = rbot')
     ax.plot(gr.XM.ravel()[out_fdr1['FDR']['Ig']], out_fdr1[ 'FDR']['q'],    label='FDR1 math. drainage')
     ax.plot(gr.XM.ravel()[out_fdr2['FDR']['Ig']], out_fdr2[ 'FDR']['q'],    label='FDR2 phys. drainage')
-    ax.plot(gr.XM.ravel()[out_drn6['DRN']['Ig']], out_drn6[ 'DRN']['q'],    label='DRN 6 drainage levels')
+    ax.plot(gr.XM.ravel()[out_drn6['DRN']['Ig']], out_drn6[ 'DRN']['q'],    label=f'DRN {nDrn} drainage levels')
     ax.grid()
     ax.legend()
     
@@ -1351,7 +1373,7 @@ cases = {
     'general_data': {        
         'z0': 0.,                
         'D' : np.array([10., 50.]),
-        'c' : np.array([[1000.]]),
+        'c' : np.array([[200.]]),      # Layer resistances [0] is top.
         'k' : np.array([np.inf, 10]),  # m/d conductivity of regional aquifer        
         'N' : 0.001, # Reference recharge
         'h' : 0.0, # drainage basis reference situation
@@ -1364,16 +1386,21 @@ cases = {
 
 if __name__ == "__main__":
     
+    show_conductances(h0=-1., hN=0., cN=200, N=0.001)
+
+    
     out1D_all = oneD_all_boundary_types(cases['sectioin1D_data'] | cases['general_data'])
     
-    outax_all = axial_all_boundary_types(cases['axial_data'    ] | cases['general_data'])
+    if False:
+        outax_all = axial_all_boundary_types(cases['axial_data'    ] | cases['general_data'])
     
     for name, out in out1D_all.items():
         print(name)
         watbal(out)
         
-    for name, out in outax_all.items():
-        print(name)
-        watbal(out)
+    if False:
+        for name, out in outax_all.items():
+            print(name)
+            watbal(out)
         
     plt.show()
