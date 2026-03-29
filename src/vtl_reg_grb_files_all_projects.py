@@ -4,7 +4,7 @@
 #
 # W A R N I N G
 #
-# This file has been run and should not be run again. It takes along time because it
+# This file has been run and should not be run again. It takes a long time because it
 # runs modflow for all regional models in all projects to generate the .grb (binary
 # grid files) which were absent in the originally obtained files (due to option NOGRB
 # in one of the Modflow input files.)

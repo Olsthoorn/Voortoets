@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "python": "/Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/.venv/bin/python",
+            "python": "${workspaceFolder}/.venv/bin/python",
             "justMyCode": false,
             "cwd": "${workspaceFolder}",
         },

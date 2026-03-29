@@ -51,8 +51,8 @@ if project_root not in sys.path:
 
 # --- Local / project
 from src import vtl_surf_water as surf_wat
-from fdm.src.fdm3t import fdm3t
-from fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
+from tools.fdm.src.fdm3t import fdm3t
+from tools.fdm.src.fdm3t import dtypeQ, dtypeH, dtypeGHB
 import src.vtl_interventions as iv
 
 # %%
