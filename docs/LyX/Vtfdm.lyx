@@ -1016,7 +1016,7 @@ Resultaten
 \end_layout
 
 \begin_layout Standard
-De resultaten kunnen op verschillende manieren worden gespresenteerd.
+De resultaten kunnen op verschillende manieren worden gepresenteerd.
  Momenteel is dat
 \end_layout
 
@@ -1035,7 +1035,7 @@ receptor punt
 
 \begin_layout Enumerate
 Het grafische verloop van de verschillende debietsoorten voor het hele model:
- Totaal onttrokken (of geïnfilteerd),
+ Totaal onttrokken (of geïnfiltreerd),
  totale uitwisseling via punten met vaste stijghoogte (zoals van de bouwput),
  totale uitwisseling met het oppervlaktewater,
  en totale uitwisseling met de berging.
@@ -1052,7 +1052,7 @@ Een platte grond van het model met daarop de interventie (putten,
  het oppervlaktewater (sloten,
  beken,
  kanalen,
- rivieren) en de berekende verlaging op het moment dat de verlaging weer naar nul gaat of de onttrekking staakt danwel na 365 dagen.
+ rivieren) en de berekende verlaging op het moment dat de verlaging weer naar nul gaat of de onttrekking staakt dan wel na 365 dagen.
 \end_layout
 
 \begin_layout Enumerate
