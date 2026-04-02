@@ -979,7 +979,7 @@ def show_conductances(h0=None, hN=None, cN=None, N=None):
     # --- show the discharge continuous and with conductivy steps
 
     fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(10, 6))
-    fig.suptitle("Waterdiepe als functie van lek q en conductantie.\n"
+    fig.suptitle("Waterdiepte als functie van lek q en conductantie.\n"
        + fr"$h_N$={hN} m, $h_0$={h0} m, $N$={N} m/d, $c_{{dr}}$={cN}, $C_s$={Cs:.3g} 1/d")
        
     ax1.set(title="Discharge [m/d]", xlabel=r"$q$ [m/d]", ylabel=r"$\phi - h_0$")

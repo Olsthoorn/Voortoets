@@ -1,0 +1,2227 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+%\usepackage{epstopdf} % to include .eps graphics files with pdfLaTeX
+\usepackage{flafter}   % Don't place floats before their definition
+%\usepackage{topcapt}  % Define \topcation for placing captions above tables (not in gwTeX)
+
+\usepackage{xurl}      % better URL setting, uses old url package
+
+\usepackage{xcolor}
+\definecolor{darkblue}{rgb}{0,0,0.4}
+\usepackage[]{hyperref} % Generates all cross references
+\hypersetup{            % Setting options for hyperref package
+	breaklinks=true,    % break line with long hyperlinks
+	colorlinks=true,    % coloured links
+	linkcolor=blue,
+	filecolor=magenta,
+	urlcolor=darkblue,
+	citecolor=blue,
+	backref=page
+} 
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{memhfixc}  % remove conflict between the memoir class & hyperref
+\usepackage{pdfsync}   % enable tex source and pdf output syncronicity
+
+\usepackage{alltt}
+
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+% \lstdefinestyle{mystyle}{
+%   language=Python,
+%   numbers=left
+% }
+
+% Put lstset here, after lstdefinestyle
+% \lstset{style=mystyle}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language dutch
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command biber
+\index_command default
+\float_placement H
+\float_alignment center
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\biblio_options hyperref=true, backref=true, backrefstyle=three,backreffloats=true,indexing=bib,date=year
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style polish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\listings_params "language=Python,extendedchars=false,frameround=fttt,numbers=left,% line numbers use none,numberstyle={\tiny},stepnumber=2,% line numbers only every so many,numbersep=9pt,% how far line numbers from text?,showspaces=false,showstringspaces=false,showtabs=false,tab={\rightarrowfill},basicstyle={\small},keywordstyle={\color{blue}},commentstyle={\color{green}},stringstyle={\ttfamily \color{magenta}},identifierstyle={\color{black}}"
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Voortoets ANB
+\begin_inset Newline newline
+\end_inset
+
+Gebruik van formules voor semi-spanningswater voor het berekenen van de invloed van onttrekkingen in een freatisch pakket
+\end_layout
+
+\begin_layout Author
+T.N.Olsthoorn
+\end_layout
+
+\begin_layout Date
+02 April 2026
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "default"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Prof.dr.ir.T.N.Olsthoorn
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Hygea Consult
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Strawinskylaan 54
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+NL 2102 CR Heemstede
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
++31620440256
+\end_layout
+
+\begin_layout Plain Layout
+
+\size footnotesize
+tolsthoorn@xs4all.nl
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+In voorliggend rapport wordt ten behoeve van de Voortoets van het Agentschap Bos en Natuur (ANB,
+ Vlaamse Overheid) onderzocht in hoeverre bij de berekening van de reikwijdte van een voorgestelde ingreep in het grondwatersysteem,
+ zoals een onttrekking,
+ kan worden volstaan met eenvoudige grondwaterformules,
+ waarin het complexe oppervlaktewater wordt vervangen door een equivalente semi-permeabele laag bovenop het watervoerende pakket.
+ Een doel van ANB is de berekeningen op de website van de Voortoets eenvoudig,
+ robuust en transparant te houden.
+ In dit rapport werkt wordt de vraag uitgewerkt voor doorsneden en in de ruimtelijke situatie.
+ Het blijkt dat de uitkomsten van berekeningen waarin de waterlopen zijn vervangen door een equivalente semi-permeabele toplaag,
+ niet van berekeningen met afzonderlijke waterlopen zijn te onderscheiden,
+ wanneer de spreidingslengte van de equivalente waterremmende toplaag groter is dan de afstand tussen de waterlopen.
+ Dit criterium voor acceptabele toepassing van deze vereenvoudiging kan direct worden berekend uit de lekweerstand en het bekend veronderstelde doorlaatvermogen van het (freatische) watervoerende pakket.
+ De voorbeelden met een reëel gebied met echt oppervlaktewater laten zien dat de overeenkomst redelijk goed is,
+ maar niet perfect.
+\end_layout
+
+\begin_layout Section
+Inleiding
+\end_layout
+
+\begin_layout Standard
+Onttrekking aan een freatisch pakket veroorzaakt verlagingen.
+ Deze werken door tot de randvoorwaarden,
+ zoals open water,
+ dat aan een verdere verbreiding van de grondwaterdaling een halt toeroept.
+ Wanneer het open water maar voor een deel het watervoerend pakket doorsnijdt,
+ zal de verlaging van de grondwaterstand ook onder de waterlopen doorlopen.
+ De mate waarin dit gebeurt hang af van de weerstand die de waterlopen en hun bodem bieden tegen in- en uitstroming van grondwater.
+ We noemen deze weerstand de lekweerstand,
+ deze is gedefinieerd als het hoogteverschil tussen de tijds- en gebiedsgemiddelde grondwaterstand en het peil van het oppervlaktewater gedeeld door het gemiddelde neerslagoverschot.
+ Deze lekweerstand is de weerstand die het neerslagoverschot ondervindt door horizontale stroming,
+ radiale stroming en passage van een eventuele sliblaag op de waterbodem.
+ De radiale weerstand is het gevolg van de contractie van de grondwaterstroomlijnen nabij de (onvolkomen insnijdende) waterloop,
+ waarbij ook verticale anisotropie een rol speelt.
+ Het berekenen van de verlaging van de grondwaterstand door een onttrekking hoort rekening te houden met het oppervlaktewater in de wijdere omgeving.
+ In dit rapport wordt nagegaan in hoeverre het gebruik van analytische formules voor semi-spanningswater bruikbaar zijn voor de berekening van de reikwijdte van een voorgenomen ingreep in het freatische grondwater.
+\end_layout
+
+\begin_layout Standard
+Het idee is geboren uit de veel gebruikte aanpak om berekeningen van grondwater binnen een dicht oppervlaktewaterstelsel zoals in een polder te vervangen door een equivalente waterremmende laag op de aquifer waarna beschikbare formules voor semi-gespannen water toepasbaar worden.
+ Het oppervlaktewaterstelsel is in het algemeen echter een stuk minder dicht dan in een polder.
+ Zo komen waterlopen in hogere gebieden soms slechts sporadisch voor in de vorm van beken die vele honderden meters uit elkaar liggen.
+ De vraag die in deze rapportage voorligt,
+ is of ook in gebieden met weinig oppervlaktewater de aanpak met een uniforme lekweerstand acceptabel is,
+ om de invloed van onttrekkingen in een freatisch pakket met redelijke nauwkeurigheid te kunnen berekenen met beschikbare formules voor semi-gespannen grondwaterlagen,
+ te weten de formules van Hantush en De Glee.
+ Beide berekenen de grondwaterstandverlaging 
+\begin_inset Formula $s$
+\end_inset
+
+ [m] ten gevolgen van een constante putonttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+ [m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d].
+ Beide vergen een uniforme weerstandbiedende laag 
+\begin_inset Formula $c$
+\end_inset
+
+ [d] op de aquifer en een uniform doorlaatvermogen 
+\begin_inset Formula $kD$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d].
+ Alleen Hantush heeft een bergingscoëfficiënt 
+\begin_inset Formula $S$
+\end_inset
+
+ [-] nodig.
+ De formule van De Glee is de stationaire versie van die van Hantush en vergt dus geen bergingscoëfficiënt.
+\end_layout
+
+\begin_layout Standard
+De Glee:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s=\frac{Q}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right);\;\lambda=\sqrt{kDc}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Met 
+\begin_inset Formula $K_{0}\left(..\right)$
+\end_inset
+
+ een gemodificeerde besselfunctie.
+\end_layout
+
+\begin_layout Standard
+Hantush:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+s\left(r,t\right)=\frac{Q}{4\pi kD}W\left(u,\frac{r}{\lambda}\right);\;u=\frac{r^{2}S}{4kDt}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+met 
+\begin_inset Formula $W\left(u,\frac{r}{\lambda}\right)$
+\end_inset
+
+ de Hantush's well function.
+\end_layout
+
+\begin_layout Standard
+Het voordeel van het gebruik van deze formules is dat verschillende situaties bij elkaar kunnen worden opgeteld,
+ gesuperponeerd.
+ Voorts gaat de formule van Hantush na lange tijd over in die van De Glee.
+ In principe zou men dus altijd Hantush kunnen toepassen zonder zich te bekommeren over de vraag of de te berekenen situatie al overeenkomt met de eindsituatie of nog niet.
+\end_layout
+
+\begin_layout Section
+lekweerstand
+\end_layout
+
+\begin_layout Standard
+De lekweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d] is een gebiedsparameter die hierna centraal staat.
+ De lekweerstand is per definitie de ruimte en tijdsgemiddelde grondwaterstand 
+\begin_inset Formula $\overline{\phi}$
+\end_inset
+
+ [m] boven het gemiddelde oppervlaktewaterpeil 
+\begin_inset Formula $\overline{h}$
+\end_inset
+
+ [m],
+ gedeeld door het gemiddelde neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+ [m/d] 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bot16"
+literal "false"
+
+\end_inset
+
+.
+ Deze gegevens zijn redelijk gemakkelijk te verkrijgen,
+ want gemeten,
+ zodat de lekweerstand kan worden bepaald.
+ De lekweerstand is onafhankelijk van het neerslagoverschot.
+ Dit geldt ook voor de onderliggende horizontale een radiale weerstand binnen het grondwaterpakket.
+ Voor de weerstand van een sliblaag op de waterbodem is er doorgaans een verschil tussen intredeweerstand (infiltratie vanuit de waterloop) en uittredeweerstand (stroming van grondwater vanuit de grond naar de waterloop,
+ de drainage).
+ Dit verschil maakt de berekeningen afhankelijk van de vraag of de grondwaterstand zich boven of onder het peil van de waterloop bevindt.
+\end_layout
+
+\begin_layout Standard
+De lekweerstand is binnen een gebied met evenwijdige waterlopen als volgt op te splitsen (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ernst62"
+literal "false"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c=\frac{\overline{\phi}-\overline{h}}{N}=Lw+\frac{NL}{12kD}+c_{slb}\label{eq:lekweerstand}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $L$
+\end_inset
+
+ [m] de afstand tussen de (parallel veronderstelde) waterlopen,
+ 
+\begin_inset Formula $kD$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d] het doorlaatvermogen van het freatische pakket en 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] de radiale weerstand die ontstaat door contractie van stroomlijnen naar de onvolkomen insnijdende sloot.
+ 
+\begin_inset Formula $NL$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d] is de afvoer per m slootlengte,
+ ervan uitgaande dat de waterloop al het neerslagoverschot afvoert binnen zijn intrekgebied.
+ 
+\end_layout
+
+\begin_layout Standard
+Aldus is de lekweerstand uit veldgegevens te bepalen en op te splitsen mits het doorlaatvermogen 
+\begin_inset Formula $kD$
+\end_inset
+
+ bekend is.
+ De radiale weerstand kan ook langs theoretische weg worden berekend:
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Huis72"
+literal "false"
+
+\end_inset
+
+ (p57) geeft een formule voor de extra verlaging 
+\begin_inset Formula $\Delta\phi$
+\end_inset
+
+ [m] door contractie van stroomlijnen bij onttrekking 
+\begin_inset Formula $Q$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d] per strekkende meter open leiding
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta\phi=\frac{Q}{\pi k}\ln\left(\frac{D}{\pi r}\right)\approx\frac{Q}{\pi k}\ln\left(\frac{D}{\Omega}\right)\label{eq:Huisman72}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $r$
+\end_inset
+
+ de halve breedte van de waterloop waarvan de doorsnede als halve cirkel is verondersteld en de natte omtrek 
+\begin_inset Formula $\Omega\approx\pi r$
+\end_inset
+
+.
+ De radiale weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] is dan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+w=\frac{1}{\pi k}\ln\left(\frac{D}{\Omega}\right)\label{eq:Huisman72-w}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor berekening van de radiale weerstand bij verticale anisotropie,
+ die praktisch overal voorkomt,
+ moet eerst de doorsnede worden verschaald tot een isotroop medium met uniforme doorlatendheid 
+\begin_inset Formula $k=\sqrt{k_{x}k_{z}}$
+\end_inset
+
+ met 
+\begin_inset Formula $k_{x}$
+\end_inset
+
+en 
+\begin_inset Formula $k_{z}$
+\end_inset
+
+ de horizontale en verticale doorlatendheid respectievelijk
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+w=\frac{1}{\sqrt{k_{x}k_{z}}}\ln\left(\frac{D}{\pi r}\sqrt{\frac{k_{x}}{k_{z}}}\right)\label{eq:Huisman72-aniso}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Een verticale anisotropie met 
+\begin_inset Formula $k_{x}>k_{z}$
+\end_inset
+
+ vergroot de slootweerstand.
+\end_layout
+
+\begin_layout Section
+Vervanging van waterlopen door een vlakdekkende weerstandslaag
+\end_layout
+
+\begin_layout Standard
+De zogenoemde lekweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d] van de vlakdekkende laag ter vervanging van de weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] van de waterlopen is gedefinieerd als de laag die bij een uniforme onttrekking of infiltratie hetzelfde verschil tussen ruimtelijk gemiddelde stijghoogten en slootpeil veroorzaakt als bij het modelleren van de actuele waterlopen.
+ Dus,
+ stel we hebben een uniforme infiltratie gelijk aan het neerslagoverschot 
+\begin_inset Formula $N$
+\end_inset
+
+ [m/d],
+ dan geeft de equivalente weerstandslaag met weerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d] een stijghoogteverlies 
+\begin_inset Formula $\Delta\phi_{N}=\overline{\phi}_{N}-h_{N}$
+\end_inset
+
+ [m] van
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta\phi=Nc\label{eq:dphi=Nc}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En met afstand tussen de waterlopen,
+ 
+\begin_inset Formula $L$
+\end_inset
+
+,
+ hebben we
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta\phi=NLw\label{eq:dphi=NLw}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En dus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c=wL\label{eq:c=wL}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het concept van de 
+\begin_inset Quotes pld
+\end_inset
+
+general head boundary
+\begin_inset Quotes prd
+\end_inset
+
+ in een eindig differentie model stelt dat de drainagestroom vanuit een rekencel gelijk is aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Q=C\Delta\phi\label{eq:Q=CDphi}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hierin is 
+\begin_inset Formula $C$
+\end_inset
+
+ de conductantie [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d].
+ Met de waterlopen loodrecht op de 
+\begin_inset Formula $x$
+\end_inset
+
+-as en de lengte van de rekencel gelijk aan 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ loodrecht op de 
+\begin_inset Formula $x$
+\end_inset
+
+-as wordt de drainage van de rekencel ,met dus ook 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ aan lengte waterloop erin,
+ gelijk aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Q=NL\Delta y=C\Delta\phi=\frac{\Delta\phi}{w}\Delta y
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Zodat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+C=\frac{\Delta y}{w}\;[m^{2}/d]\label{eq:C=Dy/w}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voor het model met de equivalente watervoerende laag met weerstand 
+\begin_inset Formula $c=wL$
+\end_inset
+
+ moeten we de verticale doorlatendheid van deze laag nog bepalen.
+ De weerstand die deze laag moet bieden is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+c=wL=\frac{D_{1}/2}{k_{z1}}L
+\end{equation}
+
+\end_inset
+
+Zodat
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+k_{z1}=\frac{D_{1}/2}{w}\label{eq:kz=D1/2w}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+voor zowel het vlakke als het ruimtelijke model.
+ De factor 
+\begin_inset Formula $D_{1}/2$
+\end_inset
+
+ is het gevolg van de wijze waarop het eindige differentiemodel de verticale stroming berekent tussen de middens van de boven elkaar gelegen rekencellen.
+ De afstand vanaf het midden van de waterremmende laag tot de onderzijde daarvan is 
+\begin_inset Formula $D_{1}/2$
+\end_inset
+
+.
+ Hierbij verwaarlozen we het stijghoogteverlies tussen de bovenzijde en het midden van de onderliggende aquifer.
+ Dit is in de regel gerechtvaardigd.
+ Waar dat niet het geval is,
+ kunnen dit meenemen in de analyse.
+\end_layout
+
+\begin_layout Section
+Modellering
+\end_layout
+
+\begin_layout Subsection
+Intro
+\end_layout
+
+\begin_layout Standard
+De voorgestelde methode om een stelsel van waterlopen te vervangen door een vlakdekkende weerstandslaag,
+ illustreren we hierna aan de hand van een vlak en een ruimtelijk eindig differentie model van het type Modflow.
+ In beide modellen zijn de waterlopen evenwijdig en op onderling gelijke afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ en lopen in de 
+\begin_inset Formula $y$
+\end_inset
+
+-richting.
+ In het vlakke model is de onttrekking een oneindig lange sleuf loodrecht op de 
+\begin_inset Formula $x$
+\end_inset
+
+-as en heeft dimensie m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d.
+ In het ruimtelijke model is de onttrekking een bron in het centrum en heeft dan dimensie m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d.
+ Voor het vergelijken van de situatie met actuele waterlopen met de situatie waarin deze zijn vervangen door een equivalente waterremmende laag op de aquifer,
+ komen zowel het vlakke als het ruimtelijke model in twee varianten.
+ In de eerste variant zijn de sloten ingebracht door middel van een cauchy-randvoorwaarde,
+ de zogenoemde 
+\begin_inset Quotes pld
+\end_inset
+
+general head boundary
+\begin_inset Quotes prd
+\end_inset
+
+ in Modflow jargon,
+ waarin het grondwater in de rekencel van de aquifer via een weerstand is verbonden met een vaste stijghoogte in de buitenwereld.
+ In de tweede variant zijn de waterlopen vervangen door een vlakdekkende waterremmende laag op het watervoerende pakket.
+ De watervoerende laag bestaat steeds uit slechts een enkele modellaag.
+\end_layout
+
+\begin_layout Subsection
+Eéndimensionaal model
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft de verlaging berekend met individuele waterlopen met weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] en met een equivalente uniforme lekweerstand 
+\begin_inset Formula $c=Lw$
+\end_inset
+
+ [d] (zie de titels in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+voor de gebruikte waarden,
+ inclusief van 
+\begin_inset Formula $\lambda$
+\end_inset
+
+).
+ De waterlopen liggen 
+\begin_inset Formula $L=500$
+\end_inset
+
+ m uit elkaar en zijn ook in fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ aangegeven.
+ 
+\begin_inset Formula $kD=250$
+\end_inset
+
+ m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d.
+ Omdat 
+\begin_inset Formula $c=Lw$
+\end_inset
+
+,
+ geeft een kleine slootweerstand ook een kleine lekweerstand en daarmee een kleine spreidingslengte 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ Omdat de 
+\begin_inset Formula $x$
+\end_inset
+
+-as van de plaatjes is beperkt tot -
+\begin_inset Formula $3\lambda\le x\le3\lambda$
+\end_inset
+
+ bij een veel langere rekenas,
+ hier 
+\begin_inset Formula $-5000\le x\le5000$
+\end_inset
+
+,
+ tonen de verschillende plaatjes in een meer of minder ingezoomd deel van de 
+\begin_inset Formula $x$
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+-as.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/drawdown_xsec_4xw.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-in-eendimensionaal"
+
+\end_inset
+
+Verlaging in ééndimensionale doorsnede.
+ Blauw het rekenresultaat met voeding via individuele waterlopen met intree/uittredeweerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m].
+ Rood de equivalente oplossing,
+ waarin de waterlopen zijn vervangen door een uniforme lekweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d].
+ De 
+\begin_inset Formula $x$
+\end_inset
+
+-as van de plaatjes is steeds begrensd tussen 
+\begin_inset Formula $-3\lambda<x<3\lambda$
+\end_inset
+
+,
+ maar de reken-
+\begin_inset Formula $x$
+\end_inset
+
+-as loopt van 
+\begin_inset Formula $x=-5000$
+\end_inset
+
+ tot 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $x=5000$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ m.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat zien,
+ dat met name bij kleine 
+\begin_inset Formula $\lambda$
+\end_inset
+
+,
+ in concreto 
+\begin_inset Formula $\lambda<L$
+\end_inset
+
+,
+ er een aanmerkelijk verschil is tussen beide situaties.
+ Hoe kleiner 
+\begin_inset Formula $\lambda$
+\end_inset
+
+,
+ hoe meer de individuele waterlopen het verlagingsbeeld bepalen.
+ Pas bij 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ groter dan zeg 
+\begin_inset Formula $L$
+\end_inset
+
+,
+ ontlopen de rekenwijzen elkaar nauwelijks meer.
+\end_layout
+
+\begin_layout Standard
+In dit ééndimensionale voorbeeld is het stijghoogteverloop tussen de individuele waterlopen lineair,
+ wat goed in de figuren tot uiting komt.
+ De verlaging nabij de onttrekking is daardoor een stuk kleiner dan in de berekening met een uniforme lekweerstand.
+\end_layout
+
+\begin_layout Standard
+Behalve de numeriek berekende verlaging,
+ is in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ ook de analytisch berekende verlaging opgenomen en met markers aangegeven.
+ De analytische waarden van de doorsnede met waterlopen is bepaald door van de ene waterloop naar de andere te rekenen met het constante debiet ertussen dat uit het numerieke model kwam:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi_{i}=\phi_{i-1}-\frac{Q_{x}}{k_{h}D}\left(x_{i}-x_{i-1}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De analytische verlaging in de doorsnede met weerstandbiedende toplaag volgt uit de standaard oplossing voor deze situatie,
+ nl.
+ de formule van Mazure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\phi_{x_{w}}-\phi_{x}=-\frac{\lambda}{k_{h}D}\frac{Q}{2}e^{-\left|x-x_{w}\right|/\lambda}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De figuren laten zien dat de numerieke en analytische resultaten geheel met elkaar overeenkomen.
+ De figuren laten verder zien dat wanneer de afstand tussen de waterlopen groter is dan de spreidingslengte van de equivalente vlakdekkende toplaag,
+ de uitkomsten van beide rekenmethoden nagenoeg niet meer van elkaar zijn te onderscheiden.
+ Voor kleinere spreidingslengten wordt toepassing problematisch,
+ des te meer naarmate de verhouding 
+\begin_inset Formula $\lambda/L$
+\end_inset
+
+ verder onder de waarde 1 ligt:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\lambda=\sqrt{k_{h}Dc}=\sqrt{k_{h}DwL}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\lambda}{L}=\sqrt{k_{h}D\frac{w}{L}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aldus gelden voor de gegevens in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-in-eendimensionaal"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ met de volgende waarden voor weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ van de waterlopen
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w=[0.25,\;0.5,\;1,\;2]\;\text{[d/m]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+deze waarden voor 
+\begin_inset Formula $\lambda/L$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\lambda}{L}=[0.35,\;0.5,\;0.71,\;1]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Ruimtelijk model
+\end_layout
+
+\begin_layout Standard
+Het ruimtelijke model heeft waterlopen met dezelfde weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] die zich op dezelfde onderlinge afstand 
+\begin_inset Formula $L=500$
+\end_inset
+
+ m als hiervoor bevinden.
+ Zij zijn evenwijdig aan elkaar en lopen loodrecht op de 
+\begin_inset Formula $x$
+\end_inset
+
+-as.
+ In plaats van een sleufonttrekking hebben we een brononttrekking in het centrum van het model.
+ Meer verschillen zijn er niet met het voorgaande model.
+ Ook dit model komt in 2 varianten.
+ In het eerste zijn de waterlopen individueel ingebracht en in het tweede zijn deze vervangen door een equivalente,
+ uniforme lekweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+.
+ Het netwerk verfijnt in de 
+\begin_inset Formula $x$
+\end_inset
+
+-richting;
+ telkens tot ca.
+ 1 m celbreedte bij elke waterloop.
+ Het netwerk in de 
+\begin_inset Formula $y$
+\end_inset
+
+-richting wordt logaritmisch grover met de afstand tot de lijn 
+\begin_inset Formula $y=0$
+\end_inset
+
+,
+ vanaf ca.
+ 1 m in het centrum.
+ In het eerste model worden de waterlopen aangebracht door middel van de GHB randvoorwaarde in het watervoerende pakket,
+ zoals hiervoor reeds beschreven.
+ Dit model heeft slechts één rekenlaag.
+ Het tweede model bestaat uit twee rekenlagen waarvan de bovenste de waterremmende equivalente toplaag simuleert met lekweerstand 
+\begin_inset Formula $c$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Zoals hiervoor uitgelegd is de conductantie van het model met de sloten gelijk aan 
+\begin_inset Formula $C=\Delta y/w$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d] en is de lekweerstand van het model met de equivalente toplaag gelijk aan 
+\begin_inset Formula $c=wL$
+\end_inset
+
+ [d].
+ Deze weerstand wordt verkregen door de verticale doorlatendheid van de weerstandbiedende toplaag net als in het ééndimensionale model gelijk te nemen aan
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k_{z1}=\frac{D_{1}/2}{c}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlaging-door-een-put"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ toont het resultaat van de berekening.
+ In blauw is de verlaging weergegeven wanneer de voeding van het pakket als gevolg van de onttrekking geheel plaats vindt via waterlopen met gegeven weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m].
+ In rood is de verlaging weergegeven wanneer de voeding plaats vindt via een vlakdekkende semi-permeabele toplaag met weerstand 
+\begin_inset Formula $c$
+\end_inset
+
+ [d].
+ Met rode cirkels is de analytisch berekende verlaging getekend volgens de formule van De Glee:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\phi=\frac{Q_{w}}{2\pi kD}K_{0}\left(\frac{r}{\lambda}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De waterlopen lopen loodrecht op de hier getekende doorsnede en liggen 500 m uit elkaar.
+ Net als het geval was bij de resultaten van de verlaging door een verticale oneindig lange lijnonttrekking in de hiervoor uitgewerkte vlakke doorsnede,
+ blijkt dat de uitkomsten verschillen.
+ Maar voor 
+\begin_inset Formula $\lambda<L$
+\end_inset
+
+ is het verschil tussen de uitkomsten volstrekt verwaarloosbaar.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/drawdown_3D_4xw.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlaging-door-een-put"
+
+\end_inset
+
+ Blauw:
+ Verlaging door een onttrekkingsbron wanneer de voeding van het pakket geheel via afzonderlijke waterlopen plaats vindt (hier 500 m uiteen).
+ Rood:
+ Wanneer de voeding van het watervoerende pakket plaats vindt via een equivalente vlakdekkende equivalente semi-permeabele toplaag.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /Users/Theo/Entiteiten/Hygea/2022-AGT-Voortoets/Coding/images/contours-DeGlee-vs-Model.pdf
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Verlagingscontouren-3D"
+
+\end_inset
+
+Verlagingscontouren voor de situatie met sloten (bovenste helft) en waarin de sloten zijn vervangen door een equivalente waterremmende laag (onderste helft van de figuur.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Verlagingscontouren-3D"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft de verlagingscontouren door de putonttrekking.
+ De bovenste helft toont het resultaat van het model waarin de afzonderlijke sloten zijn meegenomen;
+ de onderste helft geeft het resultaat waarin de sloten zijn vervangen door een equivalenten weerstandbiedende laag.
+ De invloed van de afzonderlijke waterlopen is nog enigszins zichtbaar.
+ De verlagingslijnen in de onderste helft zijn uiteraard zuivere cirkels.
+ Het is duidelijk dat bij deze wat grotere weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ er nauwelijks nog verschil bestaat tussen de berekening met sloten en die met een equivalente waterremmende laag op het watervoerende pakket.
+ Hoe kleiner de slootweerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ hoe groter de invloed van de sloten.
+ Bij 
+\begin_inset Formula $w=0$
+\end_inset
+
+ stop te verlaging volledig bij de eerste sloten links en rechts van de onttrekking.
+\end_layout
+
+\begin_layout Section
+Een regionaal model
+\end_layout
+
+\begin_layout Standard
+In dit hoofdstuk passen we de vereenvoudiging toe op een regionaal model.
+ Het model beslaat een willekeurig stuk van Vlaanderen met zijn eigen karakteristieke stelsel oppervlaktewater,
+ hier voornamelijk bestaande uit beken.
+ We gaan uit van een homogeen freatisch pakket met uniforme dikte en geven het oppervlaktewater overal dezelfde weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m].
+ Het model bevat opnieuw slechts twee lagen:
+ de onderste laag valst samen met de regionale aquifer,
+ de bovenste kan dienst doen als waterremmende laag die de individuele waterlopen vervangt.
+ Alle rekencellen van de bovenste modellaag krijgen 
+\begin_inset Formula $k_{x}=k_{y}=0$
+\end_inset
+
+.
+ Dit model wordt ter vergelijking op twee varianten opgezet en doorgerekend.
+ In de eerste variant worden de waterlopen elk afzonderlijk ingebracht.
+ De cellen die oppervlaktewater bevatten krijgen een GHB-randvoorwaarde zoals hiervoor reeds uitgelegd.
+ Hun conductantie 
+\begin_inset Formula $C$
+\end_inset
+
+ [m
+\begin_inset Formula $^{2}$
+\end_inset
+
+/d] is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+C=\frac{\Delta s}{w}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+waarin 
+\begin_inset Formula $\Delta s$
+\end_inset
+
+ de lengte van de waterlopen binnen de rekencel.
+ Met GIS wordt bepaald wat 
+\begin_inset Formula $\Delta s$
+\end_inset
+
+ in elke rekencel is.
+ Deze variant maakt geen gebruik van de waterremmende toplaag van het model;
+ deze wordt hier in zijn geheel inactief gemaakt.
+\end_layout
+
+\begin_layout Standard
+In de tweede variant wordt het oppervlaktewaterstelsel vervangen door de equivalente waterremmende eerste modellaag.
+ De laagweerstand is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c=wL
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+met 
+\begin_inset Formula $L$
+\end_inset
+
+ de afstand tussen de waterlopen.
+ Deze afstand is in een reële situatie niet zonder meer duidelijk en hangt af van de plek van de ingreep ten opzichte van de liggen van de waterlopen.
+ Dit kan worden geïllustreerd aan de hand van een kaart met het oppervlaktewater in een bepaald gebied.
+ Zo Fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ geeft een kaart van een stuk van Vlaanderen met daarin de voorkomende waterlopen en contourlijnen aangegeven hoe groot de kortste afstand is tot het oppervlaktewater,
+ uitgedrukt in meters.
+ De 
+\begin_inset Quotes pld
+\end_inset
+
+kam
+\begin_inset Quotes prd
+\end_inset
+
+ met de hoogte waarden is geel aangegeven en ligt steeds precies tussen twee parallel aan elkaar verlopende waterlopen.
+ De kamhoogte is derhalve de halve breedte 
+\begin_inset Formula $b$
+\end_inset
+
+ ofwel 
+\begin_inset Formula $L/2$
+\end_inset
+
+ en daarmee het equivalent van de afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ tussen parallelle waterlopen.
+\end_layout
+
+\begin_layout Standard
+In de kaart is een aantal wit ingekleurde ronde stippen gekozen als denkbeeldige punten waarop een ingreep in het grondwatersysteem wordt overwogen.
+ Vanuit deze witten stippen kan worden gezocht wat de nabije kamhoogte is.
+ Deze 
+\begin_inset Quotes pld
+\end_inset
+
+kampunten
+\begin_inset Quotes prd
+\end_inset
+
+ zijn met een gele stip aangeduid en de weg ernaar toe met een rood lijnstukje.
+\end_layout
+
+\begin_layout Standard
+Hierna worden voorbeeldberekeningen getoond voor de vijf locaties die in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ zijn weergegeven als witte bolletjes.
+ De afstand 
+\begin_inset Formula $L$
+\end_inset
+
+ in de berekening is afkomstig van de bijbehorende kamhoogte,
+ dus van gekoppelde gele bolletjes.
+ Dit levert de afstand 
+\begin_inset Formula $b=L/2$
+\end_inset
+
+ die in de berekeningen wordt gebruikt om de weerstand van de waterlopen,
+ 
+\begin_inset Formula $w$
+\end_inset
+
+,
+ mee te berekenen.
+ In de figuren met resultaten van elk van de voorbeeldberekeningen geven de rode lijnen de verlaging van de berekening met het actuele oppervlaktewater als randvoorwaarde.
+ De zwarte,
+ cirkelvormige verlagingslijnen zijn het resultaat van de berekening waarin het oppervlaktewater is vervangen door een equivalente semi-permeabele toplaag.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/afstand_tot_oppwater.png
+	width 80text%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "figAfstand-tot-het-pppervlaktewater"
+
+\end_inset
+
+Oppervlaktewater met contourlijnen van de afstand tot het oppervlaktewater.
+ De 
+\begin_inset Quotes pld
+\end_inset
+
+kam
+\begin_inset Quotes prd
+\end_inset
+
+ tussen het oppervlaktewater is geel aangeduid.
+ De afbeelding toont een vijftal locaties waar een ingreep wordt gesimuleerd (witte bollen).
+ De bij deze punten behorende 
+\begin_inset Formula $b=L/2$
+\end_inset
+
+ is met een gele bol aangegeven.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Voorbeelden
+\end_layout
+
+\begin_layout Standard
+De volgende figuren geven de resultaten van de verlagingsberekening voor een onttrekking van 
+\begin_inset Formula $Q=3000$
+\end_inset
+
+ m
+\begin_inset Formula $^{3}$
+\end_inset
+
+/d op achtereenvolgens vijf verschillende locaties in hetzelfde gebied.
+ De locaties zijn dezelfde als de witte bolletjes in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+.
+ De locaties zijn zo gekozen dat de plek ten opzichte van het oppervlaktewater voor elk punt wezenlijk anders is.
+ De rode contourlijnen geven de verlaging met het oppervlaktewater als randvoorwaarde,
+ waarbij al het oppervlaktewater dezelfde opgegeven weerstand 
+\begin_inset Formula $w$
+\end_inset
+
+ [d/m] krijgt,
+ die is aangegeven in de kop van de figuur.
+ De zwarte contourlijnen geven de berekende verlaging weer waarbij het oppervlaktewater is vervangen door een toplaag met equivalente weerstand 
+\begin_inset Formula $c=wL$
+\end_inset
+
+ met 
+\begin_inset Formula $b=L/2$
+\end_inset
+
+ overeenkomstig de afstand tussen het oppervlaktewater afkomstig van de corresponderende gele bolletje in fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "figAfstand-tot-het-pppervlaktewater"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
+ Deze afstand varieert uiteraard over het gebied,
+ maar de waarde die geldt voor locatie van de voorgenomen ingreep is uniform toegepast in de betreffende berekening.
+ Omdat het steeds gaat om de stationaire eindverlaging zijn de zwarte contourlijnen van de numerieke berekening vergeleken met de analytische verlaging volgens De Glee,
+ die daarbij blijken samen te vallen samen met numeriek berekende zwarte contourlijnen.
+\end_layout
+
+\begin_layout Standard
+In fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:192300-194100"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ blijkt de verlaging van de berekening met oppervlaktewater redelijk overeen te komen met die volgens De Glee,
+ behalve in het zuidoosten,
+ waar gewoon weinig oppervlaktewater aanwezig die de verlaging zou kunnen dempen;
+ in deze zuidoosthoek is de verlaging daardoor groter dan die volgens De Glee..
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_192300_194100.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:192300-194100"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(192300,194100)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193400-198550"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ berekent De Glee in het noordwesten een veel grotere verlaging dan het model met de waterlopen.
+ Dit wordt duidelijk veroorzaakt door een dichter stelsel oppervlaktewater ten noordwesten van de onttrekking.
+ De 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ waarde is relatief groot door de relatief grote afstand tussen het oppervlaktewater rond de onttrekking.
+ Het dichtere oppervlaktewaterstelsel ten noodwesten en ten zuiden van de onttrekking verminderen de spreidingslengte 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ ten opzichte van die rond de onttrekking en dempen de verlaging op grotere afstanden,
+ waardoor de uitkomst volgens De Glee hier een duidelijk worst-case vertegenwoordigt.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_193400_198550.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:193400-198550"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(193400,198550)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ook fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:193500-196200"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is de reikwijdte volgens De Glee in het noorden duidelijk groter dan volgt uit de numerieke berekening met oppervlaktewater.
+ De reden is hetzelfde als in de voorgaande figuur.
+ Er is slechts een klein gebied in het zuiden waar de uitkomst volgens De Glee geen worst-case vertegenwoordigt.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_193500_196200.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:193500-196200"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(193500,196200)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ook fig.
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:195000-196500"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is het invloedsgebied volgens De Glee wat groter dan dat volgens het numerieke model met het actuele oppervlaktewater,
+ behalve in het zuiden waar eenvoudig weinig oppervlaktewater voorhanden is.
+ Maar over het algemeen is het verschil beperkt.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_195000_196500.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:195000-196500"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(195000,196500)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:196250-195600"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ laat een situatie zien waarin de invloedsgrens c.q.
+ de reikwijdte van de berekening met oppervlaktewater juist groter is dan die volgens De Glee.
+ Dit komt omdat de afstand tussen het oppervlaktewater rond de voorgenomen ingreep beduidend kleiner is dan die verder weg.
+ Hierdoor verschillen de rode en de zwarte verlagingslijnen in dit voorbeeld op korte afstand van de onttrekking weinig van elkaar,
+ maar lopen ze op grotere afstanden juist uiteen.
+ In dergelijke situaties is de verlaging volgens De Glee dus juist geen worst case.
+ Het verschil is in dit voorbeeld aanzienlijk voor de 5 cm contour.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ../../images/fdm_de_Glee_xy_196250_195600.png
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:196250-195600"
+
+\end_inset
+
+Verlagingen rond punt 
+\begin_inset Formula $xy$
+\end_inset
+
+=(196250,195600)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In het algemeen kan worden gesteld dat de numerieke en analytische berekeningen redelijk met elkaar in overeenstemming zijn.
+ Maar ook dat dit niet overal geldt.
+ Het hangt echt af van de ruimtelijke verdeling van de waterlopen in de ruimere omgeving van de voorgenomen ingreep.
+\end_layout
+
+\begin_layout Section
+Conclusies
+\end_layout
+
+\begin_layout Standard
+In situaties met parallel oppervlaktewater lijkt het acceptabel om voor de berekening van de verlaging door een voorgenomen onttrekking,
+ inclusief die van de reikwijdte van de onttrekking,
+ het oppervlaktewater te vervangen door een equivalente semi-permeabele toplaag onder voorwaarde dat 
+\begin_inset Formula $\lambda>L$
+\end_inset
+
+,
+ wat neerkomt op
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w>\frac{L}{kD}
+\]
+
+\end_inset
+
+In zulke gevallen kan met een analytische oplossing volgens Hantush (De Glee) kan worden gerekend zonder een numeriek model te gebruiken.
+\end_layout
+
+\begin_layout Standard
+De methode is zo goed als altijd toepasbaar bij aanwezigheid van een dicht oppervlaktewaterstelsel zoals het geval is binnen polders.
+ Bij een min of meer willekeurige ruimtelijke en spaarzame verdeling van het oppervlaktewater over het groter gebied kunnen er,
+ afhankelijk van deze ruimtelijke verdeling duidelijke verschillen zijn tussen de uitkomsten van de berekening met het oppervlaktewater als randvoorwaarde en de uitkomsten van de analytische oplossing,
+ waarin het oppervlaktewater is vervangen door een 
+\begin_inset Quotes pld
+\end_inset
+
+equivalente
+\begin_inset Quotes prd
+\end_inset
+
+ uniforme weerstandslaag.
+ De grootste verschillen tussen de uitkomsten van het numerieke model en de analytisch oplossing zijn terug te herleiden tot het gebruik van slechts één waarde voor de afstand van het oppervlaktewater,
+ 
+\begin_inset Formula $L$
+\end_inset
+
+,
+ in de analytische berekening,
+ terwijl deze afstand voor elk punt in het gebied anders is.
+ De afstand tussen de waterlopen zoals hier berekend gaat uit van de ligging van de onttrekking ten opzichte van het dichtstbijzijnde oppervlaktewater en schiet daarom vaak tekort als geschikte maat voor een ruimer gebied.
+ Een mogelijk betere aanpak is om te kijken wat een geschikte 
+\begin_inset Formula $L$
+\end_inset
+
+ is over het gehele gebied binnen de 5 cm contourlijn;
+ maar dat maakt de berekening iteratief en dus ingewikkelder.
+\end_layout
+
+\begin_layout Standard
+De hier uitgewerkte aanpak om de reikwijdte van een ingreep analytisch te berekenen,
+ zonder numeriek model,
+ kan werken,
+ en is dan eenvoudig,
+ maar zal nooit perfect kunnen zijn maar gegeven het doel van de Voortoets wellicht wel acceptabel.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Bot (2016)"
+key "Bot16"
+literal "false"
+
+\end_inset
+
+Bot,
+ A.P.
+ (2016) Grondwaterzakboekje 2016.
+ Gwz2016.
+ ISBN-EAN:
+ 978-80-817869-1-1.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Bruggeman (1999)"
+key "Brug99"
+literal "false"
+
+\end_inset
+
+Bruggeman G.A.
+ (1999) Analyical Solutions of Geohydrological Problems.
+ Elsevier + RIVM,
+ Developments in Water Science no.
+ 46.
+ ISBN 0 444 81829 4,
+ 959p.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Ernst (1962)"
+key "Ernst62"
+literal "false"
+
+\end_inset
+
+Ernst,
+ L.F.
+ (1962) Grondwaterstromingen in de verzadigde zone en hun berekening bij de aanwezigheid van open leidingen.
+ Pudoc,
+ Publ.
+ 67.15,
+ Wageningen.
+ 189pp.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Huisman (1972)"
+key "Huis72"
+literal "false"
+
+\end_inset
+
+Huisman,
+ L.
+ (1972) Groundwater Recovery.
+ MacMillan,
+ SBN 333 09870 6.
+ Pitman Press,
+ Bath.
+ 336p.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "Kruseman en De Ridder (1994)"
+key "KR94"
+literal "false"
+
+\end_inset
+
+Kruseman,
+ G.P.
+ and N.A.
+ de Ridder (1994) Analysis and Evaluation of Pumping Test Data.
+ ISBN 90 70754207.
+ ILRI publication 47.
+ 376.
+\end_layout
+
+\end_body
+\end_document
